@@ -1,0 +1,25 @@
+Milestone 1:
+	Basic menus and enough SDL stuff to draw them:
+		- Menu porting: TLZ
+		- SDL crap: Glitch (blitting, timing, keyboard input, ?)
+		- Resource loading: ???
+		- Text writing: Glitch?
+
+
+Milestone 2:
+	Sound and music:
+		More resource loading: ???
+		LDS -> 10-channel MOD conversion: Glitch
+		MOD playing: Glitch
+		Sound effects: Glitch
+		Jukebox / sound test (maybe)
+	1p Arcade:
+		Misc. gameloop stuff: TLZ
+		Clarify this later!
+
+Now playable?
+
+Milestone 3:
+	???
+	
+
