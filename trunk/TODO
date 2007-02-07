@@ -2,13 +2,13 @@ Milestone 1:
 	Basic menus and enough SDL stuff to draw them:
 		- Menu porting: TLZ
 		- SDL crap: Glitch (blitting, timing, keyboard input, ?)
-		- Resource loading: ???
-		- Text writing: Glitch?
+		- Resource loading: MXD
+		- Text writing: Glitch and/or MXD
 
 
 Milestone 2:
 	Sound and music:
-		More resource loading: ???
+		More resource loading?: MXD again?
 		LDS -> 10-channel MOD conversion: Glitch
 		MOD playing: Glitch
 		Sound effects: Glitch
