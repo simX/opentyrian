@@ -2,8 +2,8 @@ Milestone 1:
 	Basic menus and enough SDL stuff to draw them:
 		- Menu porting: TLZ
 		- SDL crap: Glitch (blitting, timing, keyboard input, ?)
-		- Resource loading: MXD
-		- Text writing: Glitch and/or MXD
+		- resource loading: MXD
+		- text blitting (fonthand): MXD
 
 
 Milestone 2:
