@@ -1,3 +1,7 @@
+Misc:
+    - Add information about the Tyrian datafiles to README file
+
+
 Milestone 1:
 	Basic menus and enough SDL stuff to draw them:
 		- Menu porting: TLZ
