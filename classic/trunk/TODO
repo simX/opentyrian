@@ -1,13 +1,14 @@
 Okay, here's a list of source files. Please mark them in the following manner as 
 you work on them, when possible:
 
-OTHER.PAS -- UNUSED		(indicates a source file not actually used by Tyrian, i.e., from the Loudness samples or SETUP.EXE)
-FOO.PAS -- 				(blank to indicate file hasn't been ported in any significant way)
-FOO2.PAS -- partial		(indicates some porting has been done but nothing is complete)
-FOO3.PAS -- vars		(indicates all type and var definitions added to foo3.h)
-FOO4.PAS -- stubs		(indicates all functions defined in foo4.h and at least stubbed out in foo3.c)
-FOO5.PAS -- stubs, vars	(both of last two are complete)
-BAR.PAS -- COMPLETE		(all variables and types, all useful functions ported, needs only debugging at this point)
+OTHER.PAS -- UNUSED     (indicates a source file not actually used by Tyrian, i.e., from the Loudness samples or SETUP.EXE)
+FOO.PAS --              (blank to indicate file hasn't been ported in any significant way)
+FOO2.PAS -- partial     (indicates some porting has been done but nothing is complete)
+FOO3.PAS -- vars        (indicates all type and var extern definitions added to foo3.h, and variables added to foo3.c)
+FOO4.PAS -- stubs       (indicates all functions defined in foo4.h and at least stubbed out in foo4.c)
+FOO5.PAS -- stubs, vars (both of last two are complete)
+SPAM.PAS -- mostly      (indicates that most of it is ported, maybe with a few functions missing)
+BAR.PAS -- COMPLETE     (all variables and types, all useful functions ported, needs only debugging at this point)
 
 As indicated by "useful" disregard any procs that we don't need, i.e., anything made 
 superfluous by SDL. Also, note that tags in ALLCAPS indicate a file is done and can 
@@ -21,11 +22,11 @@ ADLIB5.PAS
 ANIMLIB.PAS
 ARENACLI.PAS
 BACK2.PAS
-BACKGRND.PAS
+BACKGRND.PAS -- vars
 CHAT2.PAS
 CHAT3.PAS
 CIRCVARS.PAS
-CONFIG.PAS -- stubs, vars
+CONFIG.PAS -- stubs, vars, partial
 CONV2SMP.PAS
 CONVMAP.PAS
 CONVSHAP.PAS
@@ -37,14 +38,12 @@ DTEST.PAS
 EDITSHIP.PAS
 EGAMOUSE.PAS
 ENCRYPT.PAS
-EPB.CFG
-EPB.EXE
 EPISODES.PAS
-ERROR.PAS
+ERROR.PAS -- COMPLETE
 FACEFILE.PAS
 FILESPEC.PAS
 FLAME.PAS
-FONTHAND.PAS
+FONTHAND.PAS -- COMPLETE
 GENLVL.PAS
 GENLVL2.PAS
 GENLVL3.PAS
@@ -56,39 +55,39 @@ GENSHP.PAS
 GENSOUND.PAS
 GENVOICE.PAS
 HELP.PAS
-HELPTEXT.PAS
+HELPTEXT.PAS -- COMPLETE
 INTFACE.PAS
 INTS.PAS
 INTTEST.PAS
-JOYSTICK.PAS
+JOYSTICK.PAS -- COMPLETE
 JOYTEST.PAS
 JUKEBOX.PAS
-KEYBOARD.PAS
+KEYBOARD.PAS -- COMPLETE (maybe not, was replaced)
 KEYBTEST.PAS
 KEYTEST.PAS
 KEYTEST2.PAS
 LOOKUP.PAS
-LVLLIB.PAS
-LVLMAST.PAS
+LVLLIB.PAS -- COMPLETE
+LVLMAST.PAS -- COMPLETE
 LZH.PAS
 LZHTEST.PAS
 MAININT.PAS -- partial
 MOUSE.PAS
 MUSINFO.PAS
-MUSMAST.PAS -- partial
+MUSMAST.PAS -- COMPLETE
 NETWORK.PAS
-NEWSHAPE.PAS
+NEWSHAPE.PAS -- mostly
 NORTSONG.PAS -- partial
 NORTTEST.PAS
 NORTVARS.PAS
 OLDSHAPE.PAS
 OLDTYR.PAS
 PALEDIT.PAS
-PALLIB.PAS
-PARAMS.PAS -- partial
-PCXLOAD.PAS
-PCXMAST.PAS
-PICLOAD.PAS
+PALLIB.PAS -- COMPLETE
+PARAMS.PAS -- COMPLETE
+PCXLOAD.PAS -- partial
+PCXMAST.PAS -- COMPLETE
+PICLOAD.PAS -- COMPLETE
 PICLOAD2.PAS
 PICTEST.PAS
 PLAYMUL2.PAS -- UNUSED
@@ -97,7 +96,7 @@ PLAYSNG2.PAS -- UNUSED
 PLAYSONG.PAS -- UNUSED
 REPBLOCK.PAS
 SAVEFACE.PAS
-SETUP.PAS
+SETUP.PAS -- partial
 SETUP2.PAS
 SHIPEDIT.PAS
 SHOWVGA.PAS
@@ -105,13 +104,13 @@ SHPCONV.PAS
 SHPEDIT.PAS
 SHPLIB.PAS
 SHPLIB2.PAS
-SHPMAST.PAS
+SHPMAST.PAS -- COMPLETE
 SNDLIB.PAS
-SNDMAST.PAS -- partial
+SNDMAST.PAS -- COMPLETE
 STARDRAW.PAS
 STAREDIT.PAS
 STAREFF.PAS
-STARFADE.PAS
+STARFADE.PAS -- COMPLETE
 STARGATE.PAS
 STARLIB.PAS
 TEMP.PAS
@@ -125,7 +124,7 @@ TYRIAN2.PAS -- partial
 TYRJUKE.PAS
 VARZ.PAS
 VGA256C.PAS
-VGA256D.PAS
+VGA256D.PAS -- COMPLETE
 VGA256DR.PAS
 VGATEXT.PAS
 VGAWHITE.PAS
