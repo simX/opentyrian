@@ -12,7 +12,7 @@ BAR.PAS -- COMPLETE     (all variables and types, all useful functions ported, n
 
 As indicated by "useful" disregard any procs that we don't need, i.e., anything made 
 superfluous by SDL. Also, note that tags in ALLCAPS indicate a file is done and can 
-be largley ignored while porting other stuff.
+be largely ignored while porting other stuff.
 
 3DSTAR5.PAS
 3DSTAR6.PAS
@@ -26,7 +26,7 @@ BACKGRND.PAS -- vars
 CHAT2.PAS
 CHAT3.PAS
 CIRCVARS.PAS
-CONFIG.PAS -- stubs, vars, partial
+CONFIG.PAS -- COMPLETE
 CONV2SMP.PAS
 CONVMAP.PAS
 CONVSHAP.PAS
