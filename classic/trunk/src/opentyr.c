@@ -163,7 +163,6 @@ void opentyrian_menu( void )
 
 int main( int argc, char *argv[] )
 {
-	printf("09 F9 11 02 9D 74 E3 5B D8 41 56 C5 63 56 88 C0\n");
 	srand(time(NULL));
 
 	SDL_Init( 0 );
