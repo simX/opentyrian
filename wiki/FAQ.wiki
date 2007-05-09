@@ -1,0 +1,21 @@
+#summary Frequently Asked Questions
+
+= Q: What is OpenTyrian? =
+
+A: [OpenTyrian] is rewrite of the Tyrian's Pascal and Assembly source-code in C, adapting it to use modern technologies instead of arcane DOS techniques.
+
+Right now we plan to create two versions of the port:
+
+  * *[OpenTyrianClassic OpenTyrian Classic]:* Currently being worked on, will try to faithfully recreate Tyrian, both in game and source code behaviour, won't receive any new features apart from those considered very important.
+  * *[OpenTyrian]:* Starting out of the Classic port, will feature cleaned up code, and brand new features, bug fixes and customization.
+
+= Q: Can I use Dan's released graphics with the port? =
+
+A: No, you need to (currently) have the [Tyrian] 2.X datafiles. We plan to support [Tyrian2000 Tyrian 2000] datafiles in the future.
+
+= Q: How do I get a copy of the source? =
+
+A: From our Subversion repository. Follow the instruction on our home page.
+
+
+
