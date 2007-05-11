@@ -17,5 +17,7 @@ A: No, you need to (currently) have the [Tyrian] 2.X datafiles. We plan to suppo
 
 A: From our Subversion repository. Follow the instruction on our home page.
 
+= Q: Do you have an IRC channel? =
 
+A: It's not official, but pretty much all development discussion happens on #tyrian at [http://freenode.net/ Freenode]. If you have any offers for help, or suggestions to the port, the preferred way to contact us is via IRC.
 
