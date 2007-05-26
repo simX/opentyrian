@@ -14,6 +14,27 @@ As indicated by "useful" disregard any procs that we don't need, i.e., anything 
 superfluous by SDL. Also, note that tags in ALLCAPS indicate a file is done and can 
 be largely ignored while porting other stuff.
 
+
+SYN: I used a crude automated scanner to get lists of procedures and variables and ran it on all the 
+non-UNUSED files. I did not alter the following files:
+** Dramatically changed or obsoleted by SDL or other major changes:
+ - EGAMOUSE.PAS
+ - ARENACLI.PAS
+ - KEYBOARD.PAS
+ - JOYSTICK.PAS
+** Not sure if we're using:
+ - VGA256C.PAS
+ - VGA256DR.PAS
+** Gave my scanner problems and claim to be completed already:
+ - CONFIG.PAS
+ - VGA256D.PAS
+** Gave my scanner problems and too lazy to fix, need to be dealt with manually:
+ - CIRCVARS.PAS (I think only used by Destruct)
+ - VARZ.PAS
+All other files besides those should hopefully have all variables and functions declared, and
+all functions stubbed out. 
+
+
 ANIMLIB.PAS -- vars stubs
 ARENACLI.PAS -- (probably irrelevant because of nonportability)
 BACKGRND.PAS -- vars stubs
