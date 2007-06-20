@@ -39,11 +39,27 @@ ANIMLIB.PAS -- vars stubs
 ARENACLI.PAS -- (probably irrelevant because of nonportability)
 BACKGRND.PAS -- vars stubs
 CIRCVARS.PAS -- 
-CONFIG.PAS -- COMPLETE (verify manually)
 DESTRUCT.PAS -- stubs vars
 EDITSHIP.PAS -- stubs vars
 EGAMOUSE.PAS -- (probably irrelevant because of SDL)
 EPISODES.PAS -- stubs vars
+MAININT.PAS -- stubs vars partial
+NETWORK.PAS -- stubs vars
+NEWSHAPE.PAS -- stubs vars mostly
+NORTSONG.PAS -- stubs vars partial
+NORTVARS.PAS -- stubs vars
+PCXLOAD.PAS -- stubs vars partial
+PICLOAD2.PAS -- stubs vars (may overlap with PICLOAD? )
+SETUP.PAS -- partial
+SETUP2.PAS -- (may or may not be needed, possible jukebox stuff?)
+SHPLIB.PAS -- stubs vars
+SHPLIB2.PAS -- stubs vars
+TYRIAN2.PAS -- stubs vars partial
+VARZ.PAS -- partial? (verify manually)
+VGA256C.PAS -- ??
+VGA256DR.PAS -- ??
+
+CONFIG.PAS -- COMPLETE (verify manually)
 ERROR.PAS -- COMPLETE
 FONTHAND.PAS -- COMPLETE
 HELPTEXT.PAS -- COMPLETE
@@ -52,32 +68,16 @@ JUKEBOX.PAS -- COMPLETE
 KEYBOARD.PAS -- COMPLETE (maybe not, was replaced)
 LVLLIB.PAS -- COMPLETE
 LVLMAST.PAS -- COMPLETE
-MAININT.PAS -- stubs vars partial
 MUSMAST.PAS -- COMPLETE
-NETWORK.PAS -- stubs vars
-NEWSHAPE.PAS -- stubs vars mostly
-NORTSONG.PAS -- stubs vars partial
-NORTVARS.PAS -- stubs vars
 PALLIB.PAS -- COMPLETE
 PARAMS.PAS -- COMPLETE
-PCXLOAD.PAS -- stubs vars partial
 PCXMAST.PAS -- COMPLETE
 PICLOAD.PAS -- COMPLETE
-PICLOAD2.PAS -- stubs vars (may overlap with PICLOAD? )
-SETUP.PAS -- partial
-SETUP2.PAS -- (may or may not be needed, possible jukebox stuff?)
-SHPLIB.PAS -- stubs vars
-SHPLIB2.PAS -- stubs vars
 SHPMAST.PAS -- COMPLETE
 SNDMAST.PAS -- COMPLETE
 STARFADE.PAS -- COMPLETE
 STARLIB.PAS -- COMPLETE buggy
-TYRIAN2.PAS -- stubs vars partial
-VARZ.PAS -- partial? (verify manually)
-VGA256C.PAS -- ??
 VGA256D.PAS -- COMPLETE
-VGA256DR.PAS -- ??
-
 
 ********************************************************************8
 These are the files I think are not used in Tyrian itself, and can 
