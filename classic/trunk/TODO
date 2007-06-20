@@ -71,7 +71,7 @@ SHPLIB2.PAS -- stubs vars
 SHPMAST.PAS -- COMPLETE
 SNDMAST.PAS -- COMPLETE
 STARFADE.PAS -- COMPLETE
-STARLIB.PAS -- stubs partial
+STARLIB.PAS -- COMPLETE buggy
 TYRIAN2.PAS -- stubs vars partial
 VARZ.PAS -- partial? (verify manually)
 VGA256C.PAS -- ??
