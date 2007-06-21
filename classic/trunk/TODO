@@ -38,11 +38,9 @@ all functions stubbed out.
 ANIMLIB.PAS -- vars stubs
 ARENACLI.PAS -- (probably irrelevant because of nonportability)
 BACKGRND.PAS -- vars stubs
-CIRCVARS.PAS -- 
 DESTRUCT.PAS -- stubs vars
 EDITSHIP.PAS -- stubs vars
 EGAMOUSE.PAS -- (probably irrelevant because of SDL)
-EPISODES.PAS -- stubs vars
 MAININT.PAS -- stubs vars partial
 NETWORK.PAS -- stubs vars
 NEWSHAPE.PAS -- stubs vars mostly
@@ -55,11 +53,12 @@ SETUP2.PAS -- (may or may not be needed, possible jukebox stuff?)
 SHPLIB.PAS -- stubs vars
 SHPLIB2.PAS -- stubs vars
 TYRIAN2.PAS -- stubs vars partial
-VARZ.PAS -- partial? (verify manually)
+VARZ.PAS -- partial
 VGA256C.PAS -- ??
 VGA256DR.PAS -- ??
 
 CONFIG.PAS -- COMPLETE (verify manually)
+EPISODES.PAS -- COMPLETE
 ERROR.PAS -- COMPLETE
 FONTHAND.PAS -- COMPLETE
 HELPTEXT.PAS -- COMPLETE
@@ -91,6 +90,7 @@ ADLIB5.PAS -- UNUSED
 BACK2.PAS -- UNUSED
 CHAT2.PAS -- UNUSED
 CHAT3.PAS -- UNUSED
+CIRCVARS.PAS -- UNUSED
 CONV2SMP.PAS -- UNUSED (utility)
 CONVMAP.PAS -- UNUSED (utility)
 CONVSHAP.PAS -- UNUSED (utility)
