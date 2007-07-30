@@ -20,3 +20,11 @@ A: No, you need to (currently) have the [Tyrian] 2.x datafiles. We plan to suppo
 = Q: Do you have an IRC channel? =
 
 A: It's not official, but pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
+
+= Q: Help! When I try to run OpenTyrian I get a message along the lines of `OpenTyrian needs the Tyrian data files to run. Please read the README file.` What happen? =
+
+A: You need to have the Tyrian 2.x data files to run the game. 1.x or 2000 data files will *NOT* work! If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there. If you don't, [http://it.travisbsd.org/foo/tyrian/tyrian21.zip get yourself a copy].
+
+= Q: I have all the data files inside the ./data/ directory, but OpenTyrian still says it doesn't finds them! =
+
+A: If you're using a case-sensitive filesystem (example: Linux), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
