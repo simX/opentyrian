@@ -1,0 +1,55 @@
+#summary How to compile OpenTyrian for Windows using MinGW and MSYS
+*Written by Skutarth*
+
+= Getting the necessary files =
+
+Download the latest *Automated MinGW Installer* and *MSYS: Minimal System* from:
+http://sourceforge.net/project/showfiles.php?group_id=2435
+
+Download the latest SDL development libraries for MinGW under Win32:
+http://www.libsdl.org/download-1.2.php
+
+Download the latest 32 Bit version of TortoiseSVN:
+http://tortoisesvn.net/downloads
+
+= How to use your brain =
+
+Install MSYS to the directory of your choice, but preferably the default `c:\msys\1.0` (for ease of use in this tutorial).
+Leave the command prompt that opens alone for now.
+
+Install MinGW. Choose to download and install. The default current release is recommended.
+Select a Full install.
+Choose `C:\msys\1.0\mingw` as the directory to install to and continue. The process may take a while.
+
+Go back to the MSYS installation and answer "`y`" for the first two questions.
+Type in that your installation is at `c:/msys/1.0/mingw`
+Exit the prompt and complete the MSYS installation.
+
+Extract the contents SDL folder in the downloaded archive to `c:\msys\1.0\SDL`
+Run MSYS.
+Type `cd /`, then `cd SDL`, then `make native`
+Close MSYS.
+
+Install TortoiseSVN, making sure you have menu extensions enabled. Create a new folder called `OpenTyrian` in `c:\msys\1.0`
+Right click on the folder you just created and click "`SVN Checkout...`"
+Enter http://opentyrian.googlecode.com/svn/classic/trunk into the "`URL of repository`" box.
+Click OK and wait for it to finish downloading.
+
+Run MSYS.
+Type `cd /`, then `cd OpenTyrian`, then `make`
+Close MSYS.
+
+Go to `c:/msys/1.0/opentyrian`
+Look for tyrian.exe
+This is the program you just compiled. Put it into the directory of a valid Tyrian 2.x installation and test it.
+It's recommended that you rename the original tyrian.exe to something else instead of overwriting it.
+
+= If you want to get and compile a new revision =
+
+Right click on the `OpenTyrian` folder in `c:/msys/1.0/` and click "`SVN Update`"
+It will tell you if it updated anything. There's no need to continue if it doesn't, as you already have the newest version.
+After it's finished, run MSYS.
+Type `cd /`, then `cd OpenTyrian`, then `make`
+Close MSYS.
+
+Provided no errors occurred, the tyrian.exe in `c:/msys/1.0/opentyrian` should be the new version.
