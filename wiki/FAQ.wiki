@@ -1,4 +1,5 @@
 #summary Frequently Asked Questions
+#labels Featured
 
 = Q: What is OpenTyrian? =
 
