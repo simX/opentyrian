@@ -42,9 +42,9 @@ JE_word nsp2;
 JE_shortint nspVar2Inc;
 
 /* JE: new sprite pointer */
-JE_real nsp;
-JE_real nspVarInc;
-JE_real nspVarVarInc;
+double nsp;
+double nspVarInc;
+double nspVarVarInc;
 
 JE_word changeTime;
 JE_boolean doChange;

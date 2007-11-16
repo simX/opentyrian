@@ -356,7 +356,7 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 
 void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
 {
-	JE_real a = 0, rx, ry, rz, b;
+	double a = 0, rx, ry, rz, b;
 	Uint8 *vga;
 
 	while (a < 6.29)
@@ -374,7 +374,7 @@ void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
 
 void JE_line( JE_word a, JE_byte b, JE_longint c, JE_byte d, JE_byte e )
 {
-	JE_real g, h, x, y;
+	double g, h, x, y;
 	int z, v;
 	Uint8 *vga;
 

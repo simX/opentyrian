@@ -56,7 +56,7 @@
 JE_word statDmg[2]; /* [1..2] */
 JE_byte planetAni, planetAniWait;
 JE_byte currentDotNum, currentDotWait;
-JE_real navX, navY, newNavX, newNavY;
+double navX, navY, newNavX, newNavY;
 int tempNavX, tempNavY;
 JE_byte planetDots[5]; /* [1..5] */
 int planetDotX[5][10], planetDotY[5][10]; /* [1..5, 1..10] */

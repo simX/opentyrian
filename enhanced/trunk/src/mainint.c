@@ -1381,7 +1381,7 @@ void JE_highScoreScreen( void )
 
 }
 
-void JE_gammaCorrect_func( JE_byte *col, JE_real r )
+void JE_gammaCorrect_func( JE_byte *col, double r )
 {
 	*col = round(*col * r);
 	if (*col > 63)
@@ -1393,7 +1393,7 @@ void JE_gammaCorrect_func( JE_byte *col, JE_real r )
 void JE_gammaCorrect( JE_ColorType *colorBuffer, JE_byte gamma )
 {
 	int x;
-	JE_real r = 1 + (JE_real)gamma / 10;
+	double r = 1 + (double)gamma / 10;
 	
 	for (x = 0; x < 256; x++)
 	{

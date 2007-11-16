@@ -220,7 +220,7 @@ JE_byte    superArcadeMode;
 
 JE_byte    superArcadePowerUp;
 
-JE_real linkGunDirec;
+double linkGunDirec;
 JE_byte playerDevice1, playerDevice2;
 JE_byte inputDevice1, inputDevice2;
 

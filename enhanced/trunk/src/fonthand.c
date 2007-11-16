@@ -459,7 +459,7 @@ void JE_newDrawCShapeBrightAndDarken( JE_byte *shape, JE_word xsize, JE_word ysi
 	}
 }
 
-/*void JE_newDrawCShapeZoom( JE_byte table, JE_byte, JE_word x, JE_word y, JE_real scale );
+/*void JE_newDrawCShapeZoom( JE_byte table, JE_byte, JE_word x, JE_word y, double scale );
 {
 	JE_byte lookuphoriz[320];
 	JE_byte lookupvert[200];

@@ -203,7 +203,7 @@ JE_longint galagaLife;
 JE_boolean debug; /*Debug Mode*/
 Uint32 debugTime, lastDebugTime;
 JE_longint debugHistCount;
-JE_real debugHist;
+double debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
 
 JE_boolean firstGameOver, gameLoaded, enemyStillExploding;
@@ -433,7 +433,7 @@ int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, opt
     option1MaxX, option1MinX, option2MaxX, option2MinX,
     option1MaxY, option1MinY, option2MaxY, option2MinY;
 JE_boolean optionAni1Go, optionAni2Go, option1Stop, option2Stop;
-JE_real optionSatelliteRotate;
+double optionSatelliteRotate;
 
 int optionAttachmentMove;
 JE_boolean optionAttachmentLinked, optionAttachmentReturn;
@@ -475,7 +475,7 @@ JE_word avail;
 JE_word tempCount;
 int tempI, tempI2, tempI3, tempI4, tempI5;
 JE_longint tempL;
-JE_real tempR, tempR2;
+double tempR, tempR2;
 /*int tempX, tempY;*/
 
 JE_boolean tempB;
@@ -1730,7 +1730,7 @@ void JE_resetPlayerH( void )
 
 void JE_doSP( JE_word x, JE_word y, JE_word num, JE_byte explowidth, JE_byte color ) /* superpixels */
 {
-	JE_real tempr;
+	double tempr;
 	int tempx, tempy;
 	
 	for (temp = 0; temp < num; temp++)
