@@ -136,8 +136,8 @@ typedef struct
 	JE_shortint yaccel;
 	JE_shortint xcaccel;
 	JE_shortint ycaccel;
-	JE_integer  startx;
-	JE_integer  starty;
+	int         startx;
+	int         starty;
 	JE_shortint startxc;
 	JE_shortint startyc;
 	JE_byte     armor;
@@ -152,7 +152,7 @@ typedef struct
 	JE_shortint dani;
 	JE_byte     elaunchfreq;
 	JE_word     elaunchtype;
-	JE_integer  value;
+	int         value;
 	JE_word     eenemydie;
 } JE_EnemyDatType[ENEMY_NUM + 1]; /* [0..enemynum] */
 

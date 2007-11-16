@@ -43,7 +43,7 @@ const JE_byte fontMap[136] = /* [33..168] */
 
 /* shape constants included in newshape.h */
 
-JE_integer defaultBrightness = -3;
+int defaultBrightness = -3;
 JE_byte textGlowFont, textGlowBrightness = 6;
 
 JE_boolean levelWarningDisplay;
@@ -713,7 +713,7 @@ void JE_updateWarning( void )
 
 void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 {
-	JE_integer z;
+	int z;
 	JE_byte c = 15;
 
 	JE_setNetByte(0);

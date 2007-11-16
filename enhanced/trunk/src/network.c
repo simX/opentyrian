@@ -27,9 +27,9 @@
 JE_longint startTime;
 JE_longint frames;
 
-JE_integer netPlayers,     /* Number of net players: 0, 1 or 2 */
-           thisPlayerNum = 0,  /* Player number on this PC (1 or 2) */
-           otherPlayerNum; /* Player number on remote PC (1 or 2) */
+int netPlayers,     /* Number of net players: 0, 1 or 2 */
+    thisPlayerNum = 0,  /* Player number on this PC (1 or 2) */
+    otherPlayerNum; /* Player number on remote PC (1 or 2) */
 
 /* TODO UseOutPacket : SMALL_PACKET;*/   /* This is the original player's packet - time lag */
 

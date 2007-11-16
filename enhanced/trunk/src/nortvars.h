@@ -74,7 +74,7 @@ void JE_hideMouse( void );*/
 
 void JE_dBar( JE_word x, JE_word y, JE_word num, JE_word col );
 void JE_dBar2( JE_word x, JE_word y, JE_word num, JE_word col );
-void JE_dBar3( JE_integer x,  JE_integer y,  JE_integer num,  JE_integer col );
+void JE_dBar3( int x,  int y,  int num,  int col );
 void JE_dBar4( JE_word x, JE_word y, JE_word num, JE_word col );
 void JE_barDraw( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
 void JE_barDrawShadow( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );

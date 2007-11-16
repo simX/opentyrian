@@ -83,7 +83,7 @@ void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s );
 void JE_absDrawGraphic( JE_ShapeTypeOne s );
 void JE_drawGraphicOver( JE_word x, JE_word y, JE_ShapeTypeOne s );
 void JE_absDrawGraphicOver( JE_ShapeTypeOne s );
-void JE_readGraphic( JE_integer x, JE_integer y, JE_ShapeTypeOne s );
+void JE_readGraphic( int x, int y, JE_ShapeTypeOne s );
 void JE_getK( JE_char *y );
 void JE_getUpK( JE_char *k );
 JE_boolean JE_keyPressed( JE_char *kp );

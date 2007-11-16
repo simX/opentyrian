@@ -32,8 +32,8 @@
 JE_boolean run;
 struct JE_StarType star[starlib_MAX_STARS];
 
-JE_integer tempW;
-JE_integer tempX, tempY;
+int tempW;
+int tempX, tempY;
 
 JE_byte setup;
 JE_word stepCounter;
@@ -51,9 +51,9 @@ JE_boolean doChange;
 
 JE_boolean grayB;
 
-JE_integer x;
+int x;
 
-JE_integer starlib_speed;
+int starlib_speed;
 JE_shortint speedChange;
 
 JE_byte pColor;
@@ -63,7 +63,7 @@ void JE_starlib_main( void )
 {
 	int off;
 	JE_word i;
-	JE_integer tempZ;
+	int tempZ;
 	JE_byte tempCol;
 	struct JE_StarType *stars;
 	Uint8 *surf;

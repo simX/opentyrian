@@ -80,7 +80,7 @@ void JE_drawTextWindow( char *text )
 
 void JE_outCharGlow( JE_word x, JE_word y, char *s )
 {
-	JE_integer maxloc, loc, z;
+	int maxloc, loc, z;
 	JE_shortint glowcol[60]; /* [1..60] */
 	JE_shortint glowcolc[60]; /* [1..60] */
 	JE_word textloc[60]; /* [1..60] */
@@ -201,7 +201,7 @@ void JE_drawPortConfigButtons( void )
 
 void JE_helpSystem( JE_byte startTopic )
 {
-	JE_integer page, lastPage = 0;
+	int page, lastPage = 0;
 	JE_byte menu;
 	JE_char flash;
 
@@ -1108,7 +1108,7 @@ JE_longint JE_getValue( JE_byte itemType, JE_word itemNum )
 JE_boolean JE_nextEpisode( void )
 {
 	JE_boolean found;
-	JE_integer x;
+	int x;
 	JE_longint temp;
 	
 	strcpy(lastLevelName, "Completed");
@@ -1832,7 +1832,7 @@ void JE_readDemoKeys( void )
 }
 
 /*Street Fighter codes*/
-void JE_SFCodes( JE_byte playerNum_, JE_integer PX_, JE_integer PY_, JE_integer mouseX_, JE_integer mouseY_, JE_PItemsType pItems_ )
+void JE_SFCodes( JE_byte playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ )
 {
 	JE_byte temp, temp2, temp3, temp4, temp5;
 	
@@ -1962,13 +1962,13 @@ void JE_playCredits( void )
 	
 	JE_CreditStringType credstr;
 	JE_word x, max = 0, maxlen = 0;
-	JE_integer curpos, newpos;
+	int curpos, newpos;
 	JE_byte yloc;
 	FILE *f;
 	JE_byte currentpic = 1, fade = 0;
 	JE_shortint fadechg = 1;
 	JE_byte currentship = 0;
-	JE_integer shipx = 0, shipxwait = 0;
+	int shipx = 0, shipxwait = 0;
 	JE_shortint shipxc = 0, shipxca = 0;
 	
 	JE_newLoadShapes(EXTRA_SHAPES, "estsc.shp");
@@ -2385,7 +2385,7 @@ void JE_handleChat( void )
 JE_boolean JE_getNumber( char *s, JE_byte *x )
 {
 	JE_boolean getNumber = false;
-	JE_integer code;
+	int code;
 	char buf[256];
 
 	while (strlen(s) > 0)
@@ -2966,22 +2966,22 @@ void JE_playerMovement( JE_byte inputDevice_,
                         JE_byte playerNum_,
                         JE_word shipGr_,
                         JE_byte *shapes9ptr_,
-                        JE_integer *armorLevel_, JE_integer *baseArmor_,
+                        int *armorLevel_, int *baseArmor_,
                         JE_shortint *shield_, JE_shortint *shieldMax_,
                         JE_word *playerInvulnerable_,
-                        JE_integer *PX_, JE_integer *PY_,
-                        JE_integer *lastPX_, JE_integer *lastPY_,
-                        JE_integer *lastPX2_, JE_integer *lastPY2_,
-                        JE_integer *PXChange_, JE_integer *PYChange_,
-                        JE_integer *lastTurn_, JE_integer *lastTurn2_, JE_integer *tempLastTurn2_,
+                        int *PX_, int *PY_,
+                        int *lastPX_, int *lastPY_,
+                        int *lastPX2_, int *lastPY2_,
+                        int *PXChange_, int *PYChange_,
+                        int *lastTurn_, int *lastTurn2_, int *tempLastTurn2_,
                         JE_byte *stopWaitX_, JE_byte *stopWaitY_,
                         JE_word *mouseX_, JE_word *mouseY_,
                         JE_boolean *playerAlive_,
                         JE_byte *playerStillExploding_,
                         JE_PItemsType pItems_ )
 {
-	JE_integer mouseXC, mouseYC;
-	JE_integer accelXC, accelYC;
+	int mouseXC, mouseYC;
+	int accelXC, accelYC;
 	JE_byte leftOptionIsSpecial = 0;
 	JE_byte rightOptionIsSpecial = 0;
 
@@ -4286,8 +4286,8 @@ char *JE_getName( JE_byte pnum )
 	return NULL;
 }
 
-void JE_playerCollide( JE_integer *PX_, JE_integer *PY_, JE_integer *lastTurn_, JE_integer *lastTurn2_,
-                       JE_longint *score_, JE_integer *armorLevel_, JE_shortint *shield_, JE_boolean *playerAlive_,
+void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
+                       JE_longint *score_, int *armorLevel_, JE_shortint *shield_, JE_boolean *playerAlive_,
                        JE_byte *playerStillExploding_, JE_byte playerNum_, JE_byte playerInvulnerable_ )
 {
 	char tempStr[256];

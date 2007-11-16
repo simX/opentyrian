@@ -375,7 +375,7 @@ void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
 void JE_line( JE_word a, JE_byte b, JE_longint c, JE_byte d, JE_byte e )
 {
 	JE_real g, h, x, y;
-	JE_integer z, v;
+	int z, v;
 	Uint8 *vga;
 
 	v = round(sqrt(abs((a*a)-(c*c))+abs((b*b)-(d*d)) / 4));
@@ -499,7 +499,7 @@ void JE_absDrawGraphicOver( JE_ShapeTypeOne s )
 {
 	STUB();
 }
-void JE_readGraphic( JE_integer x, JE_integer y, JE_ShapeTypeOne s )
+void JE_readGraphic( int x, int y, JE_ShapeTypeOne s )
 {
 	STUB();
 }

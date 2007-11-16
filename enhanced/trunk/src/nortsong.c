@@ -322,7 +322,7 @@ void JE_timerInt( void )
 	STUB();
 }
 
-void JE_changeVolume( JE_word *temp, JE_integer change, JE_word *fxvol, JE_integer fxchange )
+void JE_changeVolume( JE_word *temp, int change, JE_word *fxvol, int fxchange )
 {
 	if (change != 0)
 	{

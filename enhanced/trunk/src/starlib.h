@@ -28,8 +28,8 @@
 
 struct JE_StarType
 {
-	JE_integer spX, spY, spZ;
-	JE_integer lastX, lastY;
+	int spX, spY, spZ;
+	int lastX, lastY;
 };
 
 #ifndef NO_EXTERNS

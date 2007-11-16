@@ -33,7 +33,7 @@
 
 
 JE_byte fromTime;
-JE_integer tempDat, tempDat2, tempDat3;
+int tempDat, tempDat2, tempDat3;
 JE_boolean tempb2;
 
 JE_word test1;
@@ -299,17 +299,17 @@ struct
 	Sint16  fixedMovement;
 } explosions[EXPLOSION_MAX]; /* [1..ExplosionMax] */
 JE_byte explodeAvail[EXPLOSION_MAX]; /* [1..ExplosionMax] */
-JE_integer explosionFollowAmount;
+int explosionFollowAmount;
 JE_boolean playerFollow, fixedExplosions;
-JE_integer explosionMoveUp;
+int explosionMoveUp;
 
 /*EnemyShotData*/
 JE_boolean fireButtonHeld;
 JE_byte /*boolean*/ enemyShotAvail[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax] */
 struct
 {
-	JE_integer sx, sy;
-	JE_integer sxm, sym;
+	int     sx, sy;
+	int     sxm, sym;
 	JE_shortint sxc, syc;
 	JE_byte tx, ty;
 	JE_word sgr;
@@ -334,34 +334,34 @@ JE_boolean  infiniteShot;
 
 JE_byte superBomb[2]; /* [1..2] */
 
-JE_integer tempShotX, tempShotY;
+int tempShotX, tempShotY;
 struct
 {
-	JE_integer  shotX;
-	JE_integer  shotY;
-	JE_integer  shotXM;
-	JE_integer  shotYM;
-	JE_integer  shotXC;           /*10*/
-	JE_integer  shotYC;
-	JE_boolean  shotComplicated;
-	JE_integer  shotDevX;
-	JE_integer  shotDirX;
-	JE_integer  shotDevY;         /*19*/
-	JE_integer  shotDirY;
-	JE_integer  shotCirSizeX;
-	JE_integer  shotCirSizeY;
-	JE_byte     shotTrail;
-	JE_word     shotGr;
-	JE_word     shotAni;          /*30*/
-	JE_word     shotAniMax;
-	Uint8       shotDmg;
-	JE_byte     shotBlastFilter;
-	JE_byte     chainReaction;    /*35*/
-	JE_byte     playerNumber;
-	JE_byte     aimAtEnemy;
-	JE_byte     aimDelay;
-	JE_byte     aimDelayMax;      /*39*/
-	JE_byte     fill[1];          /* [1..1] */
+	int     shotX;
+	int     shotY;
+	int     shotXM;
+	int     shotYM;
+	int     shotXC;           /*10*/
+	int     shotYC;
+	JE_boolean shotComplicated;
+	int     shotDevX;
+	int     shotDirX;
+	int     shotDevY;         /*19*/
+	int     shotDirY;
+	int     shotCirSizeX;
+	int     shotCirSizeY;
+	JE_byte shotTrail;
+	JE_word shotGr;
+	JE_word shotAni;          /*30*/
+	JE_word shotAniMax;
+	Uint8   shotDmg;
+	JE_byte shotBlastFilter;
+	JE_byte chainReaction;    /*35*/
+	JE_byte playerNumber;
+	JE_byte aimAtEnemy;
+	JE_byte aimDelay;
+	JE_byte aimDelayMax;      /*39*/
+	JE_byte fill[1];          /* [1..1] */
 } playerShotData[MAX_PWEAPON + 1]; /* [1..MaxPWeapon+1] */
 
 JE_byte chain;
@@ -399,43 +399,43 @@ JE_word eShapes1Size,
         shapesW2Size;
 
 JE_byte sAni;
-JE_integer sAniX, sAniY, sAniXNeg, sAniYNeg;  /* X,Y ranges of field of hit */
-JE_integer baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B,
-           baseSpeedKeyH, baseSpeedKeyV;
+int sAniX, sAniY, sAniXNeg, sAniYNeg;  /* X,Y ranges of field of hit */
+int baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B,
+    baseSpeedKeyH, baseSpeedKeyV;
 JE_boolean keyMoveWait;
 
 JE_boolean makeMouseDelay;
 
 JE_word playerInvulnerable1, playerInvulnerable2;
 
-JE_integer lastPXShotMove, lastPYShotMove;
+int lastPXShotMove, lastPYShotMove;
 
-JE_integer PXB, PYB, lastPXB, lastPYB, lastPX2B, lastPY2B, PXChangeB, PYChangeB,
-           lastTurnB, lastTurn2B, tempLastTurn2B;
+int PXB, PYB, lastPXB, lastPYB, lastPX2B, lastPY2B, PXChangeB, PYChangeB,
+    lastTurnB, lastTurn2B, tempLastTurn2B;
 JE_byte stopWaitXB, stopWaitYB;
 JE_word mouseXB, mouseYB;
 
-JE_integer PX, PY, lastPX, lastPY, lastPX2, lastPY2, PXChange, PYChange,
-           lastTurn, lastTurn2, tempLastTurn2;
+int PX, PY, lastPX, lastPY, lastPX2, lastPY2, PXChange, PYChange,
+    lastTurn, lastTurn2, tempLastTurn2;
 JE_byte stopWaitX, stopWaitY;
 
-JE_integer PYHist[3], PYHistB[3]; /* [1..3] */
+int PYHist[3], PYHistB[3]; /* [1..3] */
 
 /*JE_shortint optionMoveX[10], optionMoveY[10]; \* [1..10] *\ */
 JE_word option1Draw, option2Draw, option1Item, option2Item;
 JE_byte option1AmmoMax, option2AmmoMax;
 JE_word option1AmmoRechargeWait, option2AmmoRechargeWait,
         option1AmmoRechargeWaitMax, option2AmmoRechargeWaitMax;
-JE_integer option1Ammo, option2Ammo;
-JE_integer optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, optionCharge2Wait,
-           option1X, option1LastX, option1Y, option1LastY,
-           option2X, option2LastX, option2Y, option2LastY,
-           option1MaxX, option1MinX, option2MaxX, option2MinX,
-           option1MaxY, option1MinY, option2MaxY, option2MinY;
+int option1Ammo, option2Ammo;
+int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, optionCharge2Wait,
+    option1X, option1LastX, option1Y, option1LastY,
+    option2X, option2LastX, option2Y, option2LastY,
+    option1MaxX, option1MinX, option2MaxX, option2MinX,
+    option1MaxY, option1MinY, option2MaxY, option2MinY;
 JE_boolean optionAni1Go, optionAni2Go, option1Stop, option2Stop;
 JE_real optionSatelliteRotate;
 
-JE_integer optionAttachmentMove;
+int optionAttachmentMove;
 JE_boolean optionAttachmentLinked, optionAttachmentReturn;
 
 
@@ -473,10 +473,10 @@ JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 /*Temporary Numbers*/
 JE_word avail;
 JE_word tempCount;
-JE_integer tempI, tempI2, tempI3, tempI4, tempI5;
+int tempI, tempI2, tempI3, tempI4, tempI5;
 JE_longint tempL;
 JE_real tempR, tempR2;
-/*JE_integer tempX, tempY;*/
+/*int tempX, tempY;*/
 
 JE_boolean tempB;
 JE_byte temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
@@ -489,7 +489,7 @@ JE_boolean doNotSaveBackup;
 JE_boolean tempSpecial;
 
 JE_word x, y;
-JE_integer a, b, c, d, z, zz;
+int a, b, c, d, z, zz;
 JE_byte playerNum;
 
 JE_byte **BKwrap1to, **BKwrap2to, **BKwrap3to,
@@ -501,7 +501,7 @@ JE_shortint specialWeaponFilter, specialWeaponFreq;
 JE_word     specialWeaponWpn;
 JE_boolean  linkToPlayer;
 
-JE_integer baseArmor, baseArmor2;
+int baseArmor, baseArmor2;
 JE_word shipGr, shipGr2;
 JE_byte *shipGrPtr, *shipGr2ptr;
 
@@ -1048,7 +1048,7 @@ void JE_initPlayerShot( JE_word portNum, JE_byte temp, JE_word PX, JE_word PY, J
 	}
 }
 
-void JE_specialComplete( JE_byte playerNum, JE_integer *armor, JE_shortint *shield, JE_byte specialType )
+void JE_specialComplete( JE_byte playerNum, int *armor, JE_shortint *shield, JE_byte specialType )
 {
 	nextSpecialWait = 0;
 	switch (special[specialType].stype)
@@ -1238,7 +1238,7 @@ void JE_specialComplete( JE_byte playerNum, JE_integer *armor, JE_shortint *shie
 	}
 }
 
-void JE_doSpecialShot( JE_byte playerNum, JE_integer *armor, JE_shortint *shield )
+void JE_doSpecialShot( JE_byte playerNum, int *armor, JE_shortint *shield )
 {
 	if (pItems[11-1] > 0)
 	{
@@ -1433,7 +1433,7 @@ void JE_doSpecialShot( JE_byte playerNum, JE_integer *armor, JE_shortint *shield
 	}
 }
 
-void JE_setupExplosion( JE_integer x, JE_integer y, JE_integer explodeType )
+void JE_setupExplosion( int x, int y, int explodeType )
 {
 	const struct {
 		JE_word egr;
@@ -1520,7 +1520,7 @@ void JE_setupExplosion( JE_integer x, JE_integer y, JE_integer explodeType )
 	}
 }
 
-void JE_setupExplosionLarge( JE_boolean enemyGround, JE_byte exploNum, JE_integer x, JE_integer y )
+void JE_setupExplosionLarge( JE_boolean enemyGround, JE_byte exploNum, int x, int y )
 {
 	JE_byte z;
 
@@ -1587,10 +1587,10 @@ void JE_wipeShieldArmorBars( void )
 
 JE_byte JE_playerDamage( JE_word tempX, JE_word tempY,
                          JE_byte temp,
-                         JE_integer *PX, JE_integer *PY,
+                         int *PX, int *PY,
                          JE_boolean *playerAlive,
                          JE_byte *playerStillExploding,
-                         JE_integer *armorLevel,
+                         int *armorLevel,
                          JE_shortint *shield )
 {
 	int playerDamage = 0;
@@ -1731,7 +1731,7 @@ void JE_resetPlayerH( void )
 void JE_doSP( JE_word x, JE_word y, JE_word num, JE_byte explowidth, JE_byte color ) /* superpixels */
 {
 	JE_real tempr;
-	JE_integer tempx, tempy;
+	int tempx, tempy;
 	
 	for (temp = 0; temp < num; temp++)
 	{

@@ -48,7 +48,7 @@ void JE_destructMain( void );
 
 JE_byte JE_placementPosition( JE_word x, JE_byte width );
 
-JE_boolean JE_stabilityCheck( JE_integer x, JE_integer y );
+JE_boolean JE_stabilityCheck( int x, int y );
 
 void JE_helpScreen( void );
 

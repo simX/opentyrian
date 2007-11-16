@@ -38,7 +38,7 @@
 struct JE_SingleEnemyType
 {
 	JE_byte     fillbyte;
-	JE_integer  ex, ey;     /* POSITION */
+	int         ex, ey;     /* POSITION */
 	JE_shortint exc, eyc;   /* CURRENT SPEED */
 	JE_shortint exca, eyca; /* RANDOM ACCELERATION */
 	JE_shortint excc, eycc; /* FIXED ACCELERATION WAITTIME */
@@ -55,7 +55,7 @@ struct JE_SingleEnemyType
 	JE_byte     aniwhenfire;
 	void       *shapeseg;
 	JE_shortint exrev, eyrev;
-	JE_integer  exccadd, eyccadd;
+	int         exccadd, eyccadd;
 	JE_byte     exccwmax, eyccwmax;
 	void       *enemydatofs;
 	JE_boolean  edamaged;
@@ -66,8 +66,8 @@ struct JE_SingleEnemyType
 	JE_shortint edani;
 	JE_byte     fill1;
 	JE_byte     filter;
-	JE_integer  evalue;
-	JE_integer  fixedmovey;
+	int         evalue;
+	int         fixedmovey;
 	JE_byte     freq[3]; /* [1..3] */
 	JE_byte     launchwait;
 	JE_word     launchtype;
@@ -89,10 +89,10 @@ struct JE_SingleEnemyType
 
 	JE_byte     launchspecial;
 
-	JE_integer  xminbounce;
-	JE_integer  xmaxbounce;
-	JE_integer  yminbounce;
-	JE_integer  ymaxbounce;
+	int         xminbounce;
+	int         xmaxbounce;
+	int         yminbounce;
+	int         ymaxbounce;
 	JE_byte     fill[3]; /* [1..3] */
 };
 
@@ -112,7 +112,7 @@ struct JE_EventRecType
 {
 	JE_word     eventtime;
 	JE_byte     eventtype;
-	JE_integer  eventdat, eventdat2;
+	int         eventdat, eventdat2;
 	JE_shortint eventdat3, eventdat5, eventdat6;
 	JE_byte     eventdat4;
 };
@@ -159,7 +159,7 @@ typedef JE_byte JE_REXtype[20]; /* [1..20] */
 
 #ifndef NO_EXTERNS
 extern JE_byte fromTime;
-extern JE_integer tempDat, tempDat2, tempDat3;
+extern int tempDat, tempDat2, tempDat3;
 extern JE_boolean tempb2;
 extern JE_word test1;
 extern const JE_byte SANextShip[SA + 2];
@@ -261,14 +261,14 @@ extern struct {
 	Sint16 fixedMovement;
 } explosions[EXPLOSION_MAX];
 extern JE_byte explodeAvail[EXPLOSION_MAX];
-extern JE_integer explosionFollowAmount;
+extern int explosionFollowAmount;
 extern JE_boolean playerFollow, fixedExplosions;
-extern JE_integer explosionMoveUp;
+extern int explosionMoveUp;
 extern JE_boolean fireButtonHeld;
 extern JE_byte /*boolean*/ enemyShotAvail[ENEMY_SHOT_MAX];
 extern struct {
-	JE_integer sx, sy;
-	JE_integer sxm, sym;
+	int sx, sy;
+	int sxm, sym;
 	JE_shortint sxc, syc;
 	JE_byte tx, ty;
 	JE_word sgr;
@@ -289,11 +289,11 @@ extern JE_boolean spraySpecial;
 extern JE_byte doIced;
 extern JE_boolean infiniteShot;
 extern JE_byte superBomb[2];
-extern JE_integer tempShotX, tempShotY;
+extern int tempShotX, tempShotY;
 extern struct {
-	JE_integer shotX, shotY, shotXM, shotYM, shotXC, shotYC;
+	int shotX, shotY, shotXM, shotYM, shotXC, shotYC;
 	JE_boolean shotComplicated;
-	JE_integer shotDevX, shotDirX, shotDevY, shotDirY, shotCirSizeX, shotCirSizeY;
+	int shotDevX, shotDirX, shotDevY, shotDirY, shotCirSizeX, shotCirSizeY;
 	JE_byte shotTrail;
 	JE_word shotGr, shotAni, shotAniMax;
 	Uint8 shotDmg;
@@ -310,26 +310,26 @@ extern JE_byte *eShapes1, *eShapes2, *eShapes3, *eShapes4, *eShapes5, *eShapes6;
 extern JE_byte *shapesC1, *shapes6, *shapes9, *shapesW2;
 extern JE_word eShapes1Size, eShapes2Size, eShapes3Size, eShapes4Size, eShapes5Size, eShapes6Size, shapesC1Size, shapes6Size, shapes9Size, shapesW2Size;
 extern JE_byte sAni;
-extern JE_integer sAniX, sAniY, sAniXNeg, sAniYNeg;
-extern JE_integer baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B, baseSpeedKeyH, baseSpeedKeyV;
+extern int sAniX, sAniY, sAniXNeg, sAniYNeg;
+extern int baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B, baseSpeedKeyH, baseSpeedKeyV;
 extern JE_boolean keyMoveWait;
 extern JE_boolean makeMouseDelay;
 extern JE_word playerInvulnerable1, playerInvulnerable2;
-extern JE_integer lastPXShotMove, lastPYShotMove;
-extern JE_integer PXB, PYB, lastPXB, lastPYB, lastPX2B, lastPY2B, PXChangeB, PYChangeB, lastTurnB, lastTurn2B, tempLastTurn2B;
+extern int lastPXShotMove, lastPYShotMove;
+extern int PXB, PYB, lastPXB, lastPYB, lastPX2B, lastPY2B, PXChangeB, PYChangeB, lastTurnB, lastTurn2B, tempLastTurn2B;
 extern JE_byte stopWaitXB, stopWaitYB;
 extern JE_word mouseXB, mouseYB;
-extern JE_integer PX, PY, lastPX, lastPY, lastPX2, lastPY2, PXChange, PYChange, lastTurn, lastTurn2, tempLastTurn2;
+extern int PX, PY, lastPX, lastPY, lastPX2, lastPY2, PXChange, PYChange, lastTurn, lastTurn2, tempLastTurn2;
 extern JE_byte stopWaitX, stopWaitY;
-extern JE_integer PYHist[3], PYHistB[3];
+extern int PYHist[3], PYHistB[3];
 extern JE_word option1Draw, option2Draw, option1Item, option2Item;
 extern JE_byte option1AmmoMax, option2AmmoMax;
 extern JE_word option1AmmoRechargeWait, option2AmmoRechargeWait, option1AmmoRechargeWaitMax, option2AmmoRechargeWaitMax;
-extern JE_integer option1Ammo, option2Ammo;
-extern JE_integer optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, optionCharge2Wait, option1X, option1LastX, option1Y, option1LastY, option2X, option2LastX, option2Y, option2LastY, option1MaxX, option1MinX, option2MaxX, option2MinX, option1MaxY, option1MinY, option2MaxY, option2MinY;
+extern int option1Ammo, option2Ammo;
+extern int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, optionCharge2Wait, option1X, option1LastX, option1Y, option1LastY, option2X, option2LastX, option2Y, option2LastY, option1MaxX, option1MinX, option2MaxX, option2MinX, option1MaxY, option1MinY, option2MaxY, option2MinY;
 extern JE_boolean optionAni1Go, optionAni2Go, option1Stop, option2Stop;
 extern JE_real optionSatelliteRotate;
-extern JE_integer optionAttachmentMove;
+extern int optionAttachmentMove;
 extern JE_boolean optionAttachmentLinked, optionAttachmentReturn;
 extern JE_byte chargeWait, chargeLevel, chargeMax, chargeGr, chargeGrWait;
 extern JE_boolean playerHNotReady;
@@ -351,7 +351,7 @@ extern JE_word lastSP;
 extern JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 extern JE_word avail;
 extern JE_word tempCount;
-extern JE_integer tempI, tempI2, tempI3, tempI4, tempI5;
+extern int tempI, tempI2, tempI3, tempI4, tempI5;
 extern JE_longint tempL;
 extern JE_real tempR, tempR2;
 extern JE_boolean tempB;
@@ -361,14 +361,14 @@ extern JE_word tempW, tempW2, tempW3, tempW4, tempW5, tempOfs;
 extern JE_boolean doNotSaveBackup;
 extern JE_boolean tempSpecial;
 extern JE_word x, y;
-extern JE_integer a, b, c, d, z, zz;
+extern int a, b, c, d, z, zz;
 extern JE_byte playerNum;
 extern JE_byte **BKwrap1to, **BKwrap2to, **BKwrap3to, **BKwrap1, **BKwrap2, **BKwrap3;
 extern JE_byte min, max;
 extern JE_shortint specialWeaponFilter, specialWeaponFreq;
 extern JE_word specialWeaponWpn;
 extern JE_boolean linkToPlayer;
-extern JE_integer baseArmor, baseArmor2;
+extern int baseArmor, baseArmor2;
 extern JE_word shipGr, shipGr2;
 extern JE_byte *shipGrPtr, *shipGr2ptr;
 #endif
@@ -383,20 +383,20 @@ void JE_tyrianHalt( JE_byte code ); /* This ends the game */
 void JE_initPlayerShot( JE_word portnum, JE_byte temp, JE_word px, JE_word py,
                         JE_word mousex, JE_word mousey,
                         JE_word wpnum, JE_byte playernum );
-void JE_specialComplete( JE_byte playernum, JE_integer *armor, JE_shortint *shield, JE_byte specialType );
-void JE_doSpecialShot( JE_byte playernum, JE_integer *armor, JE_shortint *shield );
+void JE_specialComplete( JE_byte playernum, int *armor, JE_shortint *shield, JE_byte specialType );
+void JE_doSpecialShot( JE_byte playernum, int *armor, JE_shortint *shield );
 
 void JE_powerUp( JE_byte port );
 void JE_wipeShieldArmorBars( void );
 JE_byte JE_playerDamage( JE_word tempX, JE_word tempY, JE_byte temp,
-                         JE_integer *PX, JE_integer *PY,
+                         int *PX, int *PY,
                          JE_boolean *playerAlive,
                          JE_byte *playerStillExploding,
-                         JE_integer *armorLevel,
+                         int *armorLevel,
                          JE_shortint *shield );
 
-void JE_setupExplosion( JE_integer x, JE_integer y, JE_integer explodetype );
-void JE_setupExplosionLarge( JE_boolean enemyground, JE_byte explonum, JE_integer x, JE_integer y );
+void JE_setupExplosion( int x, int y, int explodetype );
+void JE_setupExplosionLarge( JE_boolean enemyground, JE_byte explonum, int x, int y );
 
 void JE_drawShield( void );
 void JE_drawArmor( void );

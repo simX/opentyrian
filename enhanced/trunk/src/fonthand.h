@@ -32,7 +32,7 @@
 #ifndef NO_EXTERNS
 
 extern const JE_byte fontMap[136];
-extern JE_integer defaultBrightness;
+extern int defaultBrightness;
 extern JE_byte textGlowFont, textGlowBrightness;
 extern JE_boolean levelWarningDisplay;
 extern JE_byte levelWarningLines;

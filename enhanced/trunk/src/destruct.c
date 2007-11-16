@@ -64,7 +64,7 @@ void JE_helpScreen( void )
 	STUB();
 }
 
-JE_boolean JE_stabilityCheck( JE_integer x, JE_integer y )
+JE_boolean JE_stabilityCheck( int x, int y )
 {
 	STUB();
 	return false;

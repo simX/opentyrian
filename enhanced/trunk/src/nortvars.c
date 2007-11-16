@@ -334,7 +334,7 @@ void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 	}
 }
 
-void JE_dBar3( JE_integer x,  JE_integer y,  JE_integer num,  JE_integer col )
+void JE_dBar3( int x, int y, int num, int col )
 {
 	JE_byte z;
 	JE_byte zWait = 2;

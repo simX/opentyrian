@@ -43,14 +43,16 @@
 #define M_PI_2 1.57079632679489661923
 #endif
 
+#ifdef PASCAL_TYPES
 typedef Sint32 JE_longint;
-typedef Sint16 JE_integer;
+//typedef Sint16 JE_integer; - Done
 typedef Sint8  JE_shortint;
 typedef Uint16 JE_word;
 typedef Uint8  JE_byte;
 typedef bool   JE_boolean;
 typedef char   JE_char;
 typedef double JE_real;
+#endif
 
 #ifndef NO_EXTERNS
 extern const char *opentyrian_str;
@@ -66,6 +68,11 @@ size_t efwrite( void *buffer, size_t size, size_t num, FILE *stream );
 #define efwrite fwrite
 #endif
 
+#define vfread(var, source, file) { \
+	source tmptmp_src_var; \
+	efread(&tmptmp_src_var, sizeof(source), 1, file); \
+	var = tmptmp_src_var; \
+}
 
 void opentyrian_menu( void );
 

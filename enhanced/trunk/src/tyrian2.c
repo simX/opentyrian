@@ -57,9 +57,9 @@ JE_word statDmg[2]; /* [1..2] */
 JE_byte planetAni, planetAniWait;
 JE_byte currentDotNum, currentDotWait;
 JE_real navX, navY, newNavX, newNavY;
-JE_integer tempNavX, tempNavY;
+int tempNavX, tempNavY;
 JE_byte planetDots[5]; /* [1..5] */
-JE_integer planetDotX[5][10], planetDotY[5][10]; /* [1..5, 1..10] */
+int planetDotX[5][10], planetDotY[5][10]; /* [1..5, 1..10] */
 
 /* Level Event Data */
 JE_boolean quit, first, loadLevelOk, refade;
@@ -3183,7 +3183,7 @@ void JE_loadMap( void )
 /*	FILE *f2;*/
 	JE_char k2, k3;
 	JE_word x, y;
-	JE_integer yy, z, a, b;
+	int yy, z, a, b;
 	JE_word mapSh[3][128]; /* [1..3, 0..127] */
 	JE_byte *ref[3][128]; /* [1..3, 0..127] */
 	char s[256];
@@ -3890,8 +3890,8 @@ new_game:
 		{
 			efread(&eventRec[x].eventtime, sizeof(JE_word), 1, lvlFile);
 			efread(&eventRec[x].eventtype, sizeof(JE_byte), 1, lvlFile);
-			efread(&eventRec[x].eventdat,  sizeof(JE_integer), 1, lvlFile);
-			efread(&eventRec[x].eventdat2, sizeof(JE_integer), 1, lvlFile);
+			vfread( eventRec[x].eventdat,         Sint16, lvlFile);
+			vfread( eventRec[x].eventdat2,        Sint16, lvlFile);
 			efread(&eventRec[x].eventdat3, sizeof(JE_shortint), 1, lvlFile);
 			efread(&eventRec[x].eventdat5, sizeof(JE_shortint), 1, lvlFile);
 			efread(&eventRec[x].eventdat6, sizeof(JE_shortint), 1, lvlFile);
@@ -5932,7 +5932,7 @@ JE_boolean quikSave;
 JE_byte oldMenu;
 JE_boolean backFromHelp;
 JE_byte lastSelect;
-JE_integer lastDirection;
+int lastDirection;
 JE_byte skipMove;
 JE_byte tempPowerLevel[7];
 JE_boolean firstMenu9, paletteChanged;
@@ -5940,12 +5940,12 @@ JE_MenuChoiceType menuChoices;
 JE_longint shipValue;
 JE_word curX, curY, curWindow, selectX, selectY, tempX, tempY, tempAvail, x, y, textYPos;
 JE_byte flashDelay;
-JE_integer col, colC;
+int col, colC;
 JE_byte curAvail, curSelectDat;
 JE_byte lastCurSel;
 JE_word mouseSetY;
 JE_boolean firstRun;
-JE_integer curMenu;
+int curMenu;
 JE_byte curSel[MAX_MENU];
 JE_byte curItemType, curItem, cursor;
 JE_boolean buyActive, sellActive, sellViewActive, buyViewActive, /*flash,*/ purchase, cannotAfford, slotFull;
@@ -7920,8 +7920,8 @@ void JE_updateNavScreen( void )
 void JE_drawLines( JE_boolean dark )
 {
 	JE_byte x, y;
-	JE_integer tempX, tempY;
-	JE_integer tempX2, tempY2;
+	int tempX, tempY;
+	int tempX2, tempY2;
 	JE_word tempW, tempW2;
 
 	tempX2 = -10;
@@ -7980,8 +7980,8 @@ void JE_drawLines( JE_boolean dark )
 void JE_drawNavLines( JE_boolean dark )
 {
 	JE_byte x, y;
-	JE_integer tempX, tempY;
-	JE_integer tempX2, tempY2;
+	int tempX, tempY;
+	int tempX2, tempY2;
 	JE_word tempW, tempW2;
 
 	tempX2 = tempNavX >> 1;
@@ -8037,7 +8037,7 @@ void JE_drawNavLines( JE_boolean dark )
 void JE_drawDots( void )
 {
 	JE_byte x, y;
-	JE_integer tempX, tempY;
+	int tempX, tempY;
 
 	for (x = 0; x < mapPNum; x++)
 	{
@@ -8060,7 +8060,7 @@ void JE_drawDots( void )
 
 void JE_drawPlanet( JE_byte planetNum )
 {
-	JE_integer tempX, tempY, tempZ;
+	int tempX, tempY, tempZ;
 
 	tempZ = PGR[planetNum]-1;
 	tempX = planetX[planetNum] + 66 - tempNavX - shapeX[PLANET_SHAPES][tempZ] / 2;
@@ -8112,7 +8112,7 @@ void JE_initWeaponView( void )
 
 void JE_computeDots( void )
 {
-	JE_integer tempX, tempY;
+	int tempX, tempY;
 	JE_longint distX, distY;
 	JE_byte x, y;
 
@@ -8145,7 +8145,7 @@ void JE_computeDots( void )
 	}
 }
 
-JE_integer JE_partWay( JE_integer start, JE_integer finish, JE_byte dots, JE_byte dist )
+int JE_partWay( int start, int finish, JE_byte dots, JE_byte dist )
 {
 	return (finish - start) / (dots + 2) * (dist + 1) + start;
 }
@@ -8226,7 +8226,7 @@ JE_boolean JE_quitRequest( JE_boolean useMouse )
 	JE_boolean retval;
 	JE_byte sel;
 	JE_boolean quit, select;
-	JE_integer col, colC;
+	int col, colC;
 
 	if (useMouse)
 	{

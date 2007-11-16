@@ -70,7 +70,7 @@ void JE_drawMainMenuHelpText( void );
 
 void JE_doFunkyScreen( void );
 
-JE_integer JE_partWay( JE_integer start, JE_integer finish, JE_byte dots, JE_byte dist );
+int JE_partWay( int start, int finish, JE_byte dots, JE_byte dist );
 
 void JE_computeDots( void );
 

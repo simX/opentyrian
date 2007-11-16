@@ -30,14 +30,14 @@ typedef struct
 	JE_byte     buttons;
 	JE_shortint xchg, ychg;
 	JE_word     randomenemytype;    /* 0=no enemy */
-	JE_integer  ex, ey;
+	int         ex, ey;
 	JE_longint  sync;
 } JE_PacketData;
 
 #ifndef NO_EXTERNS
 extern JE_longint startTime;
 extern JE_longint frames;
-extern JE_integer netPlayers, thisPlayerNum, otherPlayerNum;
+extern int netPlayers, thisPlayerNum, otherPlayerNum;
 extern JE_boolean haltGame;
 extern JE_boolean netQuit;
 extern JE_boolean done;

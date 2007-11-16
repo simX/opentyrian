@@ -192,8 +192,8 @@ void JE_loadItemDat( void )
 		efread(&enemyDat[i].yaccel,        sizeof(JE_shortint), 1, lvlFile);
 		efread(&enemyDat[i].xcaccel,       sizeof(JE_shortint), 1, lvlFile);
 		efread(&enemyDat[i].ycaccel,       sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].startx,        sizeof(JE_integer), 1, lvlFile);
-		efread(&enemyDat[i].starty,        sizeof(JE_integer), 1, lvlFile);
+		vfread( enemyDat[i].startx,               Sint16, lvlFile);
+		vfread( enemyDat[i].starty,               Sint16, lvlFile);
 		efread(&enemyDat[i].startxc,       sizeof(JE_shortint), 1, lvlFile);
 		efread(&enemyDat[i].startyc,       sizeof(JE_shortint), 1, lvlFile);
 		efread(&enemyDat[i].armor,         sizeof(JE_byte), 1, lvlFile);
@@ -209,7 +209,7 @@ void JE_loadItemDat( void )
 		efread(&enemyDat[i].dani,          sizeof(JE_shortint), 1, lvlFile);
 		efread(&enemyDat[i].elaunchfreq,   sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].elaunchtype,   sizeof(JE_word), 1, lvlFile);
-		efread(&enemyDat[i].value,         sizeof(JE_integer), 1, lvlFile);
+		vfread( enemyDat[i].value,                Sint16, lvlFile);
 		efread(&enemyDat[i].eenemydie,     sizeof(JE_word), 1, lvlFile);
 	}
 
