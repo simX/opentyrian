@@ -41,8 +41,8 @@
 
 JE_word tempscreenseg;
 JE_byte enddelay;
-JE_boolean died;
-JE_boolean firsttime;
+bool died;
+bool firsttime;
 
 void JE_superPixel( JE_word loc )
 {
@@ -64,7 +64,7 @@ void JE_helpScreen( void )
 	STUB();
 }
 
-JE_boolean JE_stabilityCheck( int x, int y )
+bool JE_stabilityCheck( int x, int y )
 {
 	STUB();
 	return false;

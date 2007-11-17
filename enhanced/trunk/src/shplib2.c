@@ -34,7 +34,7 @@ JE_word shapex [MAXIMUM_SHAPE];
 unsigned long memory;
 JE_word shapey [MAXIMUM_SHAPE];
 JE_word maxshape;
-JE_boolean shapexist [MAXIMUM_SHAPE];
+bool shapexist [MAXIMUM_SHAPE];
 void * shapearray [MAXIMUM_SHAPE];
 char* f;
 

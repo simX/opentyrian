@@ -24,11 +24,11 @@
 
 
 #ifndef NO_EXTERNS
-extern JE_boolean notyetloadedpcx;
+extern bool notyetloadedpcx;
 #endif
 
 /*void JE_unpackPCX( void );*/
 
-void JE_loadPic( JE_byte PCXnumber, JE_boolean storepal );
+void JE_loadPic( JE_byte PCXnumber, bool storepal );
 
 #endif /* PICLOAD_H */

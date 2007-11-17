@@ -88,7 +88,7 @@ JE_byte temp, temp2;
 void JE_helpBox( JE_word x, JE_word y, char *message, JE_byte boxwidth )
 {
 	JE_byte startpos, endpos, pos;
-	JE_boolean endstring;
+	bool endstring;
 
 	char substring[256];
 

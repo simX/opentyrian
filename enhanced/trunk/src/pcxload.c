@@ -31,7 +31,7 @@
 JE_ColorType colors2;
 JE_word width, depth;
 JE_word bytes;
-JE_boolean overrideBlack = false;
+bool overrideBlack = false;
 
 void JE_updatePCXColorsSlow( JE_ColorType *colorBuffer )
 {
@@ -44,7 +44,7 @@ void JE_updatePCXColorsSlow( JE_ColorType *colorBuffer )
 	}
 }
 
-void JE_loadPCX( const char *name, JE_boolean storePalette)
+void JE_loadPCX( const char *name, bool storePalette)
 {
 	struct JE_PCXHeader_rec header;
 	/* char textbuf[1024]; [1..1024] Unused */

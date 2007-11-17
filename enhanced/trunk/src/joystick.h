@@ -23,32 +23,32 @@
 #include "opentyr.h"
 
 #ifndef TARGET_GP2X
-typedef JE_boolean JE_ButtonType[4]; /* [1..4] */
+typedef bool JE_ButtonType[4]; /* [1..4] */
 typedef JE_byte JE_ButtonAssign[4]; /* [1..4] */
 #else
-typedef JE_boolean JE_ButtonType[19];
+typedef bool JE_ButtonType[19];
 typedef JE_byte JE_ButtonAssign[19];
 #endif
 
 #ifndef NO_EXTERNS
 extern const JE_ButtonAssign defaultJoyButtonAssign;
 extern JE_ButtonType tempButton, button;
-extern JE_boolean buttonHeld;
+extern bool buttonHeld;
 extern JE_ButtonAssign joyButtonAssign;
-extern JE_boolean useButtonAssign;
+extern bool useButtonAssign;
 extern Sint16 jMinX, jMaxX, jMinY, jMaxY, jCenterX, jCenterY, joyX, joyY;
 extern JE_byte joystickError;
-extern JE_boolean joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
-extern JE_boolean joystick_installed;
+extern bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
+extern bool joystick_installed;
 extern JE_word joystickWait, joystickWaitMax;
 #endif
 
 void JE_joystick1( void ); /*procedure to get JoyX, JoyY, Button1, Button2 of Joystick 1*/
 void JE_joystick2( void );
-JE_boolean JE_nextJoystickCheck( void );
-JE_boolean JE_joystickTranslate( void );
+bool JE_nextJoystickCheck( void );
+bool JE_joystickTranslate( void );
 void JE_joystickInit( void );
-JE_boolean JE_joystickNotHeld( void );
+bool JE_joystickNotHeld( void );
 void JE_updateButtons( void ); /*Uses ButtonAssign to find out*/
 
 void joystick_init( void );

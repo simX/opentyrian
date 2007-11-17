@@ -28,7 +28,7 @@
 #undef NO_EXTERNS
 
 
-JE_boolean extraAvail;
+bool extraAvail;
 JE_word extraShapeOfs;
 /* TODO JE_ShipsType ships;*/
 void *extraShapes;

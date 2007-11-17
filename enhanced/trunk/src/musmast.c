@@ -116,4 +116,4 @@ const char musicTitle[MUSIC_NUM][48] =
 	"BEER"
 };
 
-JE_boolean musicFade;
+bool musicFade;

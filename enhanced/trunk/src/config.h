@@ -60,7 +60,7 @@ typedef struct
 	JE_byte       secretHint;
 	JE_byte       input1;
 	JE_byte       input2;
-	JE_boolean    gameHasRepeated; /*See if you went from one episode to another*/
+	bool          gameHasRepeated; /*See if you went from one episode to another*/
 	JE_byte       initialDifficulty;
 
 	/* High Scores - Each episode has both sets of 1&2 player selections - with 3 in each */
@@ -81,7 +81,7 @@ extern const JE_KeySettingType defaultKeySettings;
 extern const char defaultHighScoreNames[34][23];
 extern const char defaultTeamNames[22][25];
 extern const JE_EditorItemAvailType initialItemAvail;
-extern JE_boolean smoothies[9];
+extern bool smoothies[9];
 extern JE_byte starShowVGASpecialCode;
 extern struct
 {
@@ -92,7 +92,7 @@ extern struct
 extern JE_word starY;
 extern JE_word lastCubeMax, cubeMax;
 extern JE_word cubeList[4];
-extern JE_boolean gameHasRepeated;
+extern bool gameHasRepeated;
 extern int difficultyLevel, oldDifficultyLevel, initialDifficulty;
 extern unsigned long score, score2;
 extern int power, lastPower, powerAdd;
@@ -103,18 +103,18 @@ extern int armorLevel, armorLevel2;
 extern JE_byte shieldWait, shieldT;
 extern JE_byte shotRepeat[11], shotMultiPos[11];
 extern JE_byte portConfig[10];
-extern JE_boolean portConfigDone;
+extern bool portConfigDone;
 extern JE_PortPowerType portPower, lastPortPower;
-extern JE_boolean resetVersion;
+extern bool resetVersion;
 extern char lastLevelName[11], levelName[11];
 extern JE_byte mainLevel, nextLevel, saveLevel;
 extern JE_KeySettingType keySettings;
 extern signed int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
-extern JE_boolean filtrationAvail, filterActive, filterFade, filterFadeStart;
-extern JE_boolean gameJustLoaded;
-extern JE_boolean galagaMode;
-extern JE_boolean extraGame;
-extern JE_boolean twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian, trentWin;
+extern bool filtrationAvail, filterActive, filterFade, filterFadeStart;
+extern bool gameJustLoaded;
+extern bool galagaMode;
+extern bool extraGame;
+extern bool twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian, trentWin;
 extern JE_byte superArcadeMode;
 extern JE_byte superArcadePowerUp;
 extern double linkGunDirec;
@@ -124,11 +124,11 @@ extern JE_byte secretHint;
 extern JE_byte background3over;
 extern JE_byte background2over;
 extern JE_byte gammaCorrection;
-extern JE_boolean superPause, explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll, wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
+extern bool superPause, explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll, wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 extern JE_byte versionNum;
 extern JE_byte fastPlay;
-extern JE_boolean pentiumMode;
-extern JE_boolean playerPasswordInput;
+extern bool pentiumMode;
+extern bool playerPasswordInput;
 extern JE_byte inputDevice;
 extern JE_byte gameSpeed;
 extern JE_byte processorType;

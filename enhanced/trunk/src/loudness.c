@@ -30,8 +30,8 @@
 
 /* SYN: These are externally accessible variables: */
 JE_MusicType musicData;
-JE_boolean repeated;
-JE_boolean playing;
+bool repeated;
+bool playing;
 
 float sample_volume = 0.35f;
 float music_volume = 0.4f;
@@ -52,7 +52,7 @@ bool music_playing = false;
 void audio_cb(void *userdata, unsigned char *feedme, int howmuch);
 
 /* SYN: The arguments to this function are probably meaningless now */
-void JE_initialize(JE_word soundblaster, JE_word midi, JE_boolean mixenable, JE_byte sberror, JE_byte midierror)
+void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, JE_byte sberror, JE_byte midierror)
 {
 	SDL_AudioSpec plz, got;
 	int i = 0;

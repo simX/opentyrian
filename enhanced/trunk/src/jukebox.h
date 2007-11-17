@@ -24,7 +24,7 @@
 
 
 #ifndef NO_EXTERNS
-extern JE_boolean continuousPlay;
+extern bool continuousPlay;
 extern JE_word currentJukeboxSong;
 #endif
 

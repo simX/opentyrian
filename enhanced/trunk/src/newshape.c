@@ -41,13 +41,13 @@ JE_ShapeArrayType *shapeArray;
 JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],        /* [1..maxtable,1..maximumshape] */
         shapeY[MAX_TABLE][MAXIMUM_SHAPE];        /* [1..maxtable,1..maximumshape] */
 JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];     /* [1..maxtable,1..maximumshape] */
-JE_boolean shapeExist[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable,1..maximumshape] */
+bool shapeExist[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable,1..maximumshape] */
 
 JE_byte maxShape[MAX_TABLE];                    /* [1..maxtable] */
 
 JE_byte mouseGrabShape[24*28];                 /* [1..24*28] */
 
-JE_boolean loadOverride = false;
+bool loadOverride = false;
 
 /*
   Colors:
@@ -291,7 +291,7 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, JE_byte *shape )
 	}
 }
 
-JE_boolean JE_waitAction( JE_byte time, JE_boolean checkJoystick )
+bool JE_waitAction( JE_byte time, bool checkJoystick )
 {
 	if (time > 0)
 	{

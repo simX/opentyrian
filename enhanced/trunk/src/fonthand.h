@@ -34,10 +34,10 @@
 extern const JE_byte fontMap[136];
 extern int defaultBrightness;
 extern JE_byte textGlowFont, textGlowBrightness;
-extern JE_boolean levelWarningDisplay;
+extern bool levelWarningDisplay;
 extern JE_byte levelWarningLines;
 extern char levelWarningText[10][61];
-extern JE_boolean warningRed;
+extern bool warningRed;
 extern JE_byte warningSoundDelay;
 extern JE_word armorShipDelay;
 extern JE_byte warningCol;
@@ -63,9 +63,9 @@ void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, int b
 void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness );
 void JE_outTextModify( JE_word x, JE_word y, const char *s, JE_byte filter, JE_byte brightness, JE_byte font );
 void JE_outTextShade( JE_word x, JE_word y, const char *s, JE_byte font );
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, JE_boolean shadow );
+void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, bool shadow );
 void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_byte brightness, JE_byte font );
-char JE_bright( JE_boolean makebright );
+char JE_bright( bool makebright );
 
 void JE_updateWarning( void );
 void JE_outTextGlow( JE_word x, JE_word y, const char *s );

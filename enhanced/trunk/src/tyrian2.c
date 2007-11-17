@@ -62,7 +62,7 @@ JE_byte planetDots[5]; /* [1..5] */
 int planetDotX[5][10], planetDotY[5][10]; /* [1..5, 1..10] */
 
 /* Level Event Data */
-JE_boolean quit, first, loadLevelOk, refade;
+bool quit, first, loadLevelOk, refade;
 /*JE_byte newPal, curPal, oldPal;*/
 int newPal, curPal, oldPal; /* SYN: Originally bytes, I hope this doesn't break anything */
 
@@ -3176,7 +3176,7 @@ void JE_loadMap( void )
 	char char_mapFile, char_shapeFile;
 
 	JE_DanCShape shape;
-	JE_boolean shapeBlank;
+	bool shapeBlank;
 
 
 	FILE *f;
@@ -4040,17 +4040,15 @@ new_game:
 
 }
 
-void JE_titleScreen( JE_boolean animate )
+void JE_titleScreen( bool animate )
 {
-	JE_boolean quit = 0;
+	bool quit = 0;
 
 	const int menunum = 7;
 	JE_byte nameGo[SA + 2] = {0}; /* [1..SA+2] */
 	JE_word waitForDemo;
 	JE_byte menu = 0;
-	JE_boolean redraw = true,
-	           fadeIn = false,
-	           first = true;
+	bool redraw = true, fadeIn = false, first = true;
 	char flash;
 	JE_word z;
 
@@ -5032,9 +5030,9 @@ void JE_eventJump( JE_word jump )
 	eventLoc = tempW - 1;
 }
 
-JE_boolean JE_searchFor/*enemy*/( JE_byte PLType )
+bool JE_searchFor/*enemy*/( JE_byte PLType )
 {
-	JE_boolean tempb = false;
+	bool tempb = false;
 	JE_byte temp;
 
 	for (temp = 0; temp < 100; temp++)
@@ -5054,7 +5052,7 @@ JE_boolean JE_searchFor/*enemy*/( JE_byte PLType )
 
 void JE_eventSystem( void )
 {
-	JE_boolean tempb;
+	bool tempb;
 	
 	switch (eventRec[eventLoc-1].eventtype)
 	{
@@ -5928,14 +5926,14 @@ void JE_eventSystem( void )
 }
 
 
-JE_boolean quikSave;
+bool quikSave;
 JE_byte oldMenu;
-JE_boolean backFromHelp;
+bool backFromHelp;
 JE_byte lastSelect;
 int lastDirection;
 JE_byte skipMove;
 JE_byte tempPowerLevel[7];
-JE_boolean firstMenu9, paletteChanged;
+bool firstMenu9, paletteChanged;
 JE_MenuChoiceType menuChoices;
 unsigned long shipValue;
 JE_word curX, curY, curWindow, selectX, selectY, tempX, tempY, tempAvail, x, y, textYPos;
@@ -5944,12 +5942,12 @@ int col, colC;
 JE_byte curAvail, curSelectDat;
 JE_byte lastCurSel;
 JE_word mouseSetY;
-JE_boolean firstRun;
+bool firstRun;
 int curMenu;
 JE_byte curSel[MAX_MENU];
 JE_byte curItemType, curItem, cursor;
-JE_boolean buyActive, sellActive, sellViewActive, buyViewActive, /*flash,*/ purchase, cannotAfford, slotFull;
-JE_boolean leftPower, rightPower, rightPowerAfford;
+bool buyActive, sellActive, sellViewActive, buyViewActive, /*flash,*/ purchase, cannotAfford, slotFull;
+bool leftPower, rightPower, rightPowerAfford;
 
 char cubeHdr[4][81];
 char cubeText[4][90][CUBE_WIDTH];
@@ -5957,7 +5955,7 @@ char cubeHdr2[4][13];
 JE_byte faceNum[4];
 JE_word cubeMaxY[4];
 JE_byte currentCube;
-JE_boolean keyboardUsed;
+bool keyboardUsed;
 JE_word faceX, faceY;
 
 JE_byte currentFaceNum;
@@ -7577,11 +7575,11 @@ void JE_loadCubes( void )
 	JE_byte cube;
 	JE_word x, y;
 	JE_byte startPos, endPos, pos;
-	JE_boolean nextLine;
-	JE_boolean endString;
+	bool nextLine;
+	bool endString;
 	FILE *f;
 	JE_byte lastWidth, curWidth;
-	JE_boolean pastStringLen, pastStringWidth;
+	bool pastStringLen, pastStringWidth;
 	JE_byte temp;
 
 	char buffer[256];
@@ -7917,7 +7915,7 @@ void JE_updateNavScreen( void )
 	}
 }
 
-void JE_drawLines( JE_boolean dark )
+void JE_drawLines( bool dark )
 {
 	JE_byte x, y;
 	int tempX, tempY;
@@ -7977,7 +7975,7 @@ void JE_drawLines( JE_boolean dark )
 /* SYN: This was originally PROC drawlines... yes, there were two different procs called
    drawlines in different scopes in the same file. Dammit, Jason, why do you do this to me? */
 
-void JE_drawNavLines( JE_boolean dark )
+void JE_drawNavLines( bool dark )
 {
 	JE_byte x, y;
 	int tempX, tempY;
@@ -8221,11 +8219,11 @@ void JE_whoa( void )
 	STUB();
 }
 
-JE_boolean JE_quitRequest( JE_boolean useMouse )
+bool JE_quitRequest( bool useMouse )
 {
-	JE_boolean retval;
+	bool retval;
 	JE_byte sel;
-	JE_boolean quit, select;
+	bool quit, select;
 	int col, colC;
 
 	if (useMouse)

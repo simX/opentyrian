@@ -29,24 +29,24 @@
 
 #ifndef NO_EXTERNS
 extern const char *keyNames[];
-extern JE_boolean ESCPressed;
-extern JE_boolean newkey, newmouse, keydown, mousedown;
+extern bool ESCPressed;
+extern bool newkey, newmouse, keydown, mousedown;
 extern SDLKey lastkey_sym;
 extern SDLMod lastkey_mod;
 extern unsigned char lastkey_char;
 extern Uint8 lastmouse_but;
 extern Uint16 lastmouse_x, lastmouse_y;
-extern JE_boolean mouse_pressed[3];
+extern bool mouse_pressed[3];
 extern Uint16 mouse_x, mouse_y, mouse_xrel, mouse_yrel;
 extern int numkeys;
 extern Uint8 *keysactive;
 #endif
 
 void flush_events_buffer( void );
-void wait_input( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick );
-void wait_noinput( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick );
+void wait_input( bool keyboard, bool mouse, bool joystick );
+void wait_noinput( bool keyboard, bool mouse, bool joystick );
 void init_keyboard( void );
-void service_SDL_events( JE_boolean clear_new );
+void service_SDL_events( bool clear_new );
 void sleep_game( void );
 
 void JE_clearKeyboard( void );

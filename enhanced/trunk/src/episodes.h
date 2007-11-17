@@ -88,19 +88,19 @@ typedef struct
 
 typedef struct
 {
-	char       name[31]; /* string [30] */
-	JE_byte    pwr;
-	JE_word    itemgraphic;
-	JE_word    cost;
-	JE_byte    tr, option;
-	int        opspd;
-	JE_byte    ani;
-	JE_word    gr[20]; /* [1..20] */
-	JE_byte    wport;
-	JE_word    wpnum;
-	JE_byte    ammo;
-	JE_boolean stop;
-	JE_byte    icongr;
+	char    name[31]; /* string [30] */
+	JE_byte pwr;
+	JE_word itemgraphic;
+	JE_word cost;
+	JE_byte tr, option;
+	int     opspd;
+	JE_byte ani;
+	JE_word gr[20]; /* [1..20] */
+	JE_byte wport;
+	JE_word wpnum;
+	JE_byte ammo;
+	bool    stop;
+	JE_byte icongr;
 } JE_OptionType[OPTION_NUM + 1]; /* [0..optionnum] */
 
 typedef struct
@@ -166,16 +166,16 @@ extern JE_ShieldType shields;
 extern JE_SpecialType special;
 extern JE_EnemyDatType enemyDat;
 extern JE_byte episodeNum;
-extern JE_boolean episodeAvail[EPISODE_MAX];
+extern bool episodeAvail[EPISODE_MAX];
 extern char macroFile[13], cubeFile[13];
 extern unsigned long episode1DataLoc;
-extern JE_boolean bonusLevel;
-extern JE_boolean jumpBackToEpisode1;
+extern bool bonusLevel;
+extern bool jumpBackToEpisode1;
 #endif
 
 void JE_loadItemDat( void );
 void JE_initEpisode( JE_byte newEpisode );
-JE_boolean JE_findNextEpisode( void );
+bool JE_findNextEpisode( void );
 void JE_scanForEpisodes( void );
 
 #endif /* EPISODES_H */

@@ -46,10 +46,10 @@ const JE_byte fontMap[136] = /* [33..168] */
 int defaultBrightness = -3;
 JE_byte textGlowFont, textGlowBrightness = 6;
 
-JE_boolean levelWarningDisplay;
+bool levelWarningDisplay;
 JE_byte levelWarningLines;
 char levelWarningText[10][61]; /* [1..10] of string [60] */
-JE_boolean warningRed;
+bool warningRed;
 
 JE_byte warningSoundDelay;
 JE_word armorShipDelay;
@@ -59,7 +59,7 @@ int warningColChange;
 void JE_dString( JE_word x, JE_word y, const char *s, JE_byte font )
 {
 	JE_byte a, b;
-	JE_boolean bright = false;
+	bool bright = false;
 
 	for (a = 0; s[a] != 0; a++)
 	{
@@ -609,10 +609,10 @@ void JE_outTextShade( JE_word x, JE_word y, const char *s, JE_byte font )
 	}
 }
 
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, JE_boolean shadow )
+void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, bool shadow )
 {
 	JE_byte a, b;
-	JE_boolean bright = false;
+	bool bright = false;
 
 	for (a = 0; s[a] != 0; a++)
 	{
@@ -675,7 +675,7 @@ void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, JE_byte colorbank
 	}
 }
 
-char JE_bright( JE_boolean makebright )
+char JE_bright( bool makebright )
 {
 	if (makebright)
 	{

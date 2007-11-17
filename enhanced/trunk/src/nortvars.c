@@ -36,14 +36,14 @@ JE_word y;
 const JE_byte NV_shapeactive   = 0x01;
 const JE_byte NV_shapeinactive = 0x00;
 
-JE_boolean scanForJoystick;
-JE_boolean inputDetected;
+bool scanForJoystick;
+bool inputDetected;
 JE_word lastMouseX, lastMouseY;
 
 /*Mouse Data*/
 /*Mouse_Installed is in VGA256d*/
 JE_byte mouseCursor;
-JE_boolean mouse_threeButton;
+bool mouse_threeButton;
 JE_word mouseX, mouseY, mouseButton;
 
 JE_word z, y;
@@ -57,7 +57,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 {
 	FILE *f;
 	JE_word x;
-	JE_boolean active;
+	bool active;
 
 	char buffer[12];
 	sprintf(buffer, "shapes%c.dat", tolower(s));
@@ -85,7 +85,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 {
 	FILE *f;
 	JE_word x, y, z;
-	JE_boolean active;
+	bool active;
 	JE_ShapeTypeOne tempshape;
 	JE_byte black, color;
 
@@ -316,7 +316,7 @@ void JE_drawShape2x2Shadow( int x, int y, int s, JE_byte *shape )
 	JE_drawShape2Shadow(x+12, y+14, s+20, shape);
 }
 
-JE_boolean JE_anyButton( void )
+bool JE_anyButton( void )
 {
 	button[0] = false;
 	service_SDL_events(true);

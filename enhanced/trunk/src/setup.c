@@ -41,12 +41,12 @@
 #include "SDL.h"
 
 
-JE_boolean volumeActive = true;
-JE_boolean fx;
+bool volumeActive = true;
+bool fx;
 JE_word fxNum;
-JE_boolean repeatedFade, continuousPlay;
+bool repeatedFade, continuousPlay;
 
-void JE_textMenuWait( JE_word *waitTime, JE_boolean doGamma )
+void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 {
 	JE_setMousePosition(160, 100);
 
@@ -108,13 +108,13 @@ void JE_textMenuWait( JE_word *waitTime, JE_boolean doGamma )
 
 void JE_jukeboxGo( void )
 {
-	JE_boolean weirdMusic, weirdCurrent;
+	bool weirdMusic, weirdCurrent;
 	JE_byte weirdSpeed = 0;
 	char tempStr[64];
 
 	JE_byte lastSong;
 	JE_byte tempVolume;
-	JE_boolean youStopped, drawText, quit, fade;
+	bool youStopped, drawText, quit, fade;
 
 
 	weirdMusic = false;

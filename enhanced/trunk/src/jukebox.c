@@ -27,7 +27,7 @@
 #undef NO_EXTERNS
 
 
-JE_boolean continuousPlay = false;
+bool continuousPlay = false;
 JE_word currentJukeboxSong = 0; /* SYN: used to be currentsong, but that name conflicted with elsewhere */
 
 void JE_playNewSelection( void )

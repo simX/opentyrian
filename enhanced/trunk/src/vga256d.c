@@ -33,7 +33,7 @@
 #include <string.h>
 
 
-JE_boolean mouseInstalled = true;
+bool mouseInstalled = true;
 char k;
 
 SDL_Surface *VGAScreen, *VGAScreenSeg;
@@ -58,7 +58,7 @@ const Uint8 VGA_pal[] = {
 
 void JE_initVGA256( void )
 {
-	static JE_boolean initd = false;
+	static bool initd = false;
 	SDL_Color *col_buf;
 	int i,j;
 
@@ -452,7 +452,7 @@ void JE_getUpK( char *k )
 	*k = toupper(*k);
 }
 
-JE_boolean JE_keyPressed( char *kp )
+bool JE_keyPressed( char *kp )
 {
 	SDL_Event ev;
 
@@ -469,7 +469,7 @@ JE_boolean JE_keyPressed( char *kp )
 	}
 }
 
-JE_boolean JE_kp( void )
+bool JE_kp( void )
 {
 	printf("!!! WARNING: JE_kp is deprecated! %s:%d\n", __FILE__, __LINE__);
 	SDL_PumpEvents();

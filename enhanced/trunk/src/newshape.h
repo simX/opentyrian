@@ -49,10 +49,10 @@ extern JE_ShapeArrayType *shapeArray;
 extern JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],
                shapeY[MAX_TABLE][MAXIMUM_SHAPE];
 extern JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];
-extern JE_boolean shapeExist[MAX_TABLE][MAXIMUM_SHAPE];
+extern bool shapeExist[MAX_TABLE][MAXIMUM_SHAPE];
 extern JE_byte maxShape[MAX_TABLE];
 extern JE_byte mouseGrabShape[24*28];
-extern JE_boolean loadOverride;
+extern bool loadOverride;
 /*extern JE_word min, max;*/
 #endif
 
@@ -68,7 +68,7 @@ void JE_newPurgeShapes( JE_byte table );
 void JE_drawShapeTypeOne( JE_word x, JE_word y, JE_byte *shape );
 void JE_grabShapeTypeOne( JE_word x, JE_word y, JE_byte *shape );
 
-JE_boolean JE_waitAction( JE_byte time, JE_boolean checkjoystick );
+bool JE_waitAction( JE_byte time, bool checkjoystick );
 void JE_mouseStart( void );
 void JE_mouseReplace( void );
 

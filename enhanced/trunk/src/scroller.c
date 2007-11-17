@@ -69,7 +69,7 @@ void scroller3d( const char *text[] )
 #	define HORIZON_W 200
 #	define MAX_LINES ((200-HORIZON)/TEXT_HEIGHT)
 	int txt_y = 0, cur_line = 0, line_off = 0, text_len = 0, wait = 0;
-	JE_boolean quit = false;
+	bool quit = false;
 	Uint8 *surf;
 
 	while (text[text_len])

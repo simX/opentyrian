@@ -26,7 +26,7 @@
 typedef int JE_ShipsType; /* TODO: FIX THIS! just a placeholder! */
 
 #ifndef NO_EXTERNS
-extern JE_boolean extraAvail;
+extern bool extraAvail;
 extern JE_word extraShapeOfs;
 /* TODO: conflicts extern JE_ShipsType ships; */
 extern void *extraShapes;

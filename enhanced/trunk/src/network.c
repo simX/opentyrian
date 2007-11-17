@@ -33,13 +33,13 @@ int netPlayers,     /* Number of net players: 0, 1 or 2 */
 
 /* TODO UseOutPacket : SMALL_PACKET;*/   /* This is the original player's packet - time lag */
 
-JE_boolean haltGame;
-JE_boolean netQuit;
-JE_boolean done;
+bool haltGame;
+bool netQuit;
+bool done;
 
-JE_boolean moveOk;
-JE_boolean firstTime;
-JE_boolean netResult;
+bool moveOk;
+bool firstTime;
+bool netResult;
 
 JE_byte gameQuitDelay;  /* Make sure the game doesn't quit within the first few frames of starting */
 
@@ -47,15 +47,15 @@ JE_byte outputData[10]; /* [1..10] */
 JE_byte inputData[10]; /* [1..10] */
 
 /* Special Requests */
-JE_boolean pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
-JE_boolean yourInGameMenuRequest, inGameMenuRequest;
+bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
+bool yourInGameMenuRequest, inGameMenuRequest;
 
-JE_boolean portConfigChange, portConfigDone;
+bool portConfigChange, portConfigDone;
 
 JE_byte exchangeCount;
 
 /* Network Stuff */
-JE_boolean netSuccess;
+bool netSuccess;
 
 void JE_updateStream( void )
 {
@@ -67,7 +67,7 @@ void JE_setNetByte( JE_byte send)
 //	STUB();
 }
 
-JE_boolean JE_scanNetByte( JE_byte scan )
+bool JE_scanNetByte( JE_byte scan )
 {
 //	STUB();
 	return true;

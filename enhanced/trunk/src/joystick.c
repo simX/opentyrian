@@ -57,11 +57,11 @@ const JE_ButtonAssign defaultJoyButtonAssign = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2,
 #endif  /* TARGET_GP2X */
 
 JE_ButtonType tempButton, button, joyButton;
-JE_boolean buttonHeld;
+bool buttonHeld;
 
 JE_ButtonAssign joyButtonAssign;
 
-JE_boolean useButtonAssign = false;
+bool useButtonAssign = false;
 
 /* Joystick Data */
 Sint16 jMinX, jMaxX, jMinY, jMaxY, jCenterX, jCenterY, joyX, joyY;
@@ -71,8 +71,8 @@ Sint16 lastJoyXc, lastJoyYc;
 Sint16 lastJoyXd, lastJoyYd;
 
 JE_byte joystickError;
-JE_boolean joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
-JE_boolean joystick_installed;
+bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
+bool joystick_installed;
 JE_word joystickWait, joystickWaitMax;
 
 /*JE_byte SJoyCD;*/ /*NortVars anybutton check - problems with checking too fast*/
@@ -196,7 +196,7 @@ void JE_joystick2( void )
 	}
 }
 
-JE_boolean JE_nextJoystickCheck( void )
+bool JE_nextJoystickCheck( void )
 {
 	JE_joystick2();
 	if (joystickInput)
@@ -219,9 +219,9 @@ JE_boolean JE_nextJoystickCheck( void )
 	return false;
 }
 
-JE_boolean JE_joystickTranslate( void )
+bool JE_joystickTranslate( void )
 {
-	JE_boolean tempb;
+	bool tempb;
 
 	joystickUp = false;
 	joystickDown = false;
@@ -267,7 +267,7 @@ JE_boolean JE_joystickTranslate( void )
 	return tempb;
 }
 
-JE_boolean JE_joystickNotHeld( void )
+bool JE_joystickNotHeld( void )
 {
 	if (JE_joystickTranslate())
 	{

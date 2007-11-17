@@ -29,7 +29,7 @@
 #include <ctype.h>
 
 
-JE_boolean run;
+bool run;
 struct JE_StarType star[starlib_MAX_STARS];
 
 int tempW;
@@ -47,9 +47,9 @@ double nspVarInc;
 double nspVarVarInc;
 
 JE_word changeTime;
-JE_boolean doChange;
+bool doChange;
 
-JE_boolean grayB;
+bool grayB;
 
 int x;
 
@@ -308,7 +308,7 @@ void JE_wackyCol( void )
 
 void JE_starlib_init( void )
 {
-	static JE_boolean initialized = false;
+	static bool initialized = false;
 
 	if (!initialized)
 	{

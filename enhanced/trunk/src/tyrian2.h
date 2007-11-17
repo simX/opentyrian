@@ -62,7 +62,7 @@ void JE_drawScore( void );
 
 void JE_doStatBar( void );
 
-JE_boolean JE_quitRequest( JE_boolean usemouse );
+bool JE_quitRequest( bool usemouse );
 
 void JE_whoa( void );
 
@@ -88,12 +88,12 @@ void JE_starShowVGA( void );
 
 void JE_main( void );
 void JE_loadMap( void );
-void JE_titleScreen( JE_boolean animate );
+void JE_titleScreen( bool animate );
 void JE_openingAnim( void );
 void JE_readTextSync( void );
 void JE_displayText( void );
 
-JE_boolean JE_searchFor( JE_byte PLType );
+bool JE_searchFor( JE_byte PLType );
 void JE_eventSystem( void );
 
 unsigned long JE_cashLeft( void );
@@ -105,8 +105,8 @@ void JE_drawMenuHeader( void );
 void JE_drawMenuChoices( void );
 void JE_updateNavScreen( void );
 
-void JE_drawNavLines( JE_boolean dark );
-void JE_drawLines( JE_boolean dark );
+void JE_drawNavLines( bool dark );
+void JE_drawLines( bool dark );
 void JE_drawDots( void );
 void JE_drawPlanet( JE_byte planetNum );
 

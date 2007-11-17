@@ -33,10 +33,10 @@
 #include <string.h>
 
 
-JE_boolean notyetloadedpcx;
-JE_boolean notYetLoadedPCX = true;
+bool notyetloadedpcx;
+bool notYetLoadedPCX = true;
 
-void JE_loadPic( JE_byte PCXnumber, JE_boolean storepal )
+void JE_loadPic( JE_byte PCXnumber, bool storepal )
 {
 	typedef JE_byte JE_buftype[63000]; /* [1..63000] */
 

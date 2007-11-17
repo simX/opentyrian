@@ -49,8 +49,8 @@
 //typedef Sint8  JE_shortint; - Done
 typedef Uint16 JE_word;
 typedef Uint8  JE_byte;
-typedef bool   JE_boolean;
-//typedef char   JE_char;
+//typedef bool   JE_boolean; - Done
+//typedef char   JE_char; - Done
 //typedef double JE_real; - Done
 #endif
 

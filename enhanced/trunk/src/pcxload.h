@@ -47,12 +47,12 @@ extern JE_ColorType colors2;
 extern JE_word width, depth;
 extern JE_word bytes;
 extern char /*c,*/ c2;
-extern JE_boolean overrideBlack;
+extern bool overrideBlack;
 #endif
 
 /*void JE_unpackPCX( void );*/
 
-void JE_loadPCX( const char *name, JE_boolean storePalette );
+void JE_loadPCX( const char *name, bool storePalette );
 void JE_updatePCXColorsSlow( JE_ColorType *colorBuffer );
 
 #endif /* PCXLOAD_H */

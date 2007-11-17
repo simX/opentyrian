@@ -154,7 +154,7 @@ const JE_EditorItemAvailType initialItemAvail =
  */
 
 
-JE_boolean smoothies[9] = /* [1..9] */
+bool smoothies[9] = /* [1..9] */
 { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 
@@ -175,7 +175,7 @@ JE_word lastCubeMax, cubeMax;
 JE_word cubeList[4]; /* [1..4] */
 
 /* High-Score Stuff */
-JE_boolean gameHasRepeated;
+bool gameHasRepeated;
 
 /* Difficulty */
 int difficultyLevel, oldDifficultyLevel, initialDifficulty;
@@ -190,12 +190,12 @@ int shield2, shieldMax2;
 int armorLevel, armorLevel2;
 JE_byte shieldWait, shieldT;
 
-JE_byte          shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
-JE_byte          portConfig[10]; /* [1..10] */
-JE_boolean       portConfigDone;
+JE_byte shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
+JE_byte portConfig[10]; /* [1..10] */
+bool portConfigDone;
 JE_PortPowerType portPower, lastPortPower;
 
-JE_boolean resetVersion;
+bool resetVersion;
 
 /* Level Data */
 char    lastLevelName[11], levelName[11]; /* string [10] */
@@ -206,16 +206,16 @@ JE_KeySettingType keySettings;
 
 /* Configuration */
 int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
-JE_boolean  filtrationAvail, filterActive, filterFade, filterFadeStart;
+bool filtrationAvail, filterActive, filterFade, filterFadeStart;
 
-JE_boolean gameJustLoaded;
+bool gameJustLoaded;
 
-JE_boolean galagaMode;
+bool galagaMode;
 
-JE_boolean extraGame;
+bool extraGame;
 
-JE_boolean twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian;
-JE_boolean trentWin = false;
+bool twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian;
+bool trentWin = false;
 JE_byte    superArcadeMode;
 
 JE_byte    superArcadePowerUp;
@@ -228,25 +228,18 @@ JE_byte secretHint;
 JE_byte background3over;
 JE_byte background2over;
 JE_byte gammaCorrection;
-JE_boolean superPause = false;
-JE_boolean explosionTransparent,
-           youAreCheating,
-           displayScore,
-           soundHasChanged,
-           background2, smoothScroll, wild, superWild, starActive,
-           topEnemyOver,
-           skyEnemyOverAll,
-           background2notTransparent,
-           tempb;
+bool superPause = false;
+bool explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll,
+     wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 
 JE_byte versionNum;   /* SW 1.0 and SW/Reg 1.1 = 0 or 1
                        * EA 1.2 = 2 */
 
-JE_byte    fastPlay;
-JE_boolean pentiumMode;
+JE_byte fastPlay;
+bool pentiumMode;
 
 /* Savegame files */
-JE_boolean playerPasswordInput;
+bool playerPasswordInput;
 JE_byte    inputDevice;  /* 0=Mouse   1=Joystick   2=Gravis GamePad */
 JE_byte    gameSpeed;
 JE_byte    processorType;  /* 1=386 2=486 3=Pentium Hyper */
@@ -608,7 +601,7 @@ void JE_encryptSaveTemp( void )
 
 void JE_decryptSaveTemp( void )
 {
-	JE_boolean correct = true;
+	bool correct = true;
 	JE_SaveGameTemp s2;
 	/*JE_word x;*/
 	int x;
@@ -841,8 +834,8 @@ void JE_loadConfiguration( void )
 			saveFiles[z].input2 = *((JE_byte*)p);
 			p += sizeof(JE_byte);
 
-			saveFiles[z].gameHasRepeated = *((JE_boolean*)p);
-			p += 1; /* TODO: should be sizeof(JE_boolean) but that is 4 for some reason :( */
+			saveFiles[z].gameHasRepeated = *((Uint8 *)p);
+			p += sizeof(Uint8);
 
 			saveFiles[z].initialDifficulty = *((JE_byte*)p);
 			p += sizeof(JE_byte);
@@ -964,8 +957,8 @@ void JE_saveConfiguration( void )
 		*((JE_byte*)p) = saveFiles[z].input2;
 		p += sizeof(JE_byte);
 
-		*((JE_boolean*)p) = saveFiles[z].gameHasRepeated ;
-		p++; /* TODO: should be sizeof(JE_boolean) but that is 4 for some reason :( */
+		*((Uint8 *)p) = saveFiles[z].gameHasRepeated ;
+		p += sizeof(Uint8);
 
 		*((JE_byte*)p) = saveFiles[z].initialDifficulty;
 		p += sizeof(JE_byte);

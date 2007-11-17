@@ -27,7 +27,7 @@
 
 #ifndef NO_EXTERNS
 extern JE_ColorType colors2;
-extern JE_boolean overrideblack;
+extern bool overrideblack;
 extern char c2;
 #endif
 
@@ -37,6 +37,6 @@ void JE_unpackPCX( void );
 
 /* void JE_updatePCXColorsSlow ( void* colorbuffer ); */
 
-/*void JE_loadPic( JE_byte pcxnumber, JE_boolean storepalette );*/
+/*void JE_loadPic( JE_byte pcxnumber, bool storepalette );*/
 
 #endif /* PICLOAD2_H */

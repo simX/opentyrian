@@ -32,10 +32,10 @@
 JE_word randomcount;
 char dir[256]; /* increase me */
 
-JE_boolean errorActive = true;
-JE_boolean errorOccurred = false;
+bool errorActive = true;
+bool errorOccurred = false;
 
-JE_boolean dont_die = false;
+bool dont_die = false;
 
 char err_msg[128] = "No error!?";
 
@@ -118,7 +118,7 @@ void JE_errorHand( const char *s )
 	}
 }
 
-JE_boolean JE_find( const char *s )
+bool JE_find( const char *s )
 {
 	FILE *f;
 
@@ -206,7 +206,7 @@ void JE_resetText( FILE **f, const char *filename )
 	*f = tmp ? fopen_check(tmp, "r") : NULL;
 }
 
-JE_boolean JE_isCFGThere( void ) /* Warning: It actually returns false when the config file exists */
+bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config file exists */
 {
 	FILE *f;
 

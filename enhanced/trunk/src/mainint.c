@@ -61,9 +61,9 @@ int constantLastX;
 JE_word textErase;
 JE_word upgradeCost;
 JE_word downgradeCost;
-JE_boolean performSave;
-JE_boolean jumpSection;
-JE_boolean useLastBank; /* See if I want to use the last 16 colors for DisplayText */
+bool performSave;
+bool jumpSection;
+bool useLastBank; /* See if I want to use the last 16 colors for DisplayText */
 
 /* Draws a message at the bottom text window on the playing screen */
 void JE_drawTextWindow( char *text )
@@ -441,11 +441,11 @@ void JE_helpSystem( JE_byte startTopic )
 	} while (lastkey_sym != SDLK_ESCAPE);
 }
 
-JE_boolean JE_playerSelect( void )
+bool JE_playerSelect( void )
 {
 	JE_byte maxSel;
 	JE_byte sel;
-	JE_boolean quit;
+	bool quit;
 
 	JE_loadPic(2, false);
 	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
@@ -518,10 +518,10 @@ JE_boolean JE_playerSelect( void )
 	return true; /*MXD assumes this default return value here*/
 }
 
-JE_boolean JE_episodeSelect( void )
+bool JE_episodeSelect( void )
 {
 	JE_byte sel;
-	JE_boolean quit;
+	bool quit;
 	JE_byte max;
 
 	max = EPISODE_MAX;
@@ -631,11 +631,11 @@ startepisodeselect:
 	return false; /*MXD assumes this default return value here*/
 }
 
-JE_boolean JE_difficultySelect( void )
+bool JE_difficultySelect( void )
 {
 	JE_byte maxSel;
 	JE_byte sel;
-	JE_boolean quit;
+	bool quit;
 
 	JE_loadPic(2, false);
 	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
@@ -850,11 +850,11 @@ unsigned long JE_getCost( JE_byte itemType, JE_word itemNum )
 
 void JE_loadScreen( void )
 {
-	JE_boolean quit;
+	bool quit;
 	JE_byte sel, screen, min = 0, max = 0;
 	char *tempstr;
 	char *tempstr2;
-	JE_boolean mal_str = false;
+	bool mal_str = false;
 	int len;
 
 	tempstr = NULL;
@@ -1105,9 +1105,9 @@ unsigned int JE_getValue( JE_byte itemType, JE_word itemNum )
 	return tempW2;
 }
 
-JE_boolean JE_nextEpisode( void )
+bool JE_nextEpisode( void )
 {
-	JE_boolean found;
+	bool found;
 	int x;
 	
 	strcpy(lastLevelName, "Completed");
@@ -1402,7 +1402,7 @@ void JE_gammaCorrect( JE_ColorType *colorBuffer, JE_byte gamma )
 	}
 }
 
-JE_boolean JE_gammaCheck( void )
+bool JE_gammaCheck( void )
 {
 	Uint8 temp = keysactive[SDLK_F11];
 	if (temp)
@@ -1417,7 +1417,7 @@ JE_boolean JE_gammaCheck( void )
 	return temp;
 }
 
-/* void JE_textMenuWait( JE_word *waitTime, JE_boolean doGamma ); /!\ In setup.h */
+/* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
 void JE_loadOrderingInfo( void )
 {
 	/* YKS: Unused on the port */
@@ -1460,16 +1460,16 @@ void JE_doInGameSetup( void )
 	skipStarShowVGA = true;
 }
 
-JE_boolean JE_inGameSetup( void )
+bool JE_inGameSetup( void )
 {
 	SDL_Surface *temp_surface = VGAScreen;
 	VGAScreen = VGAScreenSeg; /* side-effect of game_screen */
 	
-	JE_boolean returnvalue = false;
+	bool returnvalue = false;
 	
 	const JE_byte help[6] /* [1..6] */ = {15, 15, 28, 29, 26, 27};
 	JE_byte  sel;
-	JE_boolean quit;
+	bool quit;
 	JE_word x, y, z;
 
 	tempScreenSeg = VGAScreenSeg; /* <MXD> ? */
@@ -1948,7 +1948,7 @@ void JE_sort( void )
 	}
 }
 
-JE_boolean JE_getPassword( void )
+bool JE_getPassword( void )
 {
 	STUB();
 	return false;
@@ -2381,9 +2381,9 @@ void JE_handleChat( void )
 	// STUB(); Annoying piece of crap =P
 }
 
-JE_boolean JE_getNumber( char *s, JE_byte *x )
+bool JE_getNumber( char *s, JE_byte *x )
 {
-	JE_boolean getNumber = false;
+	bool getNumber = false;
 	int code;
 	char buf[256];
 
@@ -2414,7 +2414,7 @@ end_loop:
 void JE_operation( JE_byte slot )
 {
 	JE_byte flash;
-	JE_boolean quit;
+	bool quit;
 	char stemp[21];
 	char tempStr[51];
 	
@@ -2865,7 +2865,7 @@ void JE_mainKeyboardInput( void )
 
 void JE_pauseGame( void )
 {
-	JE_boolean done;
+	bool done;
 	JE_word mouseX, mouseY;
 	
 	SDL_Surface *temp_surface;
@@ -2975,7 +2975,7 @@ void JE_playerMovement( JE_byte inputDevice_,
                         int *lastTurn_, int *lastTurn2_, int *tempLastTurn2_,
                         JE_byte *stopWaitX_, JE_byte *stopWaitY_,
                         JE_word *mouseX_, JE_word *mouseY_,
-                        JE_boolean *playerAlive_,
+                        bool *playerAlive_,
                         JE_byte *playerStillExploding_,
                         JE_PItemsType pItems_ )
 {
@@ -4286,7 +4286,7 @@ char *JE_getName( JE_byte pnum )
 }
 
 void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
-                       unsigned long *score_, int *armorLevel_, int *shield_, JE_boolean *playerAlive_,
+                       unsigned long *score_, int *armorLevel_, int *shield_, bool *playerAlive_,
                        JE_byte *playerStillExploding_, JE_byte playerNum_, JE_byte playerInvulnerable_ )
 {
 	char tempStr[256];
@@ -4631,7 +4631,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 }
 
 
-/*void JE_textMenuWait ( JE_word waittime, JE_boolean dogamma )
+/*void JE_textMenuWait ( JE_word waittime, bool dogamma )
 {
 	STUB();
 }*/

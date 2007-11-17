@@ -38,20 +38,20 @@ typedef struct
 extern unsigned long startTime;
 extern unsigned long frames;
 extern int netPlayers, thisPlayerNum, otherPlayerNum;
-extern JE_boolean haltGame;
-extern JE_boolean netQuit;
-extern JE_boolean done;
-extern JE_boolean moveOk;
-extern JE_boolean firstTime;
-extern JE_boolean netResult;
+extern bool haltGame;
+extern bool netQuit;
+extern bool done;
+extern bool moveOk;
+extern bool firstTime;
+extern bool netResult;
 extern JE_byte gameQuitDelay;
 extern JE_byte outputData[10];
 extern JE_byte inputData[10];
-extern JE_boolean pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
-extern JE_boolean yourInGameMenuRequest, inGameMenuRequest;
-extern JE_boolean portConfigChange, portConfigDone;
+extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
+extern bool yourInGameMenuRequest, inGameMenuRequest;
+extern bool portConfigChange, portConfigDone;
 extern JE_byte exchangeCount;
-extern JE_boolean netSuccess;
+extern bool netSuccess;
 #endif
 
 void JE_initNetwork( void );
@@ -62,7 +62,7 @@ void JE_clearSpecialRequests( void );
 
 void JE_updateStream( void );
 void JE_setNetByte( JE_byte send );
-JE_boolean JE_scanNetByte( JE_byte scan );
+bool JE_scanNetByte( JE_byte scan );
 void JE_syncNet( JE_byte syncByte );
 
 void JE_flushNet( void );

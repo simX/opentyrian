@@ -43,17 +43,17 @@ JE_SpecialType special;
 JE_EnemyDatType enemyDat;
 
 /* EPISODE variables */
-JE_byte    episodeNum = 0;
-JE_boolean episodeAvail[EPISODE_MAX]; /* [1..episodemax] */
-char       macroFile[13], cubeFile[13]; /* string [12] */
+JE_byte episodeNum = 0;
+bool episodeAvail[EPISODE_MAX]; /* [1..episodemax] */
+char macroFile[13], cubeFile[13]; /* string [12] */
 
 unsigned long episode1DataLoc;
 
 /* Tells the game whether the level currently loaded is a bonus level. */
-JE_boolean bonusLevel;
+bool bonusLevel;
 
 /* Tells if the game jumped back to Episode 1 */
-JE_boolean jumpBackToEpisode1;
+bool jumpBackToEpisode1;
 
 void JE_loadItemDat( void )
 {
@@ -171,7 +171,7 @@ void JE_loadItemDat( void )
 		efread(&options[i].wport,       sizeof(JE_byte), 1, lvlFile);
 		efread(&options[i].wpnum,       sizeof(JE_word), 1, lvlFile);
 		efread(&options[i].ammo,        sizeof(JE_byte), 1, lvlFile);
-		efread(&options[i].stop,        1, 1, lvlFile); /* override sizeof(JE_boolean) */
+		vfread(options[i].stop,        Uint8, lvlFile);
 		efread(&options[i].icongr,      sizeof(JE_byte), 1, lvlFile);
 	}
 
@@ -251,9 +251,9 @@ void JE_scanForEpisodes( void )
 	}
 }
 
-JE_boolean JE_findNextEpisode( void )
+bool JE_findNextEpisode( void )
 {
-	JE_boolean found = false;
+	bool found = false;
 	JE_byte newEpisode = episodeNum + 1;
 
 	jumpBackToEpisode1 = false;

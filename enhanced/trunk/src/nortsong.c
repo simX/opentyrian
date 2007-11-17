@@ -55,9 +55,9 @@ JE_word dspversion;
 const char hexa[17] = "0123456789ABCDEF";
 
 Uint32 target, target2;
-JE_boolean mixEnable = false;
-JE_boolean notYetLoadedSound = true;
-JE_boolean notYetLoadedMusic = true;
+bool mixEnable = false;
+bool notYetLoadedSound = true;
+bool notYetLoadedMusic = true;
 
 JE_SongPosType songPos;
 
@@ -122,7 +122,7 @@ void wait_delay( void )
 	}
 }
 
-void wait_delayorinput( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick )
+void wait_delayorinput( bool keyboard, bool mouse, bool joystick )
 {
 	Uint32 ticks;
 

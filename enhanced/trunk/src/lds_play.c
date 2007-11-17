@@ -81,7 +81,7 @@ Position *positions = NULL;
 Uint8 fmchip[0xff], jumping, fadeonoff, allvolume, hardfade, tempo_now, pattplay, tempo, regbd, chandelay[9], mode, pattlen;
 Uint16 posplay, jumppos, speed;
 Uint16 *patterns = NULL;
-JE_boolean playing, songlooped;
+bool playing, songlooped;
 Uint32 numpatch, numposi, patterns_size, mainvolume;
 
 const Uint16 maxsound = 0x3f, maxpos = 0xff;

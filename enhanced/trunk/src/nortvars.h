@@ -42,11 +42,11 @@ typedef JE_NewShapeTypeOne JE_NewShapeType[304]; /* [1..304] */
 /* extern JE_word z; */
 
 extern JE_word y;
-extern JE_boolean scanForJoystick;
-extern JE_boolean inputDetected;
+extern bool scanForJoystick;
+extern bool inputDetected;
 extern JE_word lastMouseX, lastMouseY;
 extern JE_byte mouseCursor;
-extern JE_boolean mouse_threeButton;
+extern bool mouse_threeButton;
 extern JE_word mouseX, mouseY, mouseButton;
 #endif
 
@@ -64,10 +64,10 @@ void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s );
 JE_word JE_btow(JE_byte a, JE_byte b);
 
 JE_word JE_mousePosition( JE_word *mouseX, JE_word *mouseY );
-JE_boolean JE_buttonPressed( void );
+bool JE_buttonPressed( void );
 void JE_setMousePosition( JE_word mouseX, JE_word mouseY );
 
-JE_boolean JE_anyButton( void );
+bool JE_anyButton( void );
 
 /*void JE_showMouse( void );
 void JE_hideMouse( void );*/
@@ -81,7 +81,7 @@ void JE_barDrawShadow( JE_word x, JE_word y, JE_word res, JE_word col, JE_word a
 void JE_barDrawDirect( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
 void JE_wipeKey( void );
 void JE_drawANSI( char *ansiscreen );
-/*JE_boolean JE_waitaction( JE_byte time );*/
+/*bool JE_waitaction( JE_byte time );*/
 
 void JE_drawShape2( int x, int y, int s, JE_byte *shape );
 void JE_superDrawShape2( int x, int y, int s, JE_byte *shape );

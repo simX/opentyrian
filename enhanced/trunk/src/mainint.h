@@ -31,28 +31,28 @@ extern int constantLastX;
 extern JE_word textErase;
 extern JE_word upgradeCost;
 extern JE_word downgradeCost;
-extern JE_boolean performSave;
-extern JE_boolean jumpSection;
-extern JE_boolean useLastBank;
+extern bool performSave;
+extern bool jumpSection;
+extern bool useLastBank;
 #endif
 
-/*void JE_textMenuWait ( JE_word waittime, JE_boolean dogamma );*/
+/*void JE_textMenuWait ( JE_word waittime, bool dogamma );*/
 
 void JE_drawTextWindow( char *text );
 void JE_initPlayerData( void );
 void JE_highScoreScreen( void );
 void JE_gammaCorrect_func( JE_byte *col, double r );
 void JE_gammaCorrect( JE_ColorType *colorBuffer, JE_byte gamma );
-JE_boolean JE_gammaCheck( void );
-/* void JE_textMenuWait( JE_word *waitTime, JE_boolean doGamma ); /!\ In setup.h */
+bool JE_gammaCheck( void );
+/* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
 void JE_loadOrderingInfo( void );
-JE_boolean JE_nextEpisode( void );
-JE_boolean JE_episodeSelect( void );
-JE_boolean JE_difficultySelect( void );
-JE_boolean JE_playerSelect( void );
+bool JE_nextEpisode( void );
+bool JE_episodeSelect( void );
+bool JE_difficultySelect( void );
+bool JE_playerSelect( void );
 void JE_helpSystem( JE_byte startTopic );
 void JE_doInGameSetup( void );
-JE_boolean JE_inGameSetup( void );
+bool JE_inGameSetup( void );
 void JE_inGameHelp( void );
 void JE_sortHighScores( void );
 void JE_highScoreCheck( void );
@@ -71,13 +71,13 @@ unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems );
 
 void JE_drawPortConfigButtons( void );
 void JE_outCharGlow( JE_word x, JE_word y, char *s );
-JE_boolean JE_getPassword( void );
+bool JE_getPassword( void );
 
 void JE_playCredits( void );
 void JE_endLevelAni( void );
 void JE_drawCube( JE_word x, JE_word y, JE_byte filter, JE_byte brightness );
 void JE_handleChat( void );
-JE_boolean JE_getNumber( char *s, JE_byte *x );
+bool JE_getNumber( char *s, JE_byte *x );
 void JE_loadScreen( void );
 void JE_operation( JE_byte slot );
 void JE_inGameDisplays( void );
@@ -87,12 +87,12 @@ void JE_pauseGame( void );
 void JE_loadCompShapesB( JE_byte **shapes, FILE *f, JE_word shapeSize );
 
 void JE_loadMainShapeTables( void );
-void JE_playerMovement( JE_byte inputDevice, JE_byte playerNum, JE_word shipGr, JE_byte *shapes9ptr, int *armorLevel, int *baseArmor, int *shield, int *shieldMax, JE_word *playerInvulnerable, int *PX, int *PY, int *lastPX, int *lastPY, int *lastPX2, int *lastPY2, int *PXChange, int *PYChange, int *lastTurn, int *lastTurn2, int *tempLastTurn2, JE_byte *stopWaitX, JE_byte *stopWaitY, JE_word *mouseX, JE_word *mouseY, JE_boolean *playerAlive, JE_byte *playerStillExploding, JE_PItemsType pItems );
+void JE_playerMovement( JE_byte inputDevice, JE_byte playerNum, JE_word shipGr, JE_byte *shapes9ptr, int *armorLevel, int *baseArmor, int *shield, int *shieldMax, JE_word *playerInvulnerable, int *PX, int *PY, int *lastPX, int *lastPY, int *lastPX2, int *lastPY2, int *PXChange, int *PYChange, int *lastTurn, int *lastTurn2, int *tempLastTurn2, JE_byte *stopWaitX, JE_byte *stopWaitY, JE_word *mouseX, JE_word *mouseY, bool *playerAlive, JE_byte *playerStillExploding, JE_PItemsType pItems );
 void JE_mainGamePlayerFunctions( void );
 char *JE_getName( JE_byte pnum );
 
 void JE_playerCollide( int *px, int *py, int *lastTurn, int *lastTurn2,
-                       unsigned long *score, int *armorLevel, int *shield, JE_boolean *playerAlive,
+                       unsigned long *score, int *armorLevel, int *shield, bool *playerAlive,
                        JE_byte *playerStillExploding, JE_byte playerNum, JE_byte playerInvulnerable );
 
 

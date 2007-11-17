@@ -26,8 +26,8 @@
 #ifndef NO_EXTERNS
 extern JE_word tempscreenseg;
 extern JE_byte enddelay;
-extern JE_boolean died;
-extern JE_boolean firsttime;
+extern bool died;
+extern bool firsttime;
 #endif
 
 void JE_introScreen( void );
@@ -48,7 +48,7 @@ void JE_destructMain( void );
 
 JE_byte JE_placementPosition( JE_word x, JE_byte width );
 
-JE_boolean JE_stabilityCheck( int x, int y );
+bool JE_stabilityCheck( int x, int y );
 
 void JE_helpScreen( void );
 

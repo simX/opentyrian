@@ -120,15 +120,15 @@ const char *keyNames[] = {
 	"F12"
 };
 
-JE_boolean ESCPressed;
+bool ESCPressed;
 
-JE_boolean newkey, newmouse, keydown, mousedown;
+bool newkey, newmouse, keydown, mousedown;
 SDLKey lastkey_sym;
 SDLMod lastkey_mod;
 unsigned char lastkey_char;
 Uint8 lastmouse_but;
 Uint16 lastmouse_x, lastmouse_y;
-JE_boolean mouse_pressed[3] = {false, false, false};
+bool mouse_pressed[3] = {false, false, false};
 Uint16 mouse_x, mouse_y, mouse_xrel, mouse_yrel;
 
 int numkeys;
@@ -141,7 +141,7 @@ void flush_events_buffer( void )
 	while (SDL_PollEvent(&ev));
 }
 
-void wait_input( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick )
+void wait_input( bool keyboard, bool mouse, bool joystick )
 {
 	service_SDL_events(false);
 	while (!((keyboard ? keydown : false) || (mouse ? mousedown : false) || (joystick ? button[0] : false)))
@@ -157,7 +157,7 @@ void wait_input( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick )
 	}
 }
 
-void wait_noinput( JE_boolean keyboard, JE_boolean mouse, JE_boolean joystick )
+void wait_noinput( bool keyboard, bool mouse, bool joystick )
 {
 	service_SDL_events(false);
 	while ((keydown && keyboard) || (mousedown && mouse) || (button[0] && joystick))
@@ -190,7 +190,7 @@ void init_keyboard( void )
 #endif
 }
 
-void service_SDL_events( JE_boolean clear_new )
+void service_SDL_events( bool clear_new )
 {
 	SDL_Event ev;
 

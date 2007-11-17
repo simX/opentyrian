@@ -24,11 +24,11 @@
 
 
 #ifndef NO_EXTERNS
-JE_boolean volumeActive, fx;
+bool volumeActive, fx;
 JE_word fxNum;
 #endif
 
-void JE_textMenuWait( JE_word *waitTime, JE_boolean doGamma );
+void JE_textMenuWait( JE_word *waitTime, bool doGamma );
 
 void JE_jukeboxGo( void );
 void JE_newSpeed( void );

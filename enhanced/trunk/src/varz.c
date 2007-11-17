@@ -34,7 +34,7 @@
 
 JE_byte fromTime;
 int tempDat, tempDat2, tempDat3;
-JE_boolean tempb2;
+bool tempb2;
 
 JE_word test1;
 
@@ -180,7 +180,7 @@ JE_byte SFExecuted[2]; /* [1..2] */
 
 
 /*Happy*/
-JE_boolean stoppedDemo;
+bool stoppedDemo;
 
 /*Special General Data*/
 JE_byte lvlFileNum;
@@ -190,23 +190,22 @@ JE_word tempBackMove, explodeMove; /*Speed of background movement*/
 JE_byte levelEnd;
 JE_word levelEndFxWait;
 int levelEndWarp;
-JE_boolean showMemLeft, endLevel, reallyEndLevel, waitToEndLevel, playerEndLevel,
-           normalBonusLevelCurrent, bonusLevelCurrent,
-           smallEnemyAdjust, readyToEndLevel, quitRequested;
+bool showMemLeft, endLevel, reallyEndLevel, waitToEndLevel, playerEndLevel, normalBonusLevelCurrent,
+     bonusLevelCurrent, smallEnemyAdjust, readyToEndLevel, quitRequested;
 
 JE_byte newPL[10]; /* [0..9] */ /*Eventsys event 75 parameter*/
 JE_word returnLoc;
-JE_boolean returnActive;
+bool returnActive;
 JE_word galagaShotFreq;
 unsigned long galagaLife;
 
-JE_boolean debug; /*Debug Mode*/
+bool debug; /*Debug Mode*/
 Uint32 debugTime, lastDebugTime;
 unsigned long debugHistCount;
 double debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
 
-JE_boolean firstGameOver, gameLoaded, enemyStillExploding;
+bool firstGameOver, gameLoaded, enemyStillExploding;
 
 /* Error Checking */
 JE_word tempSS;
@@ -232,53 +231,53 @@ int flashChange;
 JE_byte displayTime;
 
 /* Demo Stuff */
-JE_boolean firstEvent;
+bool firstEvent;
 FILE *recordFile;
 JE_word recordFileNum;
 JE_byte lastKey[8]; /* [1..8] */
 JE_word lastMoveWait, nextMoveWait;
 JE_byte nextDemoOperation;
-JE_boolean playDemo;
+bool playDemo;
 JE_byte playDemoNum;
 
 /* Sound Effects Queue */
 JE_byte soundQueue[8]; /* [0..7] */
 
 /*Level Event Data*/
-JE_boolean enemyContinualDamage;
-JE_boolean enemiesActive;
-JE_boolean forceEvents;
-JE_boolean stopBackgrounds;
+bool enemyContinualDamage;
+bool enemiesActive;
+bool forceEvents;
+bool stopBackgrounds;
 JE_byte stopBackgroundNum;
 JE_byte damageRate;  /*Rate at which a player takes damage*/
-JE_boolean background3x1;  /*Background 3 enemies use Background 1 X offset*/
-JE_boolean background3x1b; /*Background 3 enemies moved 8 pixels left*/
+bool background3x1;  /*Background 3 enemies use Background 1 X offset*/
+bool background3x1b; /*Background 3 enemies moved 8 pixels left*/
 
-JE_boolean levelTimer;
-JE_word    levelTimerCountdown;
-JE_word    levelTimerJumpTo;
-JE_boolean randomExplosions;
+bool levelTimer;
+JE_word levelTimerCountdown;
+JE_word levelTimerJumpTo;
+bool randomExplosions;
 
-JE_boolean editShip1, editShip2;
+bool editShip1, editShip2;
 
-JE_boolean globalFlags[10]; /* [1..10] */
+bool globalFlags[10]; /* [1..10] */
 JE_byte levelSong;
 
-JE_boolean drawGameSaved;
+bool drawGameSaved;
 
-JE_boolean repause;
+bool repause;
 
 /* DESTRUCT game */
-JE_boolean loadDestruct;
+bool loadDestruct;
 
 /* MapView Data */
 JE_word mapOrigin, mapPNum;
 JE_byte mapPlanet[5], mapSection[5]; /* [1..5] */
 
 /* Interface Constants */
-JE_boolean loadTitleScreen;
-JE_boolean moveTyrianLogoUp;
-JE_boolean skipStarShowVGA;
+bool loadTitleScreen;
+bool moveTyrianLogoUp;
+bool skipStarShowVGA;
 
 /*EnemyData*/
 JE_EnemyType enemy;
@@ -286,7 +285,7 @@ JE_EnemyAvailType enemyAvail;
 JE_word enemyAvailOfs, topEnemyAvailOfs, groundEnemyAvailOfs, groundEnemyAvailOfs2, enemyOffset;
 JE_word enemyOnScreen;
 JE_byte enemyShapeTables[6]; /* [1..6] */
-JE_boolean uniqueEnemy;
+bool uniqueEnemy;
 JE_word superEnemy254Jump;
 
 /*ExplosionData*/
@@ -300,11 +299,11 @@ struct
 } explosions[EXPLOSION_MAX]; /* [1..ExplosionMax] */
 JE_byte explodeAvail[EXPLOSION_MAX]; /* [1..ExplosionMax] */
 int explosionFollowAmount;
-JE_boolean playerFollow, fixedExplosions;
+bool playerFollow, fixedExplosions;
 int explosionMoveUp;
 
 /*EnemyShotData*/
-JE_boolean fireButtonHeld;
+bool fireButtonHeld;
 JE_byte /*boolean*/ enemyShotAvail[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax] */
 struct
 {
@@ -321,35 +320,35 @@ struct
 } enemyShot[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax]  */
 
 /* Player Shot Data */
-JE_byte    zinglonDuration;
-JE_byte    astralDuration;
-JE_word    flareDuration;
-JE_boolean flareStart;
-int        flareColChg;
-JE_byte    specialWait;
-JE_byte    nextSpecialWait;
-JE_boolean spraySpecial;
-JE_byte    doIced;
-JE_boolean infiniteShot;
+JE_byte zinglonDuration;
+JE_byte astralDuration;
+JE_word flareDuration;
+bool flareStart;
+int flareColChg;
+JE_byte specialWait;
+JE_byte nextSpecialWait;
+bool spraySpecial;
+JE_byte doIced;
+bool infiniteShot;
 
 JE_byte superBomb[2]; /* [1..2] */
 
 int tempShotX, tempShotY;
 struct
 {
-	int     shotX;
-	int     shotY;
-	int     shotXM;
-	int     shotYM;
-	int     shotXC;           /*10*/
-	int     shotYC;
-	JE_boolean shotComplicated;
-	int     shotDevX;
-	int     shotDirX;
-	int     shotDevY;         /*19*/
-	int     shotDirY;
-	int     shotCirSizeX;
-	int     shotCirSizeY;
+	int shotX;
+	int shotY;
+	int shotXM;
+	int shotYM;
+	int shotXC;           /*10*/
+	int shotYC;
+	bool shotComplicated;
+	int shotDevX;
+	int shotDirX;
+	int shotDevY;         /*19*/
+	int shotDirY;
+	int shotCirSizeX;
+	int shotCirSizeY;
 	JE_byte shotTrail;
 	JE_word shotGr;
 	JE_word shotAni;          /*30*/
@@ -367,13 +366,13 @@ struct
 JE_byte chain;
 
 /*PlayerData*/
-JE_boolean allPlayersGone; /*Both players dead and finished exploding*/
+bool allPlayersGone; /*Both players dead and finished exploding*/
 
 JE_byte shotAvail[MAX_PWEAPON]; /* [1..MaxPWeapon] */   /*0:Avail 1-255:Duration left*/
 JE_byte shadowyDist;
 JE_byte purpleBallsRemaining[2]; /* [1..2] */
 
-JE_boolean playerAlive, playerAliveB;
+bool playerAlive, playerAliveB;
 JE_byte playerStillExploding, playerStillExploding2;
 
 JE_byte *eShapes1 = NULL,
@@ -402,9 +401,9 @@ JE_byte sAni;
 int sAniX, sAniY, sAniXNeg, sAniYNeg;  /* X,Y ranges of field of hit */
 int baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B,
     baseSpeedKeyH, baseSpeedKeyV;
-JE_boolean keyMoveWait;
+bool keyMoveWait;
 
-JE_boolean makeMouseDelay;
+bool makeMouseDelay;
 
 JE_word playerInvulnerable1, playerInvulnerable2;
 
@@ -432,16 +431,16 @@ int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, opt
     option2X, option2LastX, option2Y, option2LastY,
     option1MaxX, option1MinX, option2MaxX, option2MinX,
     option1MaxY, option1MinY, option2MaxY, option2MinY;
-JE_boolean optionAni1Go, optionAni2Go, option1Stop, option2Stop;
+bool optionAni1Go, optionAni2Go, option1Stop, option2Stop;
 double optionSatelliteRotate;
 
 int optionAttachmentMove;
-JE_boolean optionAttachmentLinked, optionAttachmentReturn;
+bool optionAttachmentLinked, optionAttachmentReturn;
 
 
 JE_byte chargeWait, chargeLevel, chargeMax, chargeGr, chargeGrWait;
 
-JE_boolean playerHNotReady;
+bool playerHNotReady;
 JE_word playerHX[20], playerHY[20]; /* [1..20] */
 
 JE_word neat;
@@ -451,9 +450,9 @@ JE_word neat;
 JE_REXtype REXavail;
 struct
 {
-	JE_byte    delay;
-	JE_word    ex, ey;
-	JE_boolean big;
+	JE_byte delay;
+	JE_word ex, ey;
+	bool big;
 	/*JE_byte fill[2] \* [1..2] \* */
 } REXdat[20]; /* [1..20] */
 
@@ -478,15 +477,15 @@ long tempL;
 double tempR, tempR2;
 /*int tempX, tempY;*/
 
-JE_boolean tempB;
+bool tempB;
 JE_byte temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
 JE_word tempX, tempY, tempX2, tempY2;
 JE_word tempW, tempW2, tempW3, tempW4, tempW5, tempOfs;
 
 
-JE_boolean doNotSaveBackup;
+bool doNotSaveBackup;
 
-JE_boolean tempSpecial;
+bool tempSpecial;
 
 JE_word x, y;
 int a, b, c, d, z, zz;
@@ -498,8 +497,8 @@ JE_byte **BKwrap1to, **BKwrap2to, **BKwrap3to,
 JE_byte min, max;
 
 int specialWeaponFilter, specialWeaponFreq;
-JE_word     specialWeaponWpn;
-JE_boolean  linkToPlayer;
+JE_word specialWeaponWpn;
+bool linkToPlayer;
 
 int baseArmor, baseArmor2;
 JE_word shipGr, shipGr2;
@@ -507,8 +506,8 @@ JE_byte *shipGrPtr, *shipGr2ptr;
 
 void JE_getShipInfo( void )
 {
-	JE_boolean extraShip, extraShip2;
-	JE_byte    base, base2;
+	bool extraShip, extraShip2;
+	JE_byte base, base2;
 
 	shipGrPtr = shapes9;
 	shipGr2ptr = shapes9;
@@ -1520,7 +1519,7 @@ void JE_setupExplosion( int x, int y, int explodeType )
 	}
 }
 
-void JE_setupExplosionLarge( JE_boolean enemyGround, JE_byte exploNum, int x, int y )
+void JE_setupExplosionLarge( bool enemyGround, JE_byte exploNum, int x, int y )
 {
 	JE_byte z;
 
@@ -1588,7 +1587,7 @@ void JE_wipeShieldArmorBars( void )
 JE_byte JE_playerDamage( JE_word tempX, JE_word tempY,
                          JE_byte temp,
                          int *PX, int *PY,
-                         JE_boolean *playerAlive,
+                         bool *playerAlive,
                          JE_byte *playerStillExploding,
                          int *armorLevel,
                          int *shield )

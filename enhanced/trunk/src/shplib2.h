@@ -28,7 +28,7 @@ extern JE_word shapex [MAXIMUM_SHAPE];
 extern unsigned long memory;
 extern JE_word shapey [MAXIMUM_SHAPE];
 extern JE_word maxshape;
-extern JE_boolean shapexist [MAXIMUM_SHAPE];
+extern bool shapexist[MAXIMUM_SHAPE];
 extern void * shapearray [MAXIMUM_SHAPE];
 extern char* f; /* was type TEXT */
 #endif

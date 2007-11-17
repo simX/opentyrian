@@ -44,7 +44,7 @@ JE_byte map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 
 
 SDL_Surface *smoothiesScreen;
-JE_boolean  anySmoothies;
+bool  anySmoothies;
 JE_byte     SDAT[9]; /* [1..9] */
 
 JE_byte temp, temp2;
@@ -69,7 +69,7 @@ void JE_darkenBackground( JE_word neat )
 
 void JE_drawBackground2( void )
 {
-	JE_boolean useBackground1ofs;
+	bool useBackground1ofs;
 
 	JE_byte **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */

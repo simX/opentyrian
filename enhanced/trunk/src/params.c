@@ -28,15 +28,15 @@
 #include <time.h>
 
 
-JE_boolean timMode, richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, useBios, noSound, quikJuke, noRetrace, joyMax, forceAveraging, forceMaxVolume, soundInfoReport, stupidWindows;
+bool timMode, richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, useBios, noSound, quikJuke, noRetrace, joyMax, forceAveraging, forceMaxVolume, soundInfoReport, stupidWindows;
 
 /* JE: Special Note:
  * The two booleans to detect network play for Tim's stuff.
  * It's in here because of the dumb port 60 bug.
  */
-JE_boolean isNetworkGame, isNetworkActive;
+bool isNetworkGame, isNetworkActive;
 
-JE_boolean tyrianXmas;
+bool tyrianXmas;
 
 /* YKS: Note: LOOT cheat had non letters removed. */
 const char pars[18][9] = {
