@@ -65,9 +65,9 @@ void JE_func( JE_byte col );
 void JE_sort( void );
 
 JE_word JE_powerLevelCost( JE_word base, JE_byte level );
-JE_longint JE_getCost( JE_byte itemType, JE_word itemNum );
-JE_longint JE_getValue( JE_byte itemType, JE_word itemNum );
-JE_longint JE_totalScore( JE_longint score, JE_PItemsType pitems );
+unsigned long JE_getCost( JE_byte itemType, JE_word itemNum );
+unsigned int JE_getValue( JE_byte itemType, JE_word itemNum );
+unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems );
 
 void JE_drawPortConfigButtons( void );
 void JE_outCharGlow( JE_word x, JE_word y, char *s );
@@ -92,7 +92,7 @@ void JE_mainGamePlayerFunctions( void );
 char *JE_getName( JE_byte pnum );
 
 void JE_playerCollide( int *px, int *py, int *lastTurn, int *lastTurn2,
-                       JE_longint *score, int *armorLevel, int *shield, JE_boolean *playerAlive,
+                       unsigned long *score, int *armorLevel, int *shield, JE_boolean *playerAlive,
                        JE_byte *playerStillExploding, JE_byte playerNum, JE_byte playerInvulnerable );
 
 

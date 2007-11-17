@@ -24,8 +24,8 @@
 #undef NO_EXTERNS
 
 
-JE_longint startTime;
-JE_longint frames;
+unsigned long startTime;
+unsigned long frames;
 
 int netPlayers,     /* Number of net players: 0, 1 or 2 */
     thisPlayerNum = 0,  /* Player number on this PC (1 or 2) */

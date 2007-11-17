@@ -25,7 +25,7 @@
 
 #define PCX_NUM 13
 
-typedef JE_longint JE_pcxpostype[PCX_NUM + 1]; /* [1..PCXnum + 1] */
+typedef unsigned long JE_pcxpostype[PCX_NUM + 1]; /* [1..PCXnum + 1] */
 
 #ifndef NO_EXTERNS
 extern const char *pcxfile[PCX_NUM]; /* [1..PCXnum] */

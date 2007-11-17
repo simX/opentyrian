@@ -28,7 +28,7 @@
 #include "SDL.h"
 
 
-typedef JE_longint JE_SongPosType [MUSIC_NUM + 1]; /* [1..Musicnum + 1] */
+typedef unsigned long JE_SongPosType [MUSIC_NUM + 1]; /* [1..Musicnum + 1] */
 typedef JE_byte JE_DigiMixType [0x4ff];
 typedef JE_byte JE_AweType [35000];
 
@@ -47,7 +47,7 @@ extern JE_byte sysintwait;
 extern JE_word sbport;
 extern JE_DigiMixType * digimix;
 extern JE_byte midierror;
-extern JE_longint address;
+extern unsigned long address;
 extern JE_word intcount;
 
 extern JE_word dspversion;

@@ -48,8 +48,8 @@ typedef struct
 	JE_word       encode;
 	JE_word       level;
 	JE_PItemsType items;
-	JE_longint    score;
-	JE_longint    score2;
+	unsigned long score;
+	unsigned long score2;
 	char          levelName[11]; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
 	JE_char       name[15]; /* [1..14] */ /* SYN: Added extra byte for null */
 	JE_byte       cubes;
@@ -64,7 +64,7 @@ typedef struct
 	JE_byte       initialDifficulty;
 
 	/* High Scores - Each episode has both sets of 1&2 player selections - with 3 in each */
-	JE_longint    highScore1,
+	unsigned long highScore1,
 	              highScore2;
 	char          highScoreName[30]; /* string [29] */
 	JE_byte       highScoreDiff;
@@ -94,7 +94,7 @@ extern JE_word lastCubeMax, cubeMax;
 extern JE_word cubeList[4];
 extern JE_boolean gameHasRepeated;
 extern int difficultyLevel, oldDifficultyLevel, initialDifficulty;
-extern JE_longint score, score2;
+extern unsigned long score, score2;
 extern int power, lastPower, powerAdd;
 extern JE_PItemsType pItems, pItemsPlayer2, pItemsBack, pItemsBack2;
 extern int shield, shieldMax, shieldSet;

@@ -49,7 +49,7 @@ JE_byte sysintwait;
 JE_word sbport;
 JE_DigiMixType * digimix;
 JE_byte midierror;
-JE_longint address;
+unsigned long address;
 JE_word intcount;
 JE_word dspversion;
 const char hexa[17] = "0123456789ABCDEF";
@@ -153,7 +153,10 @@ void JE_loadSong( JE_word songnum )
 		/* SYN: We're loading offsets into MUSIC.MUS for each song here. */
 		notYetLoadedMusic = false;
 		efread(&x, sizeof(x), 1, fi);
-		efread(songPos, sizeof(JE_longint), sizeof(songPos) / sizeof(JE_longint), fi); /* SYN: reads long int (i.e. 4) * MUSICNUM */
+		for (int i = 0; i <= MUSIC_NUM; i++)
+		{
+			vfread(songPos[i], Sint32, fi); /* SYN: reads long int (i.e. 4) * MUSICNUM */
+		}
 		fseek(fi, 0, SEEK_END);
 		songPos[MUSIC_NUM] = ftell(fi); /* Store file size */
 	}
@@ -173,8 +176,8 @@ void JE_loadSndFile( void )
 	FILE *fi;
 	JE_byte y, z;
 	JE_word x;
-	JE_longint templ;
-	JE_longint sndPos[2][SOUND_NUM + 1]; /* Reindexed by -1, dammit Jason */
+	unsigned long templ;
+	unsigned long sndPos[2][SOUND_NUM + 1]; /* Reindexed by -1, dammit Jason */
 	JE_word sndNum;
 
 	/* SYN: Loading offsets into TYRIAN.SND */
@@ -183,7 +186,7 @@ void JE_loadSndFile( void )
 
 	for (x = 0; x < sndNum; x++)
 	{
-		efread(&sndPos[0][x], sizeof(sndPos[0][x]), 1, fi);
+		vfread(sndPos[0][x], Sint32, fi);
 	}
 	fseek(fi, 0, SEEK_END);
 	sndPos[1][sndNum] = ftell(fi); /* Store file size */
@@ -211,7 +214,7 @@ void JE_loadSndFile( void )
 
 	for (x = 0; x < sndNum; x++)
 	{
-		efread(&sndPos[1][x], sizeof(sndPos[1][x]), 1, fi);
+		vfread(sndPos[1][x], Sint32, fi);
 	}
 	fseek(fi, 0, SEEK_END);
 	sndPos[1][sndNum] = ftell(fi); /* Store file size */

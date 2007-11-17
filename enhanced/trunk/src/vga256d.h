@@ -76,7 +76,7 @@ void JE_barShade( JE_word a, JE_word b, JE_word c, JE_word d );
 void JE_barShade2( JE_word a, JE_word b, JE_word c, JE_word d );
 void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d );
 void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c );
-void JE_line( JE_word a, JE_byte b, JE_longint c, JE_byte d, JE_byte e );
+void JE_line( JE_word a, JE_byte b, int c, JE_byte d, JE_byte e );
 void JE_getImage16( JE_word a, JE_byte b, JE_shape16B *p );
 void JE_putImage16( JE_word a, JE_byte b, JE_shape16B *p );
 void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s );

@@ -43,7 +43,7 @@
 #define LVL_NUM_4 (20 * 2)
 #define LVL_NUM_5 (1 * 2)
 
-/*! typedef JE_longint JE_LvlPosType[LVLNum + 2];*/ /* [1..LVLnum + 2] */
+/*! typedef unsigned long JE_LvlPosType[LVLNum + 2];*/ /* [1..LVLnum + 2] */
 
 #ifndef NO_EXTERNS
 extern const JE_char shapeFile[34]; /* [1..34] */

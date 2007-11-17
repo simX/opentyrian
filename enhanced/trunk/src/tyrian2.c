@@ -2913,7 +2913,7 @@ explosion_draw_overflow:
 		sprintf(buffer, "Enemies onscreen = %d", enemyOnScreen);
 		JE_outText(30, 90, buffer, 6, 0);
 
-		debugHist = debugHist + abs((JE_longint)debugTime - (JE_longint)lastDebugTime);
+		debugHist = debugHist + abs(debugTime - lastDebugTime);
 		debugHistCount++;
 		sprintf(tempStr, "%2.3f", 1000.0f / round(debugHist / debugHistCount));
 		sprintf(buffer, "X:%d Y:%-5d  %s FPS  %d %d %d %d", (mapX - 1) * 12 + PX, curLoc, tempStr, lastTurn2, lastTurn, PX, PY);
@@ -3454,12 +3454,12 @@ new_game:
 
 								if (twoPlayerMode)
 								{
-									sprintf(levelWarningText[0], "%s %d", miscText[40], score);
-									sprintf(levelWarningText[1], "%s %d", miscText[41], score2);
+									sprintf(levelWarningText[0], "%s %lu", miscText[40], score);
+									sprintf(levelWarningText[1], "%s %lu", miscText[41], score2);
 									strcpy(levelWarningText[2], "");
 									levelWarningLines = 3;
 								} else {
-									sprintf(levelWarningText[0], "%s %d", miscText[37], JE_totalScore(score, pItems));
+									sprintf(levelWarningText[0], "%s %lu", miscText[37], JE_totalScore(score, pItems));
 									strcpy(levelWarningText[1], "");
 									levelWarningLines = 2;
 								}
@@ -5937,7 +5937,7 @@ JE_byte skipMove;
 JE_byte tempPowerLevel[7];
 JE_boolean firstMenu9, paletteChanged;
 JE_MenuChoiceType menuChoices;
-JE_longint shipValue;
+unsigned long shipValue;
 JE_word curX, curY, curWindow, selectX, selectY, tempX, tempY, tempAvail, x, y, textYPos;
 JE_byte flashDelay;
 int col, colC;
@@ -5962,9 +5962,9 @@ JE_word faceX, faceY;
 
 JE_byte currentFaceNum;
 
-JE_longint JE_cashLeft( void )
+unsigned long JE_cashLeft( void )
 {
-	JE_longint tempL;
+	unsigned long tempL;
 	JE_byte x;
 	JE_word itemNum;
 
@@ -6470,7 +6470,7 @@ item_screen_start:
 			{
 				char buf[20];
 
-				snprintf(buf, sizeof buf, "%d", score);
+				snprintf(buf, sizeof buf, "%lu", score);
 				JE_textShade(65, 173, buf, 1, 6, DARKEN);
 			}
 			JE_barDrawShadow(42, 152, 3, 14, armorLevel, 2, 13);
@@ -6484,10 +6484,10 @@ item_screen_start:
 			{
 				char buf[50];
 
-				snprintf(buf, sizeof buf, "%s %d", miscText[40], score);
+				snprintf(buf, sizeof buf, "%s %lu", miscText[40], score);
 				JE_textShade(25, 50, buf, 15, 0, FULL_SHADE);
 
-				snprintf(buf, sizeof buf, "%s %d", miscText[41], score2);
+				snprintf(buf, sizeof buf, "%s %lu", miscText[41], score2);
 				JE_textShade(25, 60, buf, 15, 0, FULL_SHADE);
 			} else if (superArcadeMode > 0 || superTyrian) {
 				helpBoxColor = 15;
@@ -8113,7 +8113,7 @@ void JE_initWeaponView( void )
 void JE_computeDots( void )
 {
 	int tempX, tempY;
-	JE_longint distX, distY;
+	int distX, distY;
 	JE_byte x, y;
 
 	for (x = 0; x < mapPNum; x++)
@@ -8435,7 +8435,7 @@ void JE_drawScore( void )
 	char cl[24];
 	if (curMenu == 4)
 	{
-		sprintf(cl, "%d", JE_cashLeft());
+		sprintf(cl, "%lu", JE_cashLeft());
 		JE_textShade(65, 173, cl, 1, 6, DARKEN);
 	}
 }
@@ -8443,7 +8443,7 @@ void JE_drawScore( void )
 void JE_menuFunction( JE_byte select )
 {
 	JE_byte x;
-	JE_longint tempScore;
+	unsigned long tempScore;
 	JE_word curSelect;
 
 	col = 0;

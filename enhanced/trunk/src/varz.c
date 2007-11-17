@@ -198,11 +198,11 @@ JE_byte newPL[10]; /* [0..9] */ /*Eventsys event 75 parameter*/
 JE_word returnLoc;
 JE_boolean returnActive;
 JE_word galagaShotFreq;
-JE_longint galagaLife;
+unsigned long galagaLife;
 
 JE_boolean debug; /*Debug Mode*/
 Uint32 debugTime, lastDebugTime;
-JE_longint debugHistCount;
+unsigned long debugHistCount;
 double debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
 
@@ -474,7 +474,7 @@ JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 JE_word avail;
 JE_word tempCount;
 int tempI, tempI2, tempI3, tempI4, tempI5;
-JE_longint tempL;
+long tempL;
 double tempR, tempR2;
 /*int tempX, tempY;*/
 

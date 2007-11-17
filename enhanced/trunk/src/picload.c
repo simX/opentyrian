@@ -61,7 +61,7 @@ void JE_loadPic( JE_byte PCXnumber, JE_boolean storepal )
 		efread(&x, sizeof(JE_word), 1, PCXfile);
 		for (x = 0; x < PCX_NUM; x++)
 		{
-			efread(&pcxpos[x], sizeof(JE_longint), 1, PCXfile);
+			vfread(pcxpos[x], Sint32, PCXfile);
 		}
 		fseek(PCXfile, 0, SEEK_END);
 		pcxpos[PCX_NUM] = ftell(PCXfile);

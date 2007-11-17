@@ -82,10 +82,10 @@ FILE *fopen_check( const char *file, const char *mode )
 }
 
 
-JE_longint JE_getFileSize( const char *filename )
+unsigned long JE_getFileSize( const char *filename )
 {
 	FILE *f;
-	JE_longint size = 0;
+	unsigned long size = 0;
 
 	errorActive = false;
 	f = fopen(JE_locateFile(filename), "rb");

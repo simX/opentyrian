@@ -31,12 +31,12 @@ typedef struct
 	int        xchg, ychg;
 	JE_word    randomenemytype;    /* 0=no enemy */
 	int        ex, ey;
-	JE_longint sync;
+	unsigned long sync;
 } JE_PacketData;
 
 #ifndef NO_EXTERNS
-extern JE_longint startTime;
-extern JE_longint frames;
+extern unsigned long startTime;
+extern unsigned long frames;
 extern int netPlayers, thisPlayerNum, otherPlayerNum;
 extern JE_boolean haltGame;
 extern JE_boolean netQuit;

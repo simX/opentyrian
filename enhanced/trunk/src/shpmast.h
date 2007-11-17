@@ -25,7 +25,7 @@
 
 #define SHP_NUM 12
 
-typedef JE_longint JE_shppostype[SHP_NUM + 1]; /* [1..SHPnum + 1] */
+typedef unsigned long JE_shppostype[SHP_NUM + 1]; /* [1..SHPnum + 1] */
 
 #ifndef NO_EXTERNS
 extern const char *shpfile[SHP_NUM];

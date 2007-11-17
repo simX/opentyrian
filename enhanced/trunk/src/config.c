@@ -181,7 +181,7 @@ JE_boolean gameHasRepeated;
 int difficultyLevel, oldDifficultyLevel, initialDifficulty;
 
 /* Player Stuff */
-JE_longint score, score2;
+unsigned long score, score2;
 
 JE_PItemsType pItems, pItemsPlayer2, pItemsBack, pItemsBack2;
 int power, lastPower, powerAdd;
@@ -800,11 +800,11 @@ void JE_loadConfiguration( void )
 			memcpy(saveFiles[z].items, ((JE_PItemsType*)p), sizeof(JE_PItemsType));
 			p += sizeof(JE_PItemsType);
 
-			saveFiles[z].score = *((JE_longint*)p);
-			p += sizeof(JE_longint);
+			saveFiles[z].score = *((Sint32 *)p);
+			p += sizeof(Sint32);
 
-			saveFiles[z].score2 = *((JE_longint*)p);
-			p += sizeof(JE_longint);
+			saveFiles[z].score2 = *((Sint32 *)p);
+			p += sizeof(Sint32);
 
 			/* SYN: Pascal strings are prefixed by a byte holding the length! */
 			p += 1; /* Skip length byte */
@@ -847,11 +847,11 @@ void JE_loadConfiguration( void )
 			saveFiles[z].initialDifficulty = *((JE_byte*)p);
 			p += sizeof(JE_byte);
 
-			saveFiles[z].highScore1 = *((JE_longint*)p);
-			p += sizeof(JE_longint);
+			saveFiles[z].highScore1 = *((Sint32 *)p);
+			p += sizeof(Sint32);
 
-			saveFiles[z].highScore2 = *((JE_longint*)p);
-			p += sizeof(JE_longint);
+			saveFiles[z].highScore2 = *((Sint32 *)p);
+			p += sizeof(Sint32);
 
 			p += 1; /* Skip length byte wheeee */
 			memcpy(saveFiles[z].highScoreName, ((char*)p), 29);
@@ -924,11 +924,11 @@ void JE_saveConfiguration( void )
 		memcpy(((JE_PItemsType*)p), saveFiles[z].items, sizeof(JE_PItemsType));
 		p += sizeof(JE_PItemsType);
 
-		*((JE_longint*)p) = saveFiles[z].score ;
-		p += sizeof(JE_longint);
+		*((Sint32 *)p) = saveFiles[z].score ;
+		p += sizeof(Sint32);
 
-		*((JE_longint*)p) = saveFiles[z].score2;
-		p += sizeof(JE_longint);
+		*((Sint32 *)p) = saveFiles[z].score2;
+		p += sizeof(Sint32);
 
 		/* SYN: Pascal strings are prefixed by a byte holding the length! */
 		*((JE_byte*)p) = strlen(saveFiles[z].levelName);
@@ -970,11 +970,11 @@ void JE_saveConfiguration( void )
 		*((JE_byte*)p) = saveFiles[z].initialDifficulty;
 		p += sizeof(JE_byte);
 
-		*((JE_longint*)p) = saveFiles[z].highScore1;
-		p += sizeof(JE_longint);
+		*((Sint32 *)p) = saveFiles[z].highScore1;
+		p += sizeof(Sint32);
 
-		*((JE_longint*)p) = saveFiles[z].highScore2 ;
-		p += sizeof(JE_longint);
+		*((Sint32 *)p) = saveFiles[z].highScore2 ;
+		p += sizeof(Sint32);
 
 		p++; /* Skip length byte wheeee */
 		memcpy(((char*)p), saveFiles[z].highScoreName, 29);

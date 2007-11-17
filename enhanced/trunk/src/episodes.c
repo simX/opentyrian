@@ -47,7 +47,7 @@ JE_byte    episodeNum = 0;
 JE_boolean episodeAvail[EPISODE_MAX]; /* [1..episodemax] */
 char       macroFile[13], cubeFile[13]; /* string [12] */
 
-JE_longint episode1DataLoc;
+unsigned long episode1DataLoc;
 
 /* Tells the game whether the level currently loaded is a bonus level. */
 JE_boolean bonusLevel;
@@ -68,7 +68,7 @@ void JE_loadItemDat( void )
 		fseek(lvlFile, lvlPos[lvlNum-1], SEEK_SET);
 	} else {
 		JE_resetFile(&lvlFile, "tyrian.hdt");
-		efread(&episode1DataLoc, sizeof(JE_longint), 1, lvlFile);
+		vfread(episode1DataLoc, Sint32, lvlFile);
 		fseek(lvlFile, episode1DataLoc, SEEK_SET);
 	}
 

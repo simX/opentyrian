@@ -31,7 +31,7 @@
 
 
 JE_word shapex [MAXIMUM_SHAPE];
-JE_longint memory;
+unsigned long memory;
 JE_word shapey [MAXIMUM_SHAPE];
 JE_word maxshape;
 JE_boolean shapexist [MAXIMUM_SHAPE];

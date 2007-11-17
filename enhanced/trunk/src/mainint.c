@@ -748,7 +748,7 @@ void JE_loadMainShapeTables( void )
 
 	FILE *f;
 
-	typedef JE_longint JE_ShpPosType[SHP_NUM + 1]; /* [1..shpnum + 1] */
+	typedef unsigned long JE_ShpPosType[SHP_NUM + 1]; /* [1..shpnum + 1] */
 
 	JE_ShpPosType shpPos;
 	JE_word shpNumb;
@@ -763,7 +763,7 @@ void JE_loadMainShapeTables( void )
 	efread(&shpNumb, sizeof(JE_word), 1, f);
 	for (x = 0; x < shpNumb; x++)
 	{
-		efread(&shpPos[x], sizeof(JE_longint), 1, f);
+		vfread(shpPos[x], Sint32, f);
 	}
 	fseek(f, 0, SEEK_END);
 	shpPos[shpNumb] = ftell(f);
@@ -815,7 +815,7 @@ JE_word JE_powerLevelCost( JE_word base, JE_byte level )
 	return tempCost;
 }
 
-JE_longint JE_getCost( JE_byte itemType, JE_word itemNum )
+unsigned long JE_getCost( JE_byte itemType, JE_word itemNum )
 {
 	switch (itemType)
 	{
@@ -1056,9 +1056,9 @@ void JE_loadScreen( void )
 	} while (!quit);
 }
 
-JE_longint JE_totalScore( JE_longint score, JE_PItemsType pitems )
+unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems )
 {
-	JE_longint tempL = score;
+	unsigned long tempL = score;
 
 	tempL += JE_getValue(2, pItems[11]);
 	tempL += JE_getValue(3, pItems[0]);
@@ -1071,9 +1071,9 @@ JE_longint JE_totalScore( JE_longint score, JE_PItemsType pitems )
 	return tempL;
 }
 
-JE_longint JE_getValue( JE_byte itemType, JE_word itemNum )
+unsigned int JE_getValue( JE_byte itemType, JE_word itemNum )
 {
-	JE_longint tempW2 = 0;
+	unsigned int tempW2 = 0;
 	JE_byte z;
 
 	switch (itemType)
@@ -1109,7 +1109,6 @@ JE_boolean JE_nextEpisode( void )
 {
 	JE_boolean found;
 	int x;
-	JE_longint temp;
 	
 	strcpy(lastLevelName, "Completed");
 	x = episodeNum;
@@ -1293,7 +1292,7 @@ void JE_highScoreScreen( void )
 					saveFiles[temp + z].highScoreDiff = 0;
 					temp5 = 0;
 				}
-				sprintf(scoretemp, "~#%d:~ %d", z + 1, saveFiles[temp+z].highScore1);
+				sprintf(scoretemp, "~#%d:~ %lu", z + 1, saveFiles[temp+z].highScore1);
 				JE_textShade(250, ((z+1) * 10) + 65 , difficultyNameB[temp5], 15, temp5 + ((JE_byte) (temp5 == 0)) - 1, FULL_SHADE);
 				JE_textShade(20, ((z+1) * 10) + 65 , scoretemp, 15, 0, FULL_SHADE);
 				JE_textShade(110, ((z+1) * 10) + 65 , saveFiles[temp + z].highScoreName, 15, 2, FULL_SHADE);
@@ -1315,7 +1314,7 @@ void JE_highScoreScreen( void )
 					saveFiles[temp + z].highScoreDiff = 0;
 					temp5 = 0;
 				}
-				sprintf(scoretemp, "~#%d:~ %d", z + 1, saveFiles[temp+z].highScore1); /* Not .highScore2 for some reason */
+				sprintf(scoretemp, "~#%d:~ %lu", z + 1, saveFiles[temp+z].highScore1); /* Not .highScore2 for some reason */
 				JE_textShade(250, ((z+1) * 10) + 125 , difficultyNameB[temp5], 15, temp5 + ((JE_byte) (temp5 == 0)) - 1, FULL_SHADE);
 				JE_textShade(20, ((z+1) * 10) + 125 , scoretemp, 15, 0, FULL_SHADE);
 				JE_textShade(110, ((z+1) * 10) + 125 , saveFiles[temp + z].highScoreName, 15, 2, FULL_SHADE);
@@ -1691,7 +1690,7 @@ void JE_setNewGameVol( void )
 void JE_changeDifficulty( void )
 {
 	JE_byte newDifficultyLevel;
-	JE_longint temp;
+	unsigned long temp;
 
 	if (twoPlayerMode)
 	{
@@ -1929,7 +1928,7 @@ void JE_sort( void )
 		{
 			if (saveFiles[temp+a].highScore1 < saveFiles[temp+b].highScore1)
 			{
-				JE_longint tempLI;
+				unsigned long tempLI;
 				char tempStr[30];
 				JE_byte tempByte;
 
@@ -2194,13 +2193,13 @@ void JE_endLevelAni( void )
 	
 	if (twoPlayerMode)
 	{
-		sprintf(tempStr, "%s %d", miscText[41-1], score);
+		sprintf(tempStr, "%s %lu", miscText[41-1], score);
 		JE_outTextGlow(30, 50, tempStr);
 		
-		sprintf(tempStr, "%s %d", miscText[42-1], score2);
+		sprintf(tempStr, "%s %lu", miscText[42-1], score2);
 		JE_outTextGlow(30, 70, tempStr);
 	} else {
-		sprintf(tempStr, "%s %d", miscText[28-1], score);
+		sprintf(tempStr, "%s %lu", miscText[28-1], score);
 		JE_outTextGlow(30, 50, tempStr);
 		
 		JE_updateStream();
@@ -2558,11 +2557,11 @@ void JE_inGameDisplays( void )
 	
 	char tempstr[256];
 
-	sprintf(tempstr, "%d", score);
+	sprintf(tempstr, "%lu", score);
 	JE_textShade(30, 175, tempstr, 2, 4, FULL_SHADE);
 	if (twoPlayerMode && !galagaMode)
 	{
-		sprintf(tempstr, "%d", score2);
+		sprintf(tempstr, "%lu", score2);
 		JE_textShade(230, 175, tempstr, 2, 4, FULL_SHADE);
 	}
 
@@ -4287,7 +4286,7 @@ char *JE_getName( JE_byte pnum )
 }
 
 void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
-                       JE_longint *score_, int *armorLevel_, int *shield_, JE_boolean *playerAlive_,
+                       unsigned long *score_, int *armorLevel_, int *shield_, JE_boolean *playerAlive_,
                        JE_byte *playerStillExploding_, JE_byte playerNum_, JE_byte playerInvulnerable_ )
 {
 	char tempStr[256];

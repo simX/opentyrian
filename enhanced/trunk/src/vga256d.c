@@ -372,7 +372,7 @@ void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
 	}
 }
 
-void JE_line( JE_word a, JE_byte b, JE_longint c, JE_byte d, JE_byte e )
+void JE_line( JE_word a, JE_byte b, int c, JE_byte d, JE_byte e )
 {
 	double g, h, x, y;
 	int z, v;

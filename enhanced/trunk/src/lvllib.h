@@ -23,7 +23,7 @@
 #include "opentyr.h"
 
 
-typedef JE_longint JE_LvlPosType[43]; /* [1..42 + 1] */
+typedef unsigned long JE_LvlPosType[43]; /* [1..42 + 1] */
 
 #ifndef NO_EXTERNS
 extern JE_LvlPosType lvlPos;

@@ -40,7 +40,7 @@ void JE_analyzeLevel( void )
 	efread(&lvlNum, sizeof(JE_word), 1, f);
 	for (x = 0; x < lvlNum; x++)
 	{
-		efread(&lvlPos[x], sizeof(JE_longint), 1, f);
+		vfread(lvlPos[x], Sint32, f);
 	}
 	fseek(f, 0, SEEK_END);
 	lvlPos[lvlNum] = ftell(f);

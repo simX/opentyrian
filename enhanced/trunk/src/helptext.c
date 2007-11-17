@@ -149,7 +149,7 @@ void JE_loadHelpText( void )
 	FILE *f; int i;
 
 	JE_resetFile(&f, "tyrian.hdt");
-	efread(&episode1DataLoc, sizeof(JE_longint), 1, f);
+	vfread(episode1DataLoc, Sint32, f);
 	JE_skipCryptLn(f);
 
 	for (i = 0; i < MAX_HELP_MESSAGE; i++)

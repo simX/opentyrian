@@ -47,6 +47,6 @@ char *JE_locateFile( const char *filename );
 void JE_findTyrian( const char *filename );
 JE_boolean JE_isCFGThere( void );
 /* void JE_OutputString( char *s ); Obscure DOS trick (?) */
-JE_longint JE_getFileSize( const char *filename );
+unsigned long JE_getFileSize( const char *filename );
 
 #endif /* ERROR_H */

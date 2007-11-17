@@ -25,7 +25,7 @@
 
 #ifndef NO_EXTERNS
 extern JE_word shapex [MAXIMUM_SHAPE];
-extern JE_longint memory;
+extern unsigned long memory;
 extern JE_word shapey [MAXIMUM_SHAPE];
 extern JE_word maxshape;
 extern JE_boolean shapexist [MAXIMUM_SHAPE];
