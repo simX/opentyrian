@@ -57,12 +57,12 @@ void JE_renderFrame( JE_word framenumber )
 	STUB();
 }
 
-void JE_playAnim( JE_char *animfile, JE_byte startingframe, JE_boolean keyhalt, JE_byte speed )
+void JE_playAnim( const char *animfile, JE_byte startingframe, JE_boolean keyhalt, JE_byte speed )
 {
 	STUB();
 }
 
-void JE_loadAnim( JE_char *filename )
+void JE_loadAnim( const char *filename )
 {
 	STUB();
 }

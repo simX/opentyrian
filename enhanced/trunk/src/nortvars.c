@@ -53,7 +53,7 @@ JE_word JE_btow(JE_byte a, JE_byte b)
 	return (JE_word) (((short) b) * 256 + a);
 }
 
-void JE_loadShapeFile( JE_ShapeType *shapes, JE_char s )
+void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 {
 	FILE *f;
 	JE_word x;
@@ -81,7 +81,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, JE_char s )
 	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
 }
 
-void JE_loadNewShapeFile( JE_NewShapeType *shapes, JE_char s )
+void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 {
 	FILE *f;
 	JE_word x, y, z;
@@ -147,7 +147,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, JE_char s )
 	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
 }
 
-void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, JE_char s )
+void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s )
 {
 	FILE *f;
 

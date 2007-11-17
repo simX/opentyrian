@@ -50,7 +50,7 @@
 typedef Uint16 JE_word;
 typedef Uint8  JE_byte;
 typedef bool   JE_boolean;
-typedef char   JE_char;
+//typedef char   JE_char;
 //typedef double JE_real; - Done
 #endif
 

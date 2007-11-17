@@ -23,7 +23,7 @@
 #include "opentyr.h"
 
 
-typedef JE_char JE_TextBuffer[4096]; /* [1..4096] */
+typedef char JE_TextBuffer[4096]; /* [1..4096] */
 
 struct JE_ColorRec {
 	JE_byte r, g, b;
@@ -55,11 +55,11 @@ void JE_add( JE_byte nextbyte );
 void JE_endShape( void );
 void JE_startNewShape( void ); */
 
-void JE_loadShapeFile( JE_ShapeType *shapes, JE_char s );
-void JE_loadNewShapeFile( JE_NewShapeType *shapes, JE_char s );
+void JE_loadShapeFile( JE_ShapeType *shapes, char s );
+void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s );
 
-void JE_compressShapeFileC( JE_char s );
-void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, JE_char s );
+void JE_compressShapeFileC( char s );
+void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s );
 
 JE_word JE_btow(JE_byte a, JE_byte b);
 

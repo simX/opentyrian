@@ -3173,7 +3173,7 @@ void JE_loadMap( void )
 /*	FILE *tempFile;*/ /*Extract map file from LVL file*/
 
 
-	JE_char char_mapFile, char_shapeFile;
+	char char_mapFile, char_shapeFile;
 
 	JE_DanCShape shape;
 	JE_boolean shapeBlank;
@@ -3181,7 +3181,7 @@ void JE_loadMap( void )
 
 	FILE *f;
 /*	FILE *f2;*/
-	JE_char k2, k3;
+	char k2, k3;
 	JE_word x, y;
 	int yy, z, a, b;
 	JE_word mapSh[3][128]; /* [1..3, 0..127] */
@@ -4051,7 +4051,7 @@ void JE_titleScreen( JE_boolean animate )
 	JE_boolean redraw = true,
 	           fadeIn = false,
 	           first = true;
-	JE_char flash;
+	char flash;
 	JE_word z;
 
 	JE_word temp; /* JE_byte temp; from varz.h will overflow in for loop */

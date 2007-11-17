@@ -30,7 +30,7 @@
 #include <stdio.h>
 
 JE_word randomcount;
-JE_char dir[256]; /* increase me */
+char dir[256]; /* increase me */
 
 JE_boolean errorActive = true;
 JE_boolean errorOccurred = false;
@@ -163,7 +163,7 @@ void JE_findTyrian( const char *filename )
 
 char *JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant !!! */
 {
-	static JE_char buf[1024];
+	static char buf[1024];
 
 	if (JE_find(filename))
 	{
@@ -229,7 +229,7 @@ void JE_DetectCFG( void )
 	STUB();
 }
 
-void JE_outputString( JE_char* s )
+void JE_outputString( const char *s )
 {
 	STUB();
 }

@@ -100,7 +100,7 @@ typedef struct JE_SingleEnemyType JE_MultiEnemyType[100]; /* [1..100] */
 
 typedef JE_word JE_DanCShape[(24 * 28) / 2]; /* [1..(24*28) div 2] */
 
-typedef JE_char JE_CharString[256]; /* [1..256] */
+typedef char JE_CharString[256]; /* [1..256] */
 
 typedef JE_byte JE_Map1Buffer[24 * 28 * 13 * 4]; /* [1..24*28*13*4] */
 

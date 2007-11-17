@@ -34,7 +34,7 @@
 
 
 JE_boolean mouseInstalled = true;
-JE_char k;
+char k;
 
 SDL_Surface *VGAScreen, *VGAScreenSeg;
 SDL_Surface *game_screen;
@@ -427,7 +427,7 @@ void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s )
 	}
 }
 
-void JE_getK( JE_char *k )
+void JE_getK( char *k )
 {
 	SDL_Event ev;
 
@@ -445,14 +445,14 @@ void JE_getK( JE_char *k )
 	}
 }
 
-void JE_getUpK( JE_char *k )
+void JE_getUpK( char *k )
 {
 	printf("!!! WARNING: JE_getupk is deprecated! %s:%d\n", __FILE__, __LINE__);
 	JE_getK(k);
 	*k = toupper(*k);
 }
 
-JE_boolean JE_keyPressed( JE_char *kp )
+JE_boolean JE_keyPressed( char *kp )
 {
 	SDL_Event ev;
 

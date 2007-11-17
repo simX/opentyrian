@@ -203,7 +203,7 @@ void JE_helpSystem( JE_byte startTopic )
 {
 	int page, lastPage = 0;
 	JE_byte menu;
-	JE_char flash;
+	char flash;
 
 	page = topicStart[startTopic-1];
 
@@ -233,7 +233,7 @@ void JE_helpSystem( JE_byte startTopic )
 
 		if (page > 0)
 		{
-			JE_char buf[128];
+			char buf[128];
 
 			sprintf(buf, "%s %d", miscText[24], page-topicStart[temp2]+1);
 			JE_outText(10, 192, buf, 13, 5);

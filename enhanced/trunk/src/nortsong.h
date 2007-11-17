@@ -53,7 +53,7 @@ extern JE_word intcount;
 extern JE_word dspversion;
 extern Uint32 target, target2;
 
-extern JE_char hexa[17];
+extern char hexa[17];
 extern JE_boolean mixEnable;
 
 extern JE_boolean notYetLoadedSound, notYetLoadedMusic;

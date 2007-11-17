@@ -36,7 +36,7 @@ JE_word shapey [MAXIMUM_SHAPE];
 JE_word maxshape;
 JE_boolean shapexist [MAXIMUM_SHAPE];
 void * shapearray [MAXIMUM_SHAPE];
-JE_char* f;
+char* f;
 
 void JE_purgeShapes( void )
 {
@@ -53,7 +53,7 @@ void JE_drawShapeNum( JE_word shape, JE_word x, JE_word y )
 	STUB();
 }
 
-void JE_loadShapes( JE_char* shapefile )
+void JE_loadShapes( const char *shapefile )
 {
 	STUB();
 }

@@ -30,14 +30,14 @@ extern JE_word shapey [MAXIMUM_SHAPE];
 extern JE_word maxshape;
 extern JE_boolean shapexist [MAXIMUM_SHAPE];
 extern void * shapearray [MAXIMUM_SHAPE];
-extern JE_char* f; /* was type TEXT */
+extern char* f; /* was type TEXT */
 #endif
 
 void JE_drawShapeS( void* shape, JE_word shapex, JE_word shapey, JE_word x, JE_word y );
 
 void JE_drawShape( void* shape, JE_word shapex, JE_word shapey, JE_word x, JE_word y );
 
-void JE_loadShapes( JE_char* shapefile );
+void JE_loadShapes( const char *shapefile );
 
 void JE_drawShapeNum( JE_word shape, JE_word x, JE_word y );
 

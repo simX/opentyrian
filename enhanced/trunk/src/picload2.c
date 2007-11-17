@@ -31,7 +31,7 @@
 
 JE_ColorType colors2;
 JE_boolean overrideblack;
-JE_char c2;
+char c2;
 
 /* JE_loadPic is found in picload.c */
 

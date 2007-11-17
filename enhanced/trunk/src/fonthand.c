@@ -675,7 +675,7 @@ void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, JE_byte colorbank
 	}
 }
 
-JE_char JE_bright( JE_boolean makebright )
+char JE_bright( JE_boolean makebright )
 {
 	if (makebright)
 	{

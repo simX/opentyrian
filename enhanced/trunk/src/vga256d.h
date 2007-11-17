@@ -38,7 +38,7 @@ typedef JE_screentype *JE_screenptr;
 
 #ifndef NO_EXTERNS
 extern JE_boolean mouseInstalled;
-extern JE_char k;
+extern char k;
 extern SDL_Surface *VGAScreen, *VGAScreenSeg;
 extern SDL_Surface *game_screen;
 extern SDL_Surface *VGAScreen2;
@@ -84,9 +84,9 @@ void JE_absDrawGraphic( JE_ShapeTypeOne s );
 void JE_drawGraphicOver( JE_word x, JE_word y, JE_ShapeTypeOne s );
 void JE_absDrawGraphicOver( JE_ShapeTypeOne s );
 void JE_readGraphic( int x, int y, JE_ShapeTypeOne s );
-void JE_getK( JE_char *y );
-void JE_getUpK( JE_char *k );
-JE_boolean JE_keyPressed( JE_char *kp );
+void JE_getK( char *y );
+void JE_getUpK( char *k );
+JE_boolean JE_keyPressed( char *kp );
 JE_boolean JE_kp( void );
 void JE_wait( JE_byte min, JE_byte sec, JE_byte hun );
 void JE_getPalette( JE_byte col, JE_byte *red, JE_byte *green, JE_byte *blue );
