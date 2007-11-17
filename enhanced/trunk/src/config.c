@@ -178,17 +178,17 @@ JE_word cubeList[4]; /* [1..4] */
 JE_boolean gameHasRepeated;
 
 /* Difficulty */
-JE_shortint difficultyLevel, oldDifficultyLevel, initialDifficulty;
+int difficultyLevel, oldDifficultyLevel, initialDifficulty;
 
 /* Player Stuff */
 JE_longint score, score2;
 
-int           power, lastPower, powerAdd;
 JE_PItemsType pItems, pItemsPlayer2, pItemsBack, pItemsBack2;
-JE_shortint   shield, shieldMax, shieldSet;
-JE_shortint   shield2, shieldMax2;
-int           armorLevel, armorLevel2;
-JE_byte       shieldWait, shieldT;
+int power, lastPower, powerAdd;
+int shield, shieldMax, shieldSet;
+int shield2, shieldMax2;
+int armorLevel, armorLevel2;
+JE_byte shieldWait, shieldT;
 
 JE_byte          shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
 JE_byte          portConfig[10]; /* [1..10] */
@@ -205,7 +205,7 @@ JE_byte mainLevel, nextLevel, saveLevel;   /*Current Level #*/
 JE_KeySettingType keySettings;
 
 /* Configuration */
-JE_shortint levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
+int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
 JE_boolean  filtrationAvail, filterActive, filterFade, filterFadeStart;
 
 JE_boolean gameJustLoaded;

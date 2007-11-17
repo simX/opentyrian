@@ -566,7 +566,7 @@ void JE_drawBackground3( void )
 
 }
 
-void JE_filterScreen( JE_shortint col, JE_shortint int_)
+void JE_filterScreen( Sint8 col, signed int int_ )
 {
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 	int x, y;

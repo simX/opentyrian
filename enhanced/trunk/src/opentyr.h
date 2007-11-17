@@ -46,7 +46,7 @@
 #ifdef PASCAL_TYPES
 typedef Sint32 JE_longint;
 //typedef Sint16 JE_integer; - Done
-typedef Sint8  JE_shortint;
+//typedef Sint8  JE_shortint; - Done
 typedef Uint16 JE_word;
 typedef Uint8  JE_byte;
 typedef bool   JE_boolean;

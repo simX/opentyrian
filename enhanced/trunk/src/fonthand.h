@@ -41,11 +41,11 @@ extern JE_boolean warningRed;
 extern JE_byte warningSoundDelay;
 extern JE_word armorShipDelay;
 extern JE_byte warningCol;
-extern JE_shortint warningColChange;
+extern int warningColChange;
 #endif
 
 void JE_dString( JE_word x, JE_word y, const char *s, JE_byte font );
-void JE_newDrawCShapeBright( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, JE_shortint brightness );
+void JE_newDrawCShapeBright( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, int brightness );
 void JE_newDrawCShapeShadow( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y );
 void JE_newDrawCShapeDarken( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y );
 void JE_newDrawCShapeDarkenNum( JE_byte table, JE_byte shape, int x, int y );
@@ -59,11 +59,11 @@ void JE_newDrawCShapeBrightAndDarken( JE_byte *shape, JE_word xsize, JE_word ysi
 /*void JE_newDrawCShapeZoom( JE_byte table, JE_byte shape, JE_word x, JE_word y, double scale );*/
 JE_word JE_fontCenter( const char *s, JE_byte font );
 JE_word JE_textWidth( const char *s, JE_byte font );
-void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_shortint brightness, JE_byte shadetype );
-void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_shortint brightness );
+void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness, JE_byte shadetype );
+void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness );
 void JE_outTextModify( JE_word x, JE_word y, const char *s, JE_byte filter, JE_byte brightness, JE_byte font );
 void JE_outTextShade( JE_word x, JE_word y, const char *s, JE_byte font );
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, JE_shortint brightness, JE_byte font, JE_boolean shadow );
+void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, JE_boolean shadow );
 void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_byte brightness, JE_byte font );
 JE_char JE_bright( JE_boolean makebright );
 

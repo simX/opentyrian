@@ -86,13 +86,18 @@ void JE_loadItemDat( void )
 		efread(&weapons[i].aim,             sizeof(JE_byte), 1, lvlFile);
 		efread(&weapons[i].attack,          sizeof(JE_byte), 8, lvlFile);
 		efread(&weapons[i].del,             sizeof(JE_byte), 8, lvlFile);
-		efread(&weapons[i].sx,              sizeof(JE_shortint), 8, lvlFile);
-		efread(&weapons[i].sy,              sizeof(JE_shortint), 8, lvlFile);
-		efread(&weapons[i].bx,              sizeof(JE_shortint), 8, lvlFile);
-		efread(&weapons[i].by,              sizeof(JE_shortint), 8, lvlFile);
+		// YKS: I broke the style rules to save space on this huge wall of text. Stab me.
+		for (int j = 0; j < 8; j++)
+			vfread(weapons[i].sx[j],       Sint8, lvlFile);
+		for (int j = 0; j < 8; j++)
+			vfread(weapons[i].sy[j],       Sint8, lvlFile);
+		for (int j = 0; j < 8; j++)
+			vfread(weapons[i].bx[j],       Sint8, lvlFile);
+		for (int j = 0; j < 8; j++)
+			vfread(weapons[i].by[j],       Sint8, lvlFile);
 		efread(&weapons[i].sg,              sizeof(JE_word), 8, lvlFile);
-		efread(&weapons[i].acceleration,    sizeof(JE_shortint), 1, lvlFile);
-		efread(&weapons[i].accelerationx,   sizeof(JE_shortint), 1, lvlFile);
+		vfread(weapons[i].acceleration,    Sint8, lvlFile);
+		vfread(weapons[i].accelerationx,   Sint8, lvlFile);
 		efread(&weapons[i].circlesize,      sizeof(JE_byte), 1, lvlFile);
 		efread(&weapons[i].sound,           sizeof(JE_byte), 1, lvlFile);
 		efread(&weapons[i].trail,           sizeof(JE_byte), 1, lvlFile);
@@ -131,7 +136,7 @@ void JE_loadItemDat( void )
 		efread(&powerSys[i].name,        1, 30, lvlFile);
 		powerSys[i].name[30] = '\0';
 		efread(&powerSys[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		efread(&powerSys[i].power,       sizeof(JE_shortint), 1, lvlFile);
+		vfread(powerSys[i].power,       Sint8, lvlFile);
 		efread(&powerSys[i].speed,       sizeof(JE_byte), 1, lvlFile);
 		efread(&powerSys[i].cost,        sizeof(JE_word), 1, lvlFile);
 	}
@@ -144,7 +149,7 @@ void JE_loadItemDat( void )
 		efread(&ships[i].shipgraphic,    sizeof(JE_word), 1, lvlFile);
 		efread(&ships[i].itemgraphic,    sizeof(JE_word), 1, lvlFile);
 		efread(&ships[i].ani,            sizeof(JE_byte), 1, lvlFile);
-		efread(&ships[i].spd,            sizeof(JE_shortint), 1, lvlFile);
+		vfread(ships[i].spd,            Sint8, lvlFile);
 		efread(&ships[i].dmg,            sizeof(JE_byte), 1, lvlFile);
 		efread(&ships[i].cost,           sizeof(JE_word), 1, lvlFile);
 		efread(&ships[i].bigshipgraphic, sizeof(JE_byte), 1, lvlFile);
@@ -160,7 +165,7 @@ void JE_loadItemDat( void )
 		efread(&options[i].cost,        sizeof(JE_word), 1, lvlFile);
 		efread(&options[i].tr,          sizeof(JE_byte), 1, lvlFile);
 		efread(&options[i].option,      sizeof(JE_byte), 1, lvlFile);
-		efread(&options[i].opspd,       sizeof(JE_shortint), 1, lvlFile);
+		vfread(options[i].opspd,       Sint8, lvlFile);
 		efread(&options[i].ani,         sizeof(JE_byte), 1, lvlFile);
 		efread(&options[i].gr,          sizeof(JE_word), 20, lvlFile);
 		efread(&options[i].wport,       sizeof(JE_byte), 1, lvlFile);
@@ -186,30 +191,30 @@ void JE_loadItemDat( void )
 		efread(&enemyDat[i].ani,           sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].tur,           sizeof(JE_byte), 3, lvlFile);
 		efread(&enemyDat[i].freq,          sizeof(JE_byte), 3, lvlFile);
-		efread(&enemyDat[i].xmove,         sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].ymove,         sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].xaccel,        sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].yaccel,        sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].xcaccel,       sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].ycaccel,       sizeof(JE_shortint), 1, lvlFile);
-		vfread( enemyDat[i].startx,               Sint16, lvlFile);
-		vfread( enemyDat[i].starty,               Sint16, lvlFile);
-		efread(&enemyDat[i].startxc,       sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].startyc,       sizeof(JE_shortint), 1, lvlFile);
+		vfread(enemyDat[i].xmove,         Sint8, lvlFile);
+		vfread(enemyDat[i].ymove,         Sint8, lvlFile);
+		vfread(enemyDat[i].xaccel,        Sint8, lvlFile);
+		vfread(enemyDat[i].yaccel,        Sint8, lvlFile);
+		vfread(enemyDat[i].xcaccel,       Sint8, lvlFile);
+		vfread(enemyDat[i].ycaccel,       Sint8, lvlFile);
+		vfread(enemyDat[i].startx,        Sint16, lvlFile);
+		vfread(enemyDat[i].starty,        Sint16, lvlFile);
+		vfread(enemyDat[i].startxc,       Sint8, lvlFile);
+		vfread(enemyDat[i].startyc,       Sint8, lvlFile);
 		efread(&enemyDat[i].armor,         sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].esize,         sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].egraphic,      sizeof(JE_word), 20, lvlFile);
 		efread(&enemyDat[i].explosiontype, sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].animate,       sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].shapebank,     sizeof(JE_byte), 1, lvlFile);
-		efread(&enemyDat[i].xrev,          sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].yrev,          sizeof(JE_shortint), 1, lvlFile);
+		vfread(enemyDat[i].xrev,          Sint8, lvlFile);
+		vfread(enemyDat[i].yrev,          Sint8, lvlFile);
 		efread(&enemyDat[i].dgr,           sizeof(JE_word), 1, lvlFile);
-		efread(&enemyDat[i].dlevel,        sizeof(JE_shortint), 1, lvlFile);
-		efread(&enemyDat[i].dani,          sizeof(JE_shortint), 1, lvlFile);
+		vfread(enemyDat[i].dlevel,        Sint8, lvlFile);
+		vfread(enemyDat[i].dani,          Sint8, lvlFile);
 		efread(&enemyDat[i].elaunchfreq,   sizeof(JE_byte), 1, lvlFile);
 		efread(&enemyDat[i].elaunchtype,   sizeof(JE_word), 1, lvlFile);
-		vfread( enemyDat[i].value,                Sint16, lvlFile);
+		vfread(enemyDat[i].value,         Sint16, lvlFile);
 		efread(&enemyDat[i].eenemydie,     sizeof(JE_word), 1, lvlFile);
 	}
 

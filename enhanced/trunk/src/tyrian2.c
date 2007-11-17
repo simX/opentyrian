@@ -67,7 +67,7 @@ JE_boolean quit, first, loadLevelOk, refade;
 int newPal, curPal, oldPal; /* SYN: Originally bytes, I hope this doesn't break anything */
 
 JE_word yLoc;
-JE_shortint yChg;
+int yChg;
 
 struct JE_EventRecType eventRec[EVENT_MAXIMUM]; /* [1..eventMaximum] */
 JE_word levelEnemyMax;
@@ -3191,7 +3191,7 @@ void JE_loadMap( void )
 
 
 	/*JE_word yLoc;*/
-	JE_shortint yChg;
+	int yChg;
 
 	JE_byte mapBuf[15 * 600]; /* [1..15 * 600] */
 	JE_word bufLoc;
@@ -3890,11 +3890,11 @@ new_game:
 		{
 			efread(&eventRec[x].eventtime, sizeof(JE_word), 1, lvlFile);
 			efread(&eventRec[x].eventtype, sizeof(JE_byte), 1, lvlFile);
-			vfread( eventRec[x].eventdat,         Sint16, lvlFile);
-			vfread( eventRec[x].eventdat2,        Sint16, lvlFile);
-			efread(&eventRec[x].eventdat3, sizeof(JE_shortint), 1, lvlFile);
-			efread(&eventRec[x].eventdat5, sizeof(JE_shortint), 1, lvlFile);
-			efread(&eventRec[x].eventdat6, sizeof(JE_shortint), 1, lvlFile);
+			vfread(eventRec[x].eventdat,         Sint16, lvlFile);
+			vfread(eventRec[x].eventdat2,        Sint16, lvlFile);
+			vfread(eventRec[x].eventdat3, Sint8, lvlFile);
+			vfread(eventRec[x].eventdat5, Sint8, lvlFile);
+			vfread(eventRec[x].eventdat6, Sint8, lvlFile);
 			efread(&eventRec[x].eventdat4, sizeof(JE_byte), 1, lvlFile);
 		}
 		eventRec[x].eventtime = 65500;  /*Not needed but just in case*/

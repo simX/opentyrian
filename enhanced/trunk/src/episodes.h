@@ -32,21 +32,21 @@
 
 typedef struct
 {
-	JE_word     drain;
-	JE_byte     shotrepeat;
-	JE_byte     multi;
-	JE_word     weapani;
-	JE_byte     max;
-	JE_byte     tx, ty, aim;
-	JE_byte     attack[8], del[8]; /* [1..8] */
-	JE_shortint sx[8], sy[8]; /* [1..8] */
-	JE_shortint bx[8], by[8]; /* [1..8] */
-	JE_word     sg[8]; /* [1..8] */
-	JE_shortint acceleration, accelerationx;
-	JE_byte     circlesize;
-	JE_byte     sound;
-	JE_byte     trail;
-	JE_byte     shipblastfilter;
+	JE_word drain;
+	JE_byte shotrepeat;
+	JE_byte multi;
+	JE_word weapani;
+	JE_byte max;
+	JE_byte tx, ty, aim;
+	JE_byte attack[8], del[8]; /* [1..8] */
+	int     sx[8], sy[8]; /* [1..8] */
+	int     bx[8], by[8]; /* [1..8] */
+	JE_word sg[8]; /* [1..8] */
+	int     acceleration, accelerationx;
+	JE_byte circlesize;
+	JE_byte sound;
+	JE_byte trail;
+	JE_byte shipblastfilter;
 } JE_WeaponType[WEAP_NUM + 1]; /* [0..weapnum] */
 
 typedef struct
@@ -61,11 +61,11 @@ typedef struct
 
 typedef struct
 {
-	char        name[31]; /* string [30] */
-	JE_word     itemgraphic;
-	JE_byte     power;
-	JE_shortint speed;
-	JE_word     cost;
+	char    name[31]; /* string [30] */
+	JE_word itemgraphic;
+	JE_byte power;
+	int     speed;
+	JE_word cost;
 } JE_PowerType[POWER_NUM + 1]; /* [0..powernum] */
 
 typedef struct
@@ -79,28 +79,28 @@ typedef struct
 
 typedef struct
 {
-	char        name[31]; /* string [30] */
-	JE_word     itemgraphic;
-	JE_shortint power;
-	JE_byte     speed;
-	JE_word     cost;
+	char    name[31]; /* string [30] */
+	JE_word itemgraphic;
+	int     power;
+	JE_byte speed;
+	JE_word cost;
 } JE_EngineType[ENGINE_NUM + 1]; /* [0..enginenum] */
 
 typedef struct
 {
-	char        name[31]; /* string [30] */
-	JE_byte     pwr;
-	JE_word     itemgraphic;
-	JE_word     cost;
-	JE_byte     tr, option;
-	JE_shortint opspd;
-	JE_byte     ani;
-	JE_word     gr[20]; /* [1..20] */
-	JE_byte     wport;
-	JE_word     wpnum;
-	JE_byte     ammo;
-	JE_boolean  stop;
-	JE_byte     icongr;
+	char       name[31]; /* string [30] */
+	JE_byte    pwr;
+	JE_word    itemgraphic;
+	JE_word    cost;
+	JE_byte    tr, option;
+	int        opspd;
+	JE_byte    ani;
+	JE_word    gr[20]; /* [1..20] */
+	JE_byte    wport;
+	JE_word    wpnum;
+	JE_byte    ammo;
+	JE_boolean stop;
+	JE_byte    icongr;
 } JE_OptionType[OPTION_NUM + 1]; /* [0..optionnum] */
 
 typedef struct
@@ -114,46 +114,46 @@ typedef struct
 
 typedef struct
 {
-	char        name[31]; /* string [30] */
-	JE_word     shipgraphic;
-	JE_word     itemgraphic;
-	JE_byte     ani;
-	JE_shortint spd;
-	JE_byte     dmg;
-	JE_word     cost;
-	JE_byte     bigshipgraphic;
+	char    name[31]; /* string [30] */
+	JE_word shipgraphic;
+	JE_word itemgraphic;
+	JE_byte ani;
+	int     spd;
+	JE_byte dmg;
+	JE_word cost;
+	JE_byte bigshipgraphic;
 } JE_ShipType[SHIP_NUM + 1]; /* [0..shipnum] */
 
 /* EnemyData */
 typedef struct
 {
-	JE_byte     ani;
-	JE_byte     tur[3]; /* [1..3] */
-	JE_byte     freq[3]; /* [1..3] */
-	JE_shortint xmove;
-	JE_shortint ymove;
-	JE_shortint xaccel;
-	JE_shortint yaccel;
-	JE_shortint xcaccel;
-	JE_shortint ycaccel;
-	int         startx;
-	int         starty;
-	JE_shortint startxc;
-	JE_shortint startyc;
-	JE_byte     armor;
-	JE_byte     esize;
-	JE_word     egraphic[20];  /* [1..20] */
-	JE_byte     explosiontype;
-	JE_byte     animate;       /* 0:Not Yet   1:Always   2:When Firing Only */
-	JE_byte     shapebank;     /* See LEVELMAK.DOC */
-	JE_shortint xrev, yrev;
-	JE_word     dgr;
-	JE_shortint dlevel;
-	JE_shortint dani;
-	JE_byte     elaunchfreq;
-	JE_word     elaunchtype;
-	int         value;
-	JE_word     eenemydie;
+	JE_byte ani;
+	JE_byte tur[3]; /* [1..3] */
+	JE_byte freq[3]; /* [1..3] */
+	int     xmove;
+	int     ymove;
+	int     xaccel;
+	int     yaccel;
+	int     xcaccel;
+	int     ycaccel;
+	int     startx;
+	int     starty;
+	int     startxc;
+	int     startyc;
+	JE_byte armor;
+	JE_byte esize;
+	JE_word egraphic[20];  /* [1..20] */
+	JE_byte explosiontype;
+	JE_byte animate;       /* 0:Not Yet   1:Always   2:When Firing Only */
+	JE_byte shapebank;     /* See LEVELMAK.DOC */
+	int     xrev, yrev;
+	JE_word dgr;
+	int     dlevel;
+	int     dani;
+	JE_byte elaunchfreq;
+	JE_word elaunchtype;
+	int     value;
+	JE_word eenemydie;
 } JE_EnemyDatType[ENEMY_NUM + 1]; /* [0..enemynum] */
 
 #ifndef NO_EXTERNS

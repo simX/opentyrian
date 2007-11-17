@@ -39,7 +39,7 @@ JE_byte setup;
 JE_word stepCounter;
 
 JE_word nsp2;
-JE_shortint nspVar2Inc;
+Sint8 nspVar2Inc;
 
 /* JE: new sprite pointer */
 double nsp;
@@ -53,8 +53,8 @@ JE_boolean grayB;
 
 int x;
 
-int starlib_speed;
-JE_shortint speedChange;
+Sint16 starlib_speed;
+Sint8 speedChange;
 
 JE_byte pColor;
 
@@ -401,12 +401,12 @@ void JE_newStar( void )
 				tempY = (int)(cos(nsp) * 20000);
 				break;
 			case 7:
-				tempX = rand() % 65535;
+				tempX = (rand() % 65535)-32768;
 				if ((rand() % 2) == 0)
 				{
-					tempY = (int)(cos(nsp / 80) * 10000) + 15000;
+					tempY = ((int)(cos(nsp / 80) * 10000) + 15000) - 32768;
 				} else {
-					tempY = 50000 - (int)(cos(nsp / 80) * 13000);
+					tempY = (50000 - (int)(cos(nsp / 80) * 13000)) - 32768;
 				}
 				break;
 			case 9:

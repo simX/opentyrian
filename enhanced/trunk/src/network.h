@@ -27,11 +27,11 @@
 
 typedef struct
 {
-	JE_byte     buttons;
-	JE_shortint xchg, ychg;
-	JE_word     randomenemytype;    /* 0=no enemy */
-	int         ex, ey;
-	JE_longint  sync;
+	JE_byte    buttons;
+	int        xchg, ychg;
+	JE_word    randomenemytype;    /* 0=no enemy */
+	int        ex, ey;
+	JE_longint sync;
 } JE_PacketData;
 
 #ifndef NO_EXTERNS
@@ -57,7 +57,7 @@ extern JE_boolean netSuccess;
 void JE_initNetwork( void );
 
 void JE_exchangePacket( JE_byte size );
-void JE_recordPacket( JE_shortint xchg, JE_shortint ychg, JE_shortint xachg, JE_shortint yachg);
+void JE_recordPacket( int xchg, int ychg, int xachg, int yachg);
 void JE_clearSpecialRequests( void );
 
 void JE_updateStream( void );

@@ -189,7 +189,7 @@ JE_word maxEvent, eventLoc;
 JE_word tempBackMove, explodeMove; /*Speed of background movement*/
 JE_byte levelEnd;
 JE_word levelEndFxWait;
-JE_shortint levelEndWarp;
+int levelEndWarp;
 JE_boolean showMemLeft, endLevel, reallyEndLevel, waitToEndLevel, playerEndLevel,
            normalBonusLevelCurrent, bonusLevelCurrent,
            smallEnemyAdjust, readyToEndLevel, quitRequested;
@@ -228,7 +228,7 @@ struct JE_MegaDataType3 *megaData3;
 
 /* Secret Level Display */
 JE_byte flash;
-JE_shortint flashChange;
+int flashChange;
 JE_byte displayTime;
 
 /* Demo Stuff */
@@ -310,7 +310,7 @@ struct
 {
 	int     sx, sy;
 	int     sxm, sym;
-	JE_shortint sxc, syc;
+	int     sxc, syc;
 	JE_byte tx, ty;
 	JE_word sgr;
 	JE_byte sdmg;
@@ -321,16 +321,16 @@ struct
 } enemyShot[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax]  */
 
 /* Player Shot Data */
-JE_byte     zinglonDuration;
-JE_byte     astralDuration;
-JE_word     flareDuration;
-JE_boolean  flareStart;
-JE_shortint flareColChg;
-JE_byte     specialWait;
-JE_byte     nextSpecialWait;
-JE_boolean  spraySpecial;
-JE_byte     doIced;
-JE_boolean  infiniteShot;
+JE_byte    zinglonDuration;
+JE_byte    astralDuration;
+JE_word    flareDuration;
+JE_boolean flareStart;
+int        flareColChg;
+JE_byte    specialWait;
+JE_byte    nextSpecialWait;
+JE_boolean spraySpecial;
+JE_byte    doIced;
+JE_boolean infiniteShot;
 
 JE_byte superBomb[2]; /* [1..2] */
 
@@ -421,7 +421,7 @@ JE_byte stopWaitX, stopWaitY;
 
 int PYHist[3], PYHistB[3]; /* [1..3] */
 
-/*JE_shortint optionMoveX[10], optionMoveY[10]; \* [1..10] *\ */
+/*int optionMoveX[10], optionMoveY[10]; \* [1..10] *\ */
 JE_word option1Draw, option2Draw, option1Item, option2Item;
 JE_byte option1AmmoMax, option2AmmoMax;
 JE_word option1AmmoRechargeWait, option2AmmoRechargeWait,
@@ -497,7 +497,7 @@ JE_byte **BKwrap1to, **BKwrap2to, **BKwrap3to,
 
 JE_byte min, max;
 
-JE_shortint specialWeaponFilter, specialWeaponFreq;
+int specialWeaponFilter, specialWeaponFreq;
 JE_word     specialWeaponWpn;
 JE_boolean  linkToPlayer;
 
@@ -1048,7 +1048,7 @@ void JE_initPlayerShot( JE_word portNum, JE_byte temp, JE_word PX, JE_word PY, J
 	}
 }
 
-void JE_specialComplete( JE_byte playerNum, int *armor, JE_shortint *shield, JE_byte specialType )
+void JE_specialComplete( JE_byte playerNum, int *armor, int *shield, JE_byte specialType )
 {
 	nextSpecialWait = 0;
 	switch (special[specialType].stype)
@@ -1238,7 +1238,7 @@ void JE_specialComplete( JE_byte playerNum, int *armor, JE_shortint *shield, JE_
 	}
 }
 
-void JE_doSpecialShot( JE_byte playerNum, int *armor, JE_shortint *shield )
+void JE_doSpecialShot( JE_byte playerNum, int *armor, int *shield )
 {
 	if (pItems[11-1] > 0)
 	{
@@ -1591,7 +1591,7 @@ JE_byte JE_playerDamage( JE_word tempX, JE_word tempY,
                          JE_boolean *playerAlive,
                          JE_byte *playerStillExploding,
                          int *armorLevel,
-                         JE_shortint *shield )
+                         int *shield )
 {
 	int playerDamage = 0;
 	soundQueue[7] = 27;

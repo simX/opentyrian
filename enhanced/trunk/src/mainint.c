@@ -57,7 +57,7 @@
 #define TOPICS 6
 const JE_byte topicStart[TOPICS] = { 0, 1, 2, 3, 7, 255 };
 
-JE_shortint constantLastX;
+int constantLastX;
 JE_word textErase;
 JE_word upgradeCost;
 JE_word downgradeCost;
@@ -81,8 +81,8 @@ void JE_drawTextWindow( char *text )
 void JE_outCharGlow( JE_word x, JE_word y, char *s )
 {
 	int maxloc, loc, z;
-	JE_shortint glowcol[60]; /* [1..60] */
-	JE_shortint glowcolc[60]; /* [1..60] */
+	char glowcol[60]; /* [1..60] */
+	char glowcolc[60]; /* [1..60] */
 	JE_word textloc[60]; /* [1..60] */
 	JE_byte b = 0, bank;
 
@@ -1966,10 +1966,10 @@ void JE_playCredits( void )
 	JE_byte yloc;
 	FILE *f;
 	JE_byte currentpic = 1, fade = 0;
-	JE_shortint fadechg = 1;
+	int fadechg = 1;
 	JE_byte currentship = 0;
 	int shipx = 0, shipxwait = 0;
-	JE_shortint shipxc = 0, shipxca = 0;
+	int shipxc = 0, shipxca = 0;
 	
 	JE_newLoadShapes(EXTRA_SHAPES, "estsc.shp");
 	
@@ -2967,7 +2967,7 @@ void JE_playerMovement( JE_byte inputDevice_,
                         JE_word shipGr_,
                         JE_byte *shapes9ptr_,
                         int *armorLevel_, int *baseArmor_,
-                        JE_shortint *shield_, JE_shortint *shieldMax_,
+                        int *shield_, int *shieldMax_,
                         JE_word *playerInvulnerable_,
                         int *PX_, int *PY_,
                         int *lastPX_, int *lastPY_,
@@ -4287,7 +4287,7 @@ char *JE_getName( JE_byte pnum )
 }
 
 void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
-                       JE_longint *score_, int *armorLevel_, JE_shortint *shield_, JE_boolean *playerAlive_,
+                       JE_longint *score_, int *armorLevel_, int *shield_, JE_boolean *playerAlive_,
                        JE_byte *playerStillExploding_, JE_byte playerNum_, JE_byte playerInvulnerable_ )
 {
 	char tempStr[256];

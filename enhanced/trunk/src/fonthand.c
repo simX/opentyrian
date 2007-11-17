@@ -54,7 +54,7 @@ JE_boolean warningRed;
 JE_byte warningSoundDelay;
 JE_word armorShipDelay;
 JE_byte warningCol;
-JE_shortint warningColChange;
+int warningColChange;
 
 void JE_dString( JE_word x, JE_word y, const char *s, JE_byte font )
 {
@@ -89,7 +89,7 @@ void JE_dString( JE_word x, JE_word y, const char *s, JE_byte font )
 	}
 }
 
-void JE_newDrawCShapeBright( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, JE_shortint brightness )
+void JE_newDrawCShapeBright( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, int brightness )
 {
 	JE_word xloop = 0, yloop = 0;
 	JE_byte *p;       /* shape pointer */
@@ -497,7 +497,7 @@ JE_word JE_textWidth( const char *s, JE_byte font )
    return x;
 }
 
-void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_shortint brightness, JE_byte shadetype )
+void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness, JE_byte shadetype )
 {
 	switch (shadetype)
 	{
@@ -521,7 +521,7 @@ void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_sh
    }
 }
 
-void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_shortint brightness )
+void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness )
 {
 	JE_byte a, b;
 	JE_byte bright = 0;
@@ -609,7 +609,7 @@ void JE_outTextShade( JE_word x, JE_word y, const char *s, JE_byte font )
 	}
 }
 
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, JE_shortint brightness, JE_byte font, JE_boolean shadow )
+void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, JE_boolean shadow )
 {
 	JE_byte a, b;
 	JE_boolean bright = false;
