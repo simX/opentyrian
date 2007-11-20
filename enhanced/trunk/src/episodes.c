@@ -23,9 +23,7 @@
 #include "lvllib.h"
 #include "lvlmast.h"
 
-#define NO_EXTERNS
 #include "episodes.h"
-#undef NO_EXTERNS
 
 
 /* MAIN Weapons Data */

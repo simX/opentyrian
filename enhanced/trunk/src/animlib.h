@@ -22,26 +22,16 @@
 
 #include "opentyr.h"
 
-
-#ifndef NO_EXTERNS
 extern JE_word currentpageofs;
 extern JE_word currentpageseg;
-#endif
 
 void JE_playRunSkipDump( JE_word bufferoffset );
-
 void JE_closeAnim( void );
-
 void JE_loadAnim( const char *filename );
-
 void JE_playAnim( const char *animfile, int startingframe, bool keyhalt, int speed );
-
 void JE_renderFrame( JE_word framenumber );
-
 JE_word JE_findPage ( JE_word framenumber );
-
 void JE_drawFrame( JE_word framenumber );
-
 void JE_loadPage( JE_word pagenumber );
 
 #endif /* ANIMLIB_H */

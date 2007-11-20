@@ -29,9 +29,7 @@
 #include "varz.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "newshape.h"
-#undef NO_EXTERNS
 
 
 SDL_Surface *tempScreenSeg = NULL;

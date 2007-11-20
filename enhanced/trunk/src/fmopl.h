@@ -1,5 +1,5 @@
-#ifndef __FMOPL_H_
-#define __FMOPL_H_
+#ifndef FMOPL_H
+#define FMOPL_H
 
 /* --- select emulation chips --- */
 #define BUILD_YM3812 1 /* (HAS_YM3812) */
@@ -248,4 +248,4 @@ void set_sl_rr(FM_OPL *OPL,int slot,int v);
 void CSMKeyControll(OPL_CH *CH);
 
 
-#endif
+#endif /* FMOPL_H */

@@ -24,9 +24,7 @@
 #include "nortsong.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "fonthand.h"
-#undef NO_EXTERNS
 
 
 const unsigned char fontMap[136] = /* [33..168] */

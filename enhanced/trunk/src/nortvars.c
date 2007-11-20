@@ -24,9 +24,7 @@
 #include "keyboard.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "nortvars.h"
-#undef NO_EXTERNS
 
 #include <ctype.h>
 

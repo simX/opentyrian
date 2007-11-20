@@ -22,9 +22,7 @@
 #include "error.h"
 #include "shpmast.h"
 
-#define NO_EXTERNS
 #include "shplib.h"
-#undef NO_EXTERNS
 
 
 JE_word shpnumb;

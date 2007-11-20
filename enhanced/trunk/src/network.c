@@ -19,9 +19,7 @@
  */
 #include "opentyr.h"
 
-#define NO_EXTERNS
 #include "network.h"
-#undef NO_EXTERNS
 
 
 unsigned long startTime;

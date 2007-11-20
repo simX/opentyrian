@@ -25,9 +25,7 @@
 #include "fonthand.h"
 #include "newshape.h"
 
-#define NO_EXTERNS
 #include "helptext.h"
-#undef NO_EXTERNS
 
 #include <string.h>
 

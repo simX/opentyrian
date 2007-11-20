@@ -23,9 +23,7 @@
 #include "nortvars.h"
 #include "starfade.h"
 
-#define NO_EXTERNS
 #include "pallib.h"
-#undef NO_EXTERNS
 
 
 JE_PalType palettes;

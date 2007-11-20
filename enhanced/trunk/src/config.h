@@ -74,7 +74,13 @@ typedef Uint8 JE_SaveGameTemp[SAVE_FILES_SIZE + 4 + 100]; /* [1..sizeof(savefile
 
 typedef int JE_PortPowerType[7]; /* [1..7] */
 
-#ifndef NO_EXTERNS
+typedef struct
+{
+	int sC;
+	JE_word sLoc;
+	JE_word sMov;
+} StarDatType;
+
 extern const unsigned char cryptKey[10];
 extern const JE_KeySettingType defaultKeySettings;
 extern const char defaultHighScoreNames[34][23];
@@ -82,12 +88,7 @@ extern const char defaultTeamNames[22][25];
 extern const JE_EditorItemAvailType initialItemAvail;
 extern bool smoothies[9];
 extern int starShowVGASpecialCode;
-extern struct
-{
-	int sC;
-	JE_word sLoc;
-	JE_word sMov;
-} starDat[MAX_STARS];
+extern StarDatType starDat[MAX_STARS];
 extern JE_word starY;
 extern JE_word lastCubeMax, cubeMax;
 extern JE_word cubeList[4];
@@ -137,7 +138,6 @@ extern JE_SaveGameTemp saveTemp;
 extern JE_SaveGameTemp *saveTempPointer;
 
 extern bool fullscreen_set, fullscreen_enabled;
-#endif
 
 void JE_initProcessorType( void );
 void JE_setNewGameSpeed( void );

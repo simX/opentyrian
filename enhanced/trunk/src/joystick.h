@@ -30,7 +30,6 @@ typedef bool JE_ButtonType[19];
 typedef int JE_ButtonAssign[19];
 #endif
 
-#ifndef NO_EXTERNS
 extern const JE_ButtonAssign defaultJoyButtonAssign;
 extern JE_ButtonType tempButton, button;
 extern bool buttonHeld;
@@ -41,7 +40,6 @@ extern int joystickError;
 extern bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 extern bool joystick_installed;
 extern JE_word joystickWait, joystickWaitMax;
-#endif
 
 void JE_joystick1( void ); /*procedure to get JoyX, JoyY, Button1, Button2 of Joystick 1*/
 void JE_joystick2( void );

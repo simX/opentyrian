@@ -21,9 +21,7 @@
 
 #include "joystick.h"
 
-#define NO_EXTERNS
 #include "keyboard.h"
-#undef NO_EXTERNS
 
 #include "SDL.h"
 

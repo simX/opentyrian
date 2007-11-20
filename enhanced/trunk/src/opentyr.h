@@ -54,9 +54,7 @@ typedef Uint8  JE_byte;
 //typedef double JE_real; - Done
 #endif
 
-#ifndef NO_EXTERNS
 extern const char *opentyrian_str;
-#endif
 
 char *strnztcpy( char *to, char *from, size_t count );
 

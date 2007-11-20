@@ -27,9 +27,7 @@
 #include "nortsong.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "varz.h"
-#undef NO_EXTERNS
 
 
 int fromTime;
@@ -200,7 +198,7 @@ JE_word galagaShotFreq;
 unsigned long galagaLife;
 
 bool debug; /*Debug Mode*/
-Uint32 debugTime, lastDebugTime;
+unsigned long debugTime, lastDebugTime;
 unsigned long debugHistCount;
 double debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
@@ -289,14 +287,7 @@ bool uniqueEnemy;
 JE_word superEnemy254Jump;
 
 /*ExplosionData*/
-struct
-{
-	Sint32  explodeLoc;
-	JE_word explodeGr;
-	int followPlayer;
-	int fixedExplode;
-	Sint16  fixedMovement;
-} explosions[EXPLOSION_MAX]; /* [1..ExplosionMax] */
+ExplosionsType explosions[EXPLOSION_MAX]; /* [1..ExplosionMax] */
 int explodeAvail[EXPLOSION_MAX]; /* [1..ExplosionMax] */
 int explosionFollowAmount;
 bool playerFollow, fixedExplosions;
@@ -305,18 +296,7 @@ int explosionMoveUp;
 /*EnemyShotData*/
 bool fireButtonHeld;
 bool enemyShotAvail[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax] */
-struct
-{
-	int     sx, sy;
-	int     sxm, sym;
-	int     sxc, syc;
-	int tx, ty;
-	JE_word sgr;
-	int sdmg;
-	int duration;
-	JE_word animate;
-	JE_word animax;
-} enemyShot[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax]  */
+EnemyShotType enemyShot[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax]  */
 
 /* Player Shot Data */
 int zinglonDuration;
@@ -333,33 +313,7 @@ bool infiniteShot;
 int superBomb[2]; /* [1..2] */
 
 int tempShotX, tempShotY;
-struct
-{
-	int shotX;
-	int shotY;
-	int shotXM;
-	int shotYM;
-	int shotXC;           /*10*/
-	int shotYC;
-	bool shotComplicated;
-	int shotDevX;
-	int shotDirX;
-	int shotDevY;         /*19*/
-	int shotDirY;
-	int shotCirSizeX;
-	int shotCirSizeY;
-	int shotTrail;
-	JE_word shotGr;
-	JE_word shotAni;          /*30*/
-	JE_word shotAniMax;
-	Uint8   shotDmg;
-	int shotBlastFilter;
-	int chainReaction;    /*35*/
-	int playerNumber;
-	int aimAtEnemy;
-	int aimDelay;
-	int aimDelayMax;      /*39*/
-} playerShotData[MAX_PWEAPON + 1]; /* [1..MaxPWeapon+1] */
+PlayerShotDataType playerShotData[MAX_PWEAPON + 1]; /* [1..MaxPWeapon+1] */
 
 int chain;
 
@@ -439,21 +393,11 @@ JE_word neat;
 
 /*Repeating Explosions*/
 JE_REXtype REXavail;
-struct
-{
-	int delay;
-	JE_word ex, ey;
-	bool big;
-} REXdat[20]; /* [1..20] */
+REXDatType REXdat[20]; /* [1..20] */
 
 /*SuperPixels*/
 int SPZ[MAX_SP + 1]; /* [0..MaxSP] */
-struct
-{
-	JE_word location;
-	JE_word movement;
-	Uint8 color;
-} SPL[MAX_SP + 1]; /* [0..MaxSP] */
+SPLType SPL[MAX_SP + 1]; /* [0..MaxSP] */
 JE_word lastSP;
 
 /*MegaData*/
@@ -481,8 +425,7 @@ JE_word x, y;
 int a, b, c, d, z, zz;
 int playerNum;
 
-char **BKwrap1to, **BKwrap2to, **BKwrap3to,
-        **BKwrap1, **BKwrap2, **BKwrap3;
+unsigned char **BKwrap1to, **BKwrap2to, **BKwrap3to, **BKwrap1, **BKwrap2, **BKwrap3;
 
 int min, max;
 

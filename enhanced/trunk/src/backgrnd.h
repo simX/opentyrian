@@ -24,7 +24,6 @@
 
 #include <inttypes.h>
 
-#ifndef NO_EXTERNS
 extern JE_word backPos, backPos2, backPos3;
 extern JE_word backMove, backMove2, backMove3;
 extern JE_word megaDataSeg, megaDataOfs, megaData2Seg, megaData2Ofs, megaData3Seg, megaData3Ofs;
@@ -36,7 +35,6 @@ extern int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 extern SDL_Surface *smoothiesScreen;
 extern bool anySmoothies;
 extern int SDAT[9];
-#endif
 
 void JE_darkenBackground( JE_word neat );
 void JE_drawBackground2( void );

@@ -22,9 +22,7 @@
 #include "loudness.h"
 #include "nortsong.h"
 
-#define NO_EXTERNS
 #include "jukebox.h"
-#undef NO_EXTERNS
 
 
 bool continuousPlay = false;

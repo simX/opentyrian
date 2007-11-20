@@ -23,9 +23,7 @@
 #include "varz.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "backgrnd.h"
-#undef NO_EXTERNS
 
 
 /*Special Background 2 and Background 3*/

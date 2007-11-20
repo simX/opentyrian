@@ -32,9 +32,6 @@ struct JE_StarType
 	int lastX, lastY;
 };
 
-#ifndef NO_EXTERNS
-#endif
-
 void JE_starlib_main( void );
 void JE_starlib_init( void );
 void JE_resetValues( void );

@@ -28,7 +28,6 @@
 
 #define DESTRUCT_MODES 5
 
-#ifndef NO_EXTERNS
 extern int verticalHeight;
 extern int helpBoxColor, helpBoxBrightness, helpBoxShadeType;
 extern char helpTxt[MAX_HELP_MESSAGE][231];
@@ -57,8 +56,7 @@ extern char weaponNames[17][17];        /* [1..17] of string [16] */
 extern char destructModeName[DESTRUCT_MODES][13]; /* [1..destructmodes] of string [12] */
 extern char shipInfo[13][2][256];
 extern char menuInt[MAX_MENU+1][11][18]; /* [0..maxmenu, 1..11] of string [17] */
-extern char menuHelp[MAX_MENU][11];   /* [1..maxmenu, 1..11] */
-#endif
+extern const int menuHelp[MAX_MENU][11];   /* [1..maxmenu, 1..11] */
 
 /*int temp, temp2;*/
 

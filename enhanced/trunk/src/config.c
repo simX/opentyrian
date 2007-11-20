@@ -28,9 +28,7 @@
 #include "varz.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "config.h"
-#undef NO_EXTERNS
 
 #include <stdio.h>
 #include <string.h>
@@ -161,12 +159,7 @@ bool smoothies[9] = /* [1..9] */
 int starShowVGASpecialCode;
 
 /* Stars */
-struct
-{
-	int sC;
-	JE_word sLoc;
-	JE_word sMov;
-} starDat[MAX_STARS]; /* [1..Maxstars] */
+StarDatType starDat[MAX_STARS]; /* [1..Maxstars] */
 JE_word starY;
 
 

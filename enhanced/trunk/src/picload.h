@@ -23,9 +23,7 @@
 #include "opentyr.h"
 
 
-#ifndef NO_EXTERNS
 extern bool notyetloadedpcx;
-#endif
 
 /*void JE_unpackPCX( void );*/
 

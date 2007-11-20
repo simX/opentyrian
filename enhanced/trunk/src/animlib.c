@@ -28,9 +28,7 @@
 #include "starfade.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "animlib.h"
-#undef NO_EXTERNS
 
 
 JE_word currentpageofs;

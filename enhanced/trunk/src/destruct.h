@@ -23,12 +23,10 @@
 #include "opentyr.h"
 
 
-#ifndef NO_EXTERNS
 extern JE_word tempscreenseg;
 extern int enddelay;
 extern bool died;
 extern bool firsttime;
-#endif
 
 void JE_introScreen( void );
 

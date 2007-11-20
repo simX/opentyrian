@@ -34,7 +34,6 @@ typedef struct
 	unsigned long sync;
 } JE_PacketData;
 
-#ifndef NO_EXTERNS
 extern unsigned long startTime;
 extern unsigned long frames;
 extern int netPlayers, thisPlayerNum, otherPlayerNum;
@@ -45,14 +44,13 @@ extern bool moveOk;
 extern bool firstTime;
 extern bool netResult;
 extern int gameQuitDelay;
-extern char outputData[10];
-extern char inputData[10];
+extern Uint8 outputData[10];
+extern Uint8 inputData[10];
 extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 extern bool yourInGameMenuRequest, inGameMenuRequest;
 extern bool portConfigChange, portConfigDone;
 extern int exchangeCount;
 extern bool netSuccess;
-#endif
 
 void JE_initNetwork( void );
 

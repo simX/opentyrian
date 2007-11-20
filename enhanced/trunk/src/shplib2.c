@@ -25,9 +25,7 @@
 /*#include "vga256c.h"*/
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "shplib2.h"
-#undef NO_EXTERNS
 
 
 JE_word shapex [MAXIMUM_SHAPE];

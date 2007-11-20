@@ -28,9 +28,7 @@
 #include "sndmast.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "nortsong.h"
-#undef NO_EXTERNS
 
 #include "SDL.h"
 

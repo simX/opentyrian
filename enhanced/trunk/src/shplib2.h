@@ -23,7 +23,6 @@
 #include "opentyr.h"
 
 
-#ifndef NO_EXTERNS
 extern JE_word shapex [MAXIMUM_SHAPE];
 extern unsigned long memory;
 extern JE_word shapey [MAXIMUM_SHAPE];
@@ -31,7 +30,6 @@ extern JE_word maxshape;
 extern bool shapexist[MAXIMUM_SHAPE];
 extern void * shapearray [MAXIMUM_SHAPE];
 extern char* f; /* was type TEXT */
-#endif
 
 void JE_drawShapeS( void* shape, JE_word shapex, JE_word shapey, JE_word x, JE_word y );
 

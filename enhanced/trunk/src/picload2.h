@@ -25,11 +25,9 @@
 #include "pcxmast.h"
 
 
-#ifndef NO_EXTERNS
 extern JE_ColorType colors2;
 extern bool overrideblack;
 extern char c2;
-#endif
 
 void JE_analyzePic( void );
 

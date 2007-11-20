@@ -33,9 +33,7 @@
 #include "varz.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "destruct.h"
-#undef NO_EXTERNS
 
 
 JE_word tempscreenseg;

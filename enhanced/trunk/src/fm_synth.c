@@ -22,9 +22,7 @@
 #include "fmopl.h"
 #include "loudness.h"
 
-#define NO_EXTERNS
 #include "fm_synth.h"
-#undef NO_EXTERNS
 
 
 const unsigned short note_table[12] = {363, 385, 408, 432, 458, 485, 514, 544, 577, 611, 647, 686};

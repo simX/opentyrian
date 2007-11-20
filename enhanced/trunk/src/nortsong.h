@@ -30,7 +30,6 @@
 
 typedef unsigned long JE_SongPosType [MUSIC_NUM + 1]; /* [1..Musicnum + 1] */
 
-#ifndef NO_EXTERNS
 extern Uint32 target, target2;
 
 extern bool mixEnable;
@@ -53,8 +52,7 @@ extern JE_word fxVolume, fxPlayVol;
 extern JE_word tempVolume;
 extern JE_word tyrMusicVolume;
 
-extern int jasondelay;
-#endif
+extern float jasondelay;
 
 void JE_timerInt( void );
 

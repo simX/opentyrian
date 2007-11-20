@@ -24,9 +24,7 @@
 #include "starfade.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "starfade.h"
-#undef NO_EXTERNS
 
 
 JE_word nocolorsx3;

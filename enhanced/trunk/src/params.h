@@ -23,13 +23,11 @@
 #include "opentyr.h"
 
 
-#ifndef NO_EXTERNS
 extern bool timMode, richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, useBios, noSound, quikJuke, noRetrace, joyMax, forceAveraging, forceMaxVolume, soundInfoReport;
 extern bool stupidWindows;
 extern bool isNetworkGame, isNetworkActive;
 extern bool tyrianXmas;
-extern const char *pars[18][8];
-#endif
+extern const char pars[18][9];
 
 void JE_paramCheck( int argc, char *argv[] );
 

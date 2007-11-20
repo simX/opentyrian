@@ -23,9 +23,7 @@
 #include "error.h"
 #include "nortvars.h"
 
-#define NO_EXTERNS
 #include "editship.h"
-#undef NO_EXTERNS
 
 
 bool extraAvail;

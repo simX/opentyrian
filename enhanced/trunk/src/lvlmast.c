@@ -19,9 +19,7 @@
  */
 #include "opentyr.h"
 
-#define NO_EXTERNS
 #include "lvlmast.h"
-#undef NO_EXTERNS
 
 
 const char shapeFile[34] = /* [1..34] */

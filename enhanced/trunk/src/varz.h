@@ -146,7 +146,48 @@ typedef int JE_EnemyAvailType[100]; /* [1..100] */
 
 typedef int JE_REXtype[20]; /* [1..20] */
 
-#ifndef NO_EXTERNS
+typedef struct {
+	Sint32 explodeLoc;
+	JE_word explodeGr;
+	int followPlayer;
+	int fixedExplode;
+	Sint16 fixedMovement;
+} ExplosionsType;
+
+typedef struct {
+	int sx, sy;
+	int sxm, sym;
+	int sxc, syc;
+	int tx, ty;
+	JE_word sgr;
+	int sdmg;
+	int duration;
+	JE_word animate;
+	JE_word animax;
+} EnemyShotType;
+
+typedef struct {
+	int shotX, shotY, shotXM, shotYM, shotXC, shotYC;
+	bool shotComplicated;
+	int shotDevX, shotDirX, shotDevY, shotDirY, shotCirSizeX, shotCirSizeY;
+	int shotTrail;
+	JE_word shotGr, shotAni, shotAniMax;
+	Uint8 shotDmg;
+	int shotBlastFilter, chainReaction, playerNumber, aimAtEnemy, aimDelay, aimDelayMax;
+} PlayerShotDataType;
+
+typedef struct {
+	int delay;
+	JE_word ex, ey;
+	bool big;
+} REXDatType;
+
+typedef struct {
+	JE_word location;
+	JE_word movement;
+	Uint8 color;
+} SPLType;
+
 extern int fromTime;
 extern int tempDat, tempDat2, tempDat3;
 extern bool tempb2;
@@ -185,10 +226,10 @@ extern int newPL[10];
 extern JE_word returnLoc;
 extern bool returnActive;
 extern JE_word galagaShotFreq;
-extern unsigned int galagaLife;
+extern unsigned long galagaLife;
 extern bool debug;
 extern unsigned long debugTime, lastDebugTime;
-extern unsigned int debugHistCount;
+extern unsigned long debugHistCount;
 extern double debugHist;
 extern JE_word curLoc;
 extern bool firstGameOver, gameLoaded, enemyStillExploding;
@@ -242,30 +283,14 @@ extern JE_word enemyOnScreen;
 extern int enemyShapeTables[6];
 extern bool uniqueEnemy;
 extern JE_word superEnemy254Jump;
-extern struct {
-	Sint32  explodeLoc;
-	JE_word explodeGr;
-	int followPlayer;
-	int fixedExplode;
-	Sint16 fixedMovement;
-} explosions[EXPLOSION_MAX];
+extern ExplosionsType explosions[EXPLOSION_MAX];
 extern int explodeAvail[EXPLOSION_MAX];
 extern int explosionFollowAmount;
 extern bool playerFollow, fixedExplosions;
 extern int explosionMoveUp;
 extern bool fireButtonHeld;
 extern bool enemyShotAvail[ENEMY_SHOT_MAX];
-extern struct {
-	int sx, sy;
-	int sxm, sym;
-	int sxc, syc;
-	int tx, ty;
-	JE_word sgr;
-	int sdmg;
-	int duration;
-	JE_word animate;
-	JE_word animax;
-} enemyShot[ENEMY_SHOT_MAX];
+extern EnemyShotType enemyShot[ENEMY_SHOT_MAX];
 extern int zinglonDuration;
 extern int astralDuration;
 extern JE_word flareDuration;
@@ -278,15 +303,7 @@ extern int doIced;
 extern bool infiniteShot;
 extern int superBomb[2];
 extern int tempShotX, tempShotY;
-extern struct {
-	int shotX, shotY, shotXM, shotYM, shotXC, shotYC;
-	bool shotComplicated;
-	int shotDevX, shotDirX, shotDevY, shotDirY, shotCirSizeX, shotCirSizeY;
-	int shotTrail;
-	JE_word shotGr, shotAni, shotAniMax;
-	Uint8 shotDmg;
-	int shotBlastFilter, chainReaction, playerNumber, aimAtEnemy, aimDelay, aimDelayMax;
-} playerShotData[MAX_PWEAPON + 1];
+extern PlayerShotDataType playerShotData[MAX_PWEAPON + 1];
 extern int chain;
 extern bool allPlayersGone;
 extern int shotAvail[MAX_PWEAPON];
@@ -324,17 +341,9 @@ extern bool playerHNotReady;
 extern JE_word playerHX[20], playerHY[20];
 extern JE_word neat;
 extern JE_REXtype REXavail;
-extern struct {
-	int delay;
-	JE_word ex, ey;
-	bool    big;
-} REXdat[20];
+extern REXDatType REXdat[20];
 extern int SPZ[MAX_SP + 1];
-extern struct {
-	JE_word location;
-	JE_word movement;
-	Uint8 color;
-} SPL[MAX_SP + 1];
+extern SPLType SPL[MAX_SP + 1];
 extern JE_word lastSP;
 extern JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 extern JE_word avail;
@@ -359,7 +368,6 @@ extern bool linkToPlayer;
 extern int baseArmor, baseArmor2;
 extern JE_word shipGr, shipGr2;
 extern Uint8 *shipGrPtr, *shipGr2ptr;
-#endif
 
 void JE_getShipInfo( void );
 JE_word JE_SGr( JE_word ship, Uint8 **ptr );

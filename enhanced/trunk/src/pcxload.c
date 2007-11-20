@@ -21,9 +21,7 @@
 
 #include "starfade.h"
 
-#define NO_EXTERNS
 #include "pcxload.h"
-#undef NO_EXTERNS
 
 #include "SDL.h"
 

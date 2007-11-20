@@ -21,9 +21,7 @@
 
 #include "error.h"
 
-#define NO_EXTERNS
 #include "lvllib.h"
-#undef NO_EXTERNS
 
 
 JE_LvlPosType lvlPos;

@@ -19,9 +19,7 @@
  */
 #include "opentyr.h"
 
-#define NO_EXTERNS
 #include "params.h"
-#undef NO_EXTERNS
 
 #include <ctype.h>
 #include <string.h>

@@ -34,9 +34,7 @@
 #include "varz.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "setup.h"
-#undef NO_EXTERNS
 
 #include "SDL.h"
 

@@ -23,9 +23,7 @@
 #include "params.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "joystick.h"
-#undef NO_EXTERNS
 
 #include "SDL.h"
 

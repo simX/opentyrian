@@ -22,9 +22,7 @@
 #include "config.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "error.h"
-#undef NO_EXTERNS
 
 #include <errno.h>
 #include <stdio.h>

@@ -19,9 +19,7 @@
  */
 #include "opentyr.h"
 
-#define NO_EXTERNS
 #include "shpmast.h"
-#undef NO_EXTERNS
 
 
 const char *shpfile[SHP_NUM] = /* [1..SHPnum] */

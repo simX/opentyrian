@@ -26,9 +26,7 @@
 #include "starfade.h"
 #include "vga256d.h"
 
-#define NO_EXTERNS
 #include "picload.h"
-#undef NO_EXTERNS
 
 #include <string.h>
 

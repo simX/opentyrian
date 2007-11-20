@@ -33,14 +33,13 @@
 
 typedef unsigned char JE_MusicType [20000];
 
-#ifndef NO_EXTERNS
 extern JE_MusicType musicData;
 extern bool repeated;
 extern bool playing;
 
 extern float sample_volume;
 extern float music_volume;
-#endif
+
 /* SYN: The arguments to initialize are probably mostly meaningless now */
 void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberror, int midierror);
 void JE_deinitialize( void );

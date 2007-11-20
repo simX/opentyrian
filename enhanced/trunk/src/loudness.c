@@ -23,9 +23,7 @@
 #include "lds_play.h"
 #include "params.h"
 
-#define NO_EXTERNS
 #include "loudness.h"
-#undef NO_EXTERNS
 
 
 /* SYN: These are externally accessible variables: */
