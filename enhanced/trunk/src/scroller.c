@@ -68,7 +68,7 @@ void scroller3d( const char *text[] )
 #	define HORIZON 30
 #	define HORIZON_W 200
 #	define MAX_LINES ((200-HORIZON)/TEXT_HEIGHT)
-	int txt_y = 0, cur_line = 0, line_off = 0, text_len = 0, wait = 0;
+	int cur_line = 0, line_off = 0, text_len = 0, wait = 0;
 	bool quit = false;
 	Uint8 *surf;
 
@@ -88,7 +88,7 @@ void scroller3d( const char *text[] )
 
 	do
 	{
-		int start_line = cur_line, i, max = min(text_len, cur_line+MAX_LINES+1);
+		int i, max = min(text_len, cur_line+MAX_LINES+1);
 
 		service_SDL_events(true);
 		if (keydown)
@@ -140,13 +140,7 @@ void scroller3d( const char *text[] )
 
 			while (total_w--)
 			{
-				int j;
 				double color = surf[(int)(ratio)*320+(int)cur_x];
-
-/*				for (j = cur_x; j < cur_x+step; j++)
-				{
-					color = (color + surf[i*320+(int)round(j)]) / 2;
-				}*/
 
 				s[i*320+scr_x] = color;
 				scr_x++; cur_x += step;

@@ -32,9 +32,6 @@
 
 /*JE_word z;*/
 JE_word y;
-/* File constants for Saving ShapeFile */
-const char NV_shapeactive   = 0x01;
-const char NV_shapeinactive = 0x00;
 
 bool scanForJoystick;
 bool inputDetected;
@@ -433,27 +430,3 @@ JE_word JE_mousePosition( JE_word *mouseX, JE_word *mouseY )
 }
 
 /* TODO */
-
-
-/*
-these are all located in editship.c
-
-void JE_startNewShape( void )
-{
-	STUB();
-}
-
-void JE_endShape( void )
-{
-	STUB();
-}
-
-void JE_add( Uint8 nextbyte )
-{
-	STUB();
-}
-
-void JE_buildRec( void )
-{
-	STUB();
-}*/

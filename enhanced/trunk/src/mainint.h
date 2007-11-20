@@ -61,7 +61,6 @@ void JE_changeDifficulty( void );
 void JE_doDemoKeys( void );
 void JE_readDemoKeys( void );
 void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ );
-void JE_func( Uint8 col );
 void JE_sort( void );
 
 JE_word JE_powerLevelCost( JE_word base, int level );

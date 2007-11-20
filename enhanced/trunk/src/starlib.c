@@ -68,15 +68,12 @@ void JE_starlib_main( void )
 	struct JE_StarType *stars;
 	Uint8 *surf;
 
-	JE_wackyCol();
-
 	grayB = false;
 
 	starlib_speed += speedChange;
 
 	/* ASM starts */
 	/* ***START THE LOOP*** */
-star_loop:
 	stars = star;
 	i = starlib_MAX_STARS;
 
@@ -149,7 +146,6 @@ next_star:
 		tempCol = pColor+((tempZ >> 4) & 31);
 	}
 
-draw_pixel:
 	/* Draw the pixel! */
 	if (off >= 640 && off < (320*200)-640)
 	{
@@ -292,18 +288,6 @@ star_end:
 	}
 
 	nspVarInc += nspVarVarInc;
-}
-
-void JE_makeGray( void )
-{
-	/* YKS: Not used anywhere. */
-	STUB();
-}
-
-void JE_wackyCol( void )
-{
-	Uint8 a, b, c;
-	/* YKS: Does nothing */
 }
 
 void JE_starlib_init( void )

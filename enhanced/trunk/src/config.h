@@ -135,7 +135,6 @@ extern JE_SaveFilesType saveFiles;
 extern JE_SaveFilesType *saveFilePointer;
 extern JE_SaveGameTemp saveTemp;
 extern JE_SaveGameTemp *saveTempPointer;
-extern JE_word editorLevel;
 
 extern bool fullscreen_set, fullscreen_enabled;
 #endif

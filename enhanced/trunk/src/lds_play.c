@@ -94,7 +94,6 @@ int lds_load(unsigned char *music_location)
 	int remaining;
 	Uint16 temp;
 	unsigned char *pos;
-	float templ;
 
 	pos = music_location;
 

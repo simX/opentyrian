@@ -35,25 +35,6 @@
 #include "SDL.h"
 
 
-JE_word w1;
-JE_AweType * awe_data;
-/*JE_word tempw;*/
-JE_word w2;
-int sberror;
-int sysintcount;
-int sbint;
-JE_AweType * awe_code;
-void * oldvector;
-int midiport;
-int sysintwait;
-JE_word sbport;
-JE_DigiMixType * digimix;
-int midierror;
-unsigned long address;
-JE_word intcount;
-JE_word dspversion;
-const char hexa[17] = "0123456789ABCDEF";
-
 Uint32 target, target2;
 bool mixEnable = false;
 bool notYetLoadedSound = true;
@@ -144,7 +125,7 @@ void wait_delayorinput( bool keyboard, bool mouse, bool joystick )
 void JE_loadSong( JE_word songnum )
 {
 	JE_word x;
-	FILE *fi, *test;
+	FILE *fi;
 
 	JE_resetFile(&fi, "music.mus");
 

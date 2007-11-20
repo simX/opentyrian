@@ -36,8 +36,6 @@ struct JE_StarType
 #endif
 
 void JE_starlib_main( void );
-void JE_makeGray( void );
-void JE_wackyCol( void );
 void JE_starlib_init( void );
 void JE_resetValues( void );
 void JE_changeSetup( int setupType );

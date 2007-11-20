@@ -76,20 +76,8 @@ void JE_barShade2( JE_word a, JE_word b, JE_word c, JE_word d );
 void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d );
 void JE_circle( JE_word x, int y, JE_word z, Uint8 c );
 void JE_line( JE_word a, int b, int c, int d, Uint8 e );
-void JE_getImage16( JE_word a, int b, JE_shape16B *p );
-void JE_putImage16( JE_word a, int b, JE_shape16B *p );
 void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s );
-void JE_absDrawGraphic( JE_ShapeTypeOne s );
-void JE_drawGraphicOver( JE_word x, JE_word y, JE_ShapeTypeOne s );
-void JE_absDrawGraphicOver( JE_ShapeTypeOne s );
-void JE_readGraphic( int x, int y, JE_ShapeTypeOne s );
-void JE_getK( char *y );
-void JE_getUpK( char *k );
-bool JE_keyPressed( char *kp );
-bool JE_kp( void );
-void JE_wait( int min, int sec, int hun );
 void JE_getPalette( Uint8 col, Uint8 *red, Uint8 *green, Uint8 *blue );
 void JE_setPalette( Uint8 col, Uint8 red, Uint8 green, Uint8 blue );
-void JE_darkenScreen( void );
 
 #endif /* VGA256D_H */

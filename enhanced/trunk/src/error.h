@@ -32,10 +32,6 @@ extern bool errorOccurred;
 extern char err_msg[128];
 #endif
 
-void JE_outputString( const char *s );
-
-void JE_DetectCFG( void );
-
 long get_stream_size( FILE *f );
 FILE *fopen_check( const char *file, const char *mode );
 
@@ -46,7 +42,6 @@ void JE_resetText( FILE **f, const char *filename );
 char *JE_locateFile( const char *filename );
 void JE_findTyrian( const char *filename );
 bool JE_isCFGThere( void );
-/* void JE_OutputString( char *s ); Obscure DOS trick (?) */
 unsigned long JE_getFileSize( const char *filename );
 
 #endif /* ERROR_H */

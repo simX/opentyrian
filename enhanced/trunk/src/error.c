@@ -223,13 +223,3 @@ bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config
 		return true;
 	}
 }
-
-void JE_DetectCFG( void )
-{
-	STUB();
-}
-
-void JE_outputString( const char *s )
-{
-	STUB();
-}

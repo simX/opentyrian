@@ -900,8 +900,6 @@ void JE_main( void )
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
-	SDL_Surface *swapper;
-
 	char buffer[256];
 
 	int lastEnemyOnScreen;
@@ -3071,10 +3069,6 @@ explosion_draw_overflow:
 			skipStarShowVGA = false;
 			JE_mainKeyboardInput();
 			newkey = false;
-			if (useBios)
-			{
-				while (JE_keyPressed(&k));
-			}
 			if (skipStarShowVGA)
 			{
 				goto level_loop;
@@ -3191,20 +3185,12 @@ void JE_loadMap( void )
 	bool shapeBlank;
 
 
-	FILE *f;
-/*	FILE *f2;*/
-	char k2, k3;
 	JE_word x, y;
-	int yy, z, a, b;
+	int yy, z;
 	JE_word mapSh[3][128]; /* [1..3, 0..127] */
 	Uint8 *ref[3][128]; /* [1..3, 0..127] */
 	char s[256];
-	Uint8 col;
-	int planets, shade;
 
-
-	/*JE_word yLoc;*/
-	int yChg;
 
 	Uint8 mapBuf[15 * 600]; /* [1..15 * 600] */
 	JE_word bufLoc;
@@ -4060,7 +4046,6 @@ void JE_titleScreen( bool animate )
 	JE_word waitForDemo;
 	int menu = 0;
 	bool redraw = true, fadeIn = false, first = true;
-	char flash;
 	JE_word z;
 
 	JE_word temp;
@@ -4143,8 +4128,6 @@ void JE_titleScreen( bool animate )
 				{
 					for (temp = 61; temp >= 4; temp -= 2)
 					{
-						int i;
-
 						setjasondelay(2);
 						memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
 
@@ -5063,8 +5046,6 @@ bool JE_searchFor/*enemy*/( int PLType )
 
 void JE_eventSystem( void )
 {
-	bool tempb;
-	
 	switch (eventRec[eventLoc-1].eventtype)
 	{
 		case 1:
@@ -6086,8 +6067,6 @@ void JE_itemScreen( void )
 	keyboardUsed = false;
 	firstMenu9 = false;
 	backFromHelp = false;
-
-item_screen_start:
 
 	do
 	{
@@ -7586,7 +7565,6 @@ void JE_loadCubes( void )
 	int cube;
 	JE_word x, y;
 	int startPos, endPos, pos;
-	bool nextLine;
 	bool endString;
 	FILE *f;
 	int lastWidth, curWidth;

@@ -14,7 +14,7 @@ OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o error.o f
 ifeq ($(DEBUG), 1)
 	DEBUG_FLAGS := -g3 -O0
 else
-	DEBUG_FLAGS := -g -O2 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing
+	DEBUG_FLAGS := -g -O2 -fomit-frame-pointer -DNDEBUG
 endif
 
 ifeq ($(PLATFORM), WINDOWS)

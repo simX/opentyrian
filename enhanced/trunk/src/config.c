@@ -249,8 +249,6 @@ JE_SaveFilesType *saveFilePointer = &saveFiles;
 JE_SaveGameTemp saveTemp;
 JE_SaveGameTemp *saveTempPointer = &saveTemp;
 
-JE_word editorLevel;   /*Initial value 800*/
-
 JE_word x;
 
 bool fullscreen_set = false, fullscreen_enabled;
@@ -306,8 +304,6 @@ void JE_setupStars( void )
 
 void JE_saveGame( int slot, char *name )
 {
-	int i;
-
 	saveFiles[slot-1].initialDifficulty = initialDifficulty;
 	saveFiles[slot-1].gameHasRepeated = gameHasRepeated;
 	saveFiles[slot-1].level = saveLevel;
@@ -554,10 +550,9 @@ void JE_setNewGameSpeed( void )
 
 void JE_encryptSaveTemp( void )
 {
-	JE_SaveGameTemp s2, s3;
-	char c;
+	JE_SaveGameTemp s3;
 	JE_word x;
-	char y, z;
+	char y;
 
 	memcpy(s3, saveTemp, sizeof(s3));
 
@@ -605,7 +600,7 @@ void JE_decryptSaveTemp( void )
 	JE_SaveGameTemp s2;
 	/*JE_word x;*/
 	int x;
-	unsigned int y, z;
+	unsigned int y;
 
 	/* Decrypt save game file */
 	for (x = (SAVE_FILE_SIZE - 1); x >= 0; x--)
@@ -866,15 +861,9 @@ void JE_loadConfiguration( void )
 			p += sizeof(Uint8);
 		}
 
-		/* SYN: This is truncating to bytes. I have no idea what this is doing or why. */
-		/* TODO: Figure out what this is about and make sure it isn't broked. */
-		editorLevel = JE_btow((Uint8) (SIZEOF_SAVEGAMETEMP - 6), (Uint8) (SIZEOF_SAVEGAMETEMP - 5));
-
 		fclose(fi);
 	} else {
 		/* We didn't have a save file! Let's make up random stuff! */
-		editorLevel = 800;
-
 		for (z = 0; z < 100; z++)
 		{
 			saveTemp[SAVE_FILES_SIZE + z] = initialItemAvail[z];
@@ -993,9 +982,6 @@ void JE_saveConfiguration( void )
 		*((Uint8*)p) = saveFiles[z].highScoreDiff ;
 		p += sizeof(Uint8);
 	}
-
-	saveTemp[SIZEOF_SAVEGAMETEMP - 6] = editorLevel >> 8;
-	saveTemp[SIZEOF_SAVEGAMETEMP - 5] = editorLevel;
 
 	JE_encryptSaveTemp();
 	f = fopen_check("tyrian.sav", "wb");

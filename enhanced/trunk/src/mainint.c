@@ -204,7 +204,6 @@ void JE_helpSystem( int startTopic )
 {
 	int page, lastPage = 0;
 	int menu;
-	char flash;
 
 	page = topicStart[startTopic-1];
 
@@ -1247,7 +1246,7 @@ void JE_highScoreScreen( void )
 	int min = 1;
 	int max = 1;
 
-	int x, y, z;
+	int x, z;
 	short int chg;
 	int quit;
 	char scoretemp[32];
@@ -1471,7 +1470,7 @@ bool JE_inGameSetup( void )
 	const int help[6] /* [1..6] */ = {15, 15, 28, 29, 26, 27};
 	int sel;
 	bool quit;
-	JE_word x, y, z;
+	JE_word x;
 
 	tempScreenSeg = VGAScreenSeg; /* <MXD> ? */
 	/* TODO callBiosHandler = true;*/
@@ -1914,11 +1913,6 @@ void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_
 	}
 }
 
-void JE_func( Uint8 col )
-{
-	STUB();
-}
-
 void JE_sort( void )
 {
 	int a, b;
@@ -2217,11 +2211,6 @@ void JE_endLevelAni( void )
 	sprintf(tempStr, "%s %d%%", miscText[63-1], temp);
 	JE_outTextGlow(40, 90, tempStr);
 	
-	if (!constantPlay)
-	{
-		editorLevel += temp / 5;
-	}
-	
 	JE_updateStream();
 	if (netQuit)
 		exit(0);
@@ -2385,7 +2374,6 @@ void JE_handleChat( void )
 bool JE_getNumber( char *s, int *x )
 {
 	bool getNumber = false;
-	int code;
 	char buf[256];
 
 	while (strlen(s) > 0)

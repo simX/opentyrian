@@ -29,31 +29,10 @@
 
 
 typedef unsigned long JE_SongPosType [MUSIC_NUM + 1]; /* [1..Musicnum + 1] */
-typedef Uint8 JE_DigiMixType [0x4ff];
-typedef Uint8 JE_AweType [35000];
 
 #ifndef NO_EXTERNS
-extern JE_word w1;
-extern JE_AweType * awe_data;
-/*extern JE_word tempw;*/
-extern JE_word w2;
-extern int sberror;
-extern int sysintcount;
-extern int sbint;
-extern JE_AweType * awe_code;
-extern void * oldvector;
-extern int midiport;
-extern int sysintwait;
-extern JE_word sbport;
-extern JE_DigiMixType * digimix;
-extern int midierror;
-extern unsigned long address;
-extern JE_word intcount;
-
-extern JE_word dspversion;
 extern Uint32 target, target2;
 
-extern char hexa[17];
 extern bool mixEnable;
 
 extern bool notYetLoadedSound, notYetLoadedMusic;

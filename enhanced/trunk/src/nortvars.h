@@ -38,9 +38,6 @@ typedef Uint8 JE_NewShapeTypeOne[182]; /* [0..168+14-1] */
 typedef JE_NewShapeTypeOne JE_NewShapeType[304]; /* [1..304] */
 
 #ifndef NO_EXTERNS
-
-/* extern JE_word z; */
-
 extern JE_word y;
 extern bool scanForJoystick;
 extern bool inputDetected;
@@ -49,11 +46,6 @@ extern int mouseCursor;
 extern bool mouse_threeButton;
 extern JE_word mouseX, mouseY, mouseButton;
 #endif
-
-/*void JE_buildRec( void );
-void JE_add( JE_byte nextbyte );
-void JE_endShape( void );
-void JE_startNewShape( void ); */
 
 void JE_loadShapeFile( JE_ShapeType *shapes, char s );
 void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s );
@@ -69,9 +61,6 @@ void JE_setMousePosition( JE_word mouseX, JE_word mouseY );
 
 bool JE_anyButton( void );
 
-/*void JE_showMouse( void );
-void JE_hideMouse( void );*/
-
 void JE_dBar( JE_word x, JE_word y, JE_word num, JE_word col );
 void JE_dBar2( JE_word x, JE_word y, JE_word num, JE_word col );
 void JE_dBar3( int x,  int y,  int num,  int col );
@@ -81,7 +70,6 @@ void JE_barDrawShadow( JE_word x, JE_word y, JE_word res, JE_word col, JE_word a
 void JE_barDrawDirect( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
 void JE_wipeKey( void );
 void JE_drawANSI( char *ansiscreen );
-/*bool JE_waitaction( JE_byte time );*/
 
 void JE_drawShape2( int x, int y, int s, Uint8 *shape );
 void JE_superDrawShape2( int x, int y, int s, Uint8 *shape );
