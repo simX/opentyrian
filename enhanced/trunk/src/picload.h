@@ -29,6 +29,6 @@ extern bool notyetloadedpcx;
 
 /*void JE_unpackPCX( void );*/
 
-void JE_loadPic( JE_byte PCXnumber, bool storepal );
+void JE_loadPic( int PCXnumber, bool storepal );
 
 #endif /* PICLOAD_H */

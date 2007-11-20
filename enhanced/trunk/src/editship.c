@@ -55,7 +55,7 @@ void JE_loadExtraShapes( void )
 	STUB();
 }
 
-void JE_add( JE_byte nextbyte )
+void JE_add( char nextbyte )
 {
 	STUB();
 }

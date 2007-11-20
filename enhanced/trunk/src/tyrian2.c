@@ -54,16 +54,16 @@
 
 
 JE_word statDmg[2]; /* [1..2] */
-JE_byte planetAni, planetAniWait;
-JE_byte currentDotNum, currentDotWait;
+int planetAni, planetAniWait;
+int currentDotNum, currentDotWait;
 double navX, navY, newNavX, newNavY;
 int tempNavX, tempNavY;
-JE_byte planetDots[5]; /* [1..5] */
+int planetDots[5]; /* [1..5] */
 int planetDotX[5][10], planetDotY[5][10]; /* [1..5, 1..10] */
 
 /* Level Event Data */
 bool quit, first, loadLevelOk, refade;
-/*JE_byte newPal, curPal, oldPal;*/
+/*int newPal, curPal, oldPal;*/
 int newPal, curPal, oldPal; /* SYN: Originally bytes, I hope this doesn't break anything */
 
 JE_word yLoc;
@@ -77,13 +77,13 @@ JE_word levelEnemy[40]; /* [1..40] */
 char tempStr[31];
 
 /* Data used for ItemScreen procedure to indicate items available */
-JE_byte itemAvail[9][10]; /* [1..9, 1..10] */
-JE_byte itemAvailMax[9]; /* [1..9] */
+int itemAvail[9][10]; /* [1..9, 1..10] */
+int itemAvailMax[9]; /* [1..9] */
 
 const JE_word generatorX[5] = { 61, 63, 66, 65, 62 };
 const JE_word generatorY[5] = { 83, 84, 85, 83, 96 };
 
-const JE_byte rearWeaponList[40] = {
+const int rearWeaponList[40] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3,
 	4, 0, 5, 6, 0, 0, 7, 0, 0, 2, 1,
 	0, 7, 0, 6, 0, 1, 1, 4, 1, 1, 1,
@@ -92,7 +92,7 @@ const JE_byte rearWeaponList[40] = {
 const JE_word rearWeaponX[7] = { 41, 27,  49,  43, 51, 39, 41 };
 const JE_word rearWeaponY[7] = { 92, 92, 113, 102, 97, 96, 76 };
 
-const JE_byte frontWeaponList[42] = {
+const int frontWeaponList[42] = {
 	 5, 10, 4, 9, 3, 6, 11, 2, 0, 0,
 	 0,  0, 8, 9, 0, 0,  1, 0, 5, 1,
 	 0,  0, 4, 0, 5, 0,  5, 0, 0, 0,
@@ -105,7 +105,7 @@ const JE_word frontWeaponY[12] = { 38, 53, 41, 36, 48, 35, 41, 35, 53, 41, 39, 3
 const JE_word planetX[21] = { 200, 150, 240, 300, 270, 280, 320, 260, 220, 150, 160, 210, 80, 240, 220, 180, 310, 330, 150, 240, 200 };
 const JE_word planetY[21] = {  40,  90,  90,  80, 170,  30,  50, 130, 120, 150, 220, 200, 80,  50, 160,  10,  55,  55,  90,  90,  40 };
 
-const JE_byte tyrian2_weapons[42] = {
+const int tyrian2_weapons[42] = {
 	 1,  2,  3,  4,  5,  6,  7,  8, 9, 10,
 	11, 12, 22,  6, 14,  0, 15, 16, 1, 15,
 	10,  9,  3, 16,  1, 14,  1,  9, 9, 12,
@@ -115,17 +115,17 @@ const JE_byte tyrian2_weapons[42] = {
 
 const JE_MenuChoiceType menuChoicesDefault = { 7, 9, 8, 0, 0, 11, (SAVE_FILES_NUM / 2) + 2, 0, 0, 6, 4, 6, 7, 5 };
 
-const JE_byte menuEsc[MAX_MENU] = { 0, 1, 1, 1, 2, 3, 3, 1, 8, 0, 0, 11, 3, 0 };
+const int menuEsc[MAX_MENU] = { 0, 1, 1, 1, 2, 3, 3, 1, 8, 0, 0, 11, 3, 0 };
 
-const JE_byte itemAvailMap[7] = { 1, 2, 3, 9, 4, 6, 7 };
+const int itemAvailMap[7] = { 1, 2, 3, 9, 4, 6, 7 };
 
-const JE_byte weaponReset[7] = { 0, 1, 2, 0, 0, 3, 4 };
+const int weaponReset[7] = { 0, 1, 2, 0, 0, 3, 4 };
 
-const JE_byte mouseSelectionY[MAX_MENU] = { 16, 16, 16, 16, 26, 12, 11, 28, 0, 16, 16, 16, 24, 16 };
+const int mouseSelectionY[MAX_MENU] = { 16, 16, 16, 16, 26, 12, 11, 28, 0, 16, 16, 16, 24, 16 };
 
 void JE_starShowVGA( void )
 {
-	JE_byte *src;
+	Uint8 *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
 	int x, y, lightx, lighty, lightdist;
@@ -231,7 +231,7 @@ void JE_drawEnemy( int enemyOffset )
 {
 	int i, j;
 
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -894,9 +894,9 @@ draw_enemy_end:
 void JE_main( void )
 {
 	int i, j, l;
-	JE_byte **bp;
+	unsigned char **bp;
 
-	JE_byte *p; /* source/shape pointer */
+	Uint8 *p; /* source/shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -1405,15 +1405,27 @@ start_level_first:
 		JE_loadItemDat();
 	}
 
-	memset(enemyAvail,       1, sizeof(enemyAvail));
-	memset(explodeAvail,     0, sizeof(explodeAvail));
-	memset(enemyShotAvail,   1, sizeof(enemyShotAvail));
+	for (int i = 0; i < 100; i++) {
+		enemyAvail[i] = 1;
+	}
+	//memset(enemyAvail,       1, sizeof(enemyAvail));
+	for (int i = 0; i < EXPLOSION_MAX; i++) {
+		explodeAvail[i] = 0;
+	}
+	//memset(explodeAvail,     0, sizeof(explodeAvail));
+	for (int i = 0; i < ENEMY_SHOT_MAX; i++) {
+		enemyShotAvail[i] = true;
+	}
+	//memset(enemyShotAvail,   1, sizeof(enemyShotAvail));
 
 	/*Initialize Shots*/
 	memset(playerShotData,   0, sizeof(playerShotData));
 	memset(shotAvail,        0, sizeof(shotAvail));
 	memset(shotMultiPos,     0, sizeof(shotMultiPos));
-	memset(shotRepeat,       1, sizeof(shotRepeat));
+	for (int i = 0; i < 11; i++) {
+		shotRepeat[i] = 1;
+	}
+	//memset(shotRepeat,       1, sizeof(shotRepeat));
 
 	memset(button,           0, sizeof(button));
 
@@ -2924,7 +2936,7 @@ explosion_draw_overflow:
 	if (displayTime > 0)
 	{
 		displayTime--;
-		JE_outTextAndDarken(90, 10, miscText[59], 15, (JE_byte)flash - 8, FONT_SHAPES);
+		JE_outTextAndDarken(90, 10, miscText[59], 15, flash - 8, FONT_SHAPES);
 		flash += flashChange;
 		if (flash > 4 || flash == 0)
 		{
@@ -3185,15 +3197,16 @@ void JE_loadMap( void )
 	JE_word x, y;
 	int yy, z, a, b;
 	JE_word mapSh[3][128]; /* [1..3, 0..127] */
-	JE_byte *ref[3][128]; /* [1..3, 0..127] */
+	Uint8 *ref[3][128]; /* [1..3, 0..127] */
 	char s[256];
-	JE_byte col, planets, shade;
+	Uint8 col;
+	int planets, shade;
 
 
 	/*JE_word yLoc;*/
 	int yChg;
 
-	JE_byte mapBuf[15 * 600]; /* [1..15 * 600] */
+	Uint8 mapBuf[15 * 600]; /* [1..15 * 600] */
 	JE_word bufLoc;
 
 	char buffer[256];
@@ -3853,8 +3866,8 @@ new_game:
 			JE_initEpisode(temp);
 			efread(levelName, 1, 10, recordFile); levelName[10] = '\0';
 			lvlFileNum = fgetc(recordFile);
-			efread(pItems, sizeof(JE_byte), 12, recordFile);
-			efread(portPower, sizeof(JE_byte), 5, recordFile);
+			efread(pItems, sizeof(Uint8), 12, recordFile);
+			efread(portPower, sizeof(Uint8), 5, recordFile);
 			levelSong = fgetc(recordFile);
 
 			temp = fgetc(recordFile);
@@ -3889,13 +3902,13 @@ new_game:
 		for (x = 0; x < maxEvent; x++)
 		{
 			efread(&eventRec[x].eventtime, sizeof(JE_word), 1, lvlFile);
-			efread(&eventRec[x].eventtype, sizeof(JE_byte), 1, lvlFile);
+			vfread(eventRec[x].eventtype, Uint8, lvlFile);
 			vfread(eventRec[x].eventdat,         Sint16, lvlFile);
 			vfread(eventRec[x].eventdat2,        Sint16, lvlFile);
 			vfread(eventRec[x].eventdat3, Sint8, lvlFile);
 			vfread(eventRec[x].eventdat5, Sint8, lvlFile);
 			vfread(eventRec[x].eventdat6, Sint8, lvlFile);
-			efread(&eventRec[x].eventdat4, sizeof(JE_byte), 1, lvlFile);
+			vfread(eventRec[x].eventdat4, Uint8, lvlFile);
 		}
 		eventRec[x].eventtime = 65500;  /*Not needed but just in case*/
 
@@ -3925,7 +3938,7 @@ new_game:
 			{
 				memset(shape, 0, sizeof(shape));
 			} else {
-				efread(shape, sizeof(JE_byte), sizeof(shape), shpFile);
+				efread(shape, sizeof(Uint8), sizeof(shape), shpFile);
 			}
 
 			/* Match 1 */
@@ -3935,7 +3948,7 @@ new_game:
 				{
 					memcpy(megaData1->shapes[x].sh, shape, sizeof(JE_DanCShape));
 
-					ref[0][x] = (JE_byte *)megaData1->shapes[x].sh;
+					ref[0][x] = (Uint8 *)megaData1->shapes[x].sh;
 				}
 			}
 
@@ -3957,8 +3970,7 @@ new_game:
 							}
 						}
 
-						megaData2->shapes[x].fill = y;
-						ref[1][x] = (JE_byte *)megaData2->shapes[x].sh;
+						ref[1][x] = (Uint8 *)megaData2->shapes[x].sh;
 					} else {
 						ref[1][x] = NULL;
 					}
@@ -3983,8 +3995,7 @@ new_game:
 							}
 						}
 
-						megaData3->shapes[x].fill = y;
-						ref[2][x] = (JE_byte *)megaData3->shapes[x].sh;
+						ref[2][x] = (Uint8 *)megaData3->shapes[x].sh;
 					} else {
 						ref[2][x] = NULL;
 					}
@@ -3994,7 +4005,7 @@ new_game:
 
 		fclose(shpFile);
 
-		efread(mapBuf, sizeof(JE_byte), 14 * 300, lvlFile);
+		efread(mapBuf, sizeof(Uint8), 14 * 300, lvlFile);
 		bufLoc = 0;              /* MAP NUMBER 1 */
 		for (y = 0; y < 300; y++)
 		{
@@ -4005,7 +4016,7 @@ new_game:
 			}
 		}
 
-		efread(mapBuf, sizeof(JE_byte), 14 * 600, lvlFile);
+		efread(mapBuf, sizeof(Uint8), 14 * 600, lvlFile);
 		bufLoc = 0;              /* MAP NUMBER 2 */
 		for (y = 0; y < 600; y++)
 		{
@@ -4016,7 +4027,7 @@ new_game:
 			}
 		}
 
-		efread(mapBuf, sizeof(JE_byte), 15 * 600, lvlFile);
+		efread(mapBuf, sizeof(Uint8), 15 * 600, lvlFile);
 		bufLoc = 0;              /* MAP NUMBER 3 */
 		for (y = 0; y < 600; y++)
 		{
@@ -4045,14 +4056,14 @@ void JE_titleScreen( bool animate )
 	bool quit = 0;
 
 	const int menunum = 7;
-	JE_byte nameGo[SA + 2] = {0}; /* [1..SA+2] */
+	unsigned char nameGo[SA + 2] = {0}; /* [1..SA+2] */
 	JE_word waitForDemo;
-	JE_byte menu = 0;
+	int menu = 0;
 	bool redraw = true, fadeIn = false, first = true;
 	char flash;
 	JE_word z;
 
-	JE_word temp; /* JE_byte temp; from varz.h will overflow in for loop */
+	JE_word temp;
 
 	JE_initPlayerData();
 
@@ -4606,7 +4617,7 @@ void JE_displayText( void )
 
 void JE_makeEnemy( struct JE_SingleEnemyType *enemy )
 {
-	JE_byte temp;
+	int temp;
 	int t = 0;
 
 	if (superArcadeMode > 0 && tempW == 534)
@@ -4939,7 +4950,7 @@ void JE_makeEnemy( struct JE_SingleEnemyType *enemy )
 	}
 }
 
-void JE_createNewEventEnemy( JE_byte enemyTypeOfs, JE_word enemyOffset )
+void JE_createNewEventEnemy( int enemyTypeOfs, JE_word enemyOffset )
 {
 	int i;
 
@@ -5030,10 +5041,10 @@ void JE_eventJump( JE_word jump )
 	eventLoc = tempW - 1;
 }
 
-bool JE_searchFor/*enemy*/( JE_byte PLType )
+bool JE_searchFor/*enemy*/( int PLType )
 {
 	bool tempb = false;
-	JE_byte temp;
+	int temp;
 
 	for (temp = 0; temp < 100; temp++)
 	{
@@ -5794,7 +5805,7 @@ void JE_eventSystem( void )
 
 		case 71:
 			printf("*!* POSSIBLY BAD MAP REPOSITONING\n");
-			if (((((intptr_t)mapYPos - (intptr_t)&megaData1->mainmap) / sizeof(JE_byte *)) * 2) <= eventRec[eventLoc-1].eventdat2) /* <MXD> ported correctly? */
+			if (((((intptr_t)mapYPos - (intptr_t)&megaData1->mainmap) / sizeof(Uint8 *)) * 2) <= eventRec[eventLoc-1].eventdat2) /* <MXD> ported correctly? */
 			{
 				JE_eventJump(eventRec[eventLoc-1].eventdat);
 			}
@@ -5927,43 +5938,43 @@ void JE_eventSystem( void )
 
 
 bool quikSave;
-JE_byte oldMenu;
+int oldMenu;
 bool backFromHelp;
-JE_byte lastSelect;
+int lastSelect;
 int lastDirection;
-JE_byte skipMove;
-JE_byte tempPowerLevel[7];
+int skipMove;
+int tempPowerLevel[7];
 bool firstMenu9, paletteChanged;
 JE_MenuChoiceType menuChoices;
 unsigned long shipValue;
 JE_word curX, curY, curWindow, selectX, selectY, tempX, tempY, tempAvail, x, y, textYPos;
-JE_byte flashDelay;
+int flashDelay;
 int col, colC;
-JE_byte curAvail, curSelectDat;
-JE_byte lastCurSel;
+int curAvail, curSelectDat;
+int lastCurSel;
 JE_word mouseSetY;
 bool firstRun;
 int curMenu;
-JE_byte curSel[MAX_MENU];
-JE_byte curItemType, curItem, cursor;
+int curSel[MAX_MENU];
+int curItemType, curItem, cursor;
 bool buyActive, sellActive, sellViewActive, buyViewActive, /*flash,*/ purchase, cannotAfford, slotFull;
 bool leftPower, rightPower, rightPowerAfford;
 
 char cubeHdr[4][81];
 char cubeText[4][90][CUBE_WIDTH];
 char cubeHdr2[4][13];
-JE_byte faceNum[4];
+int faceNum[4];
 JE_word cubeMaxY[4];
-JE_byte currentCube;
+int currentCube;
 bool keyboardUsed;
 JE_word faceX, faceY;
 
-JE_byte currentFaceNum;
+int currentFaceNum;
 
 unsigned long JE_cashLeft( void )
 {
 	unsigned long tempL;
-	JE_byte x;
+	int x;
 	JE_word itemNum;
 
 	tempL = score;
@@ -7572,15 +7583,15 @@ item_screen_start:
 void JE_loadCubes( void )
 {
 	char s[256], s2[256], s3[256];
-	JE_byte cube;
+	int cube;
 	JE_word x, y;
-	JE_byte startPos, endPos, pos;
+	int startPos, endPos, pos;
 	bool nextLine;
 	bool endString;
 	FILE *f;
-	JE_byte lastWidth, curWidth;
+	int lastWidth, curWidth;
 	bool pastStringLen, pastStringWidth;
-	JE_byte temp;
+	unsigned char temp;
 
 	char buffer[256];
 
@@ -7710,7 +7721,7 @@ void JE_loadCubes( void )
 	}
 }
 
-void JE_drawItem( JE_byte itemType, JE_word itemNum, JE_word x, JE_word y )
+void JE_drawItem( int itemType, JE_word itemNum, JE_word x, JE_word y )
 {
 	JE_word tempW = 0;
 
@@ -7775,7 +7786,7 @@ void JE_drawMenuHeader( void )
 
 void JE_drawMenuChoices( void )
 {
-	JE_byte x;
+	int x;
 	char *str;
 
 	for (x = 2; x <= menuChoices[curMenu]; x++)
@@ -7832,7 +7843,7 @@ void JE_drawMenuChoices( void )
 
 void JE_updateNavScreen( void )
 {
-	JE_byte x;
+	int x;
 
 	/* minor issues: */
 	/* TODO: The scroll to the new planet is too fast, I think */
@@ -7917,7 +7928,7 @@ void JE_updateNavScreen( void )
 
 void JE_drawLines( bool dark )
 {
-	JE_byte x, y;
+	int x, y;
 	int tempX, tempY;
 	int tempX2, tempY2;
 	JE_word tempW, tempW2;
@@ -7977,7 +7988,7 @@ void JE_drawLines( bool dark )
 
 void JE_drawNavLines( bool dark )
 {
-	JE_byte x, y;
+	int x, y;
 	int tempX, tempY;
 	int tempX2, tempY2;
 	JE_word tempW, tempW2;
@@ -8034,7 +8045,7 @@ void JE_drawNavLines( bool dark )
 
 void JE_drawDots( void )
 {
-	JE_byte x, y;
+	int x, y;
 	int tempX, tempY;
 
 	for (x = 0; x < mapPNum; x++)
@@ -8056,7 +8067,7 @@ void JE_drawDots( void )
 	}
 }
 
-void JE_drawPlanet( JE_byte planetNum )
+void JE_drawPlanet( int planetNum )
 {
 	int tempX, tempY, tempZ;
 
@@ -8112,7 +8123,7 @@ void JE_computeDots( void )
 {
 	int tempX, tempY;
 	int distX, distY;
-	JE_byte x, y;
+	int x, y;
 
 	for (x = 0; x < mapPNum; x++)
 	{
@@ -8143,7 +8154,7 @@ void JE_computeDots( void )
 	}
 }
 
-int JE_partWay( int start, int finish, JE_byte dots, JE_byte dist )
+int JE_partWay( int start, int finish, int dots, int dist )
 {
 	return (finish - start) / (dots + 2) * (dist + 1) + start;
 }
@@ -8187,7 +8198,7 @@ void JE_doFunkyScreen( void )
 void JE_drawMainMenuHelpText( void )
 {
 	char tempStr[67];
-	JE_byte temp;
+	int temp;
 
 	temp = curSel[curMenu] - 2;
 	if (curMenu < 3 || curMenu == 9 || curMenu > 10)
@@ -8222,7 +8233,7 @@ void JE_whoa( void )
 bool JE_quitRequest( bool useMouse )
 {
 	bool retval;
-	JE_byte sel;
+	int sel;
 	bool quit, select;
 	int col, colC;
 
@@ -8364,7 +8375,7 @@ bool JE_quitRequest( bool useMouse )
 	return retval;
 }
 
-void JE_barX( JE_word x1, JE_word y1, JE_word x2, JE_word y2, JE_byte col )
+void JE_barX( JE_word x1, JE_word y1, JE_word x2, JE_word y2, Uint8 col )
 {
 	JE_bar(x1, y1,     x2, y1,     col + 1);
 	JE_bar(x1, y1 + 1, x2, y2 - 1, col    );
@@ -8438,9 +8449,9 @@ void JE_drawScore( void )
 	}
 }
 
-void JE_menuFunction( JE_byte select )
+void JE_menuFunction( int select )
 {
-	JE_byte x;
+	int x;
 	unsigned long tempScore;
 	JE_word curSelect;
 
@@ -8950,7 +8961,7 @@ void JE_weaponSimUpdate( void )
 	JE_drawItem(1, pItems[12 - 1], PX - 5, PY - 7);
 }
 
-void JE_weaponViewFrame( JE_byte testshotnum )
+void JE_weaponViewFrame( int testshotnum )
 {
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	int i;
@@ -9193,7 +9204,7 @@ draw_player_shot_loop_end:
 	JE_waitFrameCount();
 }
 
-void JE_genItemMenu( JE_byte itemNum )
+void JE_genItemMenu( int itemNum )
 {
 	menuChoices[4] = itemAvailMax[itemAvailMap[itemNum - 2] - 1] + 2;
 

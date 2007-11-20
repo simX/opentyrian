@@ -50,7 +50,7 @@ void JE_updateColorsFast( JE_ColorType *colorBuffer )
 	SDL_SetColors(VGAScreenSeg, p, 0, 256);
 }
 
-void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, JE_byte startCol, JE_byte noColors, JE_byte noSteps )
+void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, int startCol, int noColors, int noSteps )
 {
 	SDL_Color p[256];
 	int s, i;
@@ -69,17 +69,17 @@ void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, JE_byte st
 	}
 }
 
-void JE_fadeBlack( JE_byte steps )
+void JE_fadeBlack( int steps )
 {
 	JE_fadeColors(&colors, &black, 0, 255, steps);
 }
 
-void JE_fadeColor( JE_byte steps )
+void JE_fadeColor( int steps )
 {
 	JE_fadeColors(&black, &colors, 0, 255, steps);
 }
 
-void JE_fadeWhite( JE_byte steps )
+void JE_fadeWhite( int steps )
 {
 	memset(black, 63, sizeof(black));
 	JE_fadeColors(&colors, &black, 0, 255, steps);

@@ -37,17 +37,17 @@ JE_word backMove, backMove2, backMove3;
 /*Main Maps*/
 JE_word megaDataSeg, megaDataOfs, megaData2Seg, megaData2Ofs, megaData3Seg, megaData3Ofs;
 JE_word mapX, mapY, mapX2, mapX3, mapY2, mapY3;
-JE_byte **mapYPos, **mapY2Pos, **mapY3Pos;
+unsigned char **mapYPos, **mapY2Pos, **mapY3Pos;
 JE_word mapXPos, oldMapXOfs, mapXOfs, mapX2Ofs, mapX2Pos, mapX3Pos, oldMapX3Ofs, mapX3Ofs, tempMapXOfs;
 intptr_t mapXbpPos, mapX2bpPos, mapX3bpPos;
-JE_byte map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
+int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 
 
 SDL_Surface *smoothiesScreen;
-bool  anySmoothies;
-JE_byte     SDAT[9]; /* [1..9] */
+bool anySmoothies;
+int SDAT[9]; /* [1..9] */
 
-JE_byte temp, temp2;
+int temp, temp2;
 
 void JE_darkenBackground( JE_word neat )
 {
@@ -71,7 +71,7 @@ void JE_drawBackground2( void )
 {
 	bool useBackground1ofs;
 
-	JE_byte **bp, *src;
+	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
 	int i, j;
@@ -250,7 +250,7 @@ void JE_superBackground2( void )
 {
 	/*=======================BACKGROUNDS========================*/
 	/*=======================BACKGROUND 2========================*/
-	JE_byte **bp, *src;
+	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
 	int i, j;
@@ -422,14 +422,14 @@ void JE_superBackground2( void )
 
 void JE_drawBackground3( void )
 {
-	JE_byte **bp, *src;
+	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
 	int i, j;
 	int x, y;
 
 	/* Movement of background */
-   backPos3 += backMove3;
+	backPos3 += backMove3;
 
 	if (backPos3 > 27)
 	{

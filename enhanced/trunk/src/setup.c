@@ -109,11 +109,11 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 void JE_jukeboxGo( void )
 {
 	bool weirdMusic, weirdCurrent;
-	JE_byte weirdSpeed = 0;
+	int weirdSpeed = 0;
 	char tempStr[64];
 
-	JE_byte lastSong;
-	JE_byte tempVolume;
+	int lastSong;
+	int tempVolume;
 	bool youStopped, drawText, quit, fade;
 
 

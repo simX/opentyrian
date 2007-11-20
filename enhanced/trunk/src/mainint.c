@@ -55,7 +55,7 @@
 
 #define MAX_PAGE 8
 #define TOPICS 6
-const JE_byte topicStart[TOPICS] = { 0, 1, 2, 3, 7, 255 };
+const int topicStart[TOPICS] = { 0, 1, 2, 3, 7, 255 };
 
 int constantLastX;
 JE_word textErase;
@@ -78,13 +78,14 @@ void JE_drawTextWindow( char *text )
 	JE_outText(20, 190, text, 0, 4);
 }
 
-void JE_outCharGlow( JE_word x, JE_word y, char *s )
+void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 {
 	int maxloc, loc, z;
 	char glowcol[60]; /* [1..60] */
 	char glowcolc[60]; /* [1..60] */
 	JE_word textloc[60]; /* [1..60] */
-	JE_byte b = 0, bank;
+	int b = 0;
+	int bank;
 
 	setjasondelay2(1);
 
@@ -199,10 +200,10 @@ void JE_drawPortConfigButtons( void )
 	}
 }
 
-void JE_helpSystem( JE_byte startTopic )
+void JE_helpSystem( int startTopic )
 {
 	int page, lastPage = 0;
-	JE_byte menu;
+	int menu;
 	char flash;
 
 	page = topicStart[startTopic-1];
@@ -443,8 +444,8 @@ void JE_helpSystem( JE_byte startTopic )
 
 bool JE_playerSelect( void )
 {
-	JE_byte maxSel;
-	JE_byte sel;
+	int maxSel;
+	int sel;
 	bool quit;
 
 	JE_loadPic(2, false);
@@ -520,9 +521,9 @@ bool JE_playerSelect( void )
 
 bool JE_episodeSelect( void )
 {
-	JE_byte sel;
+	int sel;
 	bool quit;
-	JE_byte max;
+	int max;
 
 	max = EPISODE_MAX;
 
@@ -633,8 +634,8 @@ startepisodeselect:
 
 bool JE_difficultySelect( void )
 {
-	JE_byte maxSel;
-	JE_byte sel;
+	int maxSel;
+	int sel;
 	bool quit;
 
 	JE_loadPic(2, false);
@@ -736,15 +737,15 @@ bool JE_difficultySelect( void )
 	return true; /*MXD assumes this default return value here*/
 }
 
-void JE_loadCompShapesB( JE_byte **shapes, FILE *f, JE_word shapeSize )
+void JE_loadCompShapesB( Uint8 **shapes, FILE *f, JE_word shapeSize )
 {
 	*shapes = malloc(shapeSize);
-	efread(*shapes, sizeof(JE_byte), shapeSize, f);
+	efread(*shapes, sizeof(Uint8), shapeSize, f);
 }
 
 void JE_loadMainShapeTables( void )
 {
-	const JE_byte shapeReorderList[7] /* [1..7] */ = {1, 2, 5, 0, 3, 4, 6};
+	const int shapeReorderList[7] /* [1..7] */ = {1, 2, 5, 0, 3, 4, 6};
 
 	FILE *f;
 
@@ -799,9 +800,9 @@ void JE_loadMainShapeTables( void )
 	fclose(f);
 }
 
-JE_word JE_powerLevelCost( JE_word base, JE_byte level )
+JE_word JE_powerLevelCost( JE_word base, int level )
 {
-	JE_byte x;
+	int x;
 	JE_word tempCost = 0;
 
 	if (level > 0 && level < 12)
@@ -815,7 +816,7 @@ JE_word JE_powerLevelCost( JE_word base, JE_byte level )
 	return tempCost;
 }
 
-unsigned long JE_getCost( JE_byte itemType, JE_word itemNum )
+unsigned long JE_getCost( int itemType, JE_word itemNum )
 {
 	switch (itemType)
 	{
@@ -851,7 +852,7 @@ unsigned long JE_getCost( JE_byte itemType, JE_word itemNum )
 void JE_loadScreen( void )
 {
 	bool quit;
-	JE_byte sel, screen, min = 0, max = 0;
+	int sel, screen, min = 0, max = 0;
 	char *tempstr;
 	char *tempstr2;
 	bool mal_str = false;
@@ -1071,10 +1072,10 @@ unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems )
 	return tempL;
 }
 
-unsigned int JE_getValue( JE_byte itemType, JE_word itemNum )
+unsigned int JE_getValue( int itemType, JE_word itemNum )
 {
 	unsigned int tempW2 = 0;
-	JE_byte z;
+	int z;
 
 	switch (itemType)
 	{
@@ -1232,7 +1233,7 @@ void JE_initPlayerData( void )
 
 void JE_sortHighScores( void )
 {
-	JE_byte x, temp = 0;
+	int x, temp = 0;
 
 	for (x = 0; x < 6; x++)
 	{
@@ -1293,7 +1294,7 @@ void JE_highScoreScreen( void )
 					temp5 = 0;
 				}
 				sprintf(scoretemp, "~#%d:~ %lu", z + 1, saveFiles[temp+z].highScore1);
-				JE_textShade(250, ((z+1) * 10) + 65 , difficultyNameB[temp5], 15, temp5 + ((JE_byte) (temp5 == 0)) - 1, FULL_SHADE);
+				JE_textShade(250, ((z+1) * 10) + 65 , difficultyNameB[temp5], 15, temp5 + (temp5 == 0) - 1, FULL_SHADE);
 				JE_textShade(20, ((z+1) * 10) + 65 , scoretemp, 15, 0, FULL_SHADE);
 				JE_textShade(110, ((z+1) * 10) + 65 , saveFiles[temp + z].highScoreName, 15, 2, FULL_SHADE);
 			}
@@ -1315,7 +1316,7 @@ void JE_highScoreScreen( void )
 					temp5 = 0;
 				}
 				sprintf(scoretemp, "~#%d:~ %lu", z + 1, saveFiles[temp+z].highScore1); /* Not .highScore2 for some reason */
-				JE_textShade(250, ((z+1) * 10) + 125 , difficultyNameB[temp5], 15, temp5 + ((JE_byte) (temp5 == 0)) - 1, FULL_SHADE);
+				JE_textShade(250, ((z+1) * 10) + 125 , difficultyNameB[temp5], 15, temp5 + (temp5 == 0) - 1, FULL_SHADE);
 				JE_textShade(20, ((z+1) * 10) + 125 , scoretemp, 15, 0, FULL_SHADE);
 				JE_textShade(110, ((z+1) * 10) + 125 , saveFiles[temp + z].highScoreName, 15, 2, FULL_SHADE);
 			}
@@ -1380,7 +1381,7 @@ void JE_highScoreScreen( void )
 
 }
 
-void JE_gammaCorrect_func( JE_byte *col, double r )
+void JE_gammaCorrect_func( Uint8 *col, double r )
 {
 	*col = round(*col * r);
 	if (*col > 63)
@@ -1389,7 +1390,7 @@ void JE_gammaCorrect_func( JE_byte *col, double r )
 	}
 }
 
-void JE_gammaCorrect( JE_ColorType *colorBuffer, JE_byte gamma )
+void JE_gammaCorrect( JE_ColorType *colorBuffer, int gamma )
 {
 	int x;
 	double r = 1 + (double)gamma / 10;
@@ -1467,8 +1468,8 @@ bool JE_inGameSetup( void )
 	
 	bool returnvalue = false;
 	
-	const JE_byte help[6] /* [1..6] */ = {15, 15, 28, 29, 26, 27};
-	JE_byte  sel;
+	const int help[6] /* [1..6] */ = {15, 15, 28, 29, 26, 27};
+	int sel;
 	bool quit;
 	JE_word x, y, z;
 
@@ -1689,7 +1690,7 @@ void JE_setNewGameVol( void )
 
 void JE_changeDifficulty( void )
 {
-	JE_byte newDifficultyLevel;
+	int newDifficultyLevel;
 	unsigned long temp;
 
 	if (twoPlayerMode)
@@ -1831,9 +1832,9 @@ void JE_readDemoKeys( void )
 }
 
 /*Street Fighter codes*/
-void JE_SFCodes( JE_byte playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ )
+void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ )
 {
-	JE_byte temp, temp2, temp3, temp4, temp5;
+	int temp, temp2, temp3, temp4, temp5;
 	
 	/*Get direction*/
 	tempW = pItems_[11]; // Get player ship
@@ -1913,14 +1914,14 @@ void JE_SFCodes( JE_byte playerNum_, int PX_, int PY_, int mouseX_, int mouseY_,
 	}
 }
 
-void JE_func( JE_byte col )
+void JE_func( Uint8 col )
 {
 	STUB();
 }
 
 void JE_sort( void )
 {
-	JE_byte a, b;
+	int a, b;
 
 	for (a = 0; a < 2; a++)
 	{
@@ -1930,7 +1931,7 @@ void JE_sort( void )
 			{
 				unsigned long tempLI;
 				char tempStr[30];
-				JE_byte tempByte;
+				int tempByte;
 
 				tempLI = saveFiles[temp+a].highScore1;
 				saveFiles[temp+a].highScore1 = saveFiles[temp+b].highScore1;
@@ -1962,11 +1963,11 @@ void JE_playCredits( void )
 	JE_CreditStringType credstr;
 	JE_word x, max = 0, maxlen = 0;
 	int curpos, newpos;
-	JE_byte yloc;
+	int yloc;
 	FILE *f;
-	JE_byte currentpic = 1, fade = 0;
+	int currentpic = 1, fade = 0;
 	int fadechg = 1;
-	JE_byte currentship = 0;
+	int currentship = 0;
 	int shipx = 0, shipxwait = 0;
 	int shipxc = 0, shipxca = 0;
 	
@@ -2124,7 +2125,7 @@ void JE_playCredits( void )
 void JE_endLevelAni( void )
 {
 	JE_word x, y;
-	JE_byte temp;
+	int temp;
 	char tempStr[256];
 	
 	Sint8 i;
@@ -2367,7 +2368,7 @@ void JE_endLevelAni( void )
 	JE_clr256();
 }
 
-void JE_drawCube( JE_word x, JE_word y, JE_byte filter, JE_byte brightness )
+void JE_drawCube( JE_word x, JE_word y, int filter, int brightness )
 {
 	JE_newDrawCShapeDarken((*shapeArray)[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
 	  shapeY[OPTION_SHAPES][26 - 1], x + 4, y + 4);
@@ -2381,7 +2382,7 @@ void JE_handleChat( void )
 	// STUB(); Annoying piece of crap =P
 }
 
-bool JE_getNumber( char *s, JE_byte *x )
+bool JE_getNumber( char *s, int *x )
 {
 	bool getNumber = false;
 	int code;
@@ -2411,9 +2412,9 @@ end_loop:
 	return getNumber;
 }
 
-void JE_operation( JE_byte slot )
+void JE_operation( int slot )
 {
-	JE_byte flash;
+	int flash;
 	bool quit;
 	char stemp[21];
 	char tempStr[51];
@@ -2553,7 +2554,7 @@ void JE_operation( JE_byte slot )
 void JE_inGameDisplays( void )
 {
 	char stemp[21];
-	JE_byte temp;
+	int temp;
 	
 	char tempstr[256];
 
@@ -2961,10 +2962,10 @@ void JE_pauseGame( void )
 	skipStarShowVGA = true;
 }
 
-void JE_playerMovement( JE_byte inputDevice_,
-                        JE_byte playerNum_,
+void JE_playerMovement( int inputDevice_,
+                        int playerNum_,
                         JE_word shipGr_,
-                        JE_byte *shapes9ptr_,
+                        Uint8 *shapes9ptr_,
                         int *armorLevel_, int *baseArmor_,
                         int *shield_, int *shieldMax_,
                         JE_word *playerInvulnerable_,
@@ -2973,16 +2974,16 @@ void JE_playerMovement( JE_byte inputDevice_,
                         int *lastPX2_, int *lastPY2_,
                         int *PXChange_, int *PYChange_,
                         int *lastTurn_, int *lastTurn2_, int *tempLastTurn2_,
-                        JE_byte *stopWaitX_, JE_byte *stopWaitY_,
+                        int *stopWaitX_, int *stopWaitY_,
                         JE_word *mouseX_, JE_word *mouseY_,
                         bool *playerAlive_,
-                        JE_byte *playerStillExploding_,
+                        int *playerStillExploding_,
                         JE_PItemsType pItems_ )
 {
 	int mouseXC, mouseYC;
 	int accelXC, accelYC;
-	JE_byte leftOptionIsSpecial = 0;
-	JE_byte rightOptionIsSpecial = 0;
+	int leftOptionIsSpecial = 0;
+	int rightOptionIsSpecial = 0;
 
 	if (playerNum_ == 2 || !twoPlayerMode)
 	{
@@ -4278,7 +4279,7 @@ void JE_mainGamePlayerFunctions( void )
 	}
 }
 
-char *JE_getName( JE_byte pnum )
+char *JE_getName( int pnum )
 {
 	STUB();
 
@@ -4287,7 +4288,7 @@ char *JE_getName( JE_byte pnum )
 
 void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
                        unsigned long *score_, int *armorLevel_, int *shield_, bool *playerAlive_,
-                       JE_byte *playerStillExploding_, JE_byte playerNum_, JE_byte playerInvulnerable_ )
+                       int *playerStillExploding_, int playerNum_, int playerInvulnerable_ )
 {
 	char tempStr[256];
 	

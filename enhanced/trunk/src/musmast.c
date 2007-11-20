@@ -24,7 +24,7 @@
 #undef NO_EXTERNS
 
 
-JE_byte songBuy;
+int songBuy;
 
 const char musicFile[MUSIC_NUM][13] =
 {

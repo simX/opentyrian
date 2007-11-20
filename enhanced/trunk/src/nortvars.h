@@ -26,15 +26,15 @@
 typedef char JE_TextBuffer[4096]; /* [1..4096] */
 
 struct JE_ColorRec {
-	JE_byte r, g, b;
+	Uint8 r, g, b;
 };
 
 typedef struct JE_ColorRec JE_ColorType[256]; /* [0..255] */
 
-typedef JE_byte JE_ShapeTypeOne[168]; /* [0..168-1] */
+typedef Uint8 JE_ShapeTypeOne[168]; /* [0..168-1] */
 typedef JE_ShapeTypeOne JE_ShapeType[304]; /* [1..304] */
 
-typedef JE_byte JE_NewShapeTypeOne[182]; /* [0..168+14-1] */
+typedef Uint8 JE_NewShapeTypeOne[182]; /* [0..168+14-1] */
 typedef JE_NewShapeTypeOne JE_NewShapeType[304]; /* [1..304] */
 
 #ifndef NO_EXTERNS
@@ -45,7 +45,7 @@ extern JE_word y;
 extern bool scanForJoystick;
 extern bool inputDetected;
 extern JE_word lastMouseX, lastMouseY;
-extern JE_byte mouseCursor;
+extern int mouseCursor;
 extern bool mouse_threeButton;
 extern JE_word mouseX, mouseY, mouseButton;
 #endif
@@ -59,9 +59,9 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s );
 void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s );
 
 void JE_compressShapeFileC( char s );
-void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s );
+void JE_loadCompShapes( Uint8 **shapes, JE_word *shapeSize, char s );
 
-JE_word JE_btow(JE_byte a, JE_byte b);
+JE_word JE_btow(Uint8 a, Uint8 b);
 
 JE_word JE_mousePosition( JE_word *mouseX, JE_word *mouseY );
 bool JE_buttonPressed( void );
@@ -83,12 +83,12 @@ void JE_wipeKey( void );
 void JE_drawANSI( char *ansiscreen );
 /*bool JE_waitaction( JE_byte time );*/
 
-void JE_drawShape2( int x, int y, int s, JE_byte *shape );
-void JE_superDrawShape2( int x, int y, int s, JE_byte *shape );
-void JE_drawShape2Shadow( int x, int y, int s, JE_byte *shape );
+void JE_drawShape2( int x, int y, int s, Uint8 *shape );
+void JE_superDrawShape2( int x, int y, int s, Uint8 *shape );
+void JE_drawShape2Shadow( int x, int y, int s, Uint8 *shape );
 
-void JE_drawShape2x2( int x, int y, int s, JE_byte *shape );
-void JE_superDrawShape2x2( int x, int y, int s, JE_byte *shape );
-void JE_drawShape2x2Shadow( int x, int y, int s, JE_byte *shape );
+void JE_drawShape2x2( int x, int y, int s, Uint8 *shape );
+void JE_superDrawShape2x2( int x, int y, int s, Uint8 *shape );
+void JE_drawShape2x2Shadow( int x, int y, int s, Uint8 *shape );
 
 #endif /* NORTVARS_H */

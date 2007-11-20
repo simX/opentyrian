@@ -35,6 +35,6 @@ extern JE_word palNum;
 #endif
 
 void JE_loadPals( void );
-void JE_zPal( JE_byte palette );
+void JE_zPal( int palette );
 
 #endif /* PALLIB_H */

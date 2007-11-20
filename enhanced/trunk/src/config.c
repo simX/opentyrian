@@ -55,7 +55,7 @@
 
 /* Configuration Load/Save handler */
 
-const JE_byte cryptKey[10] = /* [1..10] */
+const unsigned char cryptKey[10] = /* [1..10] */
 {
 	15, 50, 89, 240, 147, 34, 86, 9, 32, 208
 };
@@ -158,12 +158,12 @@ bool smoothies[9] = /* [1..9] */
 { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 
-JE_byte starShowVGASpecialCode;
+int starShowVGASpecialCode;
 
 /* Stars */
 struct
 {
-	JE_byte sC;
+	int sC;
 	JE_word sLoc;
 	JE_word sMov;
 } starDat[MAX_STARS]; /* [1..Maxstars] */
@@ -188,18 +188,18 @@ int power, lastPower, powerAdd;
 int shield, shieldMax, shieldSet;
 int shield2, shieldMax2;
 int armorLevel, armorLevel2;
-JE_byte shieldWait, shieldT;
+int shieldWait, shieldT;
 
-JE_byte shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
-JE_byte portConfig[10]; /* [1..10] */
+int shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
+int portConfig[10]; /* [1..10] */
 bool portConfigDone;
 JE_PortPowerType portPower, lastPortPower;
 
 bool resetVersion;
 
 /* Level Data */
-char    lastLevelName[11], levelName[11]; /* string [10] */
-JE_byte mainLevel, nextLevel, saveLevel;   /*Current Level #*/
+char lastLevelName[11], levelName[11]; /* string [10] */
+int mainLevel, nextLevel, saveLevel;   /*Current Level #*/
 
 /* Keyboard Junk */
 JE_KeySettingType keySettings;
@@ -216,33 +216,33 @@ bool extraGame;
 
 bool twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian;
 bool trentWin = false;
-JE_byte    superArcadeMode;
+int superArcadeMode;
 
-JE_byte    superArcadePowerUp;
+int superArcadePowerUp;
 
 double linkGunDirec;
-JE_byte playerDevice1, playerDevice2;
-JE_byte inputDevice1, inputDevice2;
+int playerDevice1, playerDevice2;
+int inputDevice1, inputDevice2;
 
-JE_byte secretHint;
-JE_byte background3over;
-JE_byte background2over;
-JE_byte gammaCorrection;
+int secretHint;
+int background3over;
+int background2over;
+int gammaCorrection;
 bool superPause = false;
 bool explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll,
      wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 
-JE_byte versionNum;   /* SW 1.0 and SW/Reg 1.1 = 0 or 1
-                       * EA 1.2 = 2 */
+int versionNum; /* SW 1.0 and SW/Reg 1.1 = 0 or 1
+                 * EA 1.2 = 2 */
 
-JE_byte fastPlay;
+int fastPlay;
 bool pentiumMode;
 
 /* Savegame files */
 bool playerPasswordInput;
-JE_byte    inputDevice;  /* 0=Mouse   1=Joystick   2=Gravis GamePad */
-JE_byte    gameSpeed;
-JE_byte    processorType;  /* 1=386 2=486 3=Pentium Hyper */
+int inputDevice;  /* 0=Mouse   1=Joystick   2=Gravis GamePad */
+int gameSpeed;
+int processorType;  /* 1=386 2=486 3=Pentium Hyper */
 
 JE_SaveFilesType saveFiles; /*array[1..saveLevelnum] of savefiletype;*/
 JE_SaveFilesType *saveFilePointer = &saveFiles;
@@ -255,9 +255,9 @@ JE_word x;
 
 bool fullscreen_set = false, fullscreen_enabled;
 
-const JE_byte StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
+const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
 
-void JE_decryptString( char *s, JE_byte len )
+void JE_decryptString( char *s, int len )
 {
 	int i;
 
@@ -304,7 +304,7 @@ void JE_setupStars( void )
 	}
 }
 
-void JE_saveGame( JE_byte slot, char *name )
+void JE_saveGame( int slot, char *name )
 {
 	int i;
 
@@ -367,9 +367,9 @@ void JE_saveGame( JE_byte slot, char *name )
 	JE_saveConfiguration();
 }
 
-void JE_loadGame( JE_byte slot )
+void JE_loadGame( int slot )
 {
-	JE_byte temp5;
+	int temp5;
 
 	superTyrian = false;
 	onePlayerAction = false;
@@ -557,7 +557,7 @@ void JE_encryptSaveTemp( void )
 	JE_SaveGameTemp s2, s3;
 	char c;
 	JE_word x;
-	JE_byte y, z;
+	char y, z;
 
 	memcpy(s3, saveTemp, sizeof(s3));
 
@@ -605,15 +605,15 @@ void JE_decryptSaveTemp( void )
 	JE_SaveGameTemp s2;
 	/*JE_word x;*/
 	int x;
-	JE_byte y, z;
+	unsigned int y, z;
 
 	/* Decrypt save game file */
 	for (x = (SAVE_FILE_SIZE - 1); x >= 0; x--)
 	{
-		s2[x] = (JE_byte)saveTemp[x] ^ (JE_byte)(cryptKey[(x+1) % 10]);
+		s2[x] = (char)saveTemp[x] ^ (char)(cryptKey[(x+1) % 10]);
 		if (x > 0)
 		{
-			s2[x] ^= (JE_byte)saveTemp[x - 1];
+			s2[x] ^= (char)saveTemp[x - 1];
 		}
 
 	}
@@ -626,6 +626,7 @@ void JE_decryptSaveTemp( void )
 	{
 		y += s2[x];
 	}
+	y %= 256;
 	if (saveTemp[SAVE_FILE_SIZE] != y)
 	{
 		correct = false;
@@ -637,6 +638,7 @@ void JE_decryptSaveTemp( void )
 	{
 		y -= s2[x];
 	}
+	y %= 256;
 	if (saveTemp[SAVE_FILE_SIZE+1] != y)
 	{
 		correct = false;
@@ -648,6 +650,7 @@ void JE_decryptSaveTemp( void )
 	{
 		y = (y * s2[x]) + 1;
 	}
+	y %= 256;
 	if (saveTemp[SAVE_FILE_SIZE+2] != y)
 	{
 		correct = false;
@@ -680,8 +683,8 @@ void JE_loadConfiguration( void )
 {
 	FILE *fi;
 	int z;
-	JE_byte *p;
-	JE_byte junk;
+	Uint8 *p;
+	char junk;
 	int y;
 
 	errorActive = true;
@@ -790,8 +793,11 @@ void JE_loadConfiguration( void )
 			saveFiles[z].level = *((JE_word*)p);
 			p += sizeof(JE_word);
 
-			memcpy(saveFiles[z].items, ((JE_PItemsType*)p), sizeof(JE_PItemsType));
-			p += sizeof(JE_PItemsType);
+			for (int i = 0; i < 12; i++)
+			{
+				saveFiles[z].items[i] = *((Uint8*)p);
+				p += sizeof(Uint8);
+			}
 
 			saveFiles[z].score = *((Sint32 *)p);
 			p += sizeof(Sint32);
@@ -810,35 +816,40 @@ void JE_loadConfiguration( void )
 			saveFiles[z].name[14] = 0;
 			p += 14;
 
-			saveFiles[z].cubes = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].cubes = *((Uint8 *)p);
+			p += sizeof(Uint8);
 
-			memcpy(saveFiles[z].power, ((JE_byte*)p), sizeof(JE_byte) * 2);
-			p += (sizeof(JE_byte) * 2);
+			saveFiles[z].power[0] = *((Uint8 *)p);
+			p += sizeof(Uint8);
+			saveFiles[z].power[1] = *((Uint8 *)p);
+			p += sizeof(Uint8);
 
-			saveFiles[z].episode = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].episode = *((Uint8*)p);
+			p += sizeof(Uint8);
 
-			memcpy(saveFiles[z].lastItems, ((JE_PItemsType*)p), sizeof(JE_PItemsType));
-			p += sizeof(JE_PItemsType);
+			for (int i = 0; i < 12; i++)
+			{
+				saveFiles[z].lastItems[i] = *((Uint8*)p);
+				p += sizeof(Uint8);
+			}
 
-			saveFiles[z].difficulty = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].difficulty = *((Uint8*)p);
+			p += sizeof(Uint8);
 
-			saveFiles[z].secretHint = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].secretHint = *((Uint8*)p);
+			p += sizeof(Uint8);
 
-			saveFiles[z].input1 = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].input1 = *((Uint8*)p);
+			p += sizeof(Uint8);
 
-			saveFiles[z].input2 = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].input2 = *((Uint8*)p);
+			p += sizeof(Uint8);
 
 			saveFiles[z].gameHasRepeated = *((Uint8 *)p);
 			p += sizeof(Uint8);
 
-			saveFiles[z].initialDifficulty = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].initialDifficulty = *((Uint8*)p);
+			p += sizeof(Uint8);
 
 			saveFiles[z].highScore1 = *((Sint32 *)p);
 			p += sizeof(Sint32);
@@ -851,15 +862,13 @@ void JE_loadConfiguration( void )
 			saveFiles[z].highScoreName[29] = 0;
 			p += 29;
 
-			/* TODO DEBUG printf("%s, %ld / %ld\n", saveFiles[z].highScoreName, saveFiles[z].highScore1, saveFiles[z].highScore2); */
-
-			saveFiles[z].highScoreDiff = *((JE_byte*)p);
-			p += sizeof(JE_byte);
+			saveFiles[z].highScoreDiff = *((Uint8*)p);
+			p += sizeof(Uint8);
 		}
 
 		/* SYN: This is truncating to bytes. I have no idea what this is doing or why. */
 		/* TODO: Figure out what this is about and make sure it isn't broked. */
-		editorLevel = JE_btow((JE_byte) (SIZEOF_SAVEGAMETEMP - 6), (JE_byte) (SIZEOF_SAVEGAMETEMP - 5));
+		editorLevel = JE_btow((Uint8) (SIZEOF_SAVEGAMETEMP - 6), (Uint8) (SIZEOF_SAVEGAMETEMP - 5));
 
 		fclose(fi);
 	} else {
@@ -902,7 +911,7 @@ void JE_loadConfiguration( void )
 void JE_saveConfiguration( void )
 {
 	FILE *f;
-	JE_byte *p, junk = 0;
+	Uint8 *p, junk = 0;
 	int z;
 
 	p = saveTemp;
@@ -914,8 +923,11 @@ void JE_saveConfiguration( void )
 		*((JE_word*)p) = saveFiles[z].level;
 		p += sizeof(JE_word);
 
-		memcpy(((JE_PItemsType*)p), saveFiles[z].items, sizeof(JE_PItemsType));
-		p += sizeof(JE_PItemsType);
+		for (int i = 0; i < 12; i++)
+		{
+			*((Uint8*)p) = saveFiles[z].items[i];
+			p += sizeof(Uint8);
+		}
 
 		*((Sint32 *)p) = saveFiles[z].score ;
 		p += sizeof(Sint32);
@@ -924,7 +936,7 @@ void JE_saveConfiguration( void )
 		p += sizeof(Sint32);
 
 		/* SYN: Pascal strings are prefixed by a byte holding the length! */
-		*((JE_byte*)p) = strlen(saveFiles[z].levelName);
+		*((Uint8*)p) = strlen(saveFiles[z].levelName);
 		p++;
 		memcpy(((char*)p), saveFiles[z].levelName, 9);
 		p += 9;
@@ -933,35 +945,40 @@ void JE_saveConfiguration( void )
 		memcpy(((char*)p), saveFiles[z].name, 14);
 		p += 14;
 
-		*((JE_byte*)p) = saveFiles[z].cubes;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].cubes;
+		p += sizeof(Uint8);
 
-		memcpy(((JE_byte*)p), saveFiles[z].power, sizeof(JE_byte) * 2);
-		p += (sizeof(JE_byte) * 2);
+		*((Uint8*)p) = saveFiles[z].power[0];
+		p += sizeof(Uint8);
+		*((Uint8*)p) = saveFiles[z].power[1];
+		p += sizeof(Uint8);
 
-		*((JE_byte*)p) = saveFiles[z].episode ;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].episode ;
+		p += sizeof(Uint8);
 
-		memcpy(((JE_PItemsType*)p), saveFiles[z].lastItems, sizeof(JE_PItemsType));
-		p += sizeof(JE_PItemsType);
+		for (int i = 0; i < 12; i++)
+		{
+			*((Uint8*)p) = saveFiles[z].lastItems[i];
+			p += sizeof(Uint8);
+		}
 
-		*((JE_byte*)p) = saveFiles[z].difficulty;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].difficulty;
+		p += sizeof(Uint8);
 
-		*((JE_byte*)p) = saveFiles[z].secretHint ;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].secretHint ;
+		p += sizeof(Uint8);
 
-		*((JE_byte*)p) = saveFiles[z].input1;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].input1;
+		p += sizeof(Uint8);
 
-		*((JE_byte*)p) = saveFiles[z].input2;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].input2;
+		p += sizeof(Uint8);
 
 		*((Uint8 *)p) = saveFiles[z].gameHasRepeated ;
 		p += sizeof(Uint8);
 
-		*((JE_byte*)p) = saveFiles[z].initialDifficulty;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].initialDifficulty;
+		p += sizeof(Uint8);
 
 		*((Sint32 *)p) = saveFiles[z].highScore1;
 		p += sizeof(Sint32);
@@ -973,8 +990,8 @@ void JE_saveConfiguration( void )
 		memcpy(((char*)p), saveFiles[z].highScoreName, 29);
 		p += 29;
 
-		*((JE_byte*)p) = saveFiles[z].highScoreDiff ;
-		p += sizeof(JE_byte);
+		*((Uint8*)p) = saveFiles[z].highScoreDiff ;
+		p += sizeof(Uint8);
 	}
 
 	saveTemp[SIZEOF_SAVEGAMETEMP - 6] = editorLevel >> 8;

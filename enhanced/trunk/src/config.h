@@ -39,53 +39,52 @@
 #define SAVE_FILE_SIZE (SAVE_FILES_SIZE)*/
 
 typedef SDLKey JE_KeySettingType[8]; /* [1..8] */
-typedef JE_byte JE_PItemsType[12]; /* [1..12] */
+typedef int JE_PItemsType[12]; /* [1..12] */
 
-typedef JE_byte JE_EditorItemAvailType[100]; /* [1..100] */
+typedef char JE_EditorItemAvailType[100]; /* [1..100] */
 
 typedef struct
 {
-	JE_word       encode;
-	JE_word       level;
+	JE_word encode;
+	JE_word level;
 	JE_PItemsType items;
 	unsigned long score;
 	unsigned long score2;
-	char          levelName[11]; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
-	char          name[15]; /* [1..14] */ /* SYN: Added extra byte for null */
-	JE_byte       cubes;
-	JE_byte       power[2]; /* [1..2] */
-	JE_byte       episode;
+	char levelName[11]; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
+	char name[15]; /* [1..14] */ /* SYN: Added extra byte for null */
+	int cubes;
+	int power[2]; /* [1..2] */
+	int episode;
 	JE_PItemsType lastItems;
-	JE_byte       difficulty;
-	JE_byte       secretHint;
-	JE_byte       input1;
-	JE_byte       input2;
-	bool          gameHasRepeated; /*See if you went from one episode to another*/
-	JE_byte       initialDifficulty;
+	int difficulty;
+	int secretHint;
+	int input1;
+	int input2;
+	bool gameHasRepeated; /*See if you went from one episode to another*/
+	int initialDifficulty;
 
 	/* High Scores - Each episode has both sets of 1&2 player selections - with 3 in each */
-	unsigned long highScore1,
-	              highScore2;
+	unsigned long highScore1, highScore2;
 	char          highScoreName[30]; /* string [29] */
-	JE_byte       highScoreDiff;
+	int       highScoreDiff;
 } JE_SaveFileType;
 
 typedef JE_SaveFileType JE_SaveFilesType[SAVE_FILES_NUM]; /* [1..savefilesnum] */
-typedef JE_byte JE_SaveGameTemp[SAVE_FILES_SIZE + 4 + 100]; /* [1..sizeof(savefilestype) + 4 + 100] */
+typedef Uint8 JE_SaveGameTemp[SAVE_FILES_SIZE + 4 + 100]; /* [1..sizeof(savefilestype) + 4 + 100] */
 
-typedef JE_byte JE_PortPowerType[7]; /* [1..7] */
+typedef int JE_PortPowerType[7]; /* [1..7] */
 
 #ifndef NO_EXTERNS
-extern const JE_byte cryptKey[10];
+extern const unsigned char cryptKey[10];
 extern const JE_KeySettingType defaultKeySettings;
 extern const char defaultHighScoreNames[34][23];
 extern const char defaultTeamNames[22][25];
 extern const JE_EditorItemAvailType initialItemAvail;
 extern bool smoothies[9];
-extern JE_byte starShowVGASpecialCode;
+extern int starShowVGASpecialCode;
 extern struct
 {
-	JE_byte sC;
+	int sC;
 	JE_word sLoc;
 	JE_word sMov;
 } starDat[MAX_STARS];
@@ -100,14 +99,14 @@ extern JE_PItemsType pItems, pItemsPlayer2, pItemsBack, pItemsBack2;
 extern int shield, shieldMax, shieldSet;
 extern int shield2, shieldMax2;
 extern int armorLevel, armorLevel2;
-extern JE_byte shieldWait, shieldT;
-extern JE_byte shotRepeat[11], shotMultiPos[11];
-extern JE_byte portConfig[10];
+extern int shieldWait, shieldT;
+extern int shotRepeat[11], shotMultiPos[11];
+extern int portConfig[10];
 extern bool portConfigDone;
 extern JE_PortPowerType portPower, lastPortPower;
 extern bool resetVersion;
 extern char lastLevelName[11], levelName[11];
-extern JE_byte mainLevel, nextLevel, saveLevel;
+extern int mainLevel, nextLevel, saveLevel;
 extern JE_KeySettingType keySettings;
 extern signed int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
 extern bool filtrationAvail, filterActive, filterFade, filterFadeStart;
@@ -115,27 +114,27 @@ extern bool gameJustLoaded;
 extern bool galagaMode;
 extern bool extraGame;
 extern bool twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian, trentWin;
-extern JE_byte superArcadeMode;
-extern JE_byte superArcadePowerUp;
+extern int superArcadeMode;
+extern int superArcadePowerUp;
 extern double linkGunDirec;
-extern JE_byte playerDevice1, playerDevice2;
-extern JE_byte inputDevice1, inputDevice2;
-extern JE_byte secretHint;
-extern JE_byte background3over;
-extern JE_byte background2over;
-extern JE_byte gammaCorrection;
+extern int playerDevice1, playerDevice2;
+extern int inputDevice1, inputDevice2;
+extern int secretHint;
+extern int background3over;
+extern int background2over;
+extern int gammaCorrection;
 extern bool superPause, explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll, wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
-extern JE_byte versionNum;
-extern JE_byte fastPlay;
+extern int versionNum;
+extern int fastPlay;
 extern bool pentiumMode;
 extern bool playerPasswordInput;
-extern JE_byte inputDevice;
-extern JE_byte gameSpeed;
-extern JE_byte processorType;
+extern int inputDevice;
+extern int gameSpeed;
+extern int processorType;
 extern JE_SaveFilesType saveFiles;
-extern JE_byte *saveFilePointer;
+extern JE_SaveFilesType *saveFilePointer;
 extern JE_SaveGameTemp saveTemp;
-extern JE_byte *saveTempPointer;
+extern JE_SaveGameTemp *saveTempPointer;
 extern JE_word editorLevel;
 
 extern bool fullscreen_set, fullscreen_enabled;
@@ -150,10 +149,10 @@ void JE_skipCryptLn( FILE* f );
 
 void JE_setupStars( void );
 
-void JE_saveGame( JE_byte slot, char *name );
-void JE_loadGame( JE_byte slot );
+void JE_saveGame( int slot, char *name );
+void JE_loadGame( int slot );
 
-void JE_decryptString( char *s, JE_byte len );
+void JE_decryptString( char *s, int len );
 
 
 void JE_encryptSaveTemp( void );

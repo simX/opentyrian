@@ -52,7 +52,7 @@ bool music_playing = false;
 void audio_cb(void *userdata, unsigned char *feedme, int howmuch);
 
 /* SYN: The arguments to this function are probably meaningless now */
-void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, JE_byte sberror, JE_byte midierror)
+void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberror, int midierror)
 {
 	SDL_AudioSpec plz, got;
 	int i = 0;
@@ -217,7 +217,7 @@ void JE_selectSong( JE_word value )
 			break;
 		case 1:
 		case 2:
-			lds_load((JE_byte *) musicData); /* Load song */
+			lds_load(musicData); /* Load song */
 			music_playing = true;
 			break;
 		default:
@@ -282,7 +282,7 @@ void JE_multiSampleMix( void )
 	/* SYN: This proc isn't necessary, because the mixing is handled in the SDL callback function.*/
 }
 
-void JE_multiSamplePlay(JE_byte *buffer, JE_word size, JE_byte chan, JE_byte vol)
+void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
 {
 	if (noSound)
 		return;

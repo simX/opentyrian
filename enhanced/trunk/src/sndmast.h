@@ -39,7 +39,7 @@
 
 #ifndef NO_EXTERNS
 extern const char soundTitle[SOUND_NUM + 9][9];
-extern const JE_byte windowTextSamples[9];
+extern const int windowTextSamples[9];
 #endif
 
 #endif /* SNDMAST_H */

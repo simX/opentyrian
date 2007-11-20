@@ -33,8 +33,8 @@
 /*JE_word z;*/
 JE_word y;
 /* File constants for Saving ShapeFile */
-const JE_byte NV_shapeactive   = 0x01;
-const JE_byte NV_shapeinactive = 0x00;
+const char NV_shapeactive   = 0x01;
+const char NV_shapeinactive = 0x00;
 
 bool scanForJoystick;
 bool inputDetected;
@@ -42,15 +42,15 @@ JE_word lastMouseX, lastMouseY;
 
 /*Mouse Data*/
 /*Mouse_Installed is in VGA256d*/
-JE_byte mouseCursor;
+int mouseCursor;
 bool mouse_threeButton;
 JE_word mouseX, mouseY, mouseButton;
 
 JE_word z, y;
 
-JE_word JE_btow(JE_byte a, JE_byte b)
+JE_word JE_btow(Uint8 a, Uint8 b)
 {
-	return (JE_word) (((short) b) * 256 + a);
+	return (JE_word)(((Uint16) b) * 256 + a);
 }
 
 void JE_loadShapeFile( JE_ShapeType *shapes, char s )
@@ -70,7 +70,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 
 		if (active)
 		{
-			efread((*shapes)[x], sizeof(JE_byte), sizeof(*(*shapes)[x]), f);
+			efread((*shapes)[x], sizeof(Uint8), sizeof(*(*shapes)[x]), f);
 		} else {
 			memset((*shapes)[x], 0, sizeof(*(*shapes)[x]));
 		}
@@ -87,7 +87,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 	JE_word x, y, z;
 	bool active;
 	JE_ShapeTypeOne tempshape;
-	JE_byte black, color;
+	int black, color;
 
 	char buffer[12];
 	sprintf(buffer, "shapes%c.dat", tolower(s));
@@ -100,7 +100,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 
 		if (active)
 		{
-			efread(tempshape, sizeof(JE_byte), sizeof(tempshape), f);
+			efread(tempshape, sizeof(Uint8), sizeof(tempshape), f);
 
 			for (y = 0; y <= 13; y++)
 			{
@@ -147,7 +147,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
 }
 
-void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s )
+void JE_loadCompShapes( Uint8 **shapes, JE_word *shapeSize, char s )
 {
 	FILE *f;
 
@@ -167,14 +167,14 @@ void JE_loadCompShapes( JE_byte **shapes, JE_word *shapeSize, char s )
 
 	*shapes = malloc(*shapeSize);
 
-	efread(*shapes, sizeof(JE_byte), *shapeSize, f);
+	efread(*shapes, sizeof(Uint8), *shapeSize, f);
 
 	fclose(f);
 }
 
-void JE_drawShape2( int x, int y, int s_, JE_byte *shape )
+void JE_drawShape2( int x, int y, int s_, Uint8 *shape )
 {
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -212,9 +212,9 @@ void JE_drawShape2( int x, int y, int s_, JE_byte *shape )
 	}
 }
 
-void JE_superDrawShape2( int x, int y, int s_, JE_byte *shape )
+void JE_superDrawShape2( int x, int y, int s_, Uint8 *shape )
 {
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -252,9 +252,9 @@ void JE_superDrawShape2( int x, int y, int s_, JE_byte *shape )
 	}
 }
 
-void JE_drawShape2Shadow( int x, int y, int s_, JE_byte *shape )
+void JE_drawShape2Shadow( int x, int y, int s_, Uint8 *shape )
 {
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -292,7 +292,7 @@ void JE_drawShape2Shadow( int x, int y, int s_, JE_byte *shape )
 	}
 }
 
-void JE_drawShape2x2( int x, int y, int s, JE_byte *shape )
+void JE_drawShape2x2( int x, int y, int s, Uint8 *shape )
 {
 	JE_drawShape2(x,    y,    s,    shape);
 	JE_drawShape2(x+12, y,    s+1,  shape);
@@ -300,7 +300,7 @@ void JE_drawShape2x2( int x, int y, int s, JE_byte *shape )
 	JE_drawShape2(x+12, y+14, s+20, shape);
 }
 
-void JE_superDrawShape2x2( int x, int y, int s, JE_byte *shape )
+void JE_superDrawShape2x2( int x, int y, int s, Uint8 *shape )
 {
 	JE_superDrawShape2(x,    y,    s,    shape);
 	JE_superDrawShape2(x+12, y,    s+1,  shape);
@@ -308,7 +308,7 @@ void JE_superDrawShape2x2( int x, int y, int s, JE_byte *shape )
 	JE_superDrawShape2(x+12, y+14, s+20, shape);
 }
 
-void JE_drawShape2x2Shadow( int x, int y, int s, JE_byte *shape )
+void JE_drawShape2x2Shadow( int x, int y, int s, Uint8 *shape )
 {
 	JE_drawShape2Shadow(x,    y,    s,    shape);
 	JE_drawShape2Shadow(x+12, y,    s+1,  shape);
@@ -336,8 +336,8 @@ void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 
 void JE_dBar3( int x, int y, int num, int col )
 {
-	JE_byte z;
-	JE_byte zWait = 2;
+	int z;
+	int zWait = 2;
 
 	col += 2;
 
@@ -448,7 +448,7 @@ void JE_endShape( void )
 	STUB();
 }
 
-void JE_add( JE_byte nextbyte )
+void JE_add( Uint8 nextbyte )
 {
 	STUB();
 }

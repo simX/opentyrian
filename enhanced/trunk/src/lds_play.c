@@ -87,13 +87,13 @@ Uint32 numpatch, numposi, patterns_size, mainvolume;
 const Uint16 maxsound = 0x3f, maxpos = 0xff;
 Uint8 *read_pos;
 
-int lds_load(JE_byte *music_location)
+int lds_load(unsigned char *music_location)
 {
 	Uint32	i, j;
 	SoundBank *sb;
 	int remaining;
 	Uint16 temp;
-	JE_byte *pos;
+	unsigned char *pos;
 	float templ;
 
 	pos = music_location;

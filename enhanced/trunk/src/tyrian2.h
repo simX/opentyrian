@@ -36,13 +36,13 @@ extern JE_word statDmg[2];
 
 void JE_scaleInPicture( void );
 
-void JE_createNewEventEnemy( JE_byte enemytypeofs, JE_word enemyoffset );
+void JE_createNewEventEnemy( int enemytypeofs, JE_word enemyoffset );
 
-void JE_genItemMenu( JE_byte itemnum );
+void JE_genItemMenu( int itemnum );
 
 /*void JE_drawBackground3( void );*/
 
-void JE_weaponViewFrame( JE_byte testshotnum );
+void JE_weaponViewFrame( int testshotnum );
 
 void JE_doNetwork( void );
 
@@ -56,7 +56,7 @@ void JE_drawJoystick( void );
 
 void JE_eventJump( JE_word jump );
 
-void JE_menuFunction( JE_byte select );
+void JE_menuFunction( int select );
 
 void JE_drawScore( void );
 
@@ -70,17 +70,17 @@ void JE_drawMainMenuHelpText( void );
 
 void JE_doFunkyScreen( void );
 
-int JE_partWay( int start, int finish, JE_byte dots, JE_byte dist );
+int JE_partWay( int start, int finish, int dots, int dist );
 
 void JE_computeDots( void );
 
-void JE_barX ( JE_word x1, JE_word y1, JE_word x2, JE_word y2, JE_byte col );
+void JE_barX ( JE_word x1, JE_word y1, JE_word x2, JE_word y2, Uint8 col );
 
 void JE_initWeaponView( void );
 
 void JE_scaleBitmap ( JE_word bitmap, JE_word x, JE_word y, JE_word x1, JE_word y1, JE_word x2, JE_word y2 );
 
-typedef JE_byte JE_MenuChoiceType[MAX_MENU];
+typedef int JE_MenuChoiceType[MAX_MENU];
 
 void JE_newEnemy( int enemyOffset );
 void JE_drawEnemy( int enemyOffset );
@@ -93,12 +93,12 @@ void JE_openingAnim( void );
 void JE_readTextSync( void );
 void JE_displayText( void );
 
-bool JE_searchFor( JE_byte PLType );
+bool JE_searchFor( int PLType );
 void JE_eventSystem( void );
 
 unsigned long JE_cashLeft( void );
 void JE_loadCubes( void );
-void JE_drawItem( JE_byte itemType, JE_word itemNum, JE_word x, JE_word y );
+void JE_drawItem( int itemType, JE_word itemNum, JE_word x, JE_word y );
 void JE_itemScreen( void );
 
 void JE_drawMenuHeader( void );
@@ -108,6 +108,6 @@ void JE_updateNavScreen( void );
 void JE_drawNavLines( bool dark );
 void JE_drawLines( bool dark );
 void JE_drawDots( void );
-void JE_drawPlanet( JE_byte planetNum );
+void JE_drawPlanet( int planetNum );
 
 #endif /* TYRIAN2_H */

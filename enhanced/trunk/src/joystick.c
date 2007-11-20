@@ -70,12 +70,12 @@ Sint16 lastJoyXb, lastJoyYb;
 Sint16 lastJoyXc, lastJoyYc;
 Sint16 lastJoyXd, lastJoyYd;
 
-JE_byte joystickError;
+int joystickError;
 bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 bool joystick_installed;
 JE_word joystickWait, joystickWaitMax;
 
-/*JE_byte SJoyCD;*/ /*NortVars anybutton check - problems with checking too fast*/
+/*int SJoyCD;*/ /*NortVars anybutton check - problems with checking too fast*/
 
 SDL_Joystick *joystick = NULL;
 

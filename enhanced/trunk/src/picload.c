@@ -36,16 +36,16 @@
 bool notyetloadedpcx;
 bool notYetLoadedPCX = true;
 
-void JE_loadPic( JE_byte PCXnumber, bool storepal )
+void JE_loadPic( int PCXnumber, bool storepal )
 {
-	typedef JE_byte JE_buftype[63000]; /* [1..63000] */
+	typedef Uint8 JE_buftype[63000]; /* [1..63000] */
 
 	JE_word x;
 	JE_buftype buf;
 	FILE *PCXfile;
 
 	int i;
-	JE_byte *p;
+	Uint8 *p;
 	Uint8 *s; /* screen pointer, 8-bit specific */
 
 	s = (Uint8 *)VGAScreen->pixels;
@@ -68,10 +68,10 @@ void JE_loadPic( JE_byte PCXnumber, bool storepal )
 	}
 
 	fseek(PCXfile, pcxpos[PCXnumber], SEEK_SET);
-	efread(buf, sizeof(JE_byte), pcxpos[PCXnumber + 1] - pcxpos[PCXnumber], PCXfile);
+	efread(buf, sizeof(Uint8), pcxpos[PCXnumber + 1] - pcxpos[PCXnumber], PCXfile);
 	fclose(PCXfile);
 
-	p = (JE_byte *)buf;
+	p = buf;
 	for (i = 0; i < 320 * 200; )
 	{
 		if ((*p & 0xc0) == 0xc0)

@@ -27,16 +27,16 @@
 
 
 struct JE_PCXHeader_rec {
-	JE_byte manufacturer;
-	JE_byte version;
-	JE_byte encoding;
-	JE_byte bits_per_pixel;
+	Uint8 manufacturer;
+	Uint8 version;
+	Uint8 encoding;
+	Uint8 bits_per_pixel;
 	JE_word xmin, ymin;
 	JE_word xmax, ymax;
 	JE_word hres, vres;
-	JE_byte palette[48];  /* [0..47] */
-	JE_byte reserved;
-	JE_byte colour_planes;
+	Uint8 palette[48];  /* [0..47] */
+	Uint8 reserved;
+	Uint8 colour_planes;
 	JE_word bytes_per_line;
 	JE_word palette_type;
 };

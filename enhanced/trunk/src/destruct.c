@@ -31,7 +31,6 @@
 #include "picload2.h"
 #include "starfade.h"
 #include "varz.h"
-/* #include "vga256c.h" */
 #include "vga256d.h"
 
 #define NO_EXTERNS
@@ -40,7 +39,7 @@
 
 
 JE_word tempscreenseg;
-JE_byte enddelay;
+int enddelay;
 bool died;
 bool firsttime;
 
@@ -54,7 +53,7 @@ void JE_pauseScreen( void )
 	STUB();
 }
 
-void JE_eSound( JE_byte sound )
+void JE_eSound( int sound )
 {
 	STUB();
 }
@@ -70,7 +69,7 @@ bool JE_stabilityCheck( int x, int y )
 	return false;
 }
 
-JE_byte JE_placementPosition( JE_word x, JE_byte width )
+int JE_placementPosition( JE_word x, int width )
 {
 	STUB();
 	return 0;
@@ -106,7 +105,7 @@ void JE_tempScreenChecking( void )
 	STUB();
 }
 
-void JE_makeExplosion( JE_word tempx, JE_word tempy, JE_byte shottype )
+void JE_makeExplosion( JE_word tempx, JE_word tempy, int shottype )
 {
 	STUB();
 }

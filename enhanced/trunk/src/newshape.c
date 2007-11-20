@@ -43,9 +43,9 @@ JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],        /* [1..maxtable,1..maximumshape
 JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];     /* [1..maxtable,1..maximumshape] */
 bool shapeExist[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable,1..maximumshape] */
 
-JE_byte maxShape[MAX_TABLE];                    /* [1..maxtable] */
+int maxShape[MAX_TABLE];                    /* [1..maxtable] */
 
-JE_byte mouseGrabShape[24*28];                 /* [1..24*28] */
+Uint8 mouseGrabShape[24*28];                 /* [1..24*28] */
 
 bool loadOverride = false;
 
@@ -59,7 +59,7 @@ bool loadOverride = false;
 */
 
 
-void JE_newLoadShapesB( JE_byte table, FILE *f )
+void JE_newLoadShapesB( int table, FILE *f )
 {
 	JE_word min = 0,
 	        max = 0;
@@ -67,7 +67,7 @@ void JE_newLoadShapesB( JE_byte table, FILE *f )
 	JE_word tempW;
 	JE_word z;
 
-	efread(&tempW, sizeof(JE_word), 1, f);
+	efread(&tempW, sizeof(JE_word), 1, f); // -----------------------------------------------------------------------------------------------
 	maxShape[table] = tempW;
 
 	if (!loadOverride)
@@ -90,7 +90,7 @@ void JE_newLoadShapesB( JE_byte table, FILE *f )
 
 				(*shapeArray)[table][z] = malloc(shapeX[table][z] * shapeY[table][z]);
 
-				efread((*shapeArray)[table][z], sizeof(JE_byte), shapeSize[table][z], f);
+				efread((*shapeArray)[table][z], sizeof(Uint8), shapeSize[table][z], f);
 
 				free((*shapeArray)[table][z]);
 			}
@@ -110,12 +110,12 @@ void JE_newLoadShapesB( JE_byte table, FILE *f )
 
 			(*shapeArray)[table][tempW] = malloc(shapeX[table][tempW]*shapeY[table][tempW]);
 
-			efread((*shapeArray)[table][tempW], sizeof(JE_byte), shapeSize[table][tempW], f);
+			efread((*shapeArray)[table][tempW], sizeof(Uint8), shapeSize[table][tempW], f);
 		}
 	}
 }
 
-void JE_newLoadShapes( JE_byte table, char *shapefile )
+void JE_newLoadShapes( int table, char *shapefile )
 {
 	FILE *f;
 	
@@ -128,11 +128,11 @@ void JE_newLoadShapes( JE_byte table, char *shapefile )
 	fclose(f);
 }
 
-void JE_newDrawCShape( JE_byte *shape, JE_word xsize, JE_word ysize )
+void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize )
 {
 	JE_word x = 2, y = 2;
 	JE_word xloop = 0, yloop = 0;
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 
 	s = (Uint8 *)tempScreenSeg->pixels;
@@ -168,11 +168,11 @@ void JE_newDrawCShape( JE_byte *shape, JE_word xsize, JE_word ysize )
 	tempScreenSeg = VGAScreen;
 }
 
-void JE_newDrawCShapeNum( JE_byte table, JE_byte shape, JE_word x, JE_word y )
+void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 {
 	JE_word xsize, ysize;
 	JE_word xloop = 0, yloop = 0;
-	JE_byte *p; /* shape pointer */
+	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -222,7 +222,7 @@ void JE_newDrawCShapeNum( JE_byte table, JE_byte shape, JE_word x, JE_word y )
 	tempScreenSeg = VGAScreen;
 }
 
-void JE_newPurgeShapes( JE_byte table )
+void JE_newPurgeShapes( int table )
 {
 	JE_word x;
 
@@ -239,10 +239,10 @@ void JE_newPurgeShapes( JE_byte table )
 	}
 }
 
-void JE_drawShapeTypeOne( JE_word x, JE_word y, JE_byte *shape )
+void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 {
 	JE_word xloop = 0, yloop = 0;
-	JE_byte *p = shape; /* shape pointer */
+	Uint8 *p = shape; /* shape pointer */
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -265,10 +265,10 @@ void JE_drawShapeTypeOne( JE_word x, JE_word y, JE_byte *shape )
 	}
 }
 
-void JE_grabShapeTypeOne( JE_word x, JE_word y, JE_byte *shape )
+void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 {
 	JE_word xloop = 0, yloop = 0;
-	JE_byte *p = shape; /* shape pointer */
+	Uint8 *p = shape; /* shape pointer */
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
@@ -291,7 +291,7 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, JE_byte *shape )
 	}
 }
 
-bool JE_waitAction( JE_byte time, bool checkJoystick )
+bool JE_waitAction( int time, bool checkJoystick )
 {
 	if (time > 0)
 	{
@@ -384,7 +384,7 @@ void newshape_init( void )
 	shapeArray = malloc(sizeof(JE_ShapeArrayType));
 }
 
-void JE_drawNext( JE_byte draw )
+void JE_drawNext( Uint8 draw )
 {
 	STUB();
 }

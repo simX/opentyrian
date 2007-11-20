@@ -66,7 +66,7 @@ const char soundTitle[SOUND_NUM + 9][9] = /* [1..soundnum + 9] of string [8] */
 	"VOICE9"
 };
 
-const JE_byte windowTextSamples[9] = /* [1..9] */
+const int windowTextSamples[9] = /* [1..9] */
 {
 	SOUND_NUM + 6,
 	SOUND_NUM + 2,

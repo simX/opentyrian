@@ -40,7 +40,7 @@ void JE_buildRec( void );
 
 void JE_encryptShips( void );
 
-void JE_add( JE_byte nextbyte );
+void JE_add( char nextbyte );
 
 void JE_loadExtraShapes( void );
 

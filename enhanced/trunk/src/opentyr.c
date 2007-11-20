@@ -52,7 +52,7 @@
 #include <time.h>
 
 
-const JE_byte shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
+const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 
 const char *opentyrian_str = "OpenTyrian";
 const char *opentyrian_menu_items[] =

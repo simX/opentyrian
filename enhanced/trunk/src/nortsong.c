@@ -39,16 +39,16 @@ JE_word w1;
 JE_AweType * awe_data;
 /*JE_word tempw;*/
 JE_word w2;
-JE_byte sberror;
-JE_byte sysintcount;
-JE_byte sbint;
+int sberror;
+int sysintcount;
+int sbint;
 JE_AweType * awe_code;
 void * oldvector;
-JE_byte midiport;
-JE_byte sysintwait;
+int midiport;
+int sysintwait;
 JE_word sbport;
 JE_DigiMixType * digimix;
-JE_byte midierror;
+int midierror;
 unsigned long address;
 JE_word intcount;
 JE_word dspversion;
@@ -61,17 +61,17 @@ bool notYetLoadedMusic = true;
 
 JE_SongPosType songPos;
 
-JE_byte soundEffects = 1; /* TODO: Give this a real value, figure out what they mean. */
+int soundEffects = 1; /* TODO: Give this a real value, figure out what they mean. */
 
 JE_word frameCount, frameCount2, frameCountMax;
 
-JE_byte currentSong = 0;
-JE_byte jConfigure = 0;
+int currentSong = 0;
+int jConfigure = 0;
 
-JE_byte soundActive = true; /* I'm not sure if these two are ever false. */
-JE_byte musicActive = true; /* TODO: Make sure these get proper values. */
+int soundActive = true; /* I'm not sure if these two are ever false. */
+int musicActive = true; /* TODO: Make sure these get proper values. */
 
-JE_byte *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
+Uint8 *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 int allocd_digifx = false;
 
@@ -84,7 +84,7 @@ JE_word tyrMusicVolume;
 
 float jasondelay = 1000.0f / (1193180.0f / 0x4300);
 
-void setdelay( JE_byte delay )
+void setdelay( int delay )
 {
 	target = (delay << 4)+SDL_GetTicks(); /* delay << 4 == delay * 16 */
 }
@@ -174,7 +174,7 @@ void JE_loadSong( JE_word songnum )
 void JE_loadSndFile( void )
 {
 	FILE *fi;
-	JE_byte y, z;
+	int y, z;
 	JE_word x;
 	unsigned long templ;
 	unsigned long sndPos[2][SOUND_NUM + 1]; /* Reindexed by -1, dammit Jason */
@@ -296,7 +296,7 @@ void JE_restartSong( void )
 	JE_selectSong(2);
 }
 
-void JE_playSampleNum( JE_byte samplenum )
+void JE_playSampleNum( int samplenum )
 {
 	if (soundEffects > 0 && soundActive)
 	{

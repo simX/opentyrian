@@ -34,7 +34,7 @@ void JE_closeAnim( void );
 
 void JE_loadAnim( const char *filename );
 
-void JE_playAnim( const char *animfile, JE_byte startingframe, bool keyhalt, JE_byte speed );
+void JE_playAnim( const char *animfile, int startingframe, bool keyhalt, int speed );
 
 void JE_renderFrame( JE_word framenumber );
 

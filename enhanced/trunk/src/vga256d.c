@@ -43,8 +43,7 @@ SDL_Surface *VGAScreen2;
 /* JE: From Nortsong */
 JE_word speed; /* JE: holds timer speed for 70Hz */
 
-JE_byte scancode;
-JE_byte outcol;
+Uint8 scancode;
 
 const Uint8 VGA_pal[] = {
 0, 0, 0, 0, 0, 168, 0, 168, 0, 0, 168, 168, 168, 0, 0, 168, 0, 168, 168, 84, 0, 168, 168, 168, 84, 84, 84, 84, 84, 252, 84, 252, 84, 84, 252, 252, 252, 84, 84, 252, 84, 252, 252, 252, 84, 252, 252, 252, 0, 0, 0, 20, 20, 20, 32, 32, 32, 44, 44, 44, 56, 56, 56, 68, 68, 68, 80, 80, 80, 96, 96, 96, 112, 112, 112, 128, 128, 128, 144, 144, 144, 160, 160, 160, 180, 180, 180, 200, 200, 200, 224, 224, 224, 252, 252, 252, 0, 0,
@@ -165,12 +164,12 @@ void JE_waitNotRetrace( void )
 
 
 
-void JE_pix( JE_word x, JE_word y, JE_byte c )
+void JE_pix( JE_word x, JE_word y, Uint8 c )
 {
 	JE_pix2(x,y,c);
 }
 
-void JE_pix2( JE_word x, JE_word y, JE_byte c )
+void JE_pix2( JE_word x, JE_word y, Uint8 c )
 {
 	/* Bad things happen if we don't clip */
 	if (x <  VGAScreen->w && y <  VGAScreen->h)
@@ -180,12 +179,12 @@ void JE_pix2( JE_word x, JE_word y, JE_byte c )
 	}
 }
 
-void JE_pixCool( JE_word x, JE_word y, JE_byte c )
+void JE_pixCool( JE_word x, JE_word y, Uint8 c )
 {
 	JE_pix3(x, y, c);
 }
 
-void JE_pix3( JE_word x, JE_word y, JE_byte c )
+void JE_pix3( JE_word x, JE_word y, Uint8 c )
 {
 	/* Originally impemented as several direct accesses */
 	JE_pix2(x, y, c);
@@ -195,7 +194,7 @@ void JE_pix3( JE_word x, JE_word y, JE_byte c )
 	JE_pix2(x, y + 1, c);
 }
 
-void JE_pixAbs( JE_word x, JE_byte c )
+void JE_pixAbs( JE_word x, Uint8 c )
 {
 	if (x < VGAScreen->w * VGAScreen->h)
 	{
@@ -204,7 +203,7 @@ void JE_pixAbs( JE_word x, JE_byte c )
 	}
 }
 
-void JE_getPix( JE_word x, JE_word y, JE_byte *c )
+void JE_getPix( JE_word x, JE_word y, Uint8 *c )
 {
 	/* Bad things happen if we don't clip */
 	if (x <  VGAScreen->w && y <  VGAScreen->h)
@@ -214,7 +213,7 @@ void JE_getPix( JE_word x, JE_word y, JE_byte *c )
 	}
 }
 
-JE_byte JE_getPixel( JE_word x, JE_word y )
+Uint8 JE_getPixel( JE_word x, JE_word y )
 {
 	/* Bad things happen if we don't clip */
 	if (x <  VGAScreen->w && y <  VGAScreen->h)
@@ -256,7 +255,7 @@ void JE_rectangle( JE_word a, JE_word b, JE_word c, JE_word d, JE_word e ) /* x1
 	}
 }
 
-void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, JE_byte e ) /* x1, y1, x2, y2, color */
+void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e ) /* x1, y1, x2, y2, color */
 {
 	if (a < VGAScreen->w && b < VGAScreen->h &&
 	    c < VGAScreen->w && d < VGAScreen->h)
@@ -275,7 +274,7 @@ void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, JE_byte e ) /* x1, y1, 
 	}
 }
 
-void JE_c_bar( JE_word a, JE_word b, JE_word c, JE_word d, JE_byte e )
+void JE_c_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e )
 {
 	if (a < VGAScreen->w && b < VGAScreen->h &&
 	    c < VGAScreen->w && d < VGAScreen->h)
@@ -335,7 +334,7 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 		{
 			for (j = 0; j < width; j++)
 			{
-				JE_byte al, ah;
+				Uint8 al, ah;
 				al = ah = vga[i + j];
 
 				ah &= 0xF0;
@@ -354,7 +353,7 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 	}
 }
 
-void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
+void JE_circle( JE_word x, int y, JE_word z, Uint8 c ) /* z == radius */
 {
 	double a = 0, rx, ry, rz, b;
 	Uint8 *vga;
@@ -372,7 +371,7 @@ void JE_circle( JE_word x, JE_byte y, JE_word z, JE_byte c ) /* z == radius */
 	}
 }
 
-void JE_line( JE_word a, JE_byte b, int c, JE_byte d, JE_byte e )
+void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 {
 	double g, h, x, y;
 	int z, v;
@@ -391,7 +390,7 @@ void JE_line( JE_word a, JE_byte b, int c, JE_byte d, JE_byte e )
 	}
 }
 
-void JE_getPalette( JE_byte col, JE_byte *red, JE_byte *green, JE_byte *blue )
+void JE_getPalette( Uint8 col, Uint8 *red, Uint8 *green, Uint8 *blue )
 {
 	SDL_Color color;
 
@@ -402,7 +401,7 @@ void JE_getPalette( JE_byte col, JE_byte *red, JE_byte *green, JE_byte *blue )
 	*blue = color.b >> 2;
 }
 
-void JE_setPalette( JE_byte col, JE_byte red, JE_byte green, JE_byte blue )
+void JE_setPalette( Uint8 col, Uint8 red, Uint8 green, Uint8 blue )
 {
 	SDL_Color color;
 
@@ -479,11 +478,11 @@ bool JE_kp( void )
 
 /*****************************************/
 
-void JE_getImage16( JE_word a, JE_byte b, JE_shape16B *p )
+void JE_getImage16( JE_word a, int b, JE_shape16B *p )
 {
 	STUB();
 }
-void JE_putImage16( JE_word a, JE_byte b, JE_shape16B *p )
+void JE_putImage16( JE_word a, int b, JE_shape16B *p )
 {
 	STUB();
 }
@@ -503,7 +502,7 @@ void JE_readGraphic( int x, int y, JE_ShapeTypeOne s )
 {
 	STUB();
 }
-void JE_wait( JE_byte min, JE_byte sec, JE_byte hun )
+void JE_wait( int min, int sec, int hun )
 {
 	STUB();
 }

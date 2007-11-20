@@ -24,10 +24,10 @@
 
 #ifndef TARGET_GP2X
 typedef bool JE_ButtonType[4]; /* [1..4] */
-typedef JE_byte JE_ButtonAssign[4]; /* [1..4] */
+typedef int JE_ButtonAssign[4]; /* [1..4] */
 #else
 typedef bool JE_ButtonType[19];
-typedef JE_byte JE_ButtonAssign[19];
+typedef int JE_ButtonAssign[19];
 #endif
 
 #ifndef NO_EXTERNS
@@ -37,7 +37,7 @@ extern bool buttonHeld;
 extern JE_ButtonAssign joyButtonAssign;
 extern bool useButtonAssign;
 extern Sint16 jMinX, jMaxX, jMinY, jMaxY, jCenterX, jCenterY, joyX, joyY;
-extern JE_byte joystickError;
+extern int joystickError;
 extern bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 extern bool joystick_installed;
 extern JE_word joystickWait, joystickWaitMax;

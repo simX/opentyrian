@@ -31,7 +31,7 @@
 #define SAMPLE_SCALING OUTPUT_QUALITY
 #define SAMPLE_TYPE Sint16
 
-typedef JE_byte JE_MusicType [20000];
+typedef unsigned char JE_MusicType [20000];
 
 #ifndef NO_EXTERNS
 extern JE_MusicType musicData;
@@ -42,7 +42,7 @@ extern float sample_volume;
 extern float music_volume;
 #endif
 /* SYN: The arguments to initialize are probably mostly meaningless now */
-void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, JE_byte sberror, JE_byte midierror);
+void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberror, int midierror);
 void JE_deinitialize( void );
 
 void JE_play( void );
@@ -56,12 +56,12 @@ void JE_selectSong( JE_word value );
 
 void JE_samplePlay(JE_word addlo, JE_word addhi, JE_word size, JE_word freq);
 void JE_bigSamplePlay(JE_word addlo, JE_word addhi, JE_word size, JE_word freq);
-JE_word JE_sampleStatus(JE_byte chan);
+JE_word JE_sampleStatus(int chan);
 	
 void JE_multiSampleInit(JE_word addlo, JE_word addhi, JE_word dmalo, JE_word dmahi);
 void JE_multiSampleMix( void );
-/* void JE_multiSamplePlay(JE_word addlo, JE_word addhi, JE_word size, JE_byte chan, JE_byte vol); */
-void JE_multiSamplePlay(JE_byte *buffer, JE_word size, JE_byte chan, JE_byte vol);
+/* void JE_multiSamplePlay(JE_word addlo, JE_word addhi, JE_word size, int chan, int vol); */
+void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol);
 
 void JE_setVol(JE_word volume, JE_word sample); /* Call with 0x1-0x100 for music volume, and 0x10 to 0xf0 for sample volume. */
 /* SYN: TODO: The bit about volume values seems to be inaccurate. I'll fix it later. :( */

@@ -29,8 +29,8 @@
 #define DESTRUCT_MODES 5
 
 #ifndef NO_EXTERNS
-extern JE_byte verticalHeight;
-extern JE_byte helpBoxColor, helpBoxBrightness, helpBoxShadeType;
+extern int verticalHeight;
+extern int helpBoxColor, helpBoxBrightness, helpBoxShadeType;
 extern char helpTxt[MAX_HELP_MESSAGE][231];
 extern char pName[21][16];              /* [1..21] of string [15] */
 extern char miscText[68][42];           /* [1..68] of string [41] */
@@ -57,13 +57,13 @@ extern char weaponNames[17][17];        /* [1..17] of string [16] */
 extern char destructModeName[DESTRUCT_MODES][13]; /* [1..destructmodes] of string [12] */
 extern char shipInfo[13][2][256];
 extern char menuInt[MAX_MENU+1][11][18]; /* [0..maxmenu, 1..11] of string [17] */
-extern JE_byte menuHelp[MAX_MENU][11];   /* [1..maxmenu, 1..11] */
+extern char menuHelp[MAX_MENU][11];   /* [1..maxmenu, 1..11] */
 #endif
 
-/*JE_byte temp, temp2;*/
+/*int temp, temp2;*/
 
-void JE_helpBox( JE_word x, JE_word y, char *message, JE_byte boxwidth );
-void JE_HBox( JE_word x, JE_word y, JE_byte messagenum, JE_byte boxwidth );
+void JE_helpBox( JE_word x, JE_word y, char *message, int boxwidth );
+void JE_HBox( JE_word x, JE_word y, int messagenum, int boxwidth );
 void JE_loadHelpText( void );
 
 #endif /* HELPTEXT_H */

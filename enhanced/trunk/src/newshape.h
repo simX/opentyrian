@@ -41,7 +41,7 @@
 #define MAXIMUM_SHAPE     151
 #define MAX_TABLE         8
 
-typedef JE_byte *JE_ShapeArrayType[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable, 1..maximumshape] */
+typedef Uint8 *JE_ShapeArrayType[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable, 1..maximumshape] */
 
 #ifndef NO_EXTERNS
 extern SDL_Surface *tempScreenSeg;
@@ -50,31 +50,31 @@ extern JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],
                shapeY[MAX_TABLE][MAXIMUM_SHAPE];
 extern JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];
 extern bool shapeExist[MAX_TABLE][MAXIMUM_SHAPE];
-extern JE_byte maxShape[MAX_TABLE];
-extern JE_byte mouseGrabShape[24*28];
+extern int maxShape[MAX_TABLE];
+extern Uint8 mouseGrabShape[24*28];
 extern bool loadOverride;
 /*extern JE_word min, max;*/
 #endif
 
-void JE_newLoadShapes( JE_byte table, char *shapefile );
-void JE_newLoadShapesB( JE_byte table, FILE *f );
-void JE_newCompressBlock( JE_byte **shape, JE_word xsize, JE_word ysize, JE_word *shapesize );
-void JE_newDrawShape( JE_byte *shape, JE_word xsize, JE_word ysize );
-void JE_newDrawCShape( JE_byte *shape, JE_word xsize, JE_word ysize );
-void JE_newDrawCShapeNum( JE_byte table, JE_byte shape, JE_word x, JE_word y );
-void JE_newPurgeShapes( JE_byte table );
-/*void JE_OverrideLoadShapes( JE_byte table, char *shapefile, JE_word minimum, JE_word maximum );*/
+void JE_newLoadShapes( int table, char *shapefile );
+void JE_newLoadShapesB( int table, FILE *f );
+void JE_newCompressBlock( Uint8 **shape, JE_word xsize, JE_word ysize, JE_word *shapesize );
+void JE_newDrawShape( Uint8 *shape, JE_word xsize, JE_word ysize );
+void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize );
+void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y );
+void JE_newPurgeShapes( int table );
+/*void JE_OverrideLoadShapes( int table, char *shapefile, JE_word minimum, JE_word maximum );*/
 
-void JE_drawShapeTypeOne( JE_word x, JE_word y, JE_byte *shape );
-void JE_grabShapeTypeOne( JE_word x, JE_word y, JE_byte *shape );
+void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape );
+void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape );
 
-bool JE_waitAction( JE_byte time, bool checkjoystick );
+bool JE_waitAction( int time, bool checkjoystick );
 void JE_mouseStart( void );
 void JE_mouseReplace( void );
 
 void newshape_init( void );
 
-void JE_drawNext( JE_byte draw );
+void JE_drawNext( Uint8 draw );
 void JE_drawNShape (void *shape, JE_word xsize, JE_word ysize);
 
 #endif /* NEWSHAPE_H */

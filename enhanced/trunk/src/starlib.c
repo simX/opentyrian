@@ -35,7 +35,7 @@ struct JE_StarType star[starlib_MAX_STARS];
 int tempW;
 int tempX, tempY;
 
-JE_byte setup;
+int setup;
 JE_word stepCounter;
 
 JE_word nsp2;
@@ -56,7 +56,7 @@ int x;
 Sint16 starlib_speed;
 Sint8 speedChange;
 
-JE_byte pColor;
+Uint8 pColor;
 
 
 void JE_starlib_main( void )
@@ -64,7 +64,7 @@ void JE_starlib_main( void )
 	int off;
 	JE_word i;
 	int tempZ;
-	JE_byte tempCol;
+	Uint8 tempCol;
 	struct JE_StarType *stars;
 	Uint8 *surf;
 
@@ -302,7 +302,7 @@ void JE_makeGray( void )
 
 void JE_wackyCol( void )
 {
-	JE_byte a, b, c;
+	Uint8 a, b, c;
 	/* YKS: Does nothing */
 }
 
@@ -340,7 +340,7 @@ void JE_resetValues( void )
 	speedChange = 0;
 }
 
-void JE_changeSetup( JE_byte setupType )
+void JE_changeSetup( int setupType )
 {
 	stepCounter = 0;
 	changeTime = (rand() % 1000);

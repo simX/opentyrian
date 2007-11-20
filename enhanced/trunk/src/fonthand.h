@@ -31,40 +31,40 @@
 
 #ifndef NO_EXTERNS
 
-extern const JE_byte fontMap[136];
+extern const unsigned char fontMap[136];
 extern int defaultBrightness;
-extern JE_byte textGlowFont, textGlowBrightness;
+extern int textGlowFont, textGlowBrightness;
 extern bool levelWarningDisplay;
-extern JE_byte levelWarningLines;
+extern int levelWarningLines;
 extern char levelWarningText[10][61];
 extern bool warningRed;
-extern JE_byte warningSoundDelay;
+extern int warningSoundDelay;
 extern JE_word armorShipDelay;
-extern JE_byte warningCol;
+extern int warningCol;
 extern int warningColChange;
 #endif
 
-void JE_dString( JE_word x, JE_word y, const char *s, JE_byte font );
-void JE_newDrawCShapeBright( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, int brightness );
-void JE_newDrawCShapeShadow( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y );
-void JE_newDrawCShapeDarken( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y );
-void JE_newDrawCShapeDarkenNum( JE_byte table, JE_byte shape, int x, int y );
-void JE_newDrawCShapeTrick( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y );
-void JE_newDrawCShapeTrickNum( JE_byte table, JE_byte shape, int x, int y );
-void JE_newDrawCShapeModify( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, JE_byte brightness );
-void JE_newDrawCShapeModifyNum( JE_byte table, JE_byte shape, int x, int y, JE_byte filter, JE_byte brightness );
-void JE_newDrawCShapeAdjust( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, Sint8 brightness );
-void JE_newDrawCShapeAdjustNum( JE_byte table, JE_byte shape, int x, int y, JE_byte filter, JE_byte brightness );
-void JE_newDrawCShapeBrightAndDarken( JE_byte *shape, JE_word xsize, JE_word ysize, int x, int y, JE_byte filter, JE_byte brightness );
-/*void JE_newDrawCShapeZoom( JE_byte table, JE_byte shape, JE_word x, JE_word y, double scale );*/
-JE_word JE_fontCenter( const char *s, JE_byte font );
-JE_word JE_textWidth( const char *s, JE_byte font );
-void JE_textShade( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness, JE_byte shadetype );
-void JE_outText( JE_word x, JE_word y, const char *s, JE_byte colorbank, int brightness );
-void JE_outTextModify( JE_word x, JE_word y, const char *s, JE_byte filter, JE_byte brightness, JE_byte font );
-void JE_outTextShade( JE_word x, JE_word y, const char *s, JE_byte font );
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, JE_byte filter, int brightness, JE_byte font, bool shadow );
-void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, JE_byte colorbank, JE_byte brightness, JE_byte font );
+void JE_dString( JE_word x, JE_word y, const char *s, int font );
+void JE_newDrawCShapeBright( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
+void JE_newDrawCShapeShadow( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
+void JE_newDrawCShapeDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
+void JE_newDrawCShapeDarkenNum( int table, int shape, int x, int y );
+void JE_newDrawCShapeTrick( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
+void JE_newDrawCShapeTrickNum( int table, int shape, int x, int y );
+void JE_newDrawCShapeModify( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
+void JE_newDrawCShapeModifyNum( int table, int shape, int x, int y, int filter, int brightness );
+void JE_newDrawCShapeAdjust( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
+void JE_newDrawCShapeAdjustNum( int table, int shape, int x, int y, int filter, int brightness );
+void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
+/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, double scale );*/
+JE_word JE_fontCenter( const char *s, int font );
+JE_word JE_textWidth( const char *s, int font );
+void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int shadetype );
+void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightness );
+void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brightness, int font );
+void JE_outTextShade( JE_word x, JE_word y, const char *s, int font );
+void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow );
+void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int font );
 char JE_bright( bool makebright );
 
 void JE_updateWarning( void );

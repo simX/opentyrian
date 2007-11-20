@@ -41,10 +41,10 @@ bool moveOk;
 bool firstTime;
 bool netResult;
 
-JE_byte gameQuitDelay;  /* Make sure the game doesn't quit within the first few frames of starting */
+int gameQuitDelay;  /* Make sure the game doesn't quit within the first few frames of starting */
 
-JE_byte outputData[10]; /* [1..10] */
-JE_byte inputData[10]; /* [1..10] */
+Uint8 outputData[10]; /* [1..10] */
+Uint8 inputData[10]; /* [1..10] */
 
 /* Special Requests */
 bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
@@ -52,7 +52,7 @@ bool yourInGameMenuRequest, inGameMenuRequest;
 
 bool portConfigChange, portConfigDone;
 
-JE_byte exchangeCount;
+int exchangeCount;
 
 /* Network Stuff */
 bool netSuccess;
@@ -62,12 +62,12 @@ void JE_updateStream( void )
 //	STUB();
 }
 
-void JE_setNetByte( JE_byte send)
+void JE_setNetByte( Uint8 send )
 {
 //	STUB();
 }
 
-bool JE_scanNetByte( JE_byte scan )
+bool JE_scanNetByte( Uint8 scan )
 {
 //	STUB();
 	return true;

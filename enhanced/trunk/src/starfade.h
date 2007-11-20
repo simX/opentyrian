@@ -36,9 +36,9 @@ extern JE_ColorType black, colors, colors2;
 
 /*void UpdateColorsSlow( JE_colortype *ColorBuffer );*/
 void JE_updateColorsFast( JE_ColorType *ColorBuffer );
-void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, JE_byte startCol, JE_byte noColors, JE_byte noSteps );
-void JE_fadeBlack( JE_byte steps );
-void JE_fadeColor( JE_byte steps );
-void JE_fadeWhite( JE_byte steps );
+void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, int startCol, int noColors, int noSteps );
+void JE_fadeBlack( int steps );
+void JE_fadeColor( int steps );
+void JE_fadeWhite( int steps );
 
 #endif /* STARFADE_H */

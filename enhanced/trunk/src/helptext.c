@@ -32,7 +32,7 @@
 #include <string.h>
 
 
-const JE_byte menuHelp[MAX_MENU][11] = /* [1..maxmenu, 1..11] */
+const int menuHelp[MAX_MENU][11] = /* [1..maxmenu, 1..11] */
 {
 	{  1, 34,  2,  3,  4,  5,                  0, 0, 0, 0, 0 },
 	{  6,  7,  8,  9, 10, 11, 11, 12,                0, 0, 0 },
@@ -50,10 +50,10 @@ const JE_byte menuHelp[MAX_MENU][11] = /* [1..maxmenu, 1..11] */
 	{  4, 34,  3,  5,                    0, 0, 0, 0, 0, 0, 0 }
 };
 
-JE_byte verticalHeight = 7;
-JE_byte helpBoxColor = 12;
-JE_byte helpBoxBrightness = 1;
-JE_byte helpBoxShadeType = FULL_SHADE;
+int verticalHeight = 7;
+int helpBoxColor = 12;
+int helpBoxBrightness = 1;
+int helpBoxShadeType = FULL_SHADE;
 
 char helpTxt[MAX_HELP_MESSAGE][231]; /* [1..maxhelpmessage] of string [230]; */
 char pName[21][16];                /* [1..21] of string [15] */
@@ -83,11 +83,9 @@ char shipInfo[13][2][256];
 char menuInt[MAX_MENU + 1][11][18];   /* [0..maxmenu, 1..11] of string [17] */
 
 
-JE_byte temp, temp2;
-
-void JE_helpBox( JE_word x, JE_word y, char *message, JE_byte boxwidth )
+void JE_helpBox( JE_word x, JE_word y, char *message, int boxwidth )
 {
-	JE_byte startpos, endpos, pos;
+	int startpos, endpos, pos;
 	bool endstring;
 
 	char substring[256];
@@ -139,7 +137,7 @@ void JE_helpBox( JE_word x, JE_word y, char *message, JE_byte boxwidth )
 	helpBoxShadeType = FULL_SHADE;
 }
 
-void JE_HBox( JE_word x, JE_word y, JE_byte messagenum, JE_byte boxwidth )
+void JE_HBox( JE_word x, JE_word y, int messagenum, int boxwidth )
 {
 	JE_helpBox(x, y, helpTxt[messagenum-1], boxwidth);
 }

@@ -27,10 +27,10 @@
 
 typedef struct
 {
-	JE_byte    buttons;
-	int        xchg, ychg;
-	JE_word    randomenemytype;    /* 0=no enemy */
-	int        ex, ey;
+	int buttons;
+	int xchg, ychg;
+	JE_word randomenemytype;    /* 0=no enemy */
+	int ex, ey;
 	unsigned long sync;
 } JE_PacketData;
 
@@ -44,26 +44,26 @@ extern bool done;
 extern bool moveOk;
 extern bool firstTime;
 extern bool netResult;
-extern JE_byte gameQuitDelay;
-extern JE_byte outputData[10];
-extern JE_byte inputData[10];
+extern int gameQuitDelay;
+extern char outputData[10];
+extern char inputData[10];
 extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 extern bool yourInGameMenuRequest, inGameMenuRequest;
 extern bool portConfigChange, portConfigDone;
-extern JE_byte exchangeCount;
+extern int exchangeCount;
 extern bool netSuccess;
 #endif
 
 void JE_initNetwork( void );
 
-void JE_exchangePacket( JE_byte size );
+void JE_exchangePacket( int size );
 void JE_recordPacket( int xchg, int ychg, int xachg, int yachg);
 void JE_clearSpecialRequests( void );
 
 void JE_updateStream( void );
-void JE_setNetByte( JE_byte send );
-bool JE_scanNetByte( JE_byte scan );
-void JE_syncNet( JE_byte syncByte );
+void JE_setNetByte( Uint8 send );
+bool JE_scanNetByte( Uint8 scan );
+void JE_syncNet( Uint8 syncByte );
 
 void JE_flushNet( void );
 
