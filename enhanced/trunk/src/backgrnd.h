@@ -41,7 +41,7 @@ void JE_drawBackground2( void );
 void JE_superBackground2( void );
 void JE_drawBackground3( void );
 
-void JE_filterScreen( Sint8 col, signed int int_ );
+void JE_filterScreen( Sint8 color, Sint8 brightness );
 
 void JE_checkSmoothies( void );
 void JE_initSmoothies( void );

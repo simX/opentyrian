@@ -564,11 +564,9 @@ void JE_drawBackground3( void )
 
 }
 
-void JE_filterScreen( Sint8 col, signed int int_ )
+void JE_filterScreen( Sint8 color, Sint8 brightness )
 {
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
-	int x, y;
-	unsigned int temp;
 	
 	if (filterFade)
 	{
@@ -587,34 +585,34 @@ void JE_filterScreen( Sint8 col, signed int int_ )
 		}
 	}
 	
-	if (col != -99 && filtrationAvail)
+	if (color != -99 && filtrationAvail)
 	{
 		s = VGAScreen->pixels;
 		s += 24;
 		
-		col <<= 4;
+		color <<= 4;
 		
-		for (y = 184; y; y--)
+		for (int y = 184; y; y--)
 		{
-			for (x = 264; x; x--)
+			for (int x = 264; x; x--)
 			{
-				*s = col | (*s & 0x0f);
+				*s = color | (*s & 0x0f);
 				s++;
 			}
 			s += VGAScreen->w - 264;
 		}
 	}
 	
-	if (int_ != -99 && explosionTransparent)
+	if (brightness != -99 && explosionTransparent)
 	{
 		s = VGAScreen->pixels;
 		s += 24;
 		
-		for (y = 184; y; y--)
+		for (int y = 184; y; y--)
 		{
-			for (x = 264; x; x--)
+			for (int x = 264; x; x--)
 			{
-				temp = (*s & 0x0f) + int_;
+				unsigned int temp = (*s & 0x0f) + brightness;
 				*s = (*s & 0xf0) | (temp > 0x1f ? 0 : (temp > 0x0f ? 0x0f : temp));
 				s++;
 			}
