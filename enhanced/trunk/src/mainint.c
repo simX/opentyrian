@@ -275,7 +275,6 @@ void JE_helpSystem( int startTopic )
 						JE_dString(JE_fontCenter(topicName[temp], SMALL_FONT_SHAPES), temp * 20 + 40, buf, SMALL_FONT_SHAPES);
 					}
 
-					JE_waitRetrace();
 					JE_showVGA();
 
 					tempW = 0;
@@ -2492,7 +2491,6 @@ void JE_endLevelAni( void )
 					{
 						frameCountMax = 0;
 					}
-					JE_waitRetrace();
 					JE_showVGA();
 					
 					JE_updateStream();
@@ -2512,7 +2510,6 @@ void JE_endLevelAni( void )
 					{
 						frameCountMax = 0;
 					}
-					JE_waitRetrace();
 					JE_showVGA();
 					
 					JE_updateStream();
@@ -2552,7 +2549,6 @@ void JE_endLevelAni( void )
 		do
 		{
 			setjasondelay(1);
-			JE_waitRetrace();
 			
 			JE_updateStream();
 			if (netQuit)
@@ -3366,7 +3362,7 @@ redo:
 					service_SDL_events(false);
 					/* ---- Mouse Input ---- */
 					if ((inputDevice_ == 2 || inputDevice_ == 0)
-					    && !playDemo && mouseInstalled && !recordDemo)
+					    && !playDemo && !recordDemo)
 					{
 						/* Get Mouse Status */
 						button[1-1] = mouse_pressed[0];
@@ -3378,7 +3374,7 @@ redo:
 						mouseYC = mouse_y - 100;
 #endif
 
-						if (( inputDevice_ == 2 || inputDevice_ == 0 ) && mouseInstalled
+						if (( inputDevice_ == 2 || inputDevice_ == 0 )
 						    && (!isNetworkGame || playerNum_ == thisPlayerNum)
 						    && (!galagaMode || (playerNum_ == 2 || !twoPlayerMode || playerStillExploding2 > 0)))
 							JE_setMousePosition(159, 100);

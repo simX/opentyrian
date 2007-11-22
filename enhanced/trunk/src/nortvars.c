@@ -319,12 +319,9 @@ bool JE_anyButton( void )
 
 void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 {
-	if (mouseInstalled)
-	{
 #ifdef NDEBUG
-		SDL_WarpMouse(mouseX, mouseY);
+	SDL_WarpMouse(mouseX, mouseY);
 #endif
-	}
 }
 
 void JE_dBar3( int x, int y, int num, int col )
@@ -413,15 +410,10 @@ void JE_wipeKey( void )
 
 JE_word JE_mousePosition( JE_word *mouseX, JE_word *mouseY )
 {
-	if (mouseInstalled)
-	{
-		service_SDL_events(false);
-		*mouseX = mouse_x;
-		*mouseY = mouse_y;
-		return mousedown ? lastmouse_but : 0;
-	}
-	
-	return 0;
+	service_SDL_events(false);
+	*mouseX = mouse_x;
+	*mouseY = mouse_y;
+	return mousedown ? lastmouse_but : 0;
 }
 
 /* TODO */

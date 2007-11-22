@@ -6764,7 +6764,6 @@ void JE_itemScreen( void )
 					JE_mouseStart();
 					/*if (frameCount == 1)
 					{
-						/ *JE_waitRetrace();* /
 						service_SDL_events(false);
 						inputDetected = newkey | mousedown | JE_joystickNotHeld();
 					}*/
@@ -6852,7 +6851,6 @@ void JE_itemScreen( void )
 						}
 
 						JE_drawScore();
-						JE_waitRetrace();
 
 						if (newPal > 0)
 						{
@@ -7946,7 +7944,7 @@ void JE_drawLines( bool dark )
 				tempX = tempW2 - tempX2;
 				if (tempX > 18 && tempX < 135)
 				{
-					JE_pix3(tempX, tempY, 32+6);
+					JE_pixCool(tempX, tempY, 32+6);
 				}
 			}
 		}
@@ -8006,7 +8004,7 @@ void JE_drawNavLines( bool dark )
 				tempX = tempW2 - tempX2;
 				if (tempX > 18 && tempX < 135)
 				{
-					JE_pix3(tempX, tempY, 7);
+					JE_pixCool(tempX, tempY, 7);
 				}
 			}
 		}
@@ -8218,8 +8216,6 @@ bool JE_quitRequest( bool useMouse )
 	/* callBIOSHandler = true; */
 	JE_clearKeyboard();
 
-	JE_getVGA();
-
 	quit = false;
 	select = false;
 
@@ -8270,7 +8266,7 @@ bool JE_quitRequest( bool useMouse )
 			JE_outTextAdjust(tempW, 128, miscText[10-1], 15, tempI, FONT_SHAPES, true);
 			JE_outTextAdjust(tempW2, 128, miscText[11-1], 15, tempI2, FONT_SHAPES, true);
 
-			if (useMouse && mouseInstalled)
+			if (useMouse)
 			{
 				JE_mouseStart();
 				JE_showVGA();
@@ -8588,7 +8584,6 @@ void JE_menuFunction( int select )
 				}
 				JE_rectangle(230, tempY - 2, 300, tempY + 7, col);
 
-				/* JE_waitRetrace(); */
 				setjasondelay(1);
 				service_SDL_events(false);
 

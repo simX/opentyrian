@@ -297,18 +297,6 @@ int main( int argc, char *argv[] )
 		joystick_installed = false;
 	}
 
-	if (mouseInstalled)
-	{
-		printf("Mouse Detected.   ");
-		if (mouse_threeButton)
-		{
-			printf("Mouse driver reports three buttons.");
-		}
-		printf("\n");
-	} else {
-		printf("No mouse found.\n");
-	}
-
 	if (tyrianXmas)
 	{
 		if (JE_getFileSize("tyrianc.shp") == 0)

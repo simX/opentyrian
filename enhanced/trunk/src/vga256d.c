@@ -31,17 +31,12 @@
 #include <string.h>
 
 
-bool mouseInstalled = true;
-char k;
-
 SDL_Surface *VGAScreen, *VGAScreenSeg;
 SDL_Surface *game_screen;
 SDL_Surface *VGAScreen2;
 
 /* JE: From Nortsong */
 JE_word speed; /* JE: holds timer speed for 70Hz */
-
-Uint8 scancode;
 
 const Uint8 VGA_pal[] = {
 0, 0, 0, 0, 0, 168, 0, 168, 0, 0, 168, 168, 168, 0, 0, 168, 0, 168, 168, 84, 0, 168, 168, 168, 84, 84, 84, 84, 84, 252, 84, 252, 84, 84, 252, 252, 252, 84, 84, 252, 84, 252, 252, 252, 84, 252, 252, 252, 0, 0, 0, 20, 20, 20, 32, 32, 32, 44, 44, 44, 56, 56, 56, 68, 68, 68, 80, 80, 80, 96, 96, 96, 112, 112, 112, 128, 128, 128, 144, 144, 144, 160, 160, 160, 180, 180, 180, 200, 200, 200, 224, 224, 224, 252, 252, 252, 0, 0,
@@ -96,11 +91,6 @@ void JE_initVGA256( void )
 	SDL_FillRect(VGAScreenSeg, NULL, 0x0);
 }
 
-void JE_initVGA256X( void )
-{
-	JE_initVGA256();
-}
-
 void JE_closeVGA256( void )
 {
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -116,57 +106,7 @@ void JE_showVGA( void )
 	SDL_Flip(VGAScreen);
 }
 
-void JE_showVGARetrace( void )
-{
-	SDL_Flip(VGAScreen);
-}
-
-void JE_getVGA( void )
-{
-	SDL_Flip(VGAScreen); /* TODO: YKS: This is probably not what we should do, but I don't see a way of doing it either. */
-}
-
-void JE_onScreen( void )
-{
-	STUB();
-}
-
-void JE_offScreen( void )
-{
-	STUB();
-}
-
-void JE_disableRefresh( void )
-{
-	/* This would normally blank the screen, but since it's hard to implement and not used I'll leave it as a no-op. */
-}
-
-void JE_enableRefresh( void )
-{
-	/* Same as JE_disable_refresh */
-}
-
-void JE_waitRetrace( void )
-{
-	/* nop */
-}
-
-void JE_waitPartialRetrace( void )
-{
-}
-
-void JE_waitNotRetrace( void )
-{
-}
-
-
-
 void JE_pix( JE_word x, JE_word y, Uint8 c )
-{
-	JE_pix2(x,y,c);
-}
-
-void JE_pix2( JE_word x, JE_word y, Uint8 c )
 {
 	/* Bad things happen if we don't clip */
 	if (x <  VGAScreen->w && y <  VGAScreen->h)
@@ -178,17 +118,12 @@ void JE_pix2( JE_word x, JE_word y, Uint8 c )
 
 void JE_pixCool( JE_word x, JE_word y, Uint8 c )
 {
-	JE_pix3(x, y, c);
-}
-
-void JE_pix3( JE_word x, JE_word y, Uint8 c )
-{
 	/* Originally impemented as several direct accesses */
-	JE_pix2(x, y, c);
-	JE_pix2(x - 1, y, c);
-	JE_pix2(x + 1, y, c);
-	JE_pix2(x, y - 1, c);
-	JE_pix2(x, y + 1, c);
+	JE_pix(x, y, c);
+	JE_pix(x - 1, y, c);
+	JE_pix(x + 1, y, c);
+	JE_pix(x, y - 1, c);
+	JE_pix(x, y + 1, c);
 }
 
 void JE_pixAbs( JE_word x, Uint8 c )

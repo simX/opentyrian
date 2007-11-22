@@ -332,37 +332,31 @@ void JE_mouseStart( void )
 
 	JE_word tempW;
 
-	if (mouseInstalled)
+	tempW = mouseCursorGr[mouseCursor];
+
+	service_SDL_events(false);
+	mouseButton = mousedown ? lastmouse_but : 0; /* incorrect, possibly unimportant */
+	lastMouseX = mouse_x;
+	lastMouseY = mouse_y;
+
+	if (lastMouseX > 320 - 13)
 	{
-		tempW = mouseCursorGr[mouseCursor];
+		lastMouseX = 320 - 13;
+	}
+	if (lastMouseY > 200 - 16)
+	{
+		lastMouseY = 200 - 16;
+	}
 
-		service_SDL_events(false);
-		mouseButton = mousedown ? lastmouse_but : 0; /* incorrect, possibly unimportant */
-		lastMouseX = mouse_x;
-		lastMouseY = mouse_y;
+	JE_grabShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
 
-		if (lastMouseX > 320 - 13)
-		{
-			lastMouseX = 320 - 13;
-		}
-		if (lastMouseY > 200 - 16)
-		{
-			lastMouseY = 200 - 16;
-		}
-
-		JE_grabShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
-
-		/*JE_drawShape2x2shadow(lastmousex+2,lastmousey+2,tempW,shapes6);*/
-		JE_drawShape2x2(lastMouseX, lastMouseY, tempW, shapes6);
-	 }
+	/*JE_drawShape2x2shadow(lastmousex+2,lastmousey+2,tempW,shapes6);*/
+	JE_drawShape2x2(lastMouseX, lastMouseY, tempW, shapes6);
 }
 
 void JE_mouseReplace( void )
 {
-	if (mouseInstalled)
-	{
-		JE_drawShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
-	}
+	JE_drawShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
 }
 
 void newshape_init( void )

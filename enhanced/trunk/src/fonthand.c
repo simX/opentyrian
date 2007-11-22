@@ -741,7 +741,6 @@ void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 				exit(0);
 			}
 			
-			JE_waitRetrace();
 			JE_showVGA();
 
 			int delaycount_temp;
@@ -763,7 +762,6 @@ void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 			exit(0);
 		}
 		
-		JE_waitRetrace();
 		JE_showVGA();
 
 		int delaycount_temp;
