@@ -47,10 +47,9 @@ int freq = 11025 * OUTPUT_QUALITY;
 bool music_playing = false;
 
 
-void audio_cb(void *userdata, unsigned char *feedme, int howmuch);
+void audio_cb( void *userdata, unsigned char *feedme, int howmuch );
 
-/* SYN: The arguments to this function are probably meaningless now */
-void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberror, int midierror)
+void JE_initialize( void )
 {
 	SDL_AudioSpec plz, got;
 
@@ -101,8 +100,6 @@ void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberr
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 {
-	static long ct = 0;
-
 	SDL_mutex *mut = (SDL_mutex *) userdata;
 
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
@@ -121,6 +118,8 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 		long remaining = howmuch / BYTES_PER_SAMPLE;
 		while (remaining > 0)
 		{
+			static long ct = 0;
+
 			while(ct < 0)
 			{
 				ct += freq;
@@ -186,19 +185,11 @@ void JE_deinitialize( void )
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
-void JE_play( void )
-{
-	/* SYN: This proc isn't necessary, because filling the buffer is handled in the SDL callback function.*/
-}
-
-/* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing,
-   or restart it if it is. */
+/* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing, or restart it if it is. */
 void JE_selectSong( JE_word value )
 {
 	if (noSound)
 		return;
-
-	/* TODO: The mutex'd region could possibly be smaller, but I wanted to keep it in this file. */
 
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(soundmutex) == -1)
@@ -226,18 +217,6 @@ void JE_selectSong( JE_word value )
 	SDL_mutexV(soundmutex); /* release mutex */
 }
 
-void JE_samplePlay(JE_word addlo, JE_word addhi, JE_word size, JE_word freq)
-{
-	/* SYN: I don't think this function is used. */
-	STUB();
-}
-
-void JE_bigSamplePlay(JE_word addlo, JE_word addhi, JE_word size, JE_word freq)
-{
-	/* SYN: I don't think this function is used. */
-	STUB();
-}
-
 /* Call with 0x1-0x100 for music volume, and 0x10 to 0xf0 for sample volume. */
 /* SYN: Either I'm misunderstanding Andreas's comments, or the information in them is inaccurate. */
 void JE_setVol(JE_word volume, JE_word sample)
@@ -249,34 +228,6 @@ void JE_setVol(JE_word volume, JE_word sample)
 	if (sample > 240 || sample < 16)
 		sample = 240;
 	sample_volume = sample * (float) (0.35f / 240.0f);
-}
-
-JE_word JE_getVol( void )
-{
-	STUB();
-	return 0;
-}
-
-JE_word JE_getSampleVol( void )
-{
-	STUB();
-	return 0;
-}
-
-void JE_multiSampleInit(JE_word addlo, JE_word addhi, JE_word dmalo, JE_word dmahi)
-{
-	/* SYN: I don't know if this function should do anything else. For now, it just checks to see if sound has
-	   been initialized and, if not, calls the main initialize function. */
-
-	if (!sound_init_state)
-	{
-		JE_initialize(0, 0, 0, 0, 0);
-	}
-}
-
-void JE_multiSampleMix( void )
-{
-	/* SYN: This proc isn't necessary, because the mixing is handled in the SDL callback function.*/
 }
 
 void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
@@ -308,4 +259,3 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
 
 	SDL_mutexV(soundmutex); /* release mutex */
 }
-

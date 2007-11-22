@@ -350,19 +350,9 @@ int main( int argc, char *argv[] )
 		    underlying sound code is very different. I've left out some stuff that
 		    checked hardware values and stuff here. */
 
-		JE_initialize(0, 0, 0, 0, 0); /* TODO: Fix arguments */
-
 		soundEffects = true; /* TODO: find a real way to give this a value */
 		if (soundEffects)
 		{
-			JE_multiSampleInit(0, 0, 0, 0); /* TODO: Fix arguments */
-
-			/* I don't think these messages matter, but I'll replace them with more useful stuff if I can. */
-			/*if (soundEffects == 2) printf("SoundBlaster active");
-			printf ("DSP Version ***\n");
-			printf ("SB port ***\n");
-			printf ("Interrupt ***\n");*/
-
 			JE_loadSndFile();
 		}
 
