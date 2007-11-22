@@ -63,9 +63,8 @@ void JE_newLoadShapesB( int table, FILE *f )
 	        max = 0;
 
 	JE_word tempW;
-	JE_word z;
 
-	efread(&tempW, sizeof(JE_word), 1, f); // -----------------------------------------------------------------------------------------------
+	vfread(tempW, JE_word, f);
 	maxShape[table] = tempW;
 
 	if (!loadOverride)
@@ -76,7 +75,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 
 	if (min > 1)
 	{
-		for (z = 0; z < min-1; z++)
+		for (int z = 0; z < min-1; z++)
 		{
 			shapeExist[table][z] = getc(f);
 
@@ -95,7 +94,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 		}
 	}
 
-	for (z = min-1; z < max; z++)
+	for (int z = min-1; z < max; z++)
 	{
 		tempW = z-min+1;
 		shapeExist[table][tempW] = getc(f);
@@ -222,11 +221,9 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 
 void JE_newPurgeShapes( int table )
 {
-	JE_word x;
-
 	if (maxShape[table] > 0)
 	{
-		for (x = 0; x < maxShape[table]; x++)
+		for (int x = 0; x < maxShape[table]; x++)
 		{
 			if (shapeExist[table][x])
 			{
@@ -239,7 +236,6 @@ void JE_newPurgeShapes( int table )
 
 void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 {
-	JE_word xloop = 0, yloop = 0;
 	Uint8 *p = shape; /* shape pointer */
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
@@ -250,9 +246,9 @@ void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 	s_limit = (Uint8 *)tempScreenSeg->pixels;
 	s_limit += tempScreenSeg->h * tempScreenSeg->w;
 
-	for (yloop = 0; yloop < 28; yloop++)
+	for (int yloop = 0; yloop < 28; yloop++)
 	{
-		for (xloop = 0; xloop < 24; xloop++)
+		for (int xloop = 0; xloop < 24; xloop++)
 		{
 			if (s >= s_limit) return;
 			*s = *p;
@@ -265,7 +261,6 @@ void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 
 void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 {
-	JE_word xloop = 0, yloop = 0;
 	Uint8 *p = shape; /* shape pointer */
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
@@ -276,9 +271,9 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 	s_limit = (Uint8 *)tempScreenSeg->pixels;
 	s_limit += tempScreenSeg->h * tempScreenSeg->w;
 
-	for (yloop = 0; yloop < 28; yloop++)
+	for (int yloop = 0; yloop < 28; yloop++)
 	{
-		for (xloop = 0; xloop < 24; xloop++)
+		for (int xloop = 0; xloop < 24; xloop++)
 		{
 			if (s >= s_limit) return;
 			*p = *s;
@@ -372,10 +367,8 @@ void JE_mouseReplace( void )
 
 void newshape_init( void )
 {
-	int i;
-
 	tempScreenSeg = VGAScreen;
-	for (i = 0; i < MAX_TABLE; i++)
+	for (int i = 0; i < MAX_TABLE; i++)
 	{
 		maxShape[i] = 0;
 	}

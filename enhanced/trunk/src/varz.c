@@ -670,7 +670,7 @@ void JE_drawOptionLevel( void )
 {
 	if (twoPlayerMode)
 	{
-		for (temp = 1; temp <= 3; temp++)
+		for (int temp = 1; temp <= 3; temp++)
 		{
 			JE_c_bar(268, 127 + (temp - 1) * 6, 269, 127 + 3 + (temp - 1) * 6, 193 + ((pItemsPlayer2[7-1] - 100) == temp) * 11);
 		}
@@ -788,8 +788,10 @@ void JE_initPlayerShot( JE_word portNum, int temp, JE_word PX, JE_word PY, JE_wo
 				}
 
 				/*Rot*/
-				for (tempW = 1; tempW <= weapons[wpNum].multi; tempW++)
+				for (int tempW = 1; tempW <= weapons[wpNum].multi; tempW++)
 				{
+
+					int b;
 
 					for (b = 0; b < MAX_PWEAPON; b++)
 					{
@@ -954,7 +956,7 @@ void JE_initPlayerShot( JE_word portNum, int temp, JE_word PX, JE_word PY, JE_wo
 						tempW3 = 65000;
 						temp3 = 0;
 						/*Find Closest Enemy*/
-						for (x = 0; x < 100; x++)
+						for (int x = 0; x < 100; x++)
 						{
 							if (enemyAvail[x] != 1 && !enemy[x].scoreitem)
 							{
@@ -997,7 +999,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			break;
 		/*Repulsor*/
 		case 2:
-			for (temp = 0; temp < ENEMY_SHOT_MAX; temp++)
+			for (int temp = 0; temp < ENEMY_SHOT_MAX; temp++)
 				if (!enemyShotAvail[temp])
 				{
 					if (PX > enemyShot[temp].sx)
@@ -1022,7 +1024,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			break;
 		/*Attractor*/
 		case 4:
-			for (temp = 0; temp < 100; temp++)
+			for (int temp = 0; temp < 100; temp++)
 			{
 				if (enemyAvail[temp] != 1 && enemy[temp].scoreitem
 				    && enemy[temp].evalue != 0)
@@ -1425,11 +1427,10 @@ void JE_setupExplosion( int x, int y, int explodeType )
 		{ 227, 14 },
 		{ 265, 14 }
 	};
-	int i;
 	
 	if (y > -16 && y < 190)
 	{
-		for(i = 0; i < EXPLOSION_MAX; i++)
+		for(int i = 0; i < EXPLOSION_MAX; i++)
 		{
 			if (explodeAvail[i] == 0)
 			{
@@ -1454,7 +1455,6 @@ void JE_setupExplosion( int x, int y, int explodeType )
 
 void JE_setupExplosionLarge( bool enemyGround, int exploNum, int x, int y )
 {
-	int z;
 
 	if (y >= 0)
 	{
@@ -1483,7 +1483,7 @@ void JE_setupExplosionLarge( bool enemyGround, int exploNum, int x, int y )
 		
 		if (exploNum)
 		{
-			for (z = 0; z < 20 /*REX maximum*/; z++)
+			for (int z = 0; z < 20 /*REX maximum*/; z++)
 			{
 				if (REXavail[z] == 0)
 				{
@@ -1646,7 +1646,7 @@ void JE_drawArmor( void )
 
 void JE_resetPlayerH( void )
 {
-	for (temp = 0; temp < 20; temp++)
+	for (int temp = 0; temp < 20; temp++)
 	{
 		if (twoPlayerMode)
 		{
@@ -1665,7 +1665,7 @@ void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ) /
 	double tempr;
 	int tempx, tempy;
 	
-	for (temp = 0; temp < num; temp++)
+	for (int temp = 0; temp < num; temp++)
 	{
 		if (++lastSP > MAX_SP)
 			lastSP = 0;

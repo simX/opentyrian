@@ -33,29 +33,26 @@ int use16bit, stereo;
 
 void opl_update( Sint16 *buf, int samples )
 {
-	int i;
-
 	if (use16bit) {
 		YM3812UpdateOne(opl, buf, samples);
 
 		if (stereo)
-			for(i = samples - 1; i >= 0; i--) {
+			for(int i = samples - 1; i >= 0; i--) {
 				buf[i*2] = buf[i];
 				buf[i*2+1] = buf[i];
 			}
 	} else {
 		short *tempbuf = malloc(sizeof(Sint16) * (stereo ? samples * 2 : samples));
-		int i;
 
 		YM3812UpdateOne(opl, tempbuf, samples);
 
 		if (stereo)
-			for (i = samples - 1; i >= 0; i--) {
+			for (int i = samples - 1; i >= 0; i--) {
 				tempbuf[i*2] = tempbuf[i];
 				tempbuf[i*2+1] = tempbuf[i];
 			}
 
-		for (i = 0; i < (stereo ? samples * 2 : samples); i++)
+		for (int i = 0; i < (stereo ? samples * 2 : samples); i++)
 			((char *)buf)[i] = (tempbuf[i] >> 8) ^ 0x80;
 
 		free(tempbuf);

@@ -57,7 +57,6 @@ void JE_initVGA256( void )
 {
 	static bool initd = false;
 	SDL_Color *col_buf;
-	int i,j;
 
 	if (!initd)
 	{
@@ -83,7 +82,7 @@ void JE_initVGA256( void )
 
 	col_buf = malloc(sizeof(SDL_Color)*256);
 
-	for (i = 0, j = 0; j < 256; i+=3, j++)
+	for (int i = 0, j = 0; j < 256; i+=3, j++)
 	{
 		col_buf[j].r = VGA_pal[i];
 		col_buf[j].g = VGA_pal[i+1];
@@ -229,7 +228,6 @@ void JE_rectangle( JE_word a, JE_word b, JE_word c, JE_word d, JE_word e ) /* x1
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = VGAScreen->pixels;
-		int i;
 
 		/* Top line */
 		memset(&vga[b * VGAScreen->w + a], e, c - a + 1);
@@ -238,13 +236,13 @@ void JE_rectangle( JE_word a, JE_word b, JE_word c, JE_word d, JE_word e ) /* x1
 		memset(&vga[d * VGAScreen->w + a], e, c - a + 1);
 
 		/* Left line */
-		for (i = (b + 1) * VGAScreen->w + a; i < (d * VGAScreen->w + a); i += VGAScreen->w)
+		for (int i = (b + 1) * VGAScreen->w + a; i < (d * VGAScreen->w + a); i += VGAScreen->w)
 		{
 			vga[i] = e;
 		}
 
 		/* Right line */
-		for (i = (b + 1) * VGAScreen->w + c; i < (d * VGAScreen->w + c); i += VGAScreen->w)
+		for (int i = (b + 1) * VGAScreen->w + c; i < (d * VGAScreen->w + c); i += VGAScreen->w)
 		{
 			vga[i] = e;
 		}
@@ -259,11 +257,11 @@ void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e ) /* x1, y1, x2
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = VGAScreen->pixels;
-		int i, width;
+		int width;
 
 		width = c - a + 1;
 
-		for (i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
+		for (int i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
 		{
 			memset(&vga[i], e, width);
 		}
@@ -278,11 +276,11 @@ void JE_c_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e )
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = VGAScreenSeg->pixels;
-		int i, width;
+		int width;
 
 		width = c - a + 1;
 
-		for (i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
+		for (int i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
 		{
 			memset(&vga[i], e, width);
 		}
@@ -297,13 +295,13 @@ void JE_barShade( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y2
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = VGAScreen->pixels;
-		int i, j, width;
+		int width;
 
 		width = c - a + 1;
 
-		for (i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
+		for (int i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
 		{
-			for (j = 0; j < width; j++)
+			for (int j = 0; j < width; j++)
 			{
 				vga[i + j] = ((vga[i + j] & 0x0F) >> 1) | (vga[i + j] & 0xF0);
 			}
@@ -324,13 +322,13 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = VGAScreen->pixels;
-		int i, j, width;
+		int width;
 
 		width = c-a+1;
 
-		for (i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
+		for (int i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
 		{
-			for (j = 0; j < width; j++)
+			for (int j = 0; j < width; j++)
 			{
 				Uint8 al, ah;
 				al = ah = vga[i + j];
@@ -372,7 +370,7 @@ void JE_circle( JE_word x, int y, JE_word z, Uint8 c ) /* z == radius */
 void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 {
 	double g, h, x, y;
-	int z, v;
+	int v;
 	Uint8 *vga;
 
 	v = round(sqrt(abs((a*a)-(c*c))+abs((b*b)-(d*d)) / 4));
@@ -381,7 +379,7 @@ void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 
 	vga = VGAScreen->pixels;
 
-	for (z = 0; z <= v; z++)
+	for (int z = 0; z <= v; z++)
 	{
 		vga[(int)(round(x) + round(y)) * VGAScreen->w] = e;
 		x += g; y += h;
@@ -413,11 +411,10 @@ void JE_setPalette( Uint8 col, Uint8 red, Uint8 green, Uint8 blue )
 void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s )
 {
 	Uint8 *vga = VGAScreen->pixels;
-	int i;
 
 	vga += y * VGAScreen->w + x;
 
-	for (i = 0; i < 14; i++)
+	for (int i = 0; i < 14; i++)
 	{
 		memcpy(vga, s, 12);
 		vga += VGAScreen->w; s += 12;

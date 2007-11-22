@@ -45,7 +45,6 @@ const char pars[18][9] = {
 void JE_paramCheck( int argc, char *argv[] )
 {
 	char *tempStr;
-	JE_word x,y;
 	time_t now;
 
 	robertWeird     = true;
@@ -116,15 +115,15 @@ FLICKER  - This will force Tyrian and SETUP to NEVER WAIT FOR A RETRACE.
 JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 */
 
-	for (x = 0; x < argc; x++)
+	for (int x = 0; x < argc; x++)
 	{
 		tempStr = argv[x];
-		for (y = 0; y < 8; y++)
+		for (int y = 0; y < 8; y++)
 		{
 			tempStr[y] = toupper(tempStr[y]);
 		}
 
-		for (y = 0; y < COUNTOF(pars); y++)
+		for (int y = 0; y < COUNTOF(pars); y++)
 		{
 			if (strcmp(tempStr, pars[y]) == 0)
 			{

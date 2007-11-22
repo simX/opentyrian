@@ -79,14 +79,12 @@ SDL_Joystick *joystick = NULL;
 
 void JE_joystick1( void ) /* procedure to get x and y */
 {
-	int i;
-
 	if (isNetworkGame)
 	{
 		forceAveraging = true;
 	}
 
-	for (i = 0; i < COUNTOF(joyButton); i++)
+	for (int i = 0; i < COUNTOF(joyButton); i++)
 	{
 		joyButton[i] = SDL_JoystickGetButton(joystick, i);
 	}
@@ -119,8 +117,6 @@ void JE_joystick1( void ) /* procedure to get x and y */
 
 void JE_updateButtons( void ) /* Uses ButtonAssign to find out */
 {
-	int i;
-
 	/* Button Functions:
 	 * 1 : Fire Normal
 	 * 2 : Fire Left Sidekick
@@ -130,7 +126,7 @@ void JE_updateButtons( void ) /* Uses ButtonAssign to find out */
 
 	memset(button, 0, sizeof(button));
 
-	for (i = 0; i < COUNTOF(joyButton); i++)
+	for (int i = 0; i < COUNTOF(joyButton); i++)
 	{
 		switch (joyButtonAssign[i])
 		{

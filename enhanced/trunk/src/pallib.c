@@ -32,14 +32,13 @@ JE_word palNum;
 void JE_loadPals( void )
 {
 	FILE *f;
-	int i;
 
 	palNum = 0;
 
 	JE_resetFile(&f, "palette.dat");
 	while (palNum < MAX_PAL && !feof(f))
 	{
-		for (i = 0; i < 256; i++)
+		for (int i = 0; i < 256; i++)
 		{
 			palettes[palNum][i].r = getc(f);
 			palettes[palNum][i].g = getc(f);

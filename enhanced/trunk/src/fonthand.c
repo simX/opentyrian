@@ -56,11 +56,10 @@ int warningColChange;
 
 void JE_dString( JE_word x, JE_word y, const char *s, int font )
 {
-	int a;
 	char b;
 	bool bright = false;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -473,11 +472,10 @@ JE_word JE_fontCenter( const char *s, int font )
 
 JE_word JE_textWidth( const char *s, int font )
 {
-	int a;
 	Uint8 b;
 	JE_word x = 0;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -523,11 +521,10 @@ void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brigh
 
 void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightness )
 {
-	int a;
 	unsigned char b;
 	int bright = 0;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -568,10 +565,9 @@ void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightn
 
 void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brightness, int font )
 {
-	int a;
 	unsigned char b;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -591,10 +587,9 @@ void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brig
 
 void JE_outTextShade( JE_word x, JE_word y, const char *s, int font )
 {
-	int a;
-	Uint8 b;
+	unsigned char b;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -614,11 +609,10 @@ void JE_outTextShade( JE_word x, JE_word y, const char *s, int font )
 
 void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow )
 {
-	int a;
-	Uint8 b;
+	unsigned char b;
 	bool bright = false;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -648,11 +642,10 @@ void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brig
 
 void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int font )
 {
-	int a;
 	unsigned char b;
 	int bright = 0;
 
-	for (a = 0; s[a] != 0; a++)
+	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];
 
@@ -718,7 +711,6 @@ void JE_updateWarning( void )
 
 void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 {
-	int z;
 	int c = 15;
 
 	JE_setNetByte(0);
@@ -734,7 +726,7 @@ void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 	JE_outTextAdjust(x + 1, y,     s, 0, -12, textGlowFont, false);
 	JE_outTextAdjust(x,     y + 1, s, 0, -12, textGlowFont, false);
 	if (frameCountMax > 0)
-		for (z = 1; z <= 12; z++)
+		for (int z = 1; z <= 12; z++)
 		{
 			setjasondelay(frameCountMax);
 			tempScreenSeg = VGAScreenSeg; /* sega000 */
@@ -756,7 +748,7 @@ void JE_outTextGlow( JE_word x, JE_word y, const char *s )
 			if ((delaycount_temp = target - SDL_GetTicks()) > 0)
 				SDL_Delay(delaycount_temp);
 		}
-	for (z = (frameCountMax == 0) ? 6 : 12; z >= textGlowBrightness; z--)
+	for (int z = (frameCountMax == 0) ? 6 : 12; z >= textGlowBrightness; z--)
 	{
 		setjasondelay(frameCountMax);
 		tempScreenSeg = VGAScreenSeg; /* sega000 */

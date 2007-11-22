@@ -53,7 +53,6 @@ void audio_cb(void *userdata, unsigned char *feedme, int howmuch);
 void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberror, int midierror)
 {
 	SDL_AudioSpec plz, got;
-	int i = 0;
 
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
 	{
@@ -72,7 +71,7 @@ void JE_initialize(JE_word soundblaster, JE_word midi, bool mixenable, int sberr
 		exit(-1);
 	}
 
-	for (i = 0; i < SFX_CHANNELS; i++)
+	for (int i = 0; i < SFX_CHANNELS; i++)
 	{
 		channel_buffer[i] = channel_pos[i] = NULL;
 		channel_len[i] = 0;

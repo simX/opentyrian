@@ -36,9 +36,8 @@ JE_ColorType colors, colors2;
 void JE_updateColorsFast( JE_ColorType *colorBuffer )
 {
 	SDL_Color p[256];
-	int i;
 
-	for (i = 0; i < 256; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		p[i].r = (*colorBuffer)[i].r << 2;
 		p[i].g = (*colorBuffer)[i].g << 2;
@@ -51,12 +50,11 @@ void JE_updateColorsFast( JE_ColorType *colorBuffer )
 void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, int startCol, int noColors, int noSteps )
 {
 	SDL_Color p[256];
-	int s, i;
 
-	for (s = 0; s <= noSteps; s++)
+	for (int s = 0; s <= noSteps; s++)
 	{
 		setdelay(1);
-		for (i = 0; i <= noColors; i++)
+		for (int i = 0; i <= noColors; i++)
 		{
 			p[i].r = ((*fromColors)[i].r + ((((*toColors)[i].r - (*fromColors)[i].r) * s) / noSteps)) << 2;
 			p[i].g = ((*fromColors)[i].g + ((((*toColors)[i].g - (*fromColors)[i].g) * s) / noSteps)) << 2;

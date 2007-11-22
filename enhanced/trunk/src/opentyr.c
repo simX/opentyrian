@@ -75,24 +75,24 @@ char *strnztcpy( char *to, char *from, size_t count )
 /* endian-swapping fread */
 size_t efread( void *buffer, size_t size, size_t num, FILE *stream )
 {
-	size_t i, f = fread(buffer, size, num, stream);
+	size_t f = fread(buffer, size, num, stream);
 
 	switch (size)
 	{
 		case 2:
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint16 *)buffer)[i] = SDL_Swap16(((Uint16 *)buffer)[i]);
 			}
 			break;
 		case 4:
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint32 *)buffer)[i] = SDL_Swap32(((Uint32 *)buffer)[i]);
 			}
 			break;
 		case 8:
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint64 *)buffer)[i] = SDL_Swap64(((Uint64 *)buffer)[i]);
 			}
@@ -108,27 +108,27 @@ size_t efread( void *buffer, size_t size, size_t num, FILE *stream )
 size_t efwrite( void *buffer, size_t size, size_t num, FILE *stream )
 {
 	void *swap_buffer;
-	size_t i, f;
+	size_t f;
 
 	switch (size)
 	{
 		case 2:
 			swap_buffer = malloc(size * num);
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint16 *)swap_buffer)[i] = SDL_SwapLE16(((Uint16 *)buffer)[i]);
 			}
 			break;
 		case 4:
 			swap_buffer = malloc(size * num);
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint32 *)swap_buffer)[i] = SDL_SwapLE32(((Uint32 *)buffer)[i]);
 			}
 			break;
 		case 8:
 			swap_buffer = malloc(size * num);
-			for (i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				((Uint64 *)swap_buffer)[i] = SDL_SwapLE64(((Uint64 *)buffer)[i]);
 			}

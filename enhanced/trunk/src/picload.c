@@ -42,7 +42,6 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	JE_buftype buf;
 	FILE *PCXfile;
 
-	int i;
 	Uint8 *p;
 	Uint8 *s; /* screen pointer, 8-bit specific */
 
@@ -57,7 +56,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	{
 		notYetLoadedPCX = false;
 		efread(&x, sizeof(JE_word), 1, PCXfile);
-		for (x = 0; x < PCX_NUM; x++)
+		for (int x = 0; x < PCX_NUM; x++)
 		{
 			vfread(pcxpos[x], Sint32, PCXfile);
 		}
@@ -70,7 +69,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	fclose(PCXfile);
 
 	p = buf;
-	for (i = 0; i < 320 * 200; )
+	for (int i = 0; i < 320 * 200; )
 	{
 		if ((*p & 0xc0) == 0xc0)
 		{

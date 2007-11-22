@@ -89,7 +89,6 @@ Uint8 *read_pos;
 
 int lds_load(unsigned char *music_location)
 {
-	Uint32	i, j;
 	SoundBank *sb;
 	int remaining;
 	Uint16 temp;
@@ -110,7 +109,7 @@ int lds_load(unsigned char *music_location)
 	tempo = *(pos++);
 	pattlen = *(pos++);
 
-	for(i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		chandelay[i] = *(pos++);
 	}
@@ -123,7 +122,7 @@ int lds_load(unsigned char *music_location)
 	if (soundbank) free(soundbank);
 	soundbank = malloc(sizeof(SoundBank) * numpatch);
 
-	for(i = 0; i < numpatch; i++) {
+	for (int i = 0; i < numpatch; i++) {
 		sb = &soundbank[i];
 		sb->mod_misc = *(pos++);
 		sb->mod_vol = *(pos++);
@@ -146,7 +145,7 @@ int lds_load(unsigned char *music_location)
 		sb->car_trem = *(pos++);
 		sb->tremwait = *(pos++);
 		sb->arpeggio = *(pos++);
-		for(j = 0; j < 12; j++)
+		for (int j = 0; j < 12; j++)
 		{
 			sb->arp_tab[j] = *(pos++);
 		}
@@ -168,8 +167,8 @@ int lds_load(unsigned char *music_location)
 	if (positions) free(positions);
 	positions = malloc(sizeof(Position) * 9 * numposi);
 
-	for(i = 0; i < numposi; i++)
-		for(j = 0; j < 9; j++) {
+	for (int i = 0; i < numposi; i++)
+		for (int j = 0; j < 9; j++) {
 			/*
 			* patnum is a pointer inside the pattern space, but patterns are 16bit
 			* word fields anyway, so it ought to be an even number (hopefully) and
@@ -187,7 +186,7 @@ int lds_load(unsigned char *music_location)
 	free(patterns);
 	patterns = malloc(sizeof(Uint16) * (remaining / 2 + 1));
 	/* patterns = malloc(temp + 1); */
-	for(i = 0; i < (remaining / 2 + 1); i++)
+	for (int i = 0; i < (remaining / 2 + 1); i++)
 	{
 		memcpy(&patterns[i], pos, sizeof(Uint16)); patterns[i] = SDL_SwapLE16(patterns[i]); pos += 2;
 	}
@@ -205,8 +204,6 @@ int lds_load(unsigned char *music_location)
 
 void lds_rewind(int subsong)
 {
-	int i;
-
 	/* init all with 0 */
 	tempo_now = 3;
 	playing = true; songlooped = false;
@@ -220,7 +217,7 @@ void lds_rewind(int subsong)
 	opl_write(8, 0);
 	opl_write(0xbd, regbd);
 
-	for(i = 0; i < 9; i++) {
+	for (int i = 0; i < 9; i++) {
 		opl_write(0x20 + op_table[i], 0);
 		opl_write(0x23 + op_table[i], 0);
 		opl_write(0x40 + op_table[i], 0x3f);
@@ -252,10 +249,9 @@ void lds_setregs_adv(Uint8 reg, Uint8 mask, Uint8 val)
 
 int lds_update( void )
 {
-	Uint16 comword, freq, octave, chan, tune, wibc, tremc, arpreg;
+	Uint16 comword, freq, octave, tune, wibc, tremc, arpreg;
 	int vbreak;
 	Uint8 level, regnum, comhi, comlo;
-	int i;
 	Channel *c;
 
 	if(!playing) return false;
@@ -273,7 +269,7 @@ int lds_update( void )
 				if(hardfade != 0) {
 					playing = false;
 					hardfade = 0;
-					for(i = 0; i < 9; i++)
+					for (int i = 0; i < 9; i++)
 					{
 						channel[i].keycount = 1;
 					}
@@ -292,7 +288,7 @@ int lds_update( void )
 	}
 
 	/* handle channel delay */
-	for(chan = 0; chan < 9; chan++) {
+	for (int chan = 0; chan < 9; chan++) {
 		c = &channel[chan];
 		if(c->chancheat.chandelay) {
 			if(!(--c->chancheat.chandelay)) {
@@ -305,7 +301,7 @@ int lds_update( void )
 	if(!tempo_now && positions)
 	{
 		vbreak = false;
-		for(chan = 0; chan < 9; chan++)
+		for (int chan = 0; chan < 9; chan++)
 		{
 			c = &channel[chan];
 			if(!c->packwait) {
@@ -485,7 +481,7 @@ int lds_update( void )
 		if(vbreak)
 		{
 			pattplay = 0;
-			for(i = 0; i < 9; i++)
+			for (int i = 0; i < 9; i++)
 			{
 				channel[i].packpos = channel[i].packwait = 0;
 			}
@@ -493,7 +489,7 @@ int lds_update( void )
 		} else {
 			if(pattplay >= pattlen) {
 				pattplay = 0;
-				for(i = 0; i < 9; i++)
+				for (int i = 0; i < 9; i++)
 				{
 					channel[i].packpos = channel[i].packwait = 0;
 				}
@@ -505,7 +501,7 @@ int lds_update( void )
 	}
 
 	/* make effects */
-	for(chan = 0; chan < 9; chan++) {
+	for (int chan = 0; chan < 9; chan++) {
 		c = &channel[chan];
 		regnum = op_table[chan];
 		if(c->keycount > 0) {

@@ -50,13 +50,12 @@ int temp, temp2;
 void JE_darkenBackground( JE_word neat )
 {
 	Uint8 *s = VGAScreen->pixels; /* screen pointer, 8-bit specific */
-	int x, y;
 	
 	s += 24;
 	
-	for (y = 184; y; y--)
+	for (int y = 184; y > 0; y--)
 	{
-		for (x = 264; x; x--)
+		for (int x = 264; x > 0; x--)
 		{
 			*s = ((((*s & 0x0f) << 4) - (*s & 0x0f) + ((((x - neat - y) >> 2) + *(s-2) + (y == 184 ? 0 : *(s-(VGAScreen->w-1)))) & 0x0f)) >> 4) | (*s & 0xf0);
 			s++;
@@ -71,9 +70,6 @@ void JE_drawBackground2( void )
 
 	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
-
-	int i, j;
-	int x, y;
 
 	if (map2YDelayMax > 1)
 	{
@@ -115,7 +111,7 @@ void JE_drawBackground2( void )
 		/*============BACKGROUND 2 TOP=============*/
 		if (backPos2 != 0)
 		{
-			for (i = 12; i; i--)
+			for (int i = 12; i > 0; i--)
 			{
 				/* move to previous map X location */
 				bp--;
@@ -125,9 +121,9 @@ void JE_drawBackground2( void )
 				{
 					src += (28 - backPos2) * 24;
 
-					for (y = backPos2; y; y--)
+					for (int y = backPos2; y > 0; y--)
 					{
-						for(x = 0; x < 24; x++)
+						for(int x = 0; x < 24; x++)
 						{
 							if (src[x])
 							{
@@ -157,9 +153,9 @@ void JE_drawBackground2( void )
 		/*============BACKGROUND 2 CENTER=============*/
 
 		/* Screen 6 lines high */
-		for (i = 6; i; i--)
+		for (int i = 6; i > 0; i--)
 		{
-			for (j = 12; j; j--)
+			for (int j = 12; j > 0; j--)
 			{
 				/* move to previous map X location */
 				bp--;
@@ -167,9 +163,9 @@ void JE_drawBackground2( void )
 				src = *bp;
 				if (src != NULL)
 				{
-					for (y = 28; y; y--)
+					for (int y = 28; y > 0; y--)
 					{
-						for(x = 0; x < 24; x++)
+						for(int x = 0; x < 24; x++)
 						{
 							if (src[x])
 							{
@@ -196,7 +192,7 @@ void JE_drawBackground2( void )
 		if (backPos2 <= 15)
 		{
 			/*============BACKGROUND 2 BOTTOM=============*/
-			for (i = 12; i; i--)
+			for (int i = 12; i > 0; i--)
 			{
 				/* move to previous map X location */
 				bp--;
@@ -205,9 +201,9 @@ void JE_drawBackground2( void )
 				if (src != NULL)
 				{
 
-					for (y = 15 - backPos2 + 1; y; y--)
+					for (int y = 15 - backPos2 + 1; y > 0; y--)
 					{
-						for(x = 0; x < 24; x++)
+						for(int x = 0; x < 24; x++)
 						{
 							if (src[x])
 							{
@@ -251,9 +247,6 @@ void JE_superBackground2( void )
 	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
-	int i, j;
-	int x, y;
-
 	if (map2YDelayMax > 1)
 	{
 		if (backMove2 < 2)
@@ -285,7 +278,7 @@ void JE_superBackground2( void )
 	/*============BACKGROUND 2 TOP=============*/
 	if (backPos2 != 0)
 	{
-		for (i = 12; i; i--)
+		for (int i = 12; i > 0; i--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -295,9 +288,9 @@ void JE_superBackground2( void )
 			{
 				src += (28 - backPos2) * 24;
 
-				for (y = backPos2; y; y--)
+				for (int y = backPos2; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (*src != 0)
 						{
@@ -329,9 +322,9 @@ void JE_superBackground2( void )
 	/*============BACKGROUND 2 CENTER=============*/
 
 	/* Screen 6 lines high */
-	for (i = 6; i; i--)
+	for (int i = 6; i > 0; i--)
 	{
-		for (j = 12; j; j--)
+		for (int j = 12; j > 0; j--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -339,9 +332,9 @@ void JE_superBackground2( void )
 			src = *bp;
 			if (src != NULL)
 			{
-				for (y = 28; y; y--)
+				for (int y = 28; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (*src != 0)
 						{
@@ -370,7 +363,7 @@ void JE_superBackground2( void )
 	if (backPos2 <= 15)
 	{
 		/*============BACKGROUND 2 BOTTOM=============*/
-		for (i = 12; i; i--)
+		for (int i = 12; i > 0; i--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -379,9 +372,9 @@ void JE_superBackground2( void )
 			if (src != NULL)
 			{
 
-				for (y = 15 - backPos2 + 1; y; y--)
+				for (int y = 15 - backPos2 + 1; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (*src != 0)
 						{
@@ -423,9 +416,6 @@ void JE_drawBackground3( void )
 	unsigned char **bp, *src;
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
 
-	int i, j;
-	int x, y;
-
 	/* Movement of background */
 	backPos3 += backMove3;
 
@@ -451,7 +441,7 @@ void JE_drawBackground3( void )
 	/*============BACKGROUND 3 TOP=============*/
 	if (backPos3 != 0)
 	{
-		for (i = 12; i; i--)
+		for (int i = 12; i > 0; i--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -461,9 +451,9 @@ void JE_drawBackground3( void )
 			{
 				src += (28 - backPos3) * 24;
 
-				for (y = backPos3; y; y--)
+				for (int y = backPos3; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (src[x])
 						{
@@ -493,9 +483,9 @@ void JE_drawBackground3( void )
 	/*============BACKGROUND 3 CENTER=============*/
 
 	/* Screen 14 lines high */
-	for (i = 6; i; i--)
+	for (int i = 6; i > 0; i--)
 	{
-		for (j = 12; j; j--)
+		for (int j = 12; j > 0; j--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -503,9 +493,9 @@ void JE_drawBackground3( void )
 			src = *bp;
 			if (src != NULL)
 			{
-				for (y = 28; y; y--)
+				for (int y = 28; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (src[x])
 						{
@@ -532,7 +522,7 @@ void JE_drawBackground3( void )
 	if (backPos3 <= 15)
 	{
 		/*============BACKGROUND 3 BOTTOM=============*/
-		for (i = 12; i; i--)
+		for (int i = 12; i > 0; i--)
 		{
 			/* move to previous map X location */
 			bp--;
@@ -541,9 +531,9 @@ void JE_drawBackground3( void )
 			if (src != NULL)
 			{
 
-				for (y = 15 - backPos3 + 1; y; y--)
+				for (int y = 15 - backPos3 + 1; y > 0; y--)
 				{
-					for(x = 0; x < 24; x++)
+					for(int x = 0; x < 24; x++)
 					{
 						if (src[x])
 						{
@@ -567,7 +557,7 @@ void JE_drawBackground3( void )
 void JE_filterScreen( Sint8 color, Sint8 brightness )
 {
 	Uint8 *s = NULL; /* screen pointer, 8-bit specific */
-	
+
 	if (filterFade)
 	{
 		levelBrightness += levelBrightnessChg;
@@ -592,9 +582,9 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 		
 		color <<= 4;
 		
-		for (int y = 184; y; y--)
+		for (int y = 184; y > 0; y--)
 		{
-			for (int x = 264; x; x--)
+			for (int x = 264; x > 0; x--)
 			{
 				*s = color | (*s & 0x0f);
 				s++;
@@ -608,9 +598,9 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 		s = VGAScreen->pixels;
 		s += 24;
 		
-		for (int y = 184; y; y--)
+		for (int y = 184; y > 0; y--)
 		{
-			for (int x = 264; x; x--)
+			for (int x = 264; x > 0; x--)
 			{
 				unsigned int temp = (*s & 0x0f) + brightness;
 				*s = (*s & 0xf0) | (temp > 0x1f ? 0 : (temp > 0x0f ? 0x0f : temp));
@@ -640,17 +630,17 @@ void JE_smoothies1( void ) /*Lava Effect*/
 {
 	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
 	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
-	int i, j, temp;
+	int temp;
 	
 	s += game_screen->w * 185;
 	src += game_screen->w * 185;
 	
-	for (i = 185 * game_screen->w; i; i -= 8)
+	for (int i = 185 * game_screen->w; i > 0; i -= 8)
 	{
 		temp = (((i - 1) >> 9) & 15) - 8;
 		temp = (temp < 0 ? -temp : temp) - 1;
 		
-		for (j = 8; j; j--)
+		for (int j = 8; j > 0; j--)
 		{
 			*s = (((*(src + temp) & 0x0f) + (*(src + temp + game_screen->w) & 0x0f) + (i + temp < game_screen->w ? 0 : *(src + temp - game_screen->w) & 0x0f)) >> 2) | 0x70;
 			s--;
@@ -664,17 +654,17 @@ void JE_smoothies2( void ) /*Water effect*/
 {
 	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
 	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
-	int i, j, temp;
+	int temp;
 
 	s += game_screen->w * 185;
 	src += game_screen->w * 185;
 
-	for (i = 185 * game_screen->w; i; i -= 8)
+	for (int i = 185 * game_screen->w; i > 0; i -= 8)
 	{
 		temp = (((i - 1) >> 10) & 7) - 4;
 		temp = (temp < 0 ? -temp : temp) - 1;
 		
-		for (j = 8; j; j--)
+		for (int j = 8; j > 0; j--)
 		{
 			if (*src & 0x30)
 				*s = (((*src & 0x0f) + (*(s + temp + game_screen->w) & 0x0f)) >> 1) | (SDAT[2-1] << 4);
@@ -691,9 +681,8 @@ void JE_smoothies3( void ) /* iced motion blur */
 {
 	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
 	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
-	int i;
 
-	for (i = 184 * game_screen->w; i; i--)
+	for (int i = 184 * game_screen->w; i > 0; i--)
 	{
 			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | 0x80;
 			s++;
@@ -706,9 +695,8 @@ void JE_smoothies4( void ) /* motion blur */
 {
 	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
 	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
-	int i;
 
-	for (i = 184 * game_screen->w; i; i--)
+	for (int i = 184 * game_screen->w; i > 0; i--)
 	{
 			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | (*src & 0xf0);
 			s++;

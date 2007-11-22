@@ -301,7 +301,7 @@ void JE_starlib_init( void )
 		doChange = true;
 
 		/* RANDOMIZE; */
-		for (x = 0; x < starlib_MAX_STARS; x++)
+		for (int x = 0; x < starlib_MAX_STARS; x++)
 		{
 			star[x].spX = (rand() % 64000) - 32000;
 			star[x].spY = (rand() % 40000) - 20000;

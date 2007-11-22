@@ -51,7 +51,6 @@ JE_word JE_btow(Uint8 a, Uint8 b)
 void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 {
 	FILE *f;
-	JE_word x;
 	bool active;
 
 	char buffer[12];
@@ -59,7 +58,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 
 	JE_resetFile(&f, buffer);
 
-	for (x = 0; x < 304; x++)
+	for (int x = 0; x < 304; x++)
 	{
 		active = getc(f);
 
@@ -79,7 +78,6 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 {
 	FILE *f;
-	JE_word x, y, z;
 	bool active;
 	JE_ShapeTypeOne tempshape;
 	int black, color;
@@ -89,7 +87,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 
 	JE_resetFile(&f, buffer);
 
-	for (z = 0; z < 304; z++)
+	for (int z = 0; z < 304; z++)
 	{
 		active = getc(f);
 
@@ -97,12 +95,12 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 		{
 			efread(tempshape, sizeof(Uint8), sizeof(tempshape), f);
 
-			for (y = 0; y <= 13; y++)
+			for (int y = 0; y <= 13; y++)
 			{
 
 				black = 0;
 				color = 0;
-				for (x = 0; x <= 11; x++)
+				for (int x = 0; x <= 11; x++)
 				{
 					if (tempshape[x + y * 12] == 0)
 					{
@@ -119,13 +117,13 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 					if (color == 12)
 					{  /* Compression Value 1 - All color */
 						(*shapes)[z][y * 13] = 1;
-						for (x = 0; x <= 11; x++)
+						for (int x = 0; x <= 11; x++)
 						{
 							(*shapes)[z][x + 1 + y * 13] = tempshape[x + y * 12];
 						}
 					} else {
 						(*shapes)[z][y * 13] = 2;
-						for (x = 0; x <= 11; x++)
+						for (int x = 0; x <= 11; x++)
 						{
 							(*shapes)[z][x + 1 + y * 13] = tempshape[x + y * 12];
 						}
@@ -331,12 +329,11 @@ void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 
 void JE_dBar3( int x, int y, int num, int col )
 {
-	int z;
 	int zWait = 2;
 
 	col += 2;
 
-	for (z = 0; z <= num; z++)
+	for (int z = 0; z <= num; z++)
 	{
 		JE_rectangle(x, y - 1, x + 8, y, col); /* <MXD> SEGa000 */
 		if (zWait > 0)
@@ -354,7 +351,7 @@ void JE_barDraw( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE
 {
 	xsize--;
 	ysize--;
-	for (z = 1; z <= amt / res; z++)
+	for (int z = 1; z <= amt / res; z++)
 	{
 		JE_bar(x, y,         x + xsize, y + ysize, col + 12);
 		JE_bar(x, y,         x + xsize, y,         col + 13);
@@ -374,7 +371,7 @@ void JE_barDrawShadow( JE_word x, JE_word y, JE_word res, JE_word col, JE_word a
 	xsize--;
 	ysize--;
 
-	for (z = 1; z <= amt / res; z++)
+	for (int z = 1; z <= amt / res; z++)
 	{
 		JE_barShade(x+2, y+2, x+xsize+2, y+ysize+2);
 		JE_bar(x, y, x+xsize, y+ysize, col+12);
@@ -396,7 +393,7 @@ void JE_barDrawDirect( JE_word x, JE_word y, JE_word res, JE_word col, JE_word a
 {
 	xsize--;
 	ysize--;
-	for (z = 1; z <= amt / res; z++)
+	for (int z = 1; z <= amt / res; z++)
 	{
 		JE_c_bar(x, y, x + xsize, y + ysize, col + 12);
 		x += xsize + 2;

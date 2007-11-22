@@ -31,12 +31,11 @@ JE_word lvlNum;
 
 void JE_analyzeLevel( void )
 {
-	JE_word x;
 	FILE *f;
 
 	JE_resetFile(&f, levelFile);
 	efread(&lvlNum, sizeof(JE_word), 1, f);
-	for (x = 0; x < lvlNum; x++)
+	for (int x = 0; x < lvlNum; x++)
 	{
 		vfread(lvlPos[x], Sint32, f);
 	}

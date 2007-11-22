@@ -611,7 +611,7 @@ static INT32	LFO_PM;
 
 		OPL->eg_cnt++;
 
-		for (i=0; i<9*2; i++)
+		for (int i=0; i<9*2; i++)
 		{
 			CH  = &OPL->P_CH[i/2];
 			op  = &CH->SLOT[i&1];
@@ -690,7 +690,7 @@ static INT32	LFO_PM;
 		}
 	}
 
-	for (i=0; i<9*2; i++)
+	for (int i=0; i<9*2; i++)
 	{
 		CH  = &OPL->P_CH[i/2];
 		op  = &CH->SLOT[i&1];
@@ -1021,12 +1021,11 @@ number   number    BLK/FNUM2 FNUM    Drum  Hat   Drum  Tom  Cymbal
 /* generic table initialize */
 static int init_tables(void)
 {
-	signed int i,x;
 	signed int n;
 	double o,m;
 
 
-	for (x=0; x<TL_RES_LEN; x++)
+	for (int x=0; x<TL_RES_LEN; x++)
 	{
 		m = (1<<16) / pow(2.0, (x+1) * (ENV_STEP/4.0) / 8.0);
 		m = floor(m);
@@ -1045,7 +1044,7 @@ static int init_tables(void)
 		tl_tab[ x*2 + 0 ] = n;
 		tl_tab[ x*2 + 1 ] = -tl_tab[ x*2 + 0 ];
 
-		for (i=1; i<12; i++)
+		for (int i=1; i<12; i++)
 		{
 			tl_tab[ x*2+0 + i*2*TL_RES_LEN ] =  tl_tab[ x*2+0 ]>>i;
 			tl_tab[ x*2+1 + i*2*TL_RES_LEN ] = -tl_tab[ x*2+0 + i*2*TL_RES_LEN ];
@@ -1060,7 +1059,7 @@ static int init_tables(void)
 	/*logerror("FMOPL.C: TL_TAB_LEN = %i elements (%i bytes)\n",TL_TAB_LEN, (int)sizeof(tl_tab));*/
 
 
-	for (i=0; i<SIN_LEN; i++)
+	for (int i=0; i<SIN_LEN; i++)
 	{
 		/* non-standard sinus */
 		m = sin( ((i*2)+1) * PI / SIN_LEN ); /* checked against the real chip */
@@ -1085,7 +1084,7 @@ static int init_tables(void)
 		/*logerror("FMOPL.C: sin [%4i (hex=%03x)]= %4i (tl_tab value=%5i)\n", i, i, sin_tab[i], tl_tab[sin_tab[i]] );*/
 	}
 
-	for (i=0; i<SIN_LEN; i++)
+	for (int i=0; i<SIN_LEN; i++)
 	{
 		/* waveform 1:  __      __     */
 		/*             /  \____/  \____*/
@@ -1136,8 +1135,6 @@ static void OPLCloseTable( void )
 
 static void OPL_initalize(FM_OPL *OPL)
 {
-	int i;
-
 	/* frequency base */
 	OPL->freqbase  = (OPL->rate) ? ((double)OPL->clock / 72.0) / OPL->rate  : 0;
 #if 0
@@ -1151,7 +1148,7 @@ static void OPL_initalize(FM_OPL *OPL)
 	OPL->TimerBase = 1.0 / ((double)OPL->clock / 72.0 );
 
 	/* make fnumber -> increment counter table */
-	for( i=0 ; i < 1024 ; i++ )
+	for(int i=0 ; i < 1024 ; i++ )
 	{
 		/* opn phase increment counter = 20bit */
 		OPL->fn_tab[i] = (UINT32)( (double)i * 64 * OPL->freqbase * (1<<(FREQ_SH-10)) ); /* -10 because chip works with 10.10 fixed point, while we use 16.16 */
@@ -1653,9 +1650,6 @@ static void OPL_UnLockTable(void)
 
 static void OPLResetChip(FM_OPL *OPL)
 {
-	int c,s;
-	int i;
-
 	OPL->eg_timer = 0;
 	OPL->eg_cnt   = 0;
 
@@ -1668,13 +1662,13 @@ static void OPLResetChip(FM_OPL *OPL)
 	OPLWriteReg(OPL,0x02,0); /* Timer1 */
 	OPLWriteReg(OPL,0x03,0); /* Timer2 */
 	OPLWriteReg(OPL,0x04,0); /* IRQ mask clear */
-	for(i = 0xff ; i >= 0x20 ; i-- ) OPLWriteReg(OPL,i,0);
+	for(int i = 0xff ; i >= 0x20 ; i-- ) OPLWriteReg(OPL,i,0);
 
 	/* reset operator parameters */
-	for( c = 0 ; c < 9 ; c++ )
+	for(int c = 0 ; c < 9 ; c++ )
 	{
 		OPL_CH *CH = &OPL->P_CH[c];
-		for(s = 0 ; s < 2 ; s++ )
+		for(int s = 0 ; s < 2 ; s++ )
 		{
 			/* wave table */
 			CH->SLOT[s].wavetable = 0;
@@ -1887,9 +1881,8 @@ static int OPLTimerOver(FM_OPL *OPL,int c)
 		/* CSM mode key,TL controll */
 		if( OPL->mode & 0x80 )
 		{	/* CSM mode total level latch and auto key on */
-			int ch;
 			if(OPL->UpdateHandler) OPL->UpdateHandler(OPL->UpdateParam,0);
-			for(ch=0; ch<9; ch++)
+			for(int ch=0; ch<9; ch++)
 				CSMKeyControll( &OPL->P_CH[ch] );
 		}
 	}
@@ -1909,14 +1902,12 @@ static int YM3812NumChips = 0;				/* number of chips */
 
 int YM3812Init(int num, int clock, int rate)
 {
-	int i;
-
 	if (YM3812NumChips)
 		return -1;	/* duplicate init. */
 
 	YM3812NumChips = num;
 
-	for (i = 0;i < YM3812NumChips; i++)
+	for (int i = 0;i < YM3812NumChips; i++)
 	{
 		/* emulator create */
 		OPL_YM3812[i] = OPLCreate(OPL_TYPE_YM3812,clock,rate);
@@ -1935,9 +1926,7 @@ int YM3812Init(int num, int clock, int rate)
 
 void YM3812Shutdown(void)
 {
-	int i;
-
-	for (i = 0;i < YM3812NumChips; i++)
+	for (int i = 0;i < YM3812NumChips; i++)
 	{
 		/* emulator shutdown */
 		OPLDestroy(OPL_YM3812[i]);
@@ -1991,7 +1980,6 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 	FM_OPL		*OPL = OPL_YM3812[which];
 	UINT8		rhythm = OPL->rhythm&0x20;
 	OPLSAMPLE	*buf = buffer;
-	int i;
 
 	if( (void *)OPL != cur_chip ){
 		cur_chip = (void *)OPL;
@@ -2001,7 +1989,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 		SLOT8_1 = &OPL->P_CH[8].SLOT[SLOT1];
 		SLOT8_2 = &OPL->P_CH[8].SLOT[SLOT2];
 	}
-	for( i=0; i < length ; i++ )
+	for(int i=0; i < length ; i++ )
 	{
 		int lt;
 
@@ -2067,7 +2055,7 @@ int YM3526Init(int num, int clock, int rate)
 
 	YM3526NumChips = num;
 
-	for (i = 0;i < YM3526NumChips; i++)
+	for (int i = 0;i < YM3526NumChips; i++)
 	{
 		/* emulator create */
 		OPL_YM3526[i] = OPLCreate(OPL_TYPE_YM3526,clock,rate);
@@ -2088,7 +2076,7 @@ void YM3526Shutdown(void)
 {
 	int i;
 
-	for (i = 0;i < YM3526NumChips; i++)
+	for (int i = 0;i < YM3526NumChips; i++)
 	{
 		/* emulator shutdown */
 		OPLDestroy(OPL_YM3526[i]);
@@ -2152,7 +2140,7 @@ void YM3526UpdateOne(int which, INT16 *buffer, int length)
 		SLOT8_1 = &OPL->P_CH[8].SLOT[SLOT1];
 		SLOT8_2 = &OPL->P_CH[8].SLOT[SLOT2];
 	}
-	for( i=0; i < length ; i++ )
+	for(int i=0; i < length ; i++ )
 	{
 		int lt;
 
@@ -2228,7 +2216,7 @@ int Y8950Init(int num, int clock, int rate)
 
 	Y8950NumChips = num;
 
-	for (i = 0;i < Y8950NumChips; i++)
+	for (int i = 0;i < Y8950NumChips; i++)
 	{
 		/* emulator create */
 		OPL_Y8950[i] = OPLCreate(OPL_TYPE_Y8950,clock,rate);
@@ -2254,7 +2242,7 @@ void Y8950Shutdown(void)
 {
 	int i;
 
-	for (i = 0;i < Y8950NumChips; i++)
+	for (int i = 0;i < Y8950NumChips; i++)
 	{
 		/* emulator shutdown */
 		OPLDestroy(OPL_Y8950[i]);
@@ -2325,7 +2313,7 @@ void Y8950UpdateOne(int which, INT16 *buffer, int length)
 		SLOT8_2 = &OPL->P_CH[8].SLOT[SLOT2];
 
 	}
-	for( i=0; i < length ; i++ )
+	for(int i=0; i < length ; i++ )
 	{
 		int lt;
 

@@ -88,7 +88,7 @@ void scroller3d( const char *text[] )
 
 	do
 	{
-		int i, max = min(text_len, cur_line+MAX_LINES+1);
+		int max = min(text_len, cur_line+MAX_LINES+1);
 
 		service_SDL_events(true);
 		if (keydown)
@@ -118,7 +118,7 @@ void scroller3d( const char *text[] )
 
 		memset(VGAScreen->pixels, 0, VGAScreen->pitch * VGAScreen->h);
 
-		for (i = cur_line; i < max; i++)
+		for (int i = cur_line; i < max; i++)
 		{
 			int txt_x = JE_fontCenter(text[i], SMALL_FONT_SHAPES);
 
@@ -129,7 +129,7 @@ void scroller3d( const char *text[] )
 		memcpy(surf+(HORIZON*320), ((Uint8 *)VGAScreen->pixels)+(TEXT_HEIGHT*320), (200-HORIZON)*320);
 		memset(VGAScreen->pixels, 0, VGAScreen->pitch * VGAScreen->h);
 
-		for (i = HORIZON; i < 200; i++)
+		for (int i = HORIZON; i < 200; i++)
 		{
 			int total_w = HORIZON_W+((i-HORIZON)/(199.-HORIZON))*(320-HORIZON_W);
 			double step = 320./(double)total_w;

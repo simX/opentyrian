@@ -33,8 +33,7 @@ bool overrideBlack = false;
 
 void JE_updatePCXColorsSlow( JE_ColorType *colorBuffer )
 {
-	int i;
-	for (i = 0; i < 256; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		colorBuffer[i]->r >>= 2;
 		colorBuffer[i]->g >>= 2;
@@ -48,7 +47,6 @@ void JE_loadPCX( const char *name, bool storePalette)
 	/* char textbuf[1024]; [1..1024] Unused */
 	FILE *fi;
 	/* FILE *PCXfile; Unused */
-	int i;
 
 	JE_resetFile(&fi, name);
 	efread(&header.manufacturer, 1, 1, fi);
@@ -61,7 +59,7 @@ void JE_loadPCX( const char *name, bool storePalette)
 	efread(&header.ymax, 2, 1, fi);
 	efread(&header.hres, 2, 1, fi);
 	efread(&header.vres, 2, 1, fi);
-	for (i = 0; i < 48; i++)
+	for (int i = 0; i < 48; i++)
 	{
 		efread(&header.palette[i], 1, 1, fi);
 	}
@@ -74,7 +72,7 @@ void JE_loadPCX( const char *name, bool storePalette)
 	{
 		fseek(fi, -768, SEEK_END);
 
-		for (i = 0; i < 256; i++)
+		for (int i = 0; i < 256; i++)
 		{
 			colors2[i].r = getc(fi);
 			colors2[i].g = getc(fi);

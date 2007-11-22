@@ -250,9 +250,7 @@ const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62,
 
 void JE_decryptString( char *s, int len )
 {
-	int i;
-
-	for (i = len-1; i >= 0; i--)
+	for (int i = len-1; i >= 0; i--)
 	{
 		s[i] ^= StringCryptKey[((i+1) % 10)];
 		if (i > 0)
@@ -285,9 +283,7 @@ void JE_skipCryptLn( FILE* f )
 
 void JE_setupStars( void )
 {
-	int z;
-
-	for (z = MAX_STARS; z--; )
+	for (int z = MAX_STARS; z--; )
 	{
 		starDat[z].sLoc = (rand() % 320) + (rand() % 200) * 320;
 		starDat[z].sMov = ((rand() % 3) + 2) * 320;
@@ -348,7 +344,7 @@ void JE_saveGame( int slot, char *name )
 
 	strcpy(saveFiles[slot-1].name, name);
 
-	for (x = 0; x < 2; x++)
+	for (int x = 0; x < 2; x++)
 	{
 		saveFiles[slot-1].power[x] = portPower[x];
 	}
@@ -412,7 +408,7 @@ void JE_loadGame( int slot )
 	inputDevice1 = saveFiles[slot-1].input1;
 	inputDevice2 = saveFiles[slot-1].input2;
 
-	for (temp = 0; temp < 2; temp++)
+	for (int temp = 0; temp < 2; temp++)
 	{
 		portPower[temp] = saveFiles[slot-1].power[temp];
 	}
@@ -544,40 +540,39 @@ void JE_setNewGameSpeed( void )
 void JE_encryptSaveTemp( void )
 {
 	JE_SaveGameTemp s3;
-	JE_word x;
 	char y;
 
 	memcpy(s3, saveTemp, sizeof(s3));
 
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y += s3[x];
 	}
 	saveTemp[SAVE_FILE_SIZE] = y;
 
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y -= s3[x];
 	}
 	saveTemp[SAVE_FILE_SIZE+1] = y;
 
 	y = 1;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y = (y * s3[x]) + 1;
 	}
 	saveTemp[SAVE_FILE_SIZE+2] = y;
 
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y = y ^ s3[x];
 	}
 	saveTemp[SAVE_FILE_SIZE+3] = y;
 
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		saveTemp[x] = saveTemp[x] ^ cryptKey[(x+1) % 10];
 		if (x > 0)
@@ -592,11 +587,10 @@ void JE_decryptSaveTemp( void )
 	bool correct = true;
 	JE_SaveGameTemp s2;
 	/*JE_word x;*/
-	int x;
 	unsigned int y;
 
 	/* Decrypt save game file */
-	for (x = (SAVE_FILE_SIZE - 1); x >= 0; x--)
+	for (int x = (SAVE_FILE_SIZE - 1); x >= 0; x--)
 	{
 		s2[x] = (char)saveTemp[x] ^ (char)(cryptKey[(x+1) % 10]);
 		if (x > 0)
@@ -610,7 +604,7 @@ void JE_decryptSaveTemp( void )
 
 	/* Check save file for correctitude */
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y += s2[x];
 	}
@@ -622,7 +616,7 @@ void JE_decryptSaveTemp( void )
 	}
 
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y -= s2[x];
 	}
@@ -634,7 +628,7 @@ void JE_decryptSaveTemp( void )
 	}
 
 	y = 1;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y = (y * s2[x]) + 1;
 	}
@@ -646,7 +640,7 @@ void JE_decryptSaveTemp( void )
 	}
 
 	y = 0;
-	for (x = 0; x < SAVE_FILE_SIZE; x++)
+	for (int x = 0; x < SAVE_FILE_SIZE; x++)
 	{
 		y = y ^ s2[x];
 	}
@@ -670,10 +664,8 @@ void JE_decryptSaveTemp( void )
 void JE_loadConfiguration( void )
 {
 	FILE *fi;
-	int z;
 	Uint8 *p;
 	char junk;
-	int y;
 
 	errorActive = true;
 
@@ -768,7 +760,7 @@ void JE_loadConfiguration( void )
 		   through each record and load fields manually. *emo tear* :'( */
 
 		p = saveTemp;
-		for (z = 0; z < SAVE_FILES_NUM; z++)
+		for (int z = 0; z < SAVE_FILES_NUM; z++)
 		{
 			saveFiles[z].encode = *((JE_word*)p);
 			p += sizeof(JE_word);
@@ -852,16 +844,16 @@ void JE_loadConfiguration( void )
 		fclose(fi);
 	} else {
 		/* We didn't have a save file! Let's make up random stuff! */
-		for (z = 0; z < 100; z++)
+		for (int z = 0; z < 100; z++)
 		{
 			saveTemp[SAVE_FILES_SIZE + z] = initialItemAvail[z];
 		}
 
-		for (z = 0; z < SAVE_FILES_NUM; z++)
+		for (int z = 0; z < SAVE_FILES_NUM; z++)
 		{
 			saveFiles[z].level = 0;
 
-			for (y = 0; y < 14; y++)
+			for (int y = 0; y < 14; y++)
 			{
 				saveFiles[z].name[y] = ' ';
 			}
@@ -889,10 +881,9 @@ void JE_saveConfiguration( void )
 {
 	FILE *f;
 	Uint8 *p, junk = 0;
-	int z;
 
 	p = saveTemp;
-	for (z = 0; z < SAVE_FILES_NUM; z++)
+	for (int z = 0; z < SAVE_FILES_NUM; z++)
 	{
 		*((JE_word*)p) = saveFiles[z].encode;
 		p += sizeof(JE_word);

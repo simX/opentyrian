@@ -58,8 +58,6 @@ void JE_loadItemDat( void )
 	FILE *lvlFile;
 	JE_word itemNum[7]; /* [1..7] */
 
-	int i, j;
-
 	if (episodeNum > 3)
 	{
 		JE_resetFile(&lvlFile, levelFile);
@@ -72,7 +70,7 @@ void JE_loadItemDat( void )
 
 	efread(&itemNum, sizeof(JE_word), 7, lvlFile);
 
-	for (i = 0; i < WEAP_NUM + 1; i++)
+	for (int i = 0; i < WEAP_NUM + 1; i++)
 	{
 		efread(&weapons[i].drain,           sizeof(JE_word), 1, lvlFile);
 		vfread(weapons[i].shotrepeat,      Uint8, lvlFile);
@@ -104,13 +102,13 @@ void JE_loadItemDat( void )
 		vfread(weapons[i].shipblastfilter, Uint8, lvlFile);
 	}
 
-	for (i = 0; i < PORT_NUM + 1; i++)
+	for (int i = 0; i < PORT_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&weaponPort[i].name,        1, 30, lvlFile);
 		weaponPort[i].name[30] = '\0';
 		vfread(weaponPort[i].opnum,       Uint8, lvlFile);
-		for (j = 0; j < 2; j++)
+		for (int j = 0; j < 2; j++)
 		{
 			efread(&weaponPort[i].op[j],   sizeof(JE_word), 11, lvlFile);
 		}
@@ -119,7 +117,7 @@ void JE_loadItemDat( void )
 		efread(&weaponPort[i].poweruse,    sizeof(JE_word), 1, lvlFile);
 	}
 
-	for (i = 0; i < SPECIAL_NUM + 1; i++)
+	for (int i = 0; i < SPECIAL_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&special[i].name,        1, 30, lvlFile);
@@ -130,7 +128,7 @@ void JE_loadItemDat( void )
 		efread(&special[i].wpn,         sizeof(JE_word), 1, lvlFile);
 	}
 
-	for (i = 0; i < POWER_NUM + 1; i++)
+	for (int i = 0; i < POWER_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&powerSys[i].name,        1, 30, lvlFile);
@@ -141,7 +139,7 @@ void JE_loadItemDat( void )
 		efread(&powerSys[i].cost,        sizeof(JE_word), 1, lvlFile);
 	}
 
-	for (i = 0; i < SHIP_NUM + 1; i++)
+	for (int i = 0; i < SHIP_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&ships[i].name,           1, 30, lvlFile);
@@ -155,7 +153,7 @@ void JE_loadItemDat( void )
 		vfread(ships[i].bigshipgraphic, Uint8, lvlFile);
 	}
 
-	for (i = 0; i < OPTION_NUM + 1; i++)
+	for (int i = 0; i < OPTION_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&options[i].name,        1, 30, lvlFile);
@@ -175,7 +173,7 @@ void JE_loadItemDat( void )
 		vfread(options[i].icongr,      Uint8, lvlFile);
 	}
 
-	for (i = 0; i < SHIELD_NUM + 1; i++)
+	for (int i = 0; i < SHIELD_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&shields[i].name,        1, 30, lvlFile);
@@ -186,7 +184,7 @@ void JE_loadItemDat( void )
 		efread(&shields[i].cost,        sizeof(JE_word), 1, lvlFile);
 	}
 
-	for (i = 0; i < ENEMY_NUM + 1; i++)
+	for (int i = 0; i < ENEMY_NUM + 1; i++)
 	{
 		vfread(enemyDat[i].ani,           Uint8, lvlFile);
 		for (int j = 0; j < 3; j++)
@@ -240,13 +238,11 @@ void JE_initEpisode( int newEpisode )
 
 void JE_scanForEpisodes( void )
 {
-	int temp;
-
 	char buf[sizeof(dir) + 11];
 
 	JE_findTyrian("tyrian1.lvl"); /* need to know where to scan */
 
-	for (temp = 0; temp < EPISODE_MAX; temp++)
+	for (int temp = 0; temp < EPISODE_MAX; temp++)
 	{
 		sprintf(buf, "%styrian%d.lvl", dir, temp + 1);
 		episodeAvail[temp] = JE_find(buf);

@@ -153,8 +153,7 @@ void JE_loadSong( JE_word songnum )
 void JE_loadSndFile( void )
 {
 	FILE *fi;
-	int y, z;
-	JE_word x;
+	int z;
 	unsigned long templ;
 	unsigned long sndPos[2][SOUND_NUM + 1]; /* Reindexed by -1, dammit Jason */
 	JE_word sndNum;
@@ -163,14 +162,14 @@ void JE_loadSndFile( void )
 	JE_resetFile(&fi, "tyrian.snd");
 	efread(&sndNum, sizeof(sndNum), 1, fi);
 
-	for (x = 0; x < sndNum; x++)
+	for (int x = 0; x < sndNum; x++)
 	{
 		vfread(sndPos[0][x], Sint32, fi);
 	}
 	fseek(fi, 0, SEEK_END);
 	sndPos[1][sndNum] = ftell(fi); /* Store file size */
 
-	for (z = 0; z < sndNum; z++)
+	for (int z = 0; z < sndNum; z++)
 	{
 		fseek(fi, sndPos[0][z], SEEK_SET);
 		fxSize[z] = (sndPos[0][z+1] - sndPos[0][z]); /* Store sample sizes */
@@ -191,7 +190,7 @@ void JE_loadSndFile( void )
 	}
 	efread(&sndNum, sizeof(sndNum), 1, fi);
 
-	for (x = 0; x < sndNum; x++)
+	for (int x = 0; x < sndNum; x++)
 	{
 		vfread(sndPos[1][x], Sint32, fi);
 	}
@@ -200,7 +199,7 @@ void JE_loadSndFile( void )
 
 	z = SOUND_NUM;
 
-	for (y = 0; y < sndNum; y++)
+	for (int y = 0; y < sndNum; y++)
 	{
 		fseek(fi, sndPos[1][y], SEEK_SET);
 

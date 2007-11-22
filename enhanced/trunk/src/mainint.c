@@ -110,14 +110,14 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 
 			maxloc = strlen(s);
 			tempScreenSeg = VGAScreen;
-			for (z = 0; z < 60; z++)
+			for (int z = 0; z < 60; z++)
 			{
 				glowcol[z] = -8;
 				glowcolc[z] = 1;
 			}
 
 			loc = x;
-			for (z = 0; z < maxloc; z++)
+			for (int z = 0; z < maxloc; z++)
 			{
 				textloc[z] = loc;
 				if (s[z] == ' ')
@@ -128,7 +128,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 				}
 			}
 
-			for (loc = 0; (unsigned)loc < strlen(s) + 28; loc++)
+			for (int loc = 0; (unsigned)loc < strlen(s) + 28; loc++)
 			{
 				if (!ESCPressed)
 				{
@@ -221,7 +221,7 @@ void JE_helpSystem( int startTopic )
 
 		temp2 = 0;
 
-		for (temp = 0; temp < TOPICS; temp++)
+		for (int temp = 0; temp < TOPICS; temp++)
 		{
 			if (topicStart[temp] <= page)
 			{
@@ -260,7 +260,7 @@ void JE_helpSystem( int startTopic )
 
 				do
 				{
-					for (temp = 1; temp <= TOPICS; temp++)
+					for (int temp = 1; temp <= TOPICS; temp++)
 					{
 						char buf[21+1];
 
@@ -459,7 +459,7 @@ bool JE_playerSelect( void )
 
 		JE_dString(JE_fontCenter(playerName[0], FONT_SHAPES), 20, playerName[0], FONT_SHAPES);
 
-		for (temp = 1; temp <= maxSel; temp++)
+		for (int temp = 1; temp <= maxSel; temp++)
 		{
 			JE_outTextAdjust(JE_fontCenter(playerName[temp], SMALL_FONT_SHAPES), temp * 24 + 30, playerName[temp], 15, - 4 + ((sel == temp) << 1), SMALL_FONT_SHAPES, true);
 		}
@@ -550,7 +550,7 @@ startepisodeselect:
 
 		JE_dString(JE_fontCenter(episodeName[0], FONT_SHAPES), 20, episodeName[0], FONT_SHAPES);
 
-		for (temp = 1; temp <= max; temp++)
+		for (int temp = 1; temp <= max; temp++)
 		{
 			JE_outTextAdjust(20, temp * 30 + 20, episodeName[temp], 15, - 4 - (!episodeAvail[temp-1] << 2) + ((sel == temp) << 1), SMALL_FONT_SHAPES, true);
 		}
@@ -648,7 +648,7 @@ bool JE_difficultySelect( void )
 	{
 		JE_dString(JE_fontCenter(difficultyName[0], FONT_SHAPES), 20, difficultyName[0], FONT_SHAPES);
 
-		for (temp = 1; temp <= maxSel; temp++)
+		for (int temp = 1; temp <= maxSel; temp++)
 		{
 			JE_outTextAdjust(JE_fontCenter(difficultyName[temp], SMALL_FONT_SHAPES), temp * 24 + 30, difficultyName[temp], 15, - 4 + ((sel == temp) << 1), SMALL_FONT_SHAPES, true);
 		}
@@ -759,7 +759,7 @@ void JE_loadMainShapeTables( void )
 	}
 
 	efread(&shpNumb, sizeof(JE_word), 1, f);
-	for (x = 0; x < shpNumb; x++)
+	for (int x = 0; x < shpNumb; x++)
 	{
 		vfread(shpPos[x], Sint32, f);
 	}
@@ -799,12 +799,11 @@ void JE_loadMainShapeTables( void )
 
 JE_word JE_powerLevelCost( JE_word base, int level )
 {
-	int x;
 	JE_word tempCost = 0;
 
 	if (level > 0 && level < 12)
 	{
-		for (x = 1; x <= level; x++)
+		for (int x = 1; x <= level; x++)
 		{
 			tempCost += base * x;
 		}
@@ -899,7 +898,7 @@ void JE_loadScreen( void )
 		/* {extshade(fontcenter(misctext[56],_TinyFont),192,misctext[56], 15,2,_FullShade);} */
 
 		/* SYN: Go through text line by line */
-		for (x = min; x <= max; x++)
+		for (int x = min; x <= max; x++)
 		{
 			tempY = 30 + (x - min) * 13;
 
@@ -1072,7 +1071,6 @@ unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems )
 unsigned int JE_getValue( int itemType, JE_word itemNum )
 {
 	unsigned int tempW2 = 0;
-	int z;
 
 	switch (itemType)
 	{
@@ -1083,7 +1081,7 @@ unsigned int JE_getValue( int itemType, JE_word itemNum )
 		case 4:
 			tempW2 = weaponPort[itemNum].cost;
 			tempW3 = tempW2;
-			for (z = 0; z < portPower[itemType-2-1]; z++)
+			for (int z = 0; z < portPower[itemType-3]; z++)
 			{
 				tempW2 += JE_powerLevelCost(tempW3, z);
 			}
@@ -1204,7 +1202,7 @@ void JE_initPlayerData( void )
 	pItemsPlayer2[4] = 0;
 	pItemsPlayer2[6] = 101; /* Player 2  Option Mode 101,102,103 */
 	pItemsPlayer2[7] = 0; /* Player 2  Option Type */
-	for (temp = 0; temp < 2; temp++)
+	for (int temp = 0; temp < 2; temp++)
 	{
 		portConfig[temp] = 1;
 	}
@@ -1230,9 +1228,9 @@ void JE_initPlayerData( void )
 
 void JE_sortHighScores( void )
 {
-	int x, temp = 0;
+	int temp = 0;
 
-	for (x = 0; x < 6; x++)
+	for (int x = 0; x < 6; x++)
 	{
 		JE_sort();
 		temp += 3;
@@ -1244,7 +1242,7 @@ void JE_highScoreScreen( void )
 	int min = 1;
 	int max = 1;
 
-	int x, z;
+	int x;
 	short int chg;
 	int quit;
 	char scoretemp[32];
@@ -1282,7 +1280,7 @@ void JE_highScoreScreen( void )
 
 			JE_dString( JE_fontCenter( miscText[47 - 1], SMALL_FONT_SHAPES), 55, miscText[47 - 1], SMALL_FONT_SHAPES);
 
-			for (z = 0; z < 3; z++)
+			for (int z = 0; z < 3; z++)
 			{
 				temp5 = saveFiles[temp + z].highScoreDiff;
 				if (temp5 > 9)
@@ -1304,7 +1302,7 @@ void JE_highScoreScreen( void )
 			/*{        textshade(20,125,misctext[49],15,3,_FullShade);
 			  textshade(80,125,misctext[50],15,3,_FullShade);}*/
 
-			for (z = 0; z < 3; z++)
+			for (int z = 0; z < 3; z++)
 			{
 				temp5 = saveFiles[temp + z].highScoreDiff;
 				if (temp5 > 9)
@@ -1389,10 +1387,9 @@ void JE_gammaCorrect_func( Uint8 *col, double r )
 
 void JE_gammaCorrect( JE_ColorType *colorBuffer, int gamma )
 {
-	int x;
 	double r = 1 + (double)gamma / 10;
 	
-	for (x = 0; x < 256; x++)
+	for (int x = 0; x < 256; x++)
 	{
 		JE_gammaCorrect_func(&(*colorBuffer)[x].r, r);
 		JE_gammaCorrect_func(&(*colorBuffer)[x].g, r);
@@ -1468,7 +1465,6 @@ bool JE_inGameSetup( void )
 	const int help[6] /* [1..6] */ = {15, 15, 28, 29, 26, 27};
 	int sel;
 	bool quit;
-	JE_word x;
 
 	tempScreenSeg = VGAScreenSeg; /* <MXD> ? */
 	/* TODO callBiosHandler = true;*/
@@ -1489,7 +1485,7 @@ bool JE_inGameSetup( void )
 	{
 		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
 		
-		for (x = 0; x < 6; x++)
+		for (int x = 0; x < 6; x++)
 		{
 			JE_outTextAdjust(10, (x + 1) * 20, inGameText[x], 15, ((sel == x+1) << 1) - 4, SMALL_FONT_SHAPES, true);
 		}
@@ -1664,16 +1660,16 @@ void JE_inGameHelp( void )
 
 void JE_highScoreCheck( void )
 {
-	Sint32 tempscore;
-	Uint8 num, flash;
+	long tempscore = 0;
+	int num, flash;
 	bool quit, cancel;
 	char stemp[41], tempstr[41];
 	bool fadein;
-	Uint8 a, b, c, q, z;
-	Uint8 episodenum = pItems[9-1];
+	int a, b, c, z = 0;
+	int episodenum = pItems[9-1];
 	char buffer[256];
 	
-	for (q = 1; q <= 2; q++)
+	for (int q = 1; q <= 2; q++)
 	{
 		if (q == 1 || twoPlayerMode)
 		{
@@ -1702,11 +1698,11 @@ void JE_highScoreCheck( void )
 			num = episodenum * 6 - 6 + twoPlayerMode * 3;
 			
 			b = 0;
-			for (a = 3; a >= 1; a--)
+			for (int i = 2; i >= 0; i--)
 			{
-				if (tempscore > saveFiles[num + a-1].highScore1)
+				if (tempscore > saveFiles[num + i].highScore1)
 				{
-					b = a;
+					b = i+1;
 				}
 			}
 			
@@ -1761,7 +1757,7 @@ void JE_highScoreCheck( void )
 						JE_textShade(60, 55, miscText[54-1], 11, 4, FULL_SHADE);
 					}
 					
-					sprintf(buffer, "%s %d", miscText[38-1], tempscore);
+					sprintf(buffer, "%s %ld", miscText[38-1], tempscore);
 					JE_textShade(70, 70, buffer, 11, 4, FULL_SHADE);
 					
 					do {
@@ -1876,13 +1872,13 @@ void JE_highScoreCheck( void )
 				JE_dString(JE_fontCenter(miscText[51-1], FONT_SHAPES), 10, miscText[51-1], FONT_SHAPES);
 				JE_dString(JE_fontCenter(episodeName[episodeNum], SMALL_FONT_SHAPES), 35, episodeName[episodeNum], SMALL_FONT_SHAPES);
 				
-				for (b = 1; b <= 3; b++)
+				for (int i = 1; i <= 3; i++)
 				{
-					if (a + b != num)
+					if (a + i != num)
 					{
-						sprintf(buffer, "~#%d:~  %lu", b, saveFiles[a + b-1].highScore1);
-						JE_textShade( 20, (b * 12) + 65, buffer, 15, 0, FULL_SHADE);
-						JE_textShade(150, (b * 12) + 65, saveFiles[a + b-1].highScoreName, 15, 2, FULL_SHADE);
+						sprintf(buffer, "~#%d:~  %lu", i, saveFiles[a + i-1].highScore1);
+						JE_textShade( 20, (i * 12) + 65, buffer, 15, 0, FULL_SHADE);
+						JE_textShade(150, (i * 12) + 65, saveFiles[a + i-1].highScoreName, 15, 2, FULL_SHADE);
 					}
 				}
 				
@@ -2118,7 +2114,7 @@ void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_
 			temp += button[0] * 4;
 			
 			temp3 = superTyrian ? 21 : 3;
-			for (temp2 = 0; temp2 < temp3; temp2++)
+			for (int temp2 = 0; temp2 < temp3; temp2++)
 			{
 				
 				/*Use SuperTyrian ShipCombos or not?*/
@@ -2162,11 +2158,9 @@ void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_
 
 void JE_sort( void )
 {
-	int a, b;
-
-	for (a = 0; a < 2; a++)
+	for (int a = 0; a < 2; a++)
 	{
-		for (b = a+1; b < 3; b++)
+		for (int b = a+1; b < 3; b++)
 		{
 			if (saveFiles[temp+a].highScore1 < saveFiles[temp+b].highScore1)
 			{
@@ -2202,7 +2196,7 @@ void JE_playCredits( void )
 	typedef char JE_CreditStringType[maxlines][66];
 	
 	JE_CreditStringType credstr;
-	JE_word x, max = 0, maxlen = 0;
+	JE_word max = 0, maxlen = 0;
 	int curpos, newpos;
 	int yloc;
 	FILE *f;
@@ -2233,7 +2227,7 @@ void JE_playCredits( void )
 	
 	tempScreenSeg = VGAScreenSeg;
 	
-	for (x = 0; x < maxlen; x++)
+	for (int x = 0; x < maxlen; x++)
 	{
 		setjasondelay2(1);
 		JE_clr256();
@@ -2369,8 +2363,6 @@ void JE_endLevelAni( void )
 	int temp;
 	char tempStr[256];
 	
-	Sint8 i;
-	
 	if (!constantPlay)
 	{
 		/*Grant Bonus Items*/
@@ -2480,7 +2472,7 @@ void JE_endLevelAni( void )
 			{
 				frameCountMax = 1;
 			}
-			for (temp = 1; temp <= cubeMax; temp++)
+			for (int temp = 1; temp <= cubeMax; temp++)
 			{
 				JE_playSampleNum(18);
 				x = 20 + 30 * temp;
@@ -2491,7 +2483,7 @@ void JE_endLevelAni( void )
 				if (netQuit)
 					exit(0);
 				
-				for (i = -15; i <= 10; i++)
+				for (int i = -15; i <= 10; i++)
 				{
 					setjasondelay(frameCountMax);
 					tempScreenSeg = VGAScreenSeg; /* sega000 */
@@ -2511,7 +2503,7 @@ void JE_endLevelAni( void )
 					if ((delaycount_temp = target - SDL_GetTicks()) > 0)
 						SDL_Delay(delaycount_temp);
 				}
-				for (i = 10; i >= 0; i--)
+				for (int i = 10; i >= 0; i--)
 				{
 					setjasondelay(frameCountMax);
 					tempScreenSeg = VGAScreenSeg; /* sega000 */
@@ -2790,7 +2782,6 @@ void JE_operation( int slot )
 void JE_inGameDisplays( void )
 {
 	char stemp[21];
-	int temp;
 	
 	char tempstr[256];
 
@@ -2812,7 +2803,7 @@ void JE_inGameDisplays( void )
 	if (onePlayerAction || twoPlayerMode)
 	{
 		
-		for (temp = 0; temp < (onePlayerAction ? 1 : 2); temp++)
+		for (int temp = 0; temp < (onePlayerAction ? 1 : 2); temp++)
 		{
 			temp5 = (temp == 0 && pItems[11-1] > 0) ? 35 : 15;
 			tempW = (temp == 0) ? 30: 270;
@@ -2824,7 +2815,7 @@ void JE_inGameDisplays( void )
 				sprintf(tempstr, "%d", portPower[temp] - 1);
 				JE_textShade(tempW, temp5 + 3, tempstr, 15, 1, FULL_SHADE);
 			} else if (portPower[temp] > 1) {
-				for (temp2 = 1; temp2 < portPower[temp]; temp2++)
+				for (int temp2 = 1; temp2 < portPower[temp]; temp2++)
 				{
 					JE_drawShape2(tempW, temp5, 285, shapes9);
 					tempW = (temp == 0) ? (tempW + 12) : (tempW - 12);
@@ -2845,13 +2836,13 @@ void JE_inGameDisplays( void )
 	}
 
 	/*Super Bombs!!*/
-	for (temp = 0; temp < 2; temp++)
+	for (int temp = 0; temp < 2; temp++)
 	{
 		if (superBomb[temp] > 0)
 		{
 			tempW = (temp == 0) ? 30 : 270;
 			
-			for (temp2 = 0; temp2 < superBomb[temp]; temp2++)
+			for (int temp2 = 0; temp2 < superBomb[temp]; temp2++)
 			{
 				JE_drawShape2(tempW, 160, 304, shapes9);
 				tempW = (temp == 0) ? (tempW + 12) : (tempW - 12);
@@ -2876,7 +2867,7 @@ void JE_mainKeyboardInput( void )
 		/* { Edited Ships } for Player 1 */
 		if (extraAvail && keysactive[SDLK_TAB] && !isNetworkGame && !superTyrian)
 		{
-			for (x = 0; x < 10; x++)
+			for (int x = 0; x < 10; x++)
 			{
 				if (0 /* keyactive[x+1] The number keys, TODO: doesn't exactly work like that under SDL */)
 				{
@@ -2888,7 +2879,7 @@ void JE_mainKeyboardInput( void )
 		/* for Player 2 */
 		if (extraAvail && keysactive[SDLK_CAPSLOCK] && !isNetworkGame && !superTyrian)
 		{
-			for (x = 0; x < 10; x++)
+			for (int x = 0; x < 10; x++)
 			{
 				if (0 /* keyactive[x+1] The number keys, TODO: doesn't exactly work like that under SDL */)
 				{
@@ -3049,7 +3040,7 @@ void JE_mainKeyboardInput( void )
 		/* {SMOOTHIES} */
 		if (keysactive[SDLK_F12] && keysactive[SDLK_SCROLLOCK])
 		{
-			for (temp = SDLK_2; temp <= SDLK_9; temp++)
+			for (int temp = SDLK_2; temp <= SDLK_9; temp++)
 			{
 				if (keysactive[temp])
 				{
@@ -3477,7 +3468,7 @@ redo:
 						if (recordDemo)
 						{
 							tempB = false;
-							for (temp = 0; temp < 8; temp++)
+							for (int temp = 0; temp < 8; temp++)
 								if (lastKey[temp] != keysactive[keySettings[temp]])
 									tempB = true;
 
@@ -3487,7 +3478,7 @@ redo:
 								fputc(lastMoveWait >> 8, recordFile);
 								fputc(lastMoveWait && 0xff, recordFile);
 
-								for (temp = 0; temp < 8; temp++)
+								for (int temp = 0; temp < 8; temp++)
 									lastKey[temp] = keysactive[keySettings[temp]];
 								temp = (lastKey[1-1]     ) + (lastKey[2-1] << 1) + (lastKey[3-1] << 2) + (lastKey[4-1] << 3) +
 								       (lastKey[5-1] << 4) + (lastKey[6-1] << 5) + (lastKey[7-1] << 6) + (lastKey[8-1] << 7);
@@ -3653,13 +3644,13 @@ redo:
 				if (tempI2 > 20)
 					tempI2 = 20;
 
-				for (z = 1; z <= tempI2; z++)
+				for (int z = 1; z <= tempI2; z++)
 				{
 					tempW2 += tempI;
 					tempI++;
 				}
 
-				for (z = 1; z <= tempI2; z++)
+				for (int z = 1; z <= tempI2; z++)
 				{
 					tempW2 -= tempI;
 					tempI--;
@@ -3749,7 +3740,7 @@ redo:
 					    || (playerNum_ == 2 && twoPlayerMode))
 						if (*PX_ - *mouseX_ != 0 || *PY_ - *mouseY_ != 0)
 						{ /*Option History*/
-							for (temp = 0; temp < 19; temp++)
+							for (int temp = 0; temp < 19; temp++)
 							{
 								playerHX[temp] = playerHX[temp + 1];
 								playerHY[temp] = playerHY[temp + 1];
@@ -4047,7 +4038,7 @@ redo:
 									max = 2;
 									break;
 							}
-							for (temp = min - 1; temp < max; temp++)
+							for (int temp = min - 1; temp < max; temp++)
 								if (pItems_[temp] > 0)
 								{
 									if (shotRepeat[temp] > 0)
@@ -4528,7 +4519,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 {
 	char tempStr[256];
 	
-	for (z = 0; z < 100; z++)
+	for (int z = 0; z < 100; z++)
 	{
 		if (enemyAvail[z] != 1)
 		{
@@ -4829,7 +4820,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							soundQueue[5] = 3;
 						} else {
 							
-							for (temp2 = 0; temp2 < 100; temp2++)
+							for (int temp2 = 0; temp2 < 100; temp2++)
 							{
 								if (enemyAvail[temp2] != 1)
 								{
