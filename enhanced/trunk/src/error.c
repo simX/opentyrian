@@ -20,6 +20,7 @@
 #include "opentyr.h"
 
 #include "config.h"
+#include "joystick.h"
 #include "vga256d.h"
 
 #include "error.h"
@@ -212,7 +213,7 @@ bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config
 	JE_resetFile(&f, "tyrian.cfg");
 	dont_die = false;
 
-	if (f && (get_stream_size(f) == 52 || get_stream_size(f) == 53))
+	if (f && get_stream_size(f) == 17 + sizeof(keySettings) + sizeof(joyButtonAssign))
 	{
 		fclose(f);
 		return false;
