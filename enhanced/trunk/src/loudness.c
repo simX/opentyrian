@@ -105,8 +105,8 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(mut) == -1)
 	{
-		printf("Couldn't lock mutex! Argh!\n");
-		exit(-1);
+		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		exit(1);
 	}
 
 	SAMPLE_TYPE *feedme = (SAMPLE_TYPE *) sdl_buffer;
@@ -194,8 +194,8 @@ void JE_selectSong( JE_word value )
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(soundmutex) == -1)
 	{
-		printf("Couldn't lock mutex! Argh!\n");
-		exit(-1);
+		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		exit(1);
 	}
 
 	switch (value)
@@ -238,8 +238,8 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(soundmutex) == -1)
 	{
-		printf("Couldn't lock mutex! Argh!\n");
-		exit(-1);
+		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		exit(1);
 	}
 
 	free(channel_buffer[chan]);
