@@ -21,6 +21,7 @@
 
 #include "animlib.h"
 #include "backgrnd.h"
+#include "destruct.h"
 #include "episodes.h"
 #include "error.h"
 #include "fonthand.h"
@@ -1085,7 +1086,7 @@ start_level_first:
 		{
 			free(eShapes1);
 		}
-		/* TODO JE_destructGame();*/
+		JE_destructGame();
 		loadDestruct = false;
 		loadTitleScreen = true;
 		goto start_level_first;
@@ -1251,10 +1252,10 @@ start_level_first:
 
 	/* Setup Armor/Shield Data */
 	shieldWait = 1;
-	shield     = shields[pItems[9]-1].mpwr;
-	shieldT    = shields[pItems[9]-1].tpwr * 20;
+	shield     = shields[pItems[9]].mpwr;
+	shieldT    = shields[pItems[9]].tpwr * 20;
 	shieldMax  = shield * 2;
-	shield2    = shields[pItemsPlayer2[9]-1].mpwr;
+	shield2    = shields[pItemsPlayer2[9]].mpwr;
 	shieldMax2 = shield * 2;
 	JE_drawShield();
 	JE_drawArmor();

@@ -266,7 +266,7 @@ int main( int argc, char *argv[] )
 
 	/* JE_detectCFG(); YKS: Removed */
 
-	printf("\nWelcome to... >> OpenTyrian v0.1 <<\n\n");
+	printf("\nWelcome to... >> OpenTyrian Enhanced v0.1 <<\n\n");
 
 	JE_scanForEpisodes();
 
