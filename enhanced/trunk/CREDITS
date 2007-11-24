@@ -7,3 +7,4 @@ syntaxglitch - Casey A. McCann - <syntaxglitch@gmail.com>
 Further thanks to:
 Jason Emery - Original code for Tyrian
 AdPlug team - FM synthesis emulator code
+Nicolas Devillard - iniparser library and Freek for the single-file version (http://ndevilla.free.fr/iniparser/)
