@@ -8593,8 +8593,6 @@ void JE_menuFunction( int select )
 
 			tempB = true;
 
-			printf("key: %d", lastkey_sym);
-
 			for (x = 0; x < 8; x++)
 			{
 				if (keySettings[x] == lastkey_sym)

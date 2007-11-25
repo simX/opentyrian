@@ -68,30 +68,27 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 		}
 
 #ifdef NDEBUG
-		if (mouseInstalled)
+		if (abs(mouse_y - 100) > 10)
 		{
-			if (abs(mouse_y - 100) > 10)
+			inputDetected = true;
+			if (mouse_y - 100 < 0)
 			{
-				inputDetected = true;
-				if (mouse_y - 100 < 0)
-				{
-					lastkey_sym = SDLK_UP;
-				} else {
-					lastkey_sym = SDLK_DOWN;
-				}
-				newkey = true;
+				lastkey_sym = SDLK_UP;
+			} else {
+				lastkey_sym = SDLK_DOWN;
 			}
-			if (abs(mouse_x - 160) > 10)
+			newkey = true;
+		}
+		if (abs(mouse_x - 160) > 10)
+		{
+			inputDetected = true;
+			if (mouse_x - 160 < 0)
 			{
-				inputDetected = true;
-				if (mouse_x - 160 < 0)
-				{
-					lastkey_sym = SDLK_LEFT;
-				} else {
-					lastkey_sym = SDLK_RIGHT;
-				}
-				newkey = true;
+				lastkey_sym = SDLK_LEFT;
+			} else {
+				lastkey_sym = SDLK_RIGHT;
 			}
+			newkey = true;
 		}
 #endif
 

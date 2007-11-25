@@ -730,11 +730,6 @@ void JE_tyrianHalt( int code )
 
 	if (code != 9)
 	{
-		/*
-		TODO?
-		JE_drawANSI("exitmsg.bin");
-		JE_gotoXY(1,22);*/
-
 		JE_saveConfiguration();
 	}
 
