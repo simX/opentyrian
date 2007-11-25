@@ -39,6 +39,13 @@
 extern "C" {
 #endif
 
+static char *strdup2( const char *s )
+{
+	size_t size = strlen(s)+1;
+	return memcpy(malloc(size), s, size);
+}
+
+
 /* strlib.c following */
 
 #define ASCIILINESZ 1024
@@ -397,7 +404,7 @@ static void dictionary_set(dictionary * d, char * key, char * val)
                     /* Found a value: modify and return */
                     if (d->val[i]!=NULL)
                         free(d->val[i]);
-                    d->val[i] = val ? strdup(val) : NULL ;
+                    d->val[i] = val ? strdup2(val) : NULL ;
                     /* Value has been modified: return */
                     return ;
                 }
@@ -425,8 +432,8 @@ static void dictionary_set(dictionary * d, char * key, char * val)
         }
     }
     /* Copy key */
-    d->key[i]  = strdup(key);
-    d->val[i]  = val ? strdup(val) : NULL ;
+    d->key[i]  = strdup2(key);
+    d->val[i]  = val ? strdup2(val) : NULL ;
     d->hash[i] = hash;
     d->n ++ ;
     return ;
@@ -729,7 +736,7 @@ char * iniparser_getstring(dictionary * d, char * key, char * def)
     if (d==NULL || key==NULL)
         return def ;
 
-    lc_key = strdup(strlwc(key));
+    lc_key = strdup2(strlwc(key));
     sval = dictionary_get(d, lc_key, def);
     free(lc_key);
     return sval ;
