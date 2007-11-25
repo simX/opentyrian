@@ -27,6 +27,7 @@
 #include "nortvars.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "iniparser.h"
 
 #include "config.h"
 
@@ -61,8 +62,46 @@ const unsigned char cryptKey[10] = /* [1..10] */
 const JE_KeySettingType defaultKeySettings =
 {
 	SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_RETURN, SDLK_LCTRL, SDLK_LALT
-/*	72, 80, 75, 77, 57, 28, 29, 56*/
 };
+
+
+const char tyrian_ini_template[] = \
+	"[video]\n"
+	"game_speed = %d\n"
+	"processor_type = %d\n"
+	"gamma_correction = %d\n"
+	"fullscreen = %s\n"
+	"\n"
+	"[sound]\n"
+	"sound_effects = %s\n"
+	"music_volume = %d\n"
+	"fx_volume = %d\n"
+	"\n"
+	"[input]\n"
+	"device1 = %d\n"
+	"device2 = %d\n"
+	"\n"
+	"[keyboard]\n"
+	"; See SDL_keysym.h for values\n"
+	"up = %d\n"
+	"down = %d\n"
+	"left = %d\n"
+	"right = %d\n"
+	"fire = %d\n"
+	"change_fire = %d\n"
+	"left_sidekick = %d\n"
+	"right_sidekick = %d\n"
+	"\n"
+	"[joystick]\n"
+	"; 1 = fire main weapons\n"
+	"; 2 = fire left sidekick\n"
+	"; 3 = fire right sidekick\n"
+	"; 4 = fire both sidekicks\n"
+	"; 5 = change rear weapon\n"
+	"button1 = %d\n"
+	"button2 = %d\n"
+	"button3 = %d\n"
+	"button4 = %d\n";
 
 const char defaultHighScoreNames[34][23] = /* [1..34] of string [22] */
 {/*1P*/
@@ -669,72 +708,35 @@ void JE_loadConfiguration( void )
 
 	errorActive = true;
 
-	if (!JE_isCFGThere())
-	{
-		JE_resetFile(&fi, "tyrian.cfg");
+	dictionary *ini = iniparser_new("tyrian.ini");
 
-		/* SYN: I've hardcoded the sizes here because the .CFG file format is fixed
-		   anyways, so it's not like they'll change. */
-		background2 = 0;
-		efread(&background2, 1, 1, fi);
-		efread(&gameSpeed, 1, 1, fi);
+	gameSpeed = iniparser_getint(ini, "video:game_speed", 4);
+	processorType = iniparser_getint(ini, "video:processor_type", 3);
+	gammaCorrection = iniparser_getint(ini, "video:gamma_correction", 0);
+	fullscreen_set = iniparser_getboolean(ini, "video:fullscreen", false);
 
-		/* Wait what? */
-		efread(&inputDevice, 1, 1, fi);
-		inputDevice = 0;
+	soundEffects = iniparser_getboolean(ini, "sound:sound_effects", true);
+	tyrMusicVolume = iniparser_getint(ini, "sound:music_volume", 255);
+	fxVolume = iniparser_getint(ini, "sound:fx_volume", 128);
 
-		efread(&jConfigure, 1, 1, fi);
-		if (jConfigure == 0) /* Dunno what this is about. */
-		{
-			jConfigure = 1;
-		}
+	inputDevice1 = iniparser_getint(ini, "input:device1", 0);
+	inputDevice2 = iniparser_getint(ini, "input:device2", 0);
 
-		efread(&versionNum, 1, 1, fi);
-		if (resetVersion)
-		{
-			versionNum = 2; /* JE: {Shareware 1.0 and Registered 1.1 = 1} */
-		}
+	keySettings[0] = iniparser_getint(ini, "keyboard:up", 273);
+	keySettings[1] = iniparser_getint(ini, "keyboard:down", 274);
+	keySettings[2] = iniparser_getint(ini, "keyboard:left", 276);
+	keySettings[3] = iniparser_getint(ini, "keyboard:right", 275);
+	keySettings[4] = iniparser_getint(ini, "keyboard:fire", 32);
+	keySettings[5] = iniparser_getint(ini, "keyboard:change_fire", 13);
+	keySettings[6] = iniparser_getint(ini, "keyboard:left_sidekick", 306);
+	keySettings[7] = iniparser_getint(ini, "keyboard:right_sidekick", 308);
 
-		efread(&processorType, 1, 1, fi);
-		efread(&junk, 1, 1, fi); /* Unused variable -- was "BLOCKREAD (f, midiport   , 1);" */
-		efread(&soundEffects, 1, 1, fi);
-		efread(&gammaCorrection, 1, 1, fi);
-		efread(&difficultyLevel, 1, 1, fi);
-		efread(joyButtonAssign, sizeof(*joyButtonAssign), COUNTOF(joyButtonAssign), fi); /* typically 4 bytes */
+	joyButtonAssign[0] = iniparser_getint(ini, "joystick:button1", 1);
+	joyButtonAssign[1] = iniparser_getint(ini, "joystick:button2", 4);
+	joyButtonAssign[2] = iniparser_getint(ini, "joystick:button3", 5);
+	joyButtonAssign[3] = iniparser_getint(ini, "joystick:button4", 5);
 
-		efread(&tyrMusicVolume, 2, 1, fi);
-		efread(&fxVolume, 2, 1, fi);
-
-		efread(&inputDevice1, 1, 1, fi);
-		efread(&inputDevice2, 1, 1, fi);
-
-		efread(keySettings, sizeof(*keySettings), COUNTOF(keySettings), fi);
-
-		/* Fullscreen settings */
-		Uint8 tmp;
-		efread(&tmp, 1, 1, fi);
-
-		fullscreen_set = (tmp == 1);
-
-		fclose(fi);
-	} else {
-		memcpy(joyButtonAssign, defaultJoyButtonAssign, sizeof(joyButtonAssign));
-		/*midiPort = 1;*/ /* We don't care about this. */
-		soundEffects = 1;
-		jConfigure = 0; /* TODO: Figure out what this is */
-		memcpy(keySettings, defaultKeySettings, sizeof(keySettings));
-		background2 = true;
-		inputDevice = 0;
-		tyrMusicVolume = 255;
-		fxVolume = 128;
-		gammaCorrection = 0;
-		processorType = 3;
-		gameSpeed = 4;
-		inputDevice1 = 0;
-		inputDevice2 = 0;
-
-		fullscreen_set = false;
-	}
+	iniparser_free(ini);
 
 	tyrMusicVolume = (tyrMusicVolume > 255) ? 255 : tyrMusicVolume;
 	fxVolume = (fxVolume > 254) ? 254 : ((fxVolume < 14) ? 14 : fxVolume);
@@ -883,6 +885,7 @@ void JE_saveConfiguration( void )
 	Uint8 *p, junk = 0;
 
 	p = saveTemp;
+
 	for (int z = 0; z < SAVE_FILES_NUM; z++)
 	{
 		*((JE_word*)p) = saveFiles[z].encode;
@@ -971,33 +974,21 @@ void JE_saveConfiguration( void )
 	}
 	JE_decryptSaveTemp();
 
-	f = fopen_check("tyrian.cfg", "wb");
-	if (f)
+
+	FILE *ini = fopen("tyrian.ini", "w");
+	if (ini == NULL)
 	{
-		efwrite(&background2, 1, 1, f);
-		efwrite(&gameSpeed, 1, 1, f);
-		efwrite(&inputDevice, 1, 1, f);
-		efwrite(&jConfigure, 1, 1, f);
-		efwrite(&versionNum, 1, 1, f);
-		efwrite(&processorType, 1, 1, f);
-		efwrite(&junk, 1, 1, f); /* This isn't needed. Was: fwrite(midiPort, 1, sizeof(midiPort), f);*/
-		efwrite(&soundEffects, 1, 1, f);
-		efwrite(&gammaCorrection, 1, 1, f);
-		efwrite(&difficultyLevel, 1, 1, f);
-		efwrite(joyButtonAssign, sizeof(*joyButtonAssign), COUNTOF(joyButtonAssign), f);
-
-		efwrite(&tyrMusicVolume, 1, 2, f);
-		efwrite(&fxVolume, 1, 2, f);
-
-		efwrite(&inputDevice1, 1, 1, f);
-		efwrite(&inputDevice2, 1, 1, f);
-
-		efwrite(keySettings, sizeof(*keySettings), COUNTOF(keySettings), f);
-
-		/* New fullscreen stuff */
-		Uint8 tmp = (fullscreen_set ? 1 : 0);
-		efwrite(&tmp, 1, 1, f);
-	
-		fclose(f);
+		printf("Couldn't write tyrian.ini.");
+	} else {
+		// YKS: Yes, this is horrible, need to come up with a better way
+		fprintf(ini, tyrian_ini_template,
+			gameSpeed, processorType, gammaCorrection, (fullscreen_set ? "true" : "false"), // [video]
+			(soundEffects ? "true" : "false"), tyrMusicVolume, fxVolume, // [sound]
+			inputDevice1, inputDevice2, // [input]
+			keySettings[0], keySettings[1], keySettings[2], keySettings[3], // [keyboard]
+			keySettings[4], keySettings[5], keySettings[6], keySettings[7],
+			joyButtonAssign[0], joyButtonAssign[1], joyButtonAssign[2], joyButtonAssign[3] // [joystick]
+		);
+		fclose(ini);
 	}
 }
