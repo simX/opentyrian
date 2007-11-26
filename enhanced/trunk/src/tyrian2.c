@@ -6163,7 +6163,7 @@ void JE_itemScreen( void )
 		{
 			for (temp = 1; temp <= 4; temp++)
 			{
-				JE_textShade(214, 34 + temp*24 - 8, joyButtonNames[joyButtonAssign[temp]], 15, 2, DARKEN);
+				JE_textShade(214, 34 + temp*24 - 8, joyButtonNames[joyButtonAssign[temp-1]-1], 15, 2, DARKEN);
 			}
 		}
 
@@ -7365,10 +7365,10 @@ void JE_itemScreen( void )
 				case SDLK_LEFT:
 					if (curMenu == 12 && curSel[curMenu] < 6)
 					{
-						joyButtonAssign[curSel[curMenu] - 1]--;
-						if (joyButtonAssign[curSel[curMenu] - 1] < 1)
+						joyButtonAssign[curSel[curMenu] - 2]--;
+						if (joyButtonAssign[curSel[curMenu] - 2] < 1)
 						{
-							joyButtonAssign[curSel[curMenu] - 1] = 5;
+							joyButtonAssign[curSel[curMenu] - 2] = 5;
 						}
 					}
 
@@ -7453,10 +7453,10 @@ void JE_itemScreen( void )
 				case SDLK_RIGHT:
 					if (curMenu == 12 && curSel[curMenu] < 6)
 					{
-						joyButtonAssign[curSel[curMenu] - 1]++;
-						if (joyButtonAssign[curSel[curMenu] - 1] > 5)
+						joyButtonAssign[curSel[curMenu] - 2]++;
+						if (joyButtonAssign[curSel[curMenu] - 2] > 5)
 						{
-							joyButtonAssign[curSel[curMenu] - 1] = 1;
+							joyButtonAssign[curSel[curMenu] - 2] = 1;
 						}
 					}
 
@@ -8763,10 +8763,10 @@ void JE_menuFunction( int select )
 		case 3:
 		case 4:
 		case 5:
-			joyButtonAssign[select - 1]++;
-			if (joyButtonAssign[select - 1] > 5)
+			joyButtonAssign[select - 2]++;
+			if (joyButtonAssign[select - 2] > 5)
 			{
-				joyButtonAssign[select - 1] = 1;
+				joyButtonAssign[select - 2] = 1;
 			}
 			break;
 		case 6:
