@@ -3848,8 +3848,10 @@ new_game:
 			JE_initEpisode(temp);
 			efread(levelName, 1, 10, recordFile); levelName[10] = '\0';
 			lvlFileNum = fgetc(recordFile);
-			efread(pItems, sizeof(Uint8), 12, recordFile);
-			efread(portPower, sizeof(Uint8), 5, recordFile);
+			for (int i = 0; i < 12; i++)
+				vfread(pItems[i], Uint8, recordFile);
+			for (int i = 0; i < 5; i++)
+				vfread(portPower[i], Uint8, recordFile);
 			levelSong = fgetc(recordFile);
 
 			temp = fgetc(recordFile);
@@ -3870,23 +3872,23 @@ new_game:
 
 		char_mapFile = fgetc(lvlFile);
 		char_shapeFile = fgetc(lvlFile);
-		efread(&mapX,  sizeof(JE_word), 1, lvlFile);
-		efread(&mapX2, sizeof(JE_word), 1, lvlFile);
-		efread(&mapX3, sizeof(JE_word), 1, lvlFile);
+		vfread(mapX,  JE_word, lvlFile);
+		vfread(mapX2, JE_word, lvlFile);
+		vfread(mapX3, JE_word, lvlFile);
 
-		efread(&levelEnemyMax, sizeof(JE_word), 1, lvlFile);
+		vfread(levelEnemyMax, JE_word, lvlFile);
 		for (x = 0; x < levelEnemyMax; x++)
 		{
-			efread(&levelEnemy[x], sizeof(JE_word), 1, lvlFile);
+			vfread(levelEnemy[x], JE_word, lvlFile);
 		}
 
-		efread(&maxEvent, sizeof(JE_word), 1, lvlFile);
+		vfread(maxEvent, JE_word, lvlFile);
 		for (x = 0; x < maxEvent; x++)
 		{
-			efread(&eventRec[x].eventtime, sizeof(JE_word), 1, lvlFile);
+			vfread(eventRec[x].eventtime, JE_word, lvlFile);
 			vfread(eventRec[x].eventtype, Uint8, lvlFile);
-			vfread(eventRec[x].eventdat,         Sint16, lvlFile);
-			vfread(eventRec[x].eventdat2,        Sint16, lvlFile);
+			vfread(eventRec[x].eventdat,  Sint16, lvlFile);
+			vfread(eventRec[x].eventdat2, Sint16, lvlFile);
 			vfread(eventRec[x].eventdat3, Sint8, lvlFile);
 			vfread(eventRec[x].eventdat5, Sint8, lvlFile);
 			vfread(eventRec[x].eventdat6, Sint8, lvlFile);
