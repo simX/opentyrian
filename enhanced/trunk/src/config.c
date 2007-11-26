@@ -227,7 +227,6 @@ int portConfig[10]; /* [1..10] */
 bool portConfigDone;
 JE_PortPowerType portPower, lastPortPower;
 
-bool resetVersion;
 
 /* Level Data */
 char lastLevelName[11], levelName[11]; /* string [10] */
@@ -254,6 +253,7 @@ int superArcadePowerUp;
 
 double linkGunDirec;
 int playerDevice1, playerDevice2;
+/* 0=Mouse   1=Joystick   2=Gravis GamePad */
 int inputDevice1, inputDevice2;
 
 int secretHint;
@@ -264,15 +264,11 @@ bool superPause = false;
 bool explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll,
      wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 
-int versionNum; /* SW 1.0 and SW/Reg 1.1 = 0 or 1
-                 * EA 1.2 = 2 */
-
 int fastPlay;
 bool pentiumMode;
 
 /* Savegame files */
 bool playerPasswordInput;
-int inputDevice;  /* 0=Mouse   1=Joystick   2=Gravis GamePad */
 int gameSpeed;
 int processorType;  /* 1=386 2=486 3=Pentium Hyper */
 

@@ -24,10 +24,8 @@
 
 #include "SDL.h"
 
-
 #define SDL_POLL_INTERVAL 5
 
-extern const char *keyNames[];
 extern bool ESCPressed;
 extern bool newkey, newmouse, keydown, mousedown;
 extern SDLKey lastkey_sym;

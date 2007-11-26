@@ -38,7 +38,6 @@ extern bool notYetLoadedSound, notYetLoadedMusic;
 extern JE_SongPosType songPos;
 
 extern int soundEffects;
-extern int jConfigure;
 
 extern JE_word frameCount, frameCount2, frameCountMax;
 

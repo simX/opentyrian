@@ -45,7 +45,6 @@ int soundEffects = 1; /* TODO: Give this a real value, figure out what they mean
 JE_word frameCount, frameCount2, frameCountMax;
 
 int currentSong = 0;
-int jConfigure = 0;
 
 int soundActive = true; /* I'm not sure if these two are ever false. */
 int musicActive = true; /* TODO: Make sure these get proper values. */
