@@ -121,11 +121,11 @@ void JE_jukeboxGo( void )
 
 	lastSong = currentJukeboxSong;
 
-	/*JE_fadeBlack(10);
-	JE_initVGA256();
-	JE_fadeColor(10);*/
+	JE_fadeBlack(10);
+	SDL_FillRect(VGAScreenSeg, NULL, 0x0);
+	JE_showVGA();
+	SDL_SetColors(VGAScreen, vga_palette, 0, 256); //JE_fadeColor(10);
 
-	JE_initVGA256();
 	JE_starlib_init();
 
 	quit = false;
@@ -139,7 +139,7 @@ void JE_jukeboxGo( void )
 
 	do
 	{
-		tempScreenSeg = VGAScreen; /*sega000*/
+		tempScreenSeg = VGAScreenSeg;
 
 		if (weirdMusic) /* TODO: Not sure what this is about, figure it out */
 		{
@@ -160,14 +160,14 @@ void JE_jukeboxGo( void )
 
 		if (repeated && !repeatedFade)
 		{
-		  fade = true;
-		  repeatedFade = true;
+			fade = true;
+			repeatedFade = true;
 		}
 
 		if ( ( (repeated && !fade) || !playing) && !youStopped)
 		{
-		  currentSong = ( rand() % MUSIC_NUM );
-		  JE_playNewSong();
+			currentJukeboxSong = ( rand() % MUSIC_NUM );
+			JE_playNewSong();
 		}
 
 		setdelay(1);
@@ -175,31 +175,28 @@ void JE_jukeboxGo( void )
 
 		JE_starlib_main();
 
-		if (lastSong != currentSong)
+		if (lastSong != currentJukeboxSong)
 		{
-		  lastSong = currentSong;
-		  JE_bar(50, 190, 250, 198, 0); /* vga256c.BAR (50, 190, 250, 198, 0); */
+			lastSong = currentJukeboxSong;
+			JE_bar(50, 190, 250, 198, 0);
 		}
 
 		if (drawText)
 		{
-			/* TODO: Put in actual song titles here */
+			tempScreenSeg = VGAScreenSeg;
 			if (fx)
 			{
 				sprintf(tempStr, "%d %s", fxNum, soundTitle[fxNum - 1]);
-				JE_bar(50, 190, 250, 198, 0); /* vga256c.BAR (50, 190, 250, 198, 0); */
+				JE_bar(50, 190, 250, 198, 0);
 				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, tempStr, 1, 4);
 			} else {
 				sprintf(tempStr, "%d %s", currentJukeboxSong, musicTitle[currentJukeboxSong - 1]);
 				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, tempStr, 1, 4);
 			}
-		}
 
-		if (drawText)
-		{
-			tempScreenSeg = VGAScreen; /*sega000*/
+			tempScreenSeg = VGAScreenSeg;
 			JE_outText(JE_fontCenter("Press ESC to quit the jukebox.", TINY_FONT), 170, "Press ESC to quit the jukebox.", 1, 0);
-			tempScreenSeg = VGAScreen; /*sega000*/
+			tempScreenSeg = VGAScreenSeg;
 			JE_outText(JE_fontCenter("Arrow keys change the song being played.", TINY_FONT), 180, "Arrow keys change the song being played.", 1, 0);
 		}
 
@@ -232,15 +229,12 @@ void JE_jukeboxGo( void )
 			JE_setTimerInt();
 		}
 
-		/* TODO: Make this stuff work */
-		/*
-      joystick2;
-      IF (mouseposition (x, y) > 0) OR button [1] THEN
-        BEGIN
-          quit := true;
-          wipekey;
-        END;
-      */
+		JE_joystick2();
+		if (JE_mousePosition(&x, &y) > 0 || button[0])
+		{
+			quit = true;
+			JE_wipeKey();
+		}
 
 		JE_showVGA();
 
@@ -333,7 +327,7 @@ void JE_jukeboxGo( void )
 			}
 		}
 	} while (!quit);
-
+	
 	JE_fadeBlack(10);
 	JE_setVol(255, fxVolume);
 }
