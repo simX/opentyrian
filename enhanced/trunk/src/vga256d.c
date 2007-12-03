@@ -30,13 +30,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define surface_width 320
-#ifdef TARGET_GP2X
-#	define surface_height 240
-#else
-#	define surface_height 200
-#endif // TARGET_GP2X
-
 SDL_Surface *VGAScreen, *VGAScreenSeg;
 SDL_Surface *game_screen;
 SDL_Surface *VGAScreen2;

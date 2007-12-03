@@ -18,137 +18,266 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "scroller.h"
 
 #include "fonthand.h"
+#include "joystick.h"
 #include "jukebox.h"
 #include "keyboard.h"
 #include "newshape.h"
 #include "nortsong.h"
-#include "nortvars.h"
-#include "picload.h"
+#include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
 
-#include "scroller.h"
 
-#include "SDL.h"
-
-
-#ifndef min
-#define min(a,b) ((a) < (b) ? (a) : (b))
-#endif
-
-const char *about_text[] =
+const struct about_text_type about_text[] =
 {
-"","","","","","", /* Filler */
-"","","","","","",
-"------------------",
-"--- OpenTyrian ---",
-"------------------",
-"",
-"Hello boys and girls!",
-"This is a test text for", "OpenTyrian's scroller. by yuriks",
-"Which means: TODO, probably", "copy it off the readme! :D",
-"",
-"Thanks for RealmRPGer for", "helping with the math. :D",
-"",
-"No automatic line breaks yet, so we'll", "have to see how this will work later.",
-"",
-"",
-"Bye!",
-NULL
+	{0x10, "----- ~OpenTyrian~ -----"},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, "This is a test of the credits"},
+	{0x00, "scroller."},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, "If this had been an ~actual~ scroller"},
+	{0x00, "credit text would be in place"},
+	{0x00, "of this message."},
+	{0x00, ""},
+	{0x00, ""},
+	{0x10, "----- ~Developers~ -----"}, /* in alphabetical order */
+	{0x00, ""},
+	{0x03, "MindlessXD"},
+	{0x04, "syntaxglitch"},
+	{0x07, "yuriks"},
+	{0x00, ""},
+	{0x05, "Thanks to the ~AdPlug~ team for donating"},
+	{0x05, "the FM synthesis and LDS loading code."},
+	{0x00, ""},
+	{0x00, ""},
+	{0x12, "And a big thanks to ~Jason Emery~"},
+	{0x12, "for making all this possible."},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, "This is line color test ~0~."},
+	{0x01, "This is line color test ~1~."},
+	{0x02, "This is line color test ~2~."},
+	{0x03, "This is line color test ~3~."},
+	{0x04, "This is line color test ~4~."},
+	{0x05, "This is line color test ~5~."},
+	{0x06, "This is line color test ~6~."},
+	{0x07, "This is line color test ~7~."},
+	{0x08, "This is line color test ~8~."},
+	{0x09, "This is line color test ~9~."},
+	{0x0a, "This is line color test ~A~."},
+	{0x0b, "This is line color test ~B~."},
+	{0x0c, "This is line color test ~C~."},
+	{0x0d, "This is line color test ~D~."},
+	{0x0e, "This is line color test ~E~."},
+	{0x0f, "This is line color test ~F~."},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, "Press a key to leave."},
+	{0x00, NULL}
 };
 
 #define BEER_SHAPE 241
 
-/* Text is an array of strings terminated by a NULL */
-void scroller3d( const char *text[] )
-{
-#	define TEXT_HEIGHT 15
-#	define HORIZON 30
-#	define HORIZON_W 200
-#	define MAX_LINES ((200-HORIZON)/TEXT_HEIGHT)
-	int cur_line = 0, line_off = 0, text_len = 0, wait = 0;
-	bool quit = false;
-	Uint8 *surf;
+struct coin_def_type {
+	int shape_num;
+	int frame_count;
+	bool reverse_anim;
+};
 
-	while (text[text_len])
+#define MAX_COINS 20
+struct coin_def_type coin_defs[] =
+{
+	{1, 6}, {7, 6}, {20, 6}, {26, 6}, // Coins
+	{14, 5, true}, {32, 5, true}, {51, 5, true} // Gems
+};
+
+/* Text is an array of strings terminated by a NULL */
+void scroller_sine( const struct about_text_type text[] )
+{
+	int visible_lines = surface_height / 15 + 1;
+	int current_line = -visible_lines;
+	int y = 0;
+	bool fade_in = true;
+	
+	struct coin_type { int x, y, vel, type, cur_frame; bool backwards; } coins[MAX_COINS];
+	
+	// struct { int x, y, ay, vx, vy; } beer[5];
+	//memset(beer, 0, sizeof(beer));
+
+	for (int i = 0; i < MAX_COINS; i++)
 	{
-		text_len++;
+		coins[i].x = rand() % (surface_width - 12);
+		coins[i].y = rand() % (surface_height - 20 - 14);
+
+		coins[i].vel = (rand() % 4) + 1;
+		coins[i].type = rand() % COUNTOF(coin_defs);
+		coins[i].cur_frame = rand() % coin_defs[coins[i].type].frame_count;
+		coins[i].backwards = false;
 	}
 
-	JE_loadPic(4, false); /* Steal palette for now. */
-	memset(VGAScreen->pixels, 0, VGAScreen->pitch * VGAScreen->h);
-
-	surf = malloc(VGAScreen->pitch * VGAScreen->h);
-
-	wait_noinput(true,true,true);
+	
+	JE_fadeBlack(10);
+	
+	wait_noinput(true, true, joystick_installed);
+	
 	currentJukeboxSong = 41; /* BEER! =D */
 	JE_playSong(currentJukeboxSong);
-
-	do
+	
+	while (!JE_anyButton())
 	{
-		int max = min(text_len, cur_line+MAX_LINES+1);
-
-		service_SDL_events(true);
-		if (keydown)
+		setdelay(3);
+		
+		JE_clr256();
+		
+		for (int i = 0; i < MAX_COINS/2; i++)
 		{
-			quit = true;
+			struct coin_type *coin = &coins[i];
+			JE_drawShape2(coin->x, coin->y, coin_defs[coin->type].shape_num + coin->cur_frame, eShapes5);
 		}
 
-		if (wait++ >= 60)
+		for (int i = 0; i < visible_lines; i++)
 		{
-			wait = 0;
-
-			line_off++;
-			if (line_off == 15)
+			if (current_line + i >= 0)
 			{
-				line_off = 0;
-				cur_line++;
+				if (text[current_line + i].text == NULL)
+				{
+					break;
+				}
+				
+				int line_x = JE_fontCenter(text[i + current_line].text, SMALL_FONT_SHAPES);
+				int line_y = i * 15 - y;
+				
+				JE_outTextAdjust(line_x, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -4, SMALL_FONT_SHAPES, false);
+				
+				if (text[i + current_line].effect & 0x10)
+				{
+					for (int j = 0; j < 15; j++)
+					{
+						if (line_y + j >= 10 && line_y + j <= surface_height - 10)
+						{
+							int foo = sin((((line_y + j) / 2) % 13) / 6.5f * M_PI) * 3;
+							memmove(&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j) + foo],
+									&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j)],
+									VGAScreenSeg->pitch);
+						}
+					}
+				}
 			}
-
-			if (cur_line == text_len)
-			{
-				cur_line = 0;
-			}
-		} else {
-			JE_showVGA();
-			continue;
 		}
-
-		memset(VGAScreen->pixels, 0, VGAScreen->pitch * VGAScreen->h);
-
-		for (int i = cur_line; i < max; i++)
+		
+		y++;
+		y %= 15;
+		if (y == 0)
 		{
-			int txt_x = JE_fontCenter(text[i], SMALL_FONT_SHAPES);
-
-			JE_outTextAdjust(txt_x, (i-cur_line)*TEXT_HEIGHT-line_off+TEXT_HEIGHT, text[i], 15, -3, SMALL_FONT_SHAPES, false);
-		}
-
-		memset(surf, 0, VGAScreen->pitch * VGAScreen->h);
-		memcpy(surf+(HORIZON*320), ((Uint8 *)VGAScreen->pixels)+(TEXT_HEIGHT*320), (200-HORIZON)*320);
-		memset(VGAScreen->pixels, 0, VGAScreen->pitch * VGAScreen->h);
-
-		for (int i = HORIZON; i < 200; i++)
-		{
-			int total_w = HORIZON_W+((i-HORIZON)/(199.-HORIZON))*(320-HORIZON_W);
-			double step = 320./(double)total_w;
-			int scr_x = 320/2-total_w/2;
-			Uint8 *s = VGAScreen->pixels;
-			double cur_x = 0.;
-			double ratio = (i-HORIZON)/(total_w/320.);
-
-			while (total_w--)
+			if (current_line < 0 || text[current_line].text != NULL)
 			{
-				double color = surf[(int)(ratio)*320+(int)cur_x];
-
-				s[i*320+scr_x] = color;
-				scr_x++; cur_x += step;
+				current_line++;
+			} else {
+				current_line = -visible_lines;
 			}
 		}
 
-		JE_drawShape2x2(0,0, BEER_SHAPE, eShapes5);
+		for (int i = MAX_COINS/2; i < MAX_COINS; i++)
+		{
+			struct coin_type *coin = &coins[i];
+			JE_drawShape2(coin->x, coin->y, coin_defs[coin->type].shape_num + coin->cur_frame, eShapes5);
+		}
+
+		JE_bar(0, 0, surface_width - 1, 14, 0);
+		JE_bar(0, surface_height - 14, surface_width - 1, surface_height - 1, 0);
+		
+		for (int i = 0; i < MAX_COINS; i++)
+		{
+			struct coin_type *coin = &coins[i];
+
+			if (coin->backwards)
+			{
+				coin->cur_frame--;
+			} else {
+				coin->cur_frame++;
+			}
+			if (coin->cur_frame == coin_defs[coin->type].frame_count)
+			{
+				if (coin_defs[coin->type].reverse_anim)
+				{
+					coin->backwards = true;
+					coin->cur_frame -= 2;
+				} else {
+					coin->cur_frame = 0;
+				}
+			}
+			if (coin->cur_frame == -1)
+			{
+				coin->cur_frame = 1;
+				coin->backwards = false;
+			}
+
+			coin->y += coin->vel;
+			if (coin->y > surface_height - 14)
+			{
+				coin->x = rand() % (surface_width - 12);
+				coin->y = 0;
+
+				coin->vel = (rand() % 4) + 1;
+				coin->type = rand() % COUNTOF(coin_defs);
+				coin->cur_frame = rand() % coin_defs[coin->type].frame_count;
+			}
+		}
+
+		/*
+		for (int i = 0; i < COUNTOF(beer); i++)
+		{
+			while (beer[i].vx == 0)
+			{
+				beer[i].x = rand() % (surface_width - 24);
+				beer[i].y = rand() % (surface_height - 28 - 50);
+				
+				beer[i].vx = (rand() % 5) - 2;
+			}
+			
+			beer[i].vy++;
+			
+			if (beer[i].x + beer[i].vx > surface_width - 24 || beer[i].x + beer[i].vx < 0) // check if the beer hit the sides
+			{
+				beer[i].vx = -beer[i].vx;
+			}
+			beer[i].x += beer[i].vx;
+			
+			if (beer[i].y + beer[i].vy > surface_height - 28) // check if the beer hit the bottom
+			{
+				beer[i].vy = -(beer[i].vy * 15 / 16) + (rand() % 3 - 1); // make sure the beer doesn't bounce too high
+				if ((beer[i].vy) > -10) // make sure the beer bounces!
+				{
+					beer[i].vy--;
+				}
+			}
+			beer[i].y += beer[i].vy;
+			
+			JE_drawShape2x2(beer[i].x, beer[i].y, BEER_SHAPE, eShapes5);
+		}
+		*/
 
 		JE_showVGA();
-	} while (!(quit));
+		
+		if (fade_in)
+		{
+			fade_in = false;
+			JE_fadeColor(10);
+			JE_setPalette(254, 63, 63, 63);
+		}
+		
+		int delaycount_temp = target - SDL_GetTicks();
+		if (delaycount_temp > 0)
+		{
+			SDL_Delay(delaycount_temp);
+		}
+	}
+	
+	JE_fadeBlack(10);
 }

@@ -248,6 +248,18 @@ void JE_jukeboxGo( void )
 			}
 		}
 
+		if (joystickInput)
+		{
+			if (joystickUp || joystickLeft)
+			{
+				currentJukeboxSong--;
+				JE_playNewSong();
+			} else if (joystickDown || joystickRight) {
+				currentJukeboxSong++;
+				JE_playNewSong();
+			}
+		}
+
 		JE_showVGA();
 
 		if (newkey) {

@@ -1401,15 +1401,12 @@ start_level_first:
 	for (int i = 0; i < 100; i++) {
 		enemyAvail[i] = 1;
 	}
-	//memset(enemyAvail,       1, sizeof(enemyAvail));
 	for (int i = 0; i < EXPLOSION_MAX; i++) {
 		explodeAvail[i] = 0;
 	}
-	//memset(explodeAvail,     0, sizeof(explodeAvail));
 	for (int i = 0; i < ENEMY_SHOT_MAX; i++) {
 		enemyShotAvail[i] = true;
 	}
-	//memset(enemyShotAvail,   1, sizeof(enemyShotAvail));
 
 	/*Initialize Shots*/
 	memset(playerShotData,   0, sizeof(playerShotData));

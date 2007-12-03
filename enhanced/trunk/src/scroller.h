@@ -22,10 +22,12 @@
 
 #include "opentyr.h"
 
+extern const struct about_text_type {
+	int effect;
+	char *text;
+} about_text[];
 
-extern const char *about_text[];
-
-void scroller3d( const char *text[] );
+void scroller_sine( const struct about_text_type text[] );
 
 #endif /* SCROLLER_H */
 

@@ -25,7 +25,7 @@
 
 typedef char JE_TextBuffer[4096]; /* [1..4096] */
 
-typedef struct SDL_Color JE_ColorType[256]; /* [0..255] */
+typedef SDL_Color JE_ColorType[256]; /* [0..255] */
 
 typedef Uint8 JE_ShapeTypeOne[168]; /* [0..168-1] */
 typedef JE_ShapeTypeOne JE_ShapeType[304]; /* [1..304] */
