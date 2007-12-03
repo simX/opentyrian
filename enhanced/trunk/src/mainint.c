@@ -1838,18 +1838,18 @@ void JE_highScoreCheck( void )
 										temp++;
 									}
 									break;
-								case 8:
+								case SDLK_BACKSPACE:
 									if (temp)
 									{
 										temp--;
 										stemp[temp] = ' ';
 									}
 									break;
-								case 27:
+								case SDLK_ESCAPE:
 									quit = true;
 									cancel = true;
 									break;
-								case 13:
+								case SDLK_RETURN:
 									quit = true;
 									break;
 							}
@@ -2746,7 +2746,7 @@ void JE_operation( int slot )
 								temp++;
 							}
 							break;
-						case 8:
+						case SDLK_BACKSPACE:
 							if (temp)
 							{
 								temp--;
@@ -2754,11 +2754,11 @@ void JE_operation( int slot )
 								JE_playSampleNum(CLICK);
 							}
 							break;
-						case 27:
+						case SDLK_ESCAPE:
 							quit = true;
 							JE_playSampleNum(ESC);
 							break;
-						case 13:
+						case SDLK_RETURN:
 							quit = true;
 							JE_saveGame(slot, stemp);
 							drawGameSaved = true;

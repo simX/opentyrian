@@ -235,6 +235,18 @@ void JE_jukeboxGo( void )
 			quit = true;
 			JE_wipeKey();
 		}
+		
+		if (joystickInput)
+		{
+			if (joystickUp || joystickLeft)
+			{
+				currentJukeboxSong--;
+				JE_playNewSong();
+			} else if (joystickDown || joystickRight) {
+				currentJukeboxSong++;
+				JE_playNewSong();
+			}
+		}
 
 		JE_showVGA();
 
