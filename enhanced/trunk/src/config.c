@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 
 /******** MAJOR TODO:
@@ -342,7 +343,7 @@ void JE_saveGame( int slot, char *name )
 		pItems[3-1] = 254;
 	}
 
-	memcpy(saveFiles[slot-1].items, pItems, sizeof(pItems));
+	memcpy(&saveFiles[slot-1].items, &pItems, sizeof(pItems));
 
 	if (superArcadeMode > 253)
 	{
@@ -350,14 +351,14 @@ void JE_saveGame( int slot, char *name )
 	}
 	if (twoPlayerMode)
 	{
-		memcpy(saveFiles[slot-1].lastItems, pItemsPlayer2, sizeof(pItemsPlayer2));
+		memcpy(&saveFiles[slot-1].lastItems, &pItemsPlayer2, sizeof(pItemsPlayer2));
 	} else {
-		memcpy(saveFiles[slot-1].lastItems, pItemsBack2, sizeof(pItemsBack2));
+		memcpy(&saveFiles[slot-1].lastItems, &pItemsBack2, sizeof(pItemsBack2));
 	}
 
 	saveFiles[slot-1].score  = score;
 	saveFiles[slot-1].score2 = score2;
-	memcpy(saveFiles[slot-1].levelName, lastLevelName, sizeof(lastLevelName));
+	memcpy(&saveFiles[slot-1].levelName, &lastLevelName, sizeof(lastLevelName));
 	saveFiles[slot-1].cubes  = lastCubeMax;
 
 	if (strcmp(lastLevelName, "Completed") == 0)
@@ -401,7 +402,7 @@ void JE_loadGame( int slot )
 	gameHasRepeated   = saveFiles[slot-1].gameHasRepeated;
 	twoPlayerMode     = (slot-1) > 10;
 	difficultyLevel   = saveFiles[slot-1].difficulty;
-	memcpy(pItems, saveFiles[slot-1].items, sizeof(pItems));
+	memcpy(&pItems, &saveFiles[slot-1].items, sizeof(pItems));
 	superArcadeMode   = pItems[3-1];
 
 	if (superArcadeMode == 255)
@@ -420,10 +421,10 @@ void JE_loadGame( int slot )
 
 	if (twoPlayerMode)
 	{
-		memcpy(pItemsPlayer2, saveFiles[slot-1].lastItems, sizeof(pItemsPlayer2));
+		memcpy(&pItemsPlayer2, &saveFiles[slot-1].lastItems, sizeof(pItemsPlayer2));
 		onePlayerAction = false;
 	} else {
-		memcpy(pItemsBack2, saveFiles[slot-1].lastItems, sizeof(pItemsBack2));
+		memcpy(&pItemsBack2, &saveFiles[slot-1].lastItems, sizeof(pItemsBack2));
 	}
 
 	/* Compatibility with old version */
@@ -450,7 +451,7 @@ void JE_loadGame( int slot )
 
 	temp5 = saveFiles[slot-1].episode;
 
-	memcpy(levelName, saveFiles[slot-1].levelName, sizeof(levelName));
+	memcpy(&levelName, &saveFiles[slot-1].levelName, sizeof(levelName));
 
 	if (strcmp(levelName, "Completed") == 0)
 	{
@@ -465,7 +466,7 @@ void JE_loadGame( int slot )
 
 	JE_initEpisode(temp5);
 	saveLevel = mainLevel;
-	memcpy(lastLevelName, levelName, sizeof(levelName));
+	memcpy(&lastLevelName, &levelName, sizeof(levelName));
 }
 
 void JE_initProcessorType( void )
@@ -577,7 +578,7 @@ void JE_encryptSaveTemp( void )
 	JE_SaveGameTemp s3;
 	char y;
 
-	memcpy(s3, saveTemp, sizeof(s3));
+	memcpy(&s3, &saveTemp, sizeof(s3));
 
 	y = 0;
 	for (int x = 0; x < SAVE_FILE_SIZE; x++)
@@ -693,7 +694,7 @@ void JE_decryptSaveTemp( void )
 	}
 
 	/* Keep decrypted version plz */
-	memcpy(saveTemp, s2, sizeof(s2));
+	memcpy(&saveTemp, &s2, sizeof(s2));
 }
 
 void JE_loadConfiguration( void )
@@ -760,83 +761,58 @@ void JE_loadConfiguration( void )
 		p = saveTemp;
 		for (int z = 0; z < SAVE_FILES_NUM; z++)
 		{
-			saveFiles[z].encode = *((JE_word*)p);
-			p += sizeof(JE_word);
-
-			saveFiles[z].level = *((JE_word*)p);
-			p += sizeof(JE_word);
-
-			for (int i = 0; i < 12; i++)
-			{
-				saveFiles[z].items[i] = *((Uint8*)p);
-				p += sizeof(Uint8);
-			}
-
-			saveFiles[z].score = *((Sint32 *)p);
-			p += sizeof(Sint32);
-
-			saveFiles[z].score2 = *((Sint32 *)p);
-			p += sizeof(Sint32);
-
+			memcpy(&saveFiles[z].encode, p, sizeof(JE_word)); p += 2;
+			saveFiles[z].encode = SDL_SwapLE16(saveFiles[z].encode);
+			
+			memcpy(&saveFiles[z].level, p, sizeof(JE_word)); p += 2;
+			saveFiles[z].level = SDL_SwapLE16(saveFiles[z].level);
+			
+			memcpy(&saveFiles[z].items, p, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
+			
+			memcpy(&saveFiles[z].score, p, sizeof(Sint32)); p += 4;
+			saveFiles[z].score = SDL_SwapLE32(saveFiles[z].score);
+			
+			memcpy(&saveFiles[z].score2, p, sizeof(Sint32)); p += 4;
+			saveFiles[z].score2 = SDL_SwapLE32(saveFiles[z].score2);
+			
 			/* SYN: Pascal strings are prefixed by a byte holding the length! */
-			p += 1; /* Skip length byte */
-			memcpy(saveFiles[z].levelName, ((char*)p), 9);
-			saveFiles[z].levelName[9] = 0;
-			p += 9;
-
+			memset(&saveFiles[z].levelName, 0, sizeof(saveFiles[z].levelName));
+			memcpy(&saveFiles[z].levelName, &p[1], *p);
+			p += 10;
+			
 			/* This was a BYTE array, not a STRING, in the original. Go fig. */
-			memcpy(saveFiles[z].name, ((char*)p), 14);
-			saveFiles[z].name[14] = 0;
+			memcpy(&saveFiles[z].name, p, 14);
 			p += 14;
-
-			saveFiles[z].cubes = *((Uint8 *)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].power[0] = *((Uint8 *)p);
-			p += sizeof(Uint8);
-			saveFiles[z].power[1] = *((Uint8 *)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].episode = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			for (int i = 0; i < 12; i++)
-			{
-				saveFiles[z].lastItems[i] = *((Uint8*)p);
-				p += sizeof(Uint8);
-			}
-
-			saveFiles[z].difficulty = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].secretHint = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].input1 = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].input2 = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].gameHasRepeated = *((Uint8 *)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].initialDifficulty = *((Uint8*)p);
-			p += sizeof(Uint8);
-
-			saveFiles[z].highScore1 = *((Sint32 *)p);
-			p += sizeof(Sint32);
-
-			saveFiles[z].highScore2 = *((Sint32 *)p);
-			p += sizeof(Sint32);
-
-			p += 1; /* Skip length byte wheeee */
-			memcpy(saveFiles[z].highScoreName, ((char*)p), 29);
-			saveFiles[z].highScoreName[29] = 0;
-			p += 29;
-
-			saveFiles[z].highScoreDiff = *((Uint8*)p);
-			p += sizeof(Uint8);
+			
+			memcpy(&saveFiles[z].cubes, p, sizeof(Uint8)); p++;
+			memcpy(&saveFiles[z].power, p, sizeof(Uint8) * 2); p += 2;
+			memcpy(&saveFiles[z].episode, p, sizeof(Uint8)); p++;
+			memcpy(&saveFiles[z].lastItems, p, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
+			memcpy(&saveFiles[z].difficulty, p, sizeof(Uint8)); p++;
+			memcpy(&saveFiles[z].secretHint, p, sizeof(Uint8)); p++;
+			memcpy(&saveFiles[z].input1, p, sizeof(Uint8)); p++;
+			memcpy(&saveFiles[z].input2, p, sizeof(Uint8)); p++;
+			
+			/* booleans were 1 byte in pascal -- working around it */
+			Uint8 temp;
+			memcpy(&temp, p, 1); p++;
+			saveFiles[z].gameHasRepeated = temp != 0;
+			
+			memcpy(&saveFiles[z].initialDifficulty, p, sizeof(Uint8)); p++;
+			
+			memcpy(&saveFiles[z].highScore1, p, sizeof(Sint32)); p += 4;
+			saveFiles[z].highScore1 = SDL_SwapLE32(saveFiles[z].highScore1);
+			
+			memcpy(&saveFiles[z].highScore2, p, sizeof(Sint32)); p += 4;
+			saveFiles[z].highScore2 = SDL_SwapLE32(saveFiles[z].highScore2);
+			
+			memset(&saveFiles[z].highScoreName, 0, sizeof(saveFiles[z].highScoreName));
+			memcpy(&saveFiles[z].highScoreName, &p[1], *p);
+			p += 30;
+			
+			/* TODO DEBUG printf("%s, %ld / %ld\n", saveFiles[z].highScoreName, saveFiles[z].highScore1, saveFiles[z].highScore2); */
+			
+			memcpy(&saveFiles[z].highScoreDiff, p, sizeof(Uint8)); p++;
 		}
 
 		fclose(fi);
@@ -884,81 +860,60 @@ void JE_saveConfiguration( void )
 
 	for (int z = 0; z < SAVE_FILES_NUM; z++)
 	{
-		*((JE_word*)p) = saveFiles[z].encode;
-		p += sizeof(JE_word);
-
-		*((JE_word*)p) = saveFiles[z].level;
-		p += sizeof(JE_word);
-
-		for (int i = 0; i < 12; i++)
-		{
-			*((Uint8*)p) = saveFiles[z].items[i];
-			p += sizeof(Uint8);
-		}
-
-		*((Sint32 *)p) = saveFiles[z].score ;
-		p += sizeof(Sint32);
-
-		*((Sint32 *)p) = saveFiles[z].score2;
-		p += sizeof(Sint32);
-
+		JE_SaveFileType tempSaveFile;
+		memcpy(&tempSaveFile, &saveFiles[z], sizeof(tempSaveFile));
+		
+		tempSaveFile.encode = SDL_SwapLE16(tempSaveFile.encode);
+		memcpy(p, &tempSaveFile.encode, sizeof(JE_word)); p += 2;
+		
+		tempSaveFile.level = SDL_SwapLE16(tempSaveFile.level);
+		memcpy(p, &tempSaveFile.level, sizeof(JE_word)); p += 2;
+		
+		memcpy(p, &tempSaveFile.items, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
+		
+		tempSaveFile.score = SDL_SwapLE32(tempSaveFile.score);
+		memcpy(p, &tempSaveFile.score, sizeof(Sint32)); p += 4;
+		
+		tempSaveFile.score2 = SDL_SwapLE32(tempSaveFile.score2);
+		memcpy(p, &tempSaveFile.score2, sizeof(Sint32)); p += 4;
+		
 		/* SYN: Pascal strings are prefixed by a byte holding the length! */
-		*((Uint8*)p) = strlen(saveFiles[z].levelName);
-		p++;
-		memcpy(((char*)p), saveFiles[z].levelName, 9);
-		p += 9;
-
+		memset(p, 0, sizeof(tempSaveFile.levelName));
+		*p = strlen(tempSaveFile.levelName);
+		memcpy(&p[1], &tempSaveFile.levelName, *p);
+		p += 10;
+		
 		/* This was a BYTE array, not a STRING, in the original. Go fig. */
-		memcpy(((char*)p), saveFiles[z].name, 14);
+		memcpy(p, &tempSaveFile.name, 14);
 		p += 14;
-
-		*((Uint8*)p) = saveFiles[z].cubes;
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].power[0];
-		p += sizeof(Uint8);
-		*((Uint8*)p) = saveFiles[z].power[1];
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].episode ;
-		p += sizeof(Uint8);
-
-		for (int i = 0; i < 12; i++)
-		{
-			*((Uint8*)p) = saveFiles[z].lastItems[i];
-			p += sizeof(Uint8);
-		}
-
-		*((Uint8*)p) = saveFiles[z].difficulty;
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].secretHint ;
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].input1;
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].input2;
-		p += sizeof(Uint8);
-
-		*((Uint8 *)p) = saveFiles[z].gameHasRepeated ;
-		p += sizeof(Uint8);
-
-		*((Uint8*)p) = saveFiles[z].initialDifficulty;
-		p += sizeof(Uint8);
-
-		*((Sint32 *)p) = saveFiles[z].highScore1;
-		p += sizeof(Sint32);
-
-		*((Sint32 *)p) = saveFiles[z].highScore2 ;
-		p += sizeof(Sint32);
-
-		p++; /* Skip length byte wheeee */
-		memcpy(((char*)p), saveFiles[z].highScoreName, 29);
-		p += 29;
-
-		*((Uint8*)p) = saveFiles[z].highScoreDiff ;
-		p += sizeof(Uint8);
+		
+		memcpy(p, &tempSaveFile.cubes, sizeof(Uint8)); p++;
+		memcpy(p, &tempSaveFile.power, sizeof(Uint8) * 2); p += 2;
+		memcpy(p, &tempSaveFile.episode, sizeof(Uint8)); p++;
+		memcpy(p, &tempSaveFile.lastItems, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
+		memcpy(p, &tempSaveFile.difficulty, sizeof(Uint8)); p++;
+		memcpy(p, &tempSaveFile.secretHint, sizeof(Uint8)); p++;
+		memcpy(p, &tempSaveFile.input1, sizeof(Uint8)); p++;
+		memcpy(p, &tempSaveFile.input2, sizeof(Uint8)); p++;
+		
+		/* booleans were 1 byte in pascal -- working around it */
+		Uint8 temp = tempSaveFile.gameHasRepeated != false;
+		memcpy(p, &temp, 1); p++;
+		
+		memcpy(p, &tempSaveFile.initialDifficulty, sizeof(Uint8)); p++;
+		
+		tempSaveFile.highScore1 = SDL_SwapLE32(tempSaveFile.highScore1);
+		memcpy(p, &tempSaveFile.highScore1, sizeof(Sint32)); p += 4;
+		
+		tempSaveFile.highScore2 = SDL_SwapLE32(tempSaveFile.highScore2);
+		memcpy(p, &tempSaveFile.highScore2, sizeof(Sint32)); p += 4;
+		
+		memset(p, 0, sizeof(tempSaveFile.highScoreName));
+		*p = strlen(tempSaveFile.highScoreName);
+		memcpy(&p[1], &tempSaveFile.highScoreName, *p);
+		p += 30;
+		
+		memcpy(p, &tempSaveFile.highScoreDiff, sizeof(Uint8)); p++;
 	}
 
 	JE_encryptSaveTemp();
@@ -967,6 +922,9 @@ void JE_saveConfiguration( void )
 	{
 		efwrite(saveTemp, 1, sizeof(saveTemp), f);
 		fclose(f);
+#if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
+		sync();
+#endif
 	}
 	JE_decryptSaveTemp();
 
@@ -986,5 +944,8 @@ void JE_saveConfiguration( void )
 			joyButtonAssign[0], joyButtonAssign[1], joyButtonAssign[2], joyButtonAssign[3] // [joystick]
 		);
 		fclose(ini);
+#if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
+		sync();
+#endif
 	}
 }

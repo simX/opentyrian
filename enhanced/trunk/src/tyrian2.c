@@ -6489,7 +6489,7 @@ void JE_itemScreen( void )
 				JE_textShade(25, 120, superShips[SA+2], 15, 0, FULL_SHADE);
 				JE_helpBox(25, 130, special[pItems[11 - 1]].name, 22);
 			} else {
-				if (pItems[12 - 1] > 90)
+				if (pItems[11] > 90)
 				{
 					temp = 32;
 				} else if (pItems[11] > 0) {
