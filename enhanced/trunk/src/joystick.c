@@ -182,15 +182,21 @@ bool JE_nextJoystickCheck( void )
 	{
 		if (joystickWait > 0)
 			joystickWait--;
-		if (button[0] || button[1] || button[2] || button[3])
+		
+		for (int i = 0; i < COUNTOF(joyButton); i++)
 		{
-			return true;
-		} else {
-			if (joystickWait == 0)
-			{
-				joystickWait = joystickWaitMax;
+#ifndef TARGET_GP2X
+			if (joyButton[i])
+#else  /* TARGET_GP2X */
+			if (joyButton[i] && i != GP2X_VK_LEFT && i != GP2X_VK_RIGHT && i != GP2X_VK_UP && i != GP2X_VK_DOWN)
+#endif  /* TARGET_GP2X */
 				return true;
-			}
+		}
+		
+		if (joystickWait == 0)
+		{
+			joystickWait = joystickWaitMax;
+			return true;
 		}
 	} else {
 		joystickWait = 0;
@@ -214,32 +220,32 @@ bool JE_joystickTranslate( void )
 		if (joystickUp)
 		{
 			newkey = true;
-			lastkey_sym = SDLK_UP;
+			lastkey_char = lastkey_sym = SDLK_UP;
 		}
 		if (joystickDown)
 		{
 			newkey = true;
-			lastkey_sym = SDLK_DOWN;
+			lastkey_char = lastkey_sym = SDLK_DOWN;
 		}
 		if (joystickLeft)
 		{
 			newkey = true;
-			lastkey_sym = SDLK_LEFT;
+			lastkey_char = lastkey_sym = SDLK_LEFT;
 		}
 		if (joystickRight)
 		{
 			newkey = true;
-			lastkey_sym = SDLK_RIGHT;
+			lastkey_char = lastkey_sym = SDLK_RIGHT;
 		}
 		if (button[0])
 		{
 			newkey = true;
-			lastkey_sym = SDLK_RETURN;
+			lastkey_char = lastkey_sym = SDLK_RETURN;
 		}
 		if (button[1])
 		{
 			newkey = true;
-			lastkey_sym = SDLK_ESCAPE;
+			lastkey_char = lastkey_sym = SDLK_ESCAPE;
 		}
 	}
 
@@ -292,9 +298,9 @@ void JE_joystickInit( void )
 				{
 					joystick_installed = true;
 				}
-#else
+#else  /* TARGET_GP2X */
 				joystick_installed = true;
-#endif
+#endif  /* TARGET_GP2X */
 			}
 		}
 	}
@@ -320,9 +326,4 @@ void JE_joystickInit( void )
 		joystickLeft = false;
 		joystickRight = false;
 	}
-}
-
-void joystick_init( void )
-{
-	isNetworkGame = false;
 }

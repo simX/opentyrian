@@ -497,14 +497,16 @@ bool JE_playerSelect( void )
 					JE_playSampleNum(SELECT);
 					if (sel == 4)
 					{
-						netQuit = true;
+						/* TODO: network */
+						printf("-!- networking not implemented\n");
+						exit(-1);
 					}
 					break;
 				case SDLK_ESCAPE:
-				quit = true;
-				JE_playSampleNum(ESC);
-				return false;
-				break;
+					quit = true;
+					JE_playSampleNum(ESC);
+					return false;
+					break;
 				default:
 					break;
 			}
@@ -1227,8 +1229,8 @@ void JE_initPlayerData( void )
 
 void JE_sortHighScores( void )
 {
-	int temp = 0;
-
+	temp = 0;
+	
 	for (int x = 0; x < 6; x++)
 	{
 		JE_sort();
@@ -1806,6 +1808,7 @@ void JE_highScoreCheck( void )
 						{
 							bool validkey = false;
 							lastkey_char = toupper(lastkey_char);
+							lastkey_char = lastkey_char ? lastkey_char : lastkey_sym;
 							switch(lastkey_char)
 							{
 								case ' ':
@@ -2160,25 +2163,25 @@ void JE_sort( void )
 {
 	for (int a = 0; a < 2; a++)
 	{
-		for (int b = a+1; b < 3; b++)
+		for (int b = a + 1; b < 3; b++)
 		{
-			if (saveFiles[temp+a].highScore1 < saveFiles[temp+b].highScore1)
+			if (saveFiles[temp + a].highScore1 < saveFiles[temp + b].highScore1)
 			{
 				unsigned long tempLI;
 				char tempStr[30];
 				int tempByte;
 
-				tempLI = saveFiles[temp+a].highScore1;
-				saveFiles[temp+a].highScore1 = saveFiles[temp+b].highScore1;
-				saveFiles[temp+b].highScore1 = tempLI;
+				tempLI = saveFiles[temp + a].highScore1;
+				saveFiles[temp + a].highScore1 = saveFiles[temp + b].highScore1;
+				saveFiles[temp + b].highScore1 = tempLI;
 
-				strcpy(tempStr, saveFiles[temp+a].highScoreName);
-				strcpy(saveFiles[temp+a].highScoreName, saveFiles[temp+b].highScoreName);
-				strcpy(saveFiles[temp+b].highScoreName, tempStr);
+				strcpy(tempStr, saveFiles[temp + a].highScoreName);
+				strcpy(saveFiles[temp + a].highScoreName, saveFiles[temp + b].highScoreName);
+				strcpy(saveFiles[temp + b].highScoreName, tempStr);
 
-				tempByte = saveFiles[temp+a].highScoreDiff;
-				saveFiles[temp+a].highScoreDiff = saveFiles[temp+b].highScoreDiff;
-				saveFiles[temp+b].highScoreDiff = tempByte;
+				tempByte = saveFiles[temp + a].highScoreDiff;
+				saveFiles[temp + a].highScoreDiff = saveFiles[temp + b].highScoreDiff;
+				saveFiles[temp + b].highScoreDiff = tempByte;
 			}
 		}
 	}
@@ -2714,6 +2717,7 @@ void JE_operation( int slot )
 				{
 					bool validkey = false;
 					lastkey_char = toupper(lastkey_char);
+					lastkey_char = lastkey_char ? lastkey_char : lastkey_sym;
 					switch(lastkey_char)
 					{
 						case ' ':
@@ -3467,14 +3471,18 @@ redo:
 						{
 							tempB = false;
 							for (int temp = 0; temp < 8; temp++)
+							{
 								if (lastKey[temp] != keysactive[keySettings[temp]])
+								{
 									tempB = true;
+								}
+							}
 
 							lastMoveWait++;
 							if (tempB)
 							{
 								fputc(lastMoveWait >> 8, recordFile);
-								fputc(lastMoveWait && 0xff, recordFile);
+								fputc(lastMoveWait & 0xff, recordFile);
 
 								for (int temp = 0; temp < 8; temp++)
 									lastKey[temp] = keysactive[keySettings[temp]];
