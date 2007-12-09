@@ -7289,7 +7289,7 @@ void JE_itemScreen( void )
 						memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
 
 						curPal = newPal;
-						memcpy(colors, palettes[newPal], sizeof(colors));
+						memcpy(colors, palettes[newPal - 1], sizeof(colors));
 						JE_showVGA();
 						newPal = 0;
 						backFromHelp = true;
