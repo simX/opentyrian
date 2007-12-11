@@ -1,31 +1,31 @@
 #summary Frequently Asked Questions
 #labels Featured
 
-= Q: What is OpenTyrian? =
+== Q: What is OpenTyrian? ==
 
 A: [OpenTyrian] is rewrite of the Tyrian's Pascal and Assembly source-code in C, adapting it to use modern technologies instead of arcane DOS techniques.
 
 Right now we plan to create two versions of the port:
 
-  * *[OpenTyrianClassic OpenTyrian Classic]:* Currently being worked on, will try to faithfully recreate Tyrian, both in game and source code behaviour, won't receive any new features apart from those considered very important.
+  * *[OpenTyrianClassic OpenTyrian Classic]:* Currently being worked on, will try to faithfully recreate Tyrian, both in game and source code behavior, won't receive any new features apart from those considered very important.
   * *[OpenTyrian]:* Starting out of the Classic port, will feature cleaned up code, and brand new features, bug fixes and customization.
 
-= Q: Is Tyrian open source? =
+== Q: Is Tyrian open source? ==
 
 A: No, only OpenTyrian is open source.  The Tyrian source code was (more or less) licensed to the OpenTyrian developers for an open-source port.
 
-= Q: Can I use Dan's released graphics with the port? =
+== Q: Can I use Dan's released graphics with the port? ==
 
-A: No, you need to (currently) have the [Tyrian] 2.x datafiles. We plan to support [Tyrian2000 Tyrian 2000] datafiles in the future.
+A: No, you need to (currently) have the [Tyrian] 2.x datafiles. We may support [Tyrian2000 Tyrian 2000] datafiles in the future.
 
-= Q: Do you have an IRC channel? =
+== Q: Do you have an IRC channel? ==
 
-A: It's not official, but pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
+A: Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
 
-= Q: Help! When I try to run OpenTyrian I get a message along the lines of `OpenTyrian needs the Tyrian data files to run. Please read the README file.` What happen? =
+== Q: When I try to run OpenTyrian I get a message along the lines of "OpenTyrian needs the Tyrian data files to run." ==
 
-A: You need to have the Tyrian 2.x data files to run the game. 1.x or 2000 data files will *NOT* work! If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there. If you don't, [http://it.travisbsd.org.nyud.net:8080/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
+A: You need to have the Tyrian 2.x data files to run the game (1.x or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org.nyud.net:8080/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
 
-= Q: I have all the data files inside the ./data/ directory, but OpenTyrian still says it doesn't finds them! =
+== Q: I have all the data files inside the ./data/ directory, but OpenTyrian still doesn't find them! ==
 
-A: If you're using a case-sensitive filesystem (example: Linux), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
+A: If you're using a case-sensitive filesystem (most Unix-related filesystems), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
