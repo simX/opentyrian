@@ -16,16 +16,16 @@ A: No, only OpenTyrian is open source.  The Tyrian source code was (more or less
 
 == Q: Can I use Dan's released graphics with the port? ==
 
-A: No, you need to (currently) have the [Tyrian] 2.x datafiles. We may support [Tyrian2000 Tyrian 2000] datafiles in the future.
+A: No, you need to have the [Tyrian] 2.1 datafiles. We may support [Tyrian2000 Tyrian 2000] datafiles in the future.
 
 == Q: Do you have an IRC channel? ==
 
 A: Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
 
-== Q: When I try to run OpenTyrian I get a message along the lines of "OpenTyrian needs the Tyrian data files to run." ==
+== Q: Why do I get a message along the lines of "`OpenTyrian needs the Tyrian data files to run.`"? ==
 
-A: You need to have the Tyrian 2.x data files to run the game (1.x or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org.nyud.net:8080/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
+A: You need to have the Tyrian 2.1 data files to run the game (1.x, 2.0, or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
 
-== Q: I have all the data files inside the ./data/ directory, but OpenTyrian still doesn't find them! ==
+== Q: I have all the data files inside the ./data/ directory.  Why does OpenTyrian still not find them? ==
 
 A: If you're using a case-sensitive filesystem (most Unix-related filesystems), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
