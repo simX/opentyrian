@@ -28,12 +28,18 @@
 #include "varz.h"
 #include "vga256d.h"
 #include "iniparser.h"
+#include "BinaryStream.h"
 
 #include "config.h"
 
+#include <fstream>
 #include <stdio.h>
 #include <string.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
+#include <algorithm>
+#include <functional>
 
 
 /******** MAJOR TODO:
@@ -103,74 +109,6 @@ const char tyrian_ini_template[] = \
 	"button2 = %d\n"
 	"button3 = %d\n"
 	"button4 = %d\n";
-
-const char defaultHighScoreNames[34][23] = /* [1..34] of string [22] */
-{/*1P*/
-/*TYR*/   "The Prime Chair", /*13*/
-          "Transon Lohk",
-          "Javi Onukala",
-          "Mantori",
-          "Nortaneous",
-          "Dougan",
-          "Reid",
-          "General Zinglon",
-          "Late Gyges Phildren",
-          "Vykromod",
-          "Beppo",
-          "Borogar",
-          "ShipMaster Carlos",
-
-/*OTHER*/ "Jill", /*5*/
-          "Darcy",
-          "Jake Stone",
-          "Malvineous Havershim",
-          "Marta Louise Velasquez",
-
-/*JAZZ*/  "Jazz Jackrabbit", /*3*/
-          "Eva Earlong",
-          "Devan Shell",
-
-/*OMF*/   "Crystal Devroe", /*11*/
-          "Steffan Tommas",
-          "Milano Angston",
-          "Christian",
-          "Shirro",
-          "Jean-Paul",
-          "Ibrahim Hothe",
-          "Angel",
-          "Cossette Akira",
-          "Raven",
-          "Hans Kreissack",
-
-/*DARE*/  "Tyler", /*2*/
-          "Rennis the Rat Guard"
-};
-
-const char defaultTeamNames[22][25] = /* [1..22] of string [24] */
-{
-	"Jackrabbits",
-	"Team Tyrian",
-	"The Elam Brothers",
-	"Dare to Dream Team",
-	"Pinball Freaks",
-	"Extreme Pinball Freaks",
-	"Team Vykromod",
-	"Epic All-Stars",
-	"Hans Keissack's WARriors",
-	"Team Overkill",
-	"Pied Pipers",
-	"Gencore Growlers",
-	"Microsol Masters",
-	"Beta Warriors",
-	"Team Loco",
-	"The Shellians",
-	"Jungle Jills",
-	"Murderous Malvineous",
-	"The Traffic Department",
-	"Clan Mikal",
-	"Clan Patrok",
-	"Carlos' Crawlers"
-};
 
 
 const JE_EditorItemAvailType initialItemAvail =
@@ -252,7 +190,7 @@ int superArcadeMode;
 
 int superArcadePowerUp;
 
-double linkGunDirec;
+float linkGunDirec;
 int playerDevice1, playerDevice2;
 /* 0=Mouse   1=Joystick   2=Gravis GamePad */
 int inputDevice1, inputDevice2;
@@ -278,11 +216,153 @@ JE_SaveFilesType *saveFilePointer = &saveFiles;
 JE_SaveGameTemp saveTemp;
 JE_SaveGameTemp *saveTempPointer = &saveTemp;
 
-JE_word x;
-
 bool fullscreen_set = false, fullscreen_enabled;
 
 const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
+
+const unsigned long HighScore::defaultScores[3] = {5000, 2500, 1000};
+const char *HighScore::defaultHighScoreNames[] =
+{/*1P*/
+/*TYR*/   "The Prime Chair", /*13*/
+          "Transon Lohk",
+          "Javi Onukala",
+          "Mantori",
+          "Nortaneous",
+          "Dougan",
+          "Reid",
+          "General Zinglon",
+          "Late Gyges Phildren",
+          "Vykromod",
+          "Beppo",
+          "Borogar",
+          "ShipMaster Carlos",
+
+/*OTHER*/ "Jill", /*5*/
+          "Darcy",
+          "Jake Stone",
+          "Malvineous Havershim",
+          "Marta Louise Velasquez",
+
+/*JAZZ*/  "Jazz Jackrabbit", /*3*/
+          "Eva Earlong",
+          "Devan Shell",
+
+/*OMF*/   "Crystal Devroe", /*11*/
+          "Steffan Tommas",
+          "Milano Angston",
+          "Christian",
+          "Shirro",
+          "Jean-Paul",
+          "Ibrahim Hothe",
+          "Angel",
+          "Cossette Akira",
+          "Raven",
+          "Hans Kreissack",
+
+/*DARE*/  "Tyler", /*2*/
+          "Rennis the Rat Guard"
+};
+
+const char *HighScore::defaultTeamNames[] =
+{
+	"Jackrabbits",
+	"Team Tyrian",
+	"The Elam Brothers",
+	"Dare to Dream Team",
+	"Pinball Freaks",
+	"Extreme Pinball Freaks",
+	"Team Vykromod",
+	"Epic All-Stars",
+	"Hans Keissack's WARriors",
+	"Team Overkill",
+	"Pied Pipers",
+	"Gencore Growlers",
+	"Microsol Masters",
+	"Beta Warriors",
+	"Team Loco",
+	"The Shellians",
+	"Jungle Jills",
+	"Murderous Malvineous",
+	"The Traffic Department",
+	"Clan Mikal",
+	"Clan Patrok",
+	"Carlos' Crawlers"
+};
+
+HighScores::HighScores( )
+{
+	for (int i = 0; i < 4; i++) // Episode
+	{
+		for (int j = 0; j < 2; j++) // One or two players
+		{
+			for (int k = 0; k < 3; k++) // Place
+			{
+				mScores[i][j][k] = HighScore(i, j == 1, k);
+			}
+		}
+	}
+}
+
+void HighScores::serialize( OBinaryStream& f ) const
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				mScores[i][j][k].serialize(f);
+			}
+		}
+	}
+}
+
+void HighScores::unserialize( IBinaryStream& f )
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			for (int k = 0; k < 3; k++)
+			{
+				mScores[i][j][k] = HighScore(f);
+			}
+		}
+	}
+}
+
+void HighScores::sort( )
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			std::sort(mScores[i][j], mScores[i][j]+3, std::greater<HighScore>());
+		}
+	}
+}
+
+int HighScores::insertScore( const int episode, const int players, const HighScore& score, bool dry_run )
+{
+	sort();
+	
+	HighScore(& arr)[3] = mScores[episode][players];
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (arr[i] < score)
+		{
+			if (!dry_run)
+			{
+				arr[i] = score;
+			}
+			return i;
+		}
+	}
+
+	return -1;
+}
+HighScores highScores;
 
 void JE_decryptString( char *s, int len )
 {
@@ -573,138 +653,8 @@ void JE_setNewGameSpeed( void )
   JE_setTimerInt();
 }
 
-void JE_encryptSaveTemp( void )
-{
-	JE_SaveGameTemp s3;
-	char y;
-
-	memcpy(&s3, &saveTemp, sizeof(s3));
-
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y += s3[x];
-	}
-	saveTemp[SAVE_FILE_SIZE] = y;
-
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y -= s3[x];
-	}
-	saveTemp[SAVE_FILE_SIZE+1] = y;
-
-	y = 1;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y = (y * s3[x]) + 1;
-	}
-	saveTemp[SAVE_FILE_SIZE+2] = y;
-
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y = y ^ s3[x];
-	}
-	saveTemp[SAVE_FILE_SIZE+3] = y;
-
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		saveTemp[x] = saveTemp[x] ^ cryptKey[(x+1) % 10];
-		if (x > 0)
-		{
-			saveTemp[x] = saveTemp[x] ^ saveTemp[x - 1];
-		}
-	}
-}
-
-void JE_decryptSaveTemp( void )
-{
-	bool correct = true;
-	JE_SaveGameTemp s2;
-	/*JE_word x;*/
-	unsigned int y;
-
-	/* Decrypt save game file */
-	for (int x = (SAVE_FILE_SIZE - 1); x >= 0; x--)
-	{
-		s2[x] = (char)saveTemp[x] ^ (char)(cryptKey[(x+1) % 10]);
-		if (x > 0)
-		{
-			s2[x] ^= (char)saveTemp[x - 1];
-		}
-
-	}
-
-	/* for (x = 0; x < SAVE_FILE_SIZE; x++) printf("%c", s2[x]); */
-
-	/* Check save file for correctitude */
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y += s2[x];
-	}
-	y %= 256;
-	if (saveTemp[SAVE_FILE_SIZE] != y)
-	{
-		correct = false;
-		printf("Failed additive checksum: %d vs %d\n", saveTemp[SAVE_FILE_SIZE], y);
-	}
-
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y -= s2[x];
-	}
-	y %= 256;
-	if (saveTemp[SAVE_FILE_SIZE+1] != y)
-	{
-		correct = false;
-		printf("Failed subtractive checksum: %d vs %d\n", saveTemp[SAVE_FILE_SIZE+1], y);
-	}
-
-	y = 1;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y = (y * s2[x]) + 1;
-	}
-	y %= 256;
-	if (saveTemp[SAVE_FILE_SIZE+2] != y)
-	{
-		correct = false;
-		printf("Failed multiplicative checksum: %d vs %d\n", saveTemp[SAVE_FILE_SIZE+2], y);
-	}
-
-	y = 0;
-	for (int x = 0; x < SAVE_FILE_SIZE; x++)
-	{
-		y = y ^ s2[x];
-	}
-	if (saveTemp[SAVE_FILE_SIZE+3] != y)
-	{
-		correct = false;
-		printf("Failed XOR'd checksum: %d vs %d\n", saveTemp[SAVE_FILE_SIZE+3], y);
-	}
-
-	/* Barf and die if save file doesn't validate */
-	if (!correct)
-	{
-		printf("Error reading save file!\n");
-		exit(255);
-	}
-
-	/* Keep decrypted version plz */
-	memcpy(&saveTemp, &s2, sizeof(s2));
-}
-
 void JE_loadConfiguration( void )
 {
-	FILE *fi;
-	Uint8 *p;
-	char junk;
-
-	errorActive = true;
-
 	dictionary *ini = iniparser_new("tyrian.ini");
 
 	gameSpeed = iniparser_getint(ini, "video:game_speed", 4);
@@ -719,14 +669,14 @@ void JE_loadConfiguration( void )
 	inputDevice1 = iniparser_getint(ini, "input:device1", 0);
 	inputDevice2 = iniparser_getint(ini, "input:device2", 0);
 
-	keySettings[0] = iniparser_getint(ini, "keyboard:up", 273);
-	keySettings[1] = iniparser_getint(ini, "keyboard:down", 274);
-	keySettings[2] = iniparser_getint(ini, "keyboard:left", 276);
-	keySettings[3] = iniparser_getint(ini, "keyboard:right", 275);
-	keySettings[4] = iniparser_getint(ini, "keyboard:fire", 32);
-	keySettings[5] = iniparser_getint(ini, "keyboard:change_fire", 13);
-	keySettings[6] = iniparser_getint(ini, "keyboard:left_sidekick", 306);
-	keySettings[7] = iniparser_getint(ini, "keyboard:right_sidekick", 308);
+	keySettings[0] = (SDLKey)iniparser_getint(ini, "keyboard:up", 273);
+	keySettings[1] = (SDLKey)iniparser_getint(ini, "keyboard:down", 274);
+	keySettings[2] = (SDLKey)iniparser_getint(ini, "keyboard:left", 276);
+	keySettings[3] = (SDLKey)iniparser_getint(ini, "keyboard:right", 275);
+	keySettings[4] = (SDLKey)iniparser_getint(ini, "keyboard:fire", 32);
+	keySettings[5] = (SDLKey)iniparser_getint(ini, "keyboard:change_fire", 13);
+	keySettings[6] = (SDLKey)iniparser_getint(ini, "keyboard:left_sidekick", 306);
+	keySettings[7] = (SDLKey)iniparser_getint(ini, "keyboard:right_sidekick", 308);
 
 	joyButtonAssign[0] = iniparser_getint(ini, "joystick:button1", 1);
 	joyButtonAssign[1] = iniparser_getint(ini, "joystick:button2", 4);
@@ -743,109 +693,57 @@ void JE_loadConfiguration( void )
 
 	JE_setVol(tyrMusicVolume, fxVolume);
 
-	dont_die = true;
-	JE_resetFile(&fi, "tyrian.sav");
-	dont_die = false;
-
-	if (fi)
+	for (int i = 0; i < SAVE_FILES_NUM; i++)
 	{
+		JE_SaveFileType& save = saveFiles[i];
 
-		fseek(fi, 0, SEEK_SET);
-		efread(saveTemp, 1, sizeof(saveTemp), fi);
-		JE_decryptSaveTemp();
+		std::ifstream file((std::string("save/tyrian") + char('1'+i) + ".sav").c_str(), std::ios_base::in | std::ios_base::binary);
 
-		/* SYN: The original mostly blasted the save file into raw memory. However, our lives are not so
-		   easy, because the C struct is necessarily a different size. So instead we have to loop
-		   through each record and load fields manually. *emo tear* :'( */
-
-		p = saveTemp;
-		for (int z = 0; z < SAVE_FILES_NUM; z++)
+		if (file)
 		{
-			memcpy(&saveFiles[z].encode, p, sizeof(JE_word)); p += 2;
-			saveFiles[z].encode = SDL_SwapLE16(saveFiles[z].encode);
-			
-			memcpy(&saveFiles[z].level, p, sizeof(JE_word)); p += 2;
-			saveFiles[z].level = SDL_SwapLE16(saveFiles[z].level);
-			
-			memcpy(&saveFiles[z].items, p, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
-			
-			memcpy(&saveFiles[z].score, p, sizeof(Sint32)); p += 4;
-			saveFiles[z].score = SDL_SwapLE32(saveFiles[z].score);
-			
-			memcpy(&saveFiles[z].score2, p, sizeof(Sint32)); p += 4;
-			saveFiles[z].score2 = SDL_SwapLE32(saveFiles[z].score2);
-			
-			/* SYN: Pascal strings are prefixed by a byte holding the length! */
-			memset(&saveFiles[z].levelName, 0, sizeof(saveFiles[z].levelName));
-			memcpy(&saveFiles[z].levelName, &p[1], *p);
-			p += 10;
-			
-			/* This was a BYTE array, not a STRING, in the original. Go fig. */
-			memcpy(&saveFiles[z].name, p, 14);
-			p += 14;
-			
-			memcpy(&saveFiles[z].cubes, p, sizeof(Uint8)); p++;
-			memcpy(&saveFiles[z].power, p, sizeof(Uint8) * 2); p += 2;
-			memcpy(&saveFiles[z].episode, p, sizeof(Uint8)); p++;
-			memcpy(&saveFiles[z].lastItems, p, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
-			memcpy(&saveFiles[z].difficulty, p, sizeof(Uint8)); p++;
-			memcpy(&saveFiles[z].secretHint, p, sizeof(Uint8)); p++;
-			memcpy(&saveFiles[z].input1, p, sizeof(Uint8)); p++;
-			memcpy(&saveFiles[z].input2, p, sizeof(Uint8)); p++;
-			
-			/* booleans were 1 byte in pascal -- working around it */
-			Uint8 temp;
-			memcpy(&temp, p, 1); p++;
-			saveFiles[z].gameHasRepeated = temp != 0;
-			
-			memcpy(&saveFiles[z].initialDifficulty, p, sizeof(Uint8)); p++;
-			
-			memcpy(&saveFiles[z].highScore1, p, sizeof(Sint32)); p += 4;
-			saveFiles[z].highScore1 = SDL_SwapLE32(saveFiles[z].highScore1);
-			
-			memcpy(&saveFiles[z].highScore2, p, sizeof(Sint32)); p += 4;
-			saveFiles[z].highScore2 = SDL_SwapLE32(saveFiles[z].highScore2);
-			
-			memset(&saveFiles[z].highScoreName, 0, sizeof(saveFiles[z].highScoreName));
-			memcpy(&saveFiles[z].highScoreName, &p[1], *p);
-			p += 30;
-			
-			/* TODO DEBUG printf("%s, %ld / %ld\n", saveFiles[z].highScoreName, saveFiles[z].highScore1, saveFiles[z].highScore2); */
-			
-			memcpy(&saveFiles[z].highScoreDiff, p, sizeof(Uint8)); p++;
-		}
+			IBinaryStream f(file);
 
-		fclose(fi);
-	} else {
-		/* We didn't have a save file! Let's make up random stuff! */
-		for (int z = 0; z < 100; z++)
-		{
-			saveTemp[SAVE_FILES_SIZE + z] = initialItemAvail[z];
-		}
-
-		for (int z = 0; z < SAVE_FILES_NUM; z++)
-		{
-			saveFiles[z].level = 0;
-
-			for (int y = 0; y < 14; y++)
+			save.encode = f.get16();
+			save.level = f.get16();
+			for (int j = 0; j < 12; j++)
 			{
-				saveFiles[z].name[y] = ' ';
+				save.items[j] = f.get16();
 			}
-			saveFiles[z].name[14] = 0;
-
-			saveFiles[z].highScore1 = ((rand() % 20) + 1) * 1000;
-
-			if (z % 6 > 2)
+			for (int j = 0; j < 12; j++)
 			{
-				saveFiles[z].highScore2 = ((rand() % 20) + 1) * 1000;
-				strcpy(saveFiles[z].highScoreName, defaultTeamNames[rand() % 22]);
-			} else {
-				strcpy(saveFiles[z].highScoreName, defaultHighScoreNames[rand() % 34]);
+				save.lastItems[j] = f.get16();
 			}
+			save.score = f.get32();
+			save.score2 = f.get32();
+			save.levelName[f.getStr().copy(save.levelName, 10)] = '\0';
+			save.name[f.getStr().copy(save.name, 14)] = '\0';
+			save.cubes = f.get8();
+			save.power[0] = f.get8();
+			save.power[1] = f.get8();
+			save.episode = f.get8();
+			save.difficulty = f.get8();
+			save.secretHint = f.get8();
+			save.input1 = f.get8();
+			save.input2 = f.get8();
+			save.gameHasRepeated = (f.get8() != 0);
+			save.initialDifficulty = f.get8();
+		} else {
+			// Savefile not found, initialize to defaults
+			save.level = 0;
+			for (int i = 0; i < 14; i++)
+			{
+				save.name[i] = ' ';
+			}
+			save.name[14] = '\0';
 		}
 	}
 
-	errorActive = false;
+	std::ifstream file("save/tyrian.hi", std::ios_base::in | std::ios_base::binary);
+	if (file)
+	{
+		IBinaryStream s(file);
+		highScores.unserialize(s);
+	} // Making up random stuff handled by the default ctor
 
 	JE_calcFXVol();
 	JE_initProcessorType();
@@ -853,81 +751,67 @@ void JE_loadConfiguration( void )
 
 void JE_saveConfiguration( void )
 {
-	FILE *f;
-	Uint8 *p, junk = 0;
-
-	p = saveTemp;
-
-	for (int z = 0; z < SAVE_FILES_NUM; z++)
 	{
-		JE_SaveFileType tempSaveFile;
-		memcpy(&tempSaveFile, &saveFiles[z], sizeof(tempSaveFile));
-		
-		tempSaveFile.encode = SDL_SwapLE16(tempSaveFile.encode);
-		memcpy(p, &tempSaveFile.encode, sizeof(JE_word)); p += 2;
-		
-		tempSaveFile.level = SDL_SwapLE16(tempSaveFile.level);
-		memcpy(p, &tempSaveFile.level, sizeof(JE_word)); p += 2;
-		
-		memcpy(p, &tempSaveFile.items, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
-		
-		tempSaveFile.score = SDL_SwapLE32(tempSaveFile.score);
-		memcpy(p, &tempSaveFile.score, sizeof(Sint32)); p += 4;
-		
-		tempSaveFile.score2 = SDL_SwapLE32(tempSaveFile.score2);
-		memcpy(p, &tempSaveFile.score2, sizeof(Sint32)); p += 4;
-		
-		/* SYN: Pascal strings are prefixed by a byte holding the length! */
-		memset(p, 0, sizeof(tempSaveFile.levelName));
-		*p = strlen(tempSaveFile.levelName);
-		memcpy(&p[1], &tempSaveFile.levelName, *p);
-		p += 10;
-		
-		/* This was a BYTE array, not a STRING, in the original. Go fig. */
-		memcpy(p, &tempSaveFile.name, 14);
-		p += 14;
-		
-		memcpy(p, &tempSaveFile.cubes, sizeof(Uint8)); p++;
-		memcpy(p, &tempSaveFile.power, sizeof(Uint8) * 2); p += 2;
-		memcpy(p, &tempSaveFile.episode, sizeof(Uint8)); p++;
-		memcpy(p, &tempSaveFile.lastItems, sizeof(JE_PItemsType)); p += sizeof(JE_PItemsType);
-		memcpy(p, &tempSaveFile.difficulty, sizeof(Uint8)); p++;
-		memcpy(p, &tempSaveFile.secretHint, sizeof(Uint8)); p++;
-		memcpy(p, &tempSaveFile.input1, sizeof(Uint8)); p++;
-		memcpy(p, &tempSaveFile.input2, sizeof(Uint8)); p++;
-		
-		/* booleans were 1 byte in pascal -- working around it */
-		Uint8 temp = tempSaveFile.gameHasRepeated != false;
-		memcpy(p, &temp, 1); p++;
-		
-		memcpy(p, &tempSaveFile.initialDifficulty, sizeof(Uint8)); p++;
-		
-		tempSaveFile.highScore1 = SDL_SwapLE32(tempSaveFile.highScore1);
-		memcpy(p, &tempSaveFile.highScore1, sizeof(Sint32)); p += 4;
-		
-		tempSaveFile.highScore2 = SDL_SwapLE32(tempSaveFile.highScore2);
-		memcpy(p, &tempSaveFile.highScore2, sizeof(Sint32)); p += 4;
-		
-		memset(p, 0, sizeof(tempSaveFile.highScoreName));
-		*p = strlen(tempSaveFile.highScoreName);
-		memcpy(&p[1], &tempSaveFile.highScoreName, *p);
-		p += 30;
-		
-		memcpy(p, &tempSaveFile.highScoreDiff, sizeof(Uint8)); p++;
-	}
+		std::ofstream file("save/tyrian.hi", std::ios_base::out | std::ios_base::binary);
 
-	JE_encryptSaveTemp();
-	f = fopen_check("tyrian.sav", "wb");
-	if (f)
-	{
-		efwrite(saveTemp, 1, sizeof(saveTemp), f);
-		fclose(f);
+		if (file)
+		{
+			OBinaryStream s(file);
+			highScores.serialize(s);
+		}
+
+		file.close();
+
 #if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
 		sync();
 #endif
 	}
-	JE_decryptSaveTemp();
 
+	for (int i = 0; i < SAVE_FILES_NUM; i++)
+	{
+		if (saveFiles[i].level != 0)
+		{
+			std::ofstream file((std::string("save/tyrian") + char('1'+i) + ".sav").c_str(), std::ios_base::out | std::ios_base::binary);
+
+			if (!file)
+			{
+				std::cerr << "Failed to write save/tyrian" << '1'+i << ".sav" << std::endl;
+				continue;
+			}
+
+			OBinaryStream f(file);
+
+			JE_SaveFileType& save = saveFiles[i];
+
+			f.put16(save.encode);
+			f.put16(save.level);
+			for (int j = 0; j < 12; j++)
+			{
+				f.put16(save.items[j]);
+			}
+			for (int j = 0; j < 12; j++)
+			{
+				f.put16(save.lastItems[j]);
+			}
+			f.put32(save.score);
+			f.put32(save.score2);
+			f.put(save.levelName);
+			f.put(save.name);
+			f.put8(save.cubes);
+			f.put8(save.power[0]);
+			f.put8(save.power[1]);
+			f.put8(save.episode);
+			f.put8(save.difficulty);
+			f.put8(save.secretHint);
+			f.put8(save.input1);
+			f.put8(save.input2);
+			f.put8(save.gameHasRepeated);
+			f.put8(save.initialDifficulty);
+#if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
+			sync();
+#endif
+		}
+	}
 
 	FILE *ini = fopen("tyrian.ini", "w");
 	if (ini == NULL)

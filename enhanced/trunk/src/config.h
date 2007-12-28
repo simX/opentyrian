@@ -22,7 +22,10 @@
 
 #include "opentyr.h"
 
+#include "BinaryStream.h"
+
 #include <stdio.h>
+#include <string>
 
 
 #define SAVE_FILES_NUM (11 * 2)
@@ -43,7 +46,7 @@ typedef int JE_PItemsType[12]; /* [1..12] */
 
 typedef char JE_EditorItemAvailType[100]; /* [1..100] */
 
-typedef struct
+struct JE_SaveFileType
 {
 	JE_word encode;
 	JE_word level;
@@ -53,7 +56,7 @@ typedef struct
 	char levelName[11]; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
 	char name[15]; /* [1..14] */ /* SYN: Added extra byte for null */
 	int cubes;
-	int power[2]; /* [1..2] */
+	int power[2];
 	int episode;
 	JE_PItemsType lastItems;
 	int difficulty;
@@ -62,24 +65,90 @@ typedef struct
 	int input2;
 	bool gameHasRepeated; /*See if you went from one episode to another*/
 	int initialDifficulty;
+};
 
-	/* High Scores - Each episode has both sets of 1&2 player selections - with 3 in each */
-	unsigned long highScore1, highScore2;
-	char          highScoreName[30]; /* string [29] */
-	int       highScoreDiff;
-} JE_SaveFileType;
+class HighScore
+{
+private:
+	static const unsigned long defaultScores[3];
+	static const char *defaultHighScoreNames[34];
+	static const char *defaultTeamNames[22];
+
+	unsigned long mScore;
+	std::string mName;
+	unsigned char mDifficulty;
+public:
+	HighScore( const unsigned long score = 0, const std::string& name = "", const unsigned char difficulty = 0 )
+		: mScore(score), mName(name), mDifficulty(difficulty)
+	{}
+
+	HighScore( const int episode, const bool two_player, const int place )
+		: mScore(!two_player ? defaultScores[place]*(episode+1) : defaultScores[place]*(episode+1)/2),
+		  mName(!two_player ? defaultHighScoreNames[rand() % 34] : defaultTeamNames[rand() % 22]),
+		  mDifficulty(0)
+	{}
+
+	HighScore( IBinaryStream& f )
+		: mScore(f.get32()), mName(f.getStr()), mDifficulty(f.get8())
+	{}
+
+	void serialize( OBinaryStream& f ) const
+	{
+		f.put32(mScore);
+		f.put(mName);
+		f.put8(mDifficulty);
+	}
+
+	bool operator<( const HighScore& o ) const
+	{
+		return getScore() < o.getScore();
+	}
+	bool operator>( const HighScore& o ) const
+	{
+		return getScore() > o.getScore();
+	}
+
+	unsigned long getScore() const { return mScore; }
+	std::string getName() const { return mName; }
+	unsigned char getDifficulty() const { return mDifficulty; }
+
+	void setScore( unsigned long score ) { mScore = score; }
+	void setName( const std::string& name ) { mName = name; }
+	void setDifficulty( unsigned char difficulty ) { mDifficulty = difficulty; }
+};
+
+class HighScores
+{
+private:
+	HighScore mScores[4][2][3];
+public:
+	HighScores( );
+	HighScores( IBinaryStream& f )
+	{
+		unserialize(f);
+	}
+	void serialize( OBinaryStream& f ) const;
+	void unserialize( IBinaryStream& f );
+
+	void sort( );
+
+	int insertScore( const int episode, const int players, const HighScore& score, bool dry_run = false );
+
+	HighScore& getScore( const int episode, const int players, const int place ) { return mScores[episode][players][place]; }
+};
+extern HighScores highScores;
 
 typedef JE_SaveFileType JE_SaveFilesType[SAVE_FILES_NUM]; /* [1..savefilesnum] */
 typedef Uint8 JE_SaveGameTemp[SAVE_FILES_SIZE + 4 + 100]; /* [1..sizeof(savefilestype) + 4 + 100] */
 
 typedef int JE_PortPowerType[7]; /* [1..7] */
 
-typedef struct
+struct StarDatType
 {
 	int sC;
 	JE_word sLoc;
 	JE_word sMov;
-} StarDatType;
+};
 
 extern const unsigned char cryptKey[10];
 extern const JE_KeySettingType defaultKeySettings;
@@ -116,7 +185,7 @@ extern bool extraGame;
 extern bool twoPlayerMode, twoPlayerLinked, onePlayerAction, superTyrian, trentWin;
 extern int superArcadeMode;
 extern int superArcadePowerUp;
-extern double linkGunDirec;
+extern float linkGunDirec;
 extern int playerDevice1, playerDevice2;
 extern int inputDevice1, inputDevice2;
 extern int secretHint;
@@ -149,9 +218,5 @@ void JE_saveGame( int slot, char *name );
 void JE_loadGame( int slot );
 
 void JE_decryptString( char *s, int len );
-
-
-void JE_encryptSaveTemp( void );
-void JE_decryptSaveTemp( void );
 
 #endif /* CONFIG_H */

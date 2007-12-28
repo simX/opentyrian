@@ -53,7 +53,7 @@ void JE_newDrawCShapeModifyNum( int table, int shape, int x, int y, int filter, 
 void JE_newDrawCShapeAdjust( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
 void JE_newDrawCShapeAdjustNum( int table, int shape, int x, int y, int filter, int brightness );
 void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
-/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, double scale );*/
+/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, float scale );*/
 JE_word JE_fontCenter( const char *s, int font );
 JE_word JE_textWidth( const char *s, int font );
 void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int shadetype );

@@ -77,7 +77,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 	{
 		for (int z = 0; z < min-1; z++)
 		{
-			shapeExist[table][z] = getc(f);
+			shapeExist[table][z] = (getc(f) != 0);
 
 			if (shapeExist[table][z])
 			{
@@ -85,11 +85,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 				efread(&shapeY   [table][z], sizeof(JE_word), 1, f);
 				efread(&shapeSize[table][z], sizeof(JE_word), 1, f);
 
-				(*shapeArray)[table][z] = malloc(shapeX[table][z] * shapeY[table][z]);
-
-				efread((*shapeArray)[table][z], sizeof(Uint8), shapeSize[table][z], f);
-
-				free((*shapeArray)[table][z]);
+				fseek(f, shapeSize[table][z], SEEK_CUR);
 			}
 		}
 	}
@@ -97,7 +93,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 	for (int z = min-1; z < max; z++)
 	{
 		tempW = z-min+1;
-		shapeExist[table][tempW] = getc(f);
+		shapeExist[table][tempW] = (getc(f) != 0);
 
 		if (shapeExist[table][tempW])
 		{
@@ -105,7 +101,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 			efread(&shapeY   [table][tempW], sizeof(JE_word), 1, f);
 			efread(&shapeSize[table][tempW], sizeof(JE_word), 1, f);
 
-			(*shapeArray)[table][tempW] = malloc(shapeX[table][tempW]*shapeY[table][tempW]);
+			(*shapeArray)[table][tempW] = (Uint8 *)malloc(shapeX[table][tempW]*shapeY[table][tempW]);
 
 			efread((*shapeArray)[table][tempW], sizeof(Uint8), shapeSize[table][tempW], f);
 		}
@@ -366,7 +362,7 @@ void newshape_init( void )
 	{
 		maxShape[i] = 0;
 	}
-	shapeArray = malloc(sizeof(JE_ShapeArrayType));
+	shapeArray = (JE_ShapeArrayType *)malloc(sizeof(JE_ShapeArrayType));
 }
 
 void JE_drawNext( Uint8 draw )

@@ -457,7 +457,7 @@ void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize
 	}
 }
 
-/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, double scale );
+/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, float scale );
 {
 	Uint8 lookuphoriz[320];
 	Uint8 lookupvert[200];
@@ -611,7 +611,6 @@ void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brig
 {
 	unsigned char b;
 	bool bright = false;
-
 	for (int a = 0; s[a] != 0; a++)
 	{
 		b = s[a];

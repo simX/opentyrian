@@ -27,6 +27,8 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <string>
+#include <iostream>
 
 JE_word randomcount;
 char dir[256]; /* increase me */
@@ -35,8 +37,6 @@ bool errorActive = true;
 bool errorOccurred = false;
 
 bool dont_die = false;
-
-char err_msg[128] = "No error!?";
 
 static const char *tyrian_searchpaths[] = { "data", "tyrian", "tyrian2k" };
 
@@ -72,8 +72,7 @@ FILE *fopen_check( const char *file, const char *mode )
 				strcpy(buf, "Unknown error");
 				break;
 		}
-		snprintf(err_msg, sizeof err_msg, "ERROR opening %s: %s\n", file, buf);
-		printf("%s", err_msg);
+		std::cout << "ERROR opening " << file << ": " << buf << "\n";
 		return NULL;
 	}
 
@@ -87,7 +86,7 @@ unsigned long JE_getFileSize( const char *filename )
 	unsigned long size = 0;
 
 	errorActive = false;
-	f = fopen(JE_locateFile(filename), "rb");
+	f = fopen(JE_locateFile(filename).c_str(), "rb");
 	errorActive = true;
 	if (errorOccurred)
 	{
@@ -132,53 +131,47 @@ bool JE_find( const char *s )
 
 void JE_findTyrian( const char *filename )
 {
-	char *strbuf;
+	std::string strbuf;
 
 	if (JE_find(filename))
 	{
 		dir[0] = '\0';
 	} else {
 		/* Let's find it! */
-		printf("Searching for Tyrian files...\n\n");
+		std::cout << "Searching for Tyrian files...\n\n";
 
 		for (int i = 0; i < COUNTOF(tyrian_searchpaths); i++)
-		{
-			strbuf = malloc(strlen(tyrian_searchpaths[i]) + strlen(filename) + 2);
-			
-			sprintf(strbuf, "%s/%s", tyrian_searchpaths[i], filename);
-			if (JE_find(strbuf))
-			{
-				free(strbuf);
-				
+		{			
+			strbuf = std::string(tyrian_searchpaths[i]) + "/" + filename;
+			if (JE_find(strbuf.c_str()))
+			{				
 				sprintf(dir, "%s/", tyrian_searchpaths[i]);
-				printf("Tyrian data files found at %s\n\n", dir);
+				std::cout << "Tyrian data files found at " << dir << "\n\n";
 				return;
 			}
-			
-			free(strbuf);
 		}
 	}
 }
 
-char *JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant !!! */
+std::string JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant !!! */
 {
-	static char buf[1024];
+	std::string buf;
 
 	if (JE_find(filename))
 	{
-		strcpy(buf, filename);
+		buf = std::string(filename);
 	} else {
 		if (strcmp(dir, "") == 0 && errorActive)
 		{
 			JE_findTyrian(filename);
 		}
 
-		snprintf(buf, sizeof buf, "%s%s", dir, filename);
-		if (!JE_find(buf))
+		buf = std::string(dir) + filename;
+		if (!JE_find(buf.c_str()))
 		{
 			if (dont_die)
 			{
-				return NULL;
+				return std::string("");
 			}
 			errorActive = true;
 			JE_errorHand(filename);
@@ -191,18 +184,16 @@ char *JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant !!! */
 
 void JE_resetFile( FILE **f, const char *filename )
 {
-	char *tmp;
+	std::string tmp = JE_locateFile(filename);
 
-	tmp = JE_locateFile(filename);
-	*f = tmp ? fopen_check(tmp, "rb") : NULL;
+	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "rb");
 }
 
 void JE_resetText( FILE **f, const char *filename )
 {
-	char *tmp;
+	std::string tmp = JE_locateFile(filename);
 
-	tmp = JE_locateFile(filename);
-	*f = tmp ? fopen_check(tmp, "r") : NULL;
+	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "r");
 }
 
 bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config file exists */

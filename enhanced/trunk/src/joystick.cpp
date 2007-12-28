@@ -65,7 +65,7 @@ void JE_joystick1( void ) /* procedure to get x and y */
 
 	for (int i = 0; i < COUNTOF(joyButton); i++)
 	{
-		joyButton[i] = SDL_JoystickGetButton(joystick, i);
+		joyButton[i] = (SDL_JoystickGetButton(joystick, i) == 1);
 	}
 
 #ifndef TARGET_GP2X

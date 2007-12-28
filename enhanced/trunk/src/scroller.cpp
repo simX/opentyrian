@@ -30,8 +30,9 @@
 #include "varz.h"
 #include "vga256d.h"
 
+#include <cmath>
 
-const struct about_text_type about_text[] =
+const about_text_type about_text[] =
 {
 	{0x30, "----- ~OpenTyrian~ -----"},
 	{0x00, ""},
@@ -95,16 +96,16 @@ struct coin_def_type {
 };
 
 #define MAX_COINS 20
-struct coin_def_type coin_defs[] =
+coin_def_type coin_defs[] =
 {
 	{1, 6}, {7, 6}, {20, 6}, {26, 6}, // Coins
 	{14, 5, true}, {32, 5, true}, {51, 5, true} // Gems
 };
 
 /* Text is an array of strings terminated by a NULL */
-void scroller_sine( const struct about_text_type text[] )
+void scroller_sine( const about_text_type text[] )
 {
-	bool ale = rand() % 2;
+	bool ale = (rand() % 2) != 0;
 
 	int visible_lines = surface_height / LINE_HEIGHT + 1;
 	int current_line = -visible_lines;
@@ -178,7 +179,7 @@ void scroller_sine( const struct about_text_type text[] )
 					{
 						if (line_y + j >= 10 && line_y + j <= surface_height - 10)
 						{
-							int foo = sin((((line_y + j) / 2) % 10) / 5.0f * M_PI) * 3;
+							int foo = (int)(sin((((line_y + j) / 2) % 10) / 5.0f * M_PI) * 3);
 							memmove(&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j) + foo],
 									&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j)],
 									VGAScreenSeg->pitch);

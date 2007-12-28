@@ -43,7 +43,7 @@ void JE_weaponViewFrame( int testshotnum );
 
 void JE_doNetwork( void );
 
-void JE_makeEnemy( struct JE_SingleEnemyType *enemy );
+void JE_makeEnemy( JE_SingleEnemyType *enemy );
 
 void JE_weaponSimUpdate( void );
 

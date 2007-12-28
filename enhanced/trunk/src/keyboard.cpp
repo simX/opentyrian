@@ -121,7 +121,7 @@ void service_SDL_events( bool clear_new )
 				newkey = true;
 				lastkey_sym = ev.key.keysym.sym;
 				lastkey_mod = ev.key.keysym.mod;
-				lastkey_char = ev.key.keysym.unicode;
+				lastkey_char = (unsigned char)ev.key.keysym.unicode;
 				keydown = true;
 				return;
 			case SDL_KEYUP:

@@ -41,7 +41,6 @@ struct JE_PCXHeader_rec {
 	JE_word palette_type;
 };
 
-extern JE_ColorType colors2;
 extern JE_word width, depth;
 extern JE_word bytes;
 extern char /*c,*/ c2;

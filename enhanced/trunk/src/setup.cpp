@@ -42,7 +42,7 @@
 bool volumeActive = true;
 bool fx;
 JE_word fxNum;
-bool repeatedFade, continuousPlay;
+bool repeatedFade;
 
 void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 {

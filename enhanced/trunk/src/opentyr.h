@@ -23,12 +23,13 @@
 #include "SDL.h"
 #include "SDL_endian.h"
 
-#include <math.h> /* For the ROUND() macro */
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+#define __func__ __FUNCTION__
+#endif
 
 #define STUB() printf("!!! STUB: %s:%d:%s\n", __FILE__, __LINE__, __func__)
 
@@ -37,11 +38,13 @@
 #define COUNTOF(x) (sizeof(x) / sizeof *(x))
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846f
 #endif
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923
+#define M_PI_2 1.57079632679489661923f
 #endif
+
+int round(float x);
 
 #ifdef PASCAL_TYPES
 //typedef Sint32 JE_longint; - Done

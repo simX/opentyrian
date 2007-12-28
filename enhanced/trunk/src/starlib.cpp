@@ -25,13 +25,14 @@
 #include "starlib.h"
 
 #include <ctype.h>
+#include <cmath>
 
 
 bool run;
-struct JE_StarType star[starlib_MAX_STARS];
+JE_StarType star[starlib_MAX_STARS];
 
-int tempW;
-int tempX, tempY;
+static int tempW;
+static int tempX, tempY;
 
 int setup;
 JE_word stepCounter;
@@ -40,9 +41,9 @@ JE_word nsp2;
 Sint8 nspVar2Inc;
 
 /* JE: new sprite pointer */
-double nsp;
-double nspVarInc;
-double nspVarVarInc;
+float nsp;
+float nspVarInc;
+float nspVarVarInc;
 
 JE_word changeTime;
 bool doChange;
@@ -63,7 +64,7 @@ void JE_starlib_main( void )
 	JE_word i;
 	int tempZ;
 	Uint8 tempCol;
-	struct JE_StarType *stars;
+	JE_StarType *stars;
 	Uint8 *surf;
 
 	grayB = false;
@@ -80,7 +81,7 @@ next_star:
 	off = (stars->lastX)+(stars->lastY)*320;
 
 	/* ***CLEAR PIXEL*** */
-	surf = VGAScreen->pixels;
+	surf = (Uint8 *)VGAScreen->pixels;
 
 	if (off >= 640 && off < (320*200)-640)
 	{
@@ -241,7 +242,7 @@ star_end:
 				JE_resetValues();
 				break;
 			case 'S':
-				nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01 - 0.005;
+				nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01f - 0.005f;
 				break;
 			case 'X':
 			case 27:
@@ -282,7 +283,7 @@ star_end:
 
 	if ((rand() % 1000) == 1)
 	{
-		nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01 - 0.005;
+		nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01f - 0.005f;
 	}
 
 	nspVarInc += nspVarVarInc;
@@ -314,8 +315,8 @@ void JE_resetValues( void )
 {
 	nsp2 = 1;
 	nspVar2Inc = 1;
-	nspVarInc = 0.1;
-	nspVarVarInc = 0.0001;
+	nspVarInc = 0.1f;
+	nspVarVarInc = 0.0001f;
 	nsp = 0;
 	pColor = 32;
 	starlib_speed = 2;
@@ -336,11 +337,11 @@ void JE_changeSetup( int setupType )
 
 	if (setup == 1)
 	{
-		nspVarInc = 0.1;
+		nspVarInc = 0.1f;
 	}
-	if (nspVarInc > 2.2)
+	if (nspVarInc > 2.2f)
 	{
-		nspVarInc = 0.1;
+		nspVarInc = 0.1f;
 	}
 }
 

@@ -34,7 +34,7 @@
 #endif /* TARGET_GP2X */
 
 #define SAMPLE_SCALING OUTPUT_QUALITY
-#define SAMPLE_TYPE Sint16
+typedef Sint16 SAMPLE_TYPE;
 #define BYTES_PER_SAMPLE sizeof(SAMPLE_TYPE)
 
 typedef unsigned char JE_MusicType [20000];

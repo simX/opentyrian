@@ -17,16 +17,54 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef SHPLIB_H
-#define SHPLIB_H
+#ifndef BINARYSTREAM_H
+#define BINARYSTREAM_H
 
-#include "opentyr.h"
+#include <iostream>
+#include <string>
 
-#include "shpmast.h"
+#include "SDL_endian.h"
 
+class OBinaryStream
+{
+private:
+	std::ostream& mStream;
 
-extern JE_word shpnumb;
+public:
+	OBinaryStream(std::ostream& stream)
+		: mStream(stream)
+	{}
 
-void JE_analyzeShp( void );
+	inline std::ostream& getOStream( ) const
+	{
+		return mStream;
+	}
 
-#endif /* SHPLIB_H */
+	void put8( Uint8 data );
+	void put16( Uint16 data );
+	void put32( Uint32 data );
+	void put( std::string data );
+};
+
+class IBinaryStream
+{
+private:
+	std::istream& mStream;
+
+public:
+	IBinaryStream(std::istream& stream)
+		: mStream(stream)
+	{}
+
+	inline std::istream& getIStream( ) const
+	{
+		return mStream;
+	}
+
+	Uint8 get8( );
+	Uint16 get16( );
+	Uint32 get32( );
+	std::string getStr( );
+};
+
+#endif // BINARYSTREAM_H

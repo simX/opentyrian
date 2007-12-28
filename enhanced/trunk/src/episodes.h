@@ -29,6 +29,7 @@
 
 #define FIRST_LEVEL 1
 #define EPISODE_MAX 5
+const int NUM_EPISODES = 4;
 
 typedef struct
 {
@@ -99,7 +100,7 @@ typedef struct
 	int wport;
 	JE_word wpnum;
 	int ammo;
-	bool stop;
+	int stop;
 	int icongr;
 } JE_OptionType[OPTION_NUM + 1]; /* [0..optionnum] */
 

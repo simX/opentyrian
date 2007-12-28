@@ -25,7 +25,6 @@
 #include "pcxmast.h"
 
 
-extern JE_ColorType colors2;
 extern bool overrideblack;
 extern char c2;
 

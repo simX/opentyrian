@@ -27,7 +27,7 @@ extern const struct about_text_type {
 	char *text;
 } about_text[];
 
-void scroller_sine( const struct about_text_type text[] );
+void scroller_sine( const about_text_type text[] );
 
 #endif /* SCROLLER_H */
 

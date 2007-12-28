@@ -27,7 +27,6 @@
 #include "picload2.h"
 
 
-JE_ColorType colors2;
 bool overrideblack;
 char c2;
 

@@ -22,15 +22,15 @@
 
 #include "opentyr.h"
 
-#include <inttypes.h>
+//#include <inttypes.h>
 
 extern JE_word backPos, backPos2, backPos3;
 extern JE_word backMove, backMove2, backMove3;
-extern JE_word megaDataSeg, megaDataOfs, megaData2Seg, megaData2Ofs, megaData3Seg, megaData3Ofs;
+extern JE_word megaDataSeg, megaDataOfs, megaData2Seg, megaData3Seg;
 extern JE_word mapX, mapY, mapX2, mapX3, mapY2, mapY3;
 extern unsigned char **mapYPos, **mapY2Pos, **mapY3Pos;
 extern JE_word mapXPos, oldMapXOfs, mapXOfs, mapX2Ofs, mapX2Pos, mapX3Pos, oldMapX3Ofs, mapX3Ofs, tempMapXOfs;
-extern intptr_t mapXbpPos, mapX2bpPos, mapX3bpPos;
+extern int mapXbpPos, mapX2bpPos, mapX3bpPos;
 extern int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 extern SDL_Surface *smoothiesScreen;
 extern bool anySmoothies;

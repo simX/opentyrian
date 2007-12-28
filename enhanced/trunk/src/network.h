@@ -25,14 +25,14 @@
 
 #define PACKET_MAXIMUM 3
 
-typedef struct
+struct JE_PacketData
 {
 	int buttons;
 	int xchg, ychg;
 	JE_word randomenemytype;    /* 0=no enemy */
 	int ex, ey;
 	unsigned long sync;
-} JE_PacketData;
+};
 
 extern unsigned long startTime;
 extern unsigned long frames;
@@ -48,7 +48,7 @@ extern Uint8 outputData[10];
 extern Uint8 inputData[10];
 extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 extern bool yourInGameMenuRequest, inGameMenuRequest;
-extern bool portConfigChange, portConfigDone;
+extern bool portConfigChange;
 extern int exchangeCount;
 extern bool netSuccess;
 

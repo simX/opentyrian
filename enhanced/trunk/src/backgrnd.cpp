@@ -33,11 +33,11 @@ JE_word backPos, backPos2, backPos3;
 JE_word backMove, backMove2, backMove3;
 
 /*Main Maps*/
-JE_word megaDataSeg, megaDataOfs, megaData2Seg, megaData2Ofs, megaData3Seg, megaData3Ofs;
+JE_word megaDataSeg, megaData2Seg, megaData3Seg;
 JE_word mapX, mapY, mapX2, mapX3, mapY2, mapY3;
 unsigned char **mapYPos, **mapY2Pos, **mapY3Pos;
 JE_word mapXPos, oldMapXOfs, mapXOfs, mapX2Ofs, mapX2Pos, mapX3Pos, oldMapX3Ofs, mapX3Ofs, tempMapXOfs;
-intptr_t mapXbpPos, mapX2bpPos, mapX3bpPos;
+int mapXbpPos, mapX2bpPos, mapX3bpPos;
 int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 
 
@@ -45,11 +45,9 @@ SDL_Surface *smoothiesScreen;
 bool anySmoothies;
 int SDAT[9]; /* [1..9] */
 
-int temp, temp2;
-
 void JE_darkenBackground( JE_word neat )
 {
-	Uint8 *s = VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
 	
 	s += 24;
 	
@@ -94,7 +92,7 @@ void JE_drawBackground2( void )
 	{
 
 		/*Offset for top*/
-		s = VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen->pixels;
 		s += 11 * 24;
 
 		if (useBackground1ofs != 0)
@@ -265,7 +263,7 @@ void JE_superBackground2( void )
 	/* BP is used by all backgrounds */
 
 	/*Offset for top*/
-	s = VGAScreen->pixels;
+	s = (Uint8 *)VGAScreen->pixels;
 	s += 11 * 24;
 
 	s += mapX2Pos;
@@ -427,7 +425,7 @@ void JE_drawBackground3( void )
 	}
 
 	/* Offset for top*/
-	s = VGAScreen->pixels;
+	s = (Uint8 *)VGAScreen->pixels;
 	s += 11 * 24;
 
 	s += mapX3Pos;
@@ -577,7 +575,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 	
 	if (color != -99 && filtrationAvail)
 	{
-		s = VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen->pixels;
 		s += 24;
 		
 		color <<= 4;
@@ -595,7 +593,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 	
 	if (brightness != -99 && explosionTransparent)
 	{
-		s = VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen->pixels;
 		s += 24;
 		
 		for (int y = 184; y > 0; y--)
@@ -628,8 +626,8 @@ void JE_initSmoothies( void )
 
 void JE_smoothies1( void ) /*Lava Effect*/
 {
-	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
 	int temp;
 	
 	s += game_screen->w * 185;
@@ -652,8 +650,8 @@ void JE_smoothies1( void ) /*Lava Effect*/
 
 void JE_smoothies2( void ) /*Water effect*/
 {
-	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
 	int temp;
 
 	s += game_screen->w * 185;
@@ -679,8 +677,8 @@ void JE_smoothies2( void ) /*Water effect*/
 
 void JE_smoothies3( void ) /* iced motion blur */
 {
-	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
 
 	for (int i = 184 * game_screen->w; i > 0; i--)
 	{
@@ -693,8 +691,8 @@ void JE_smoothies3( void ) /* iced motion blur */
 
 void JE_smoothies4( void ) /* motion blur */
 {
-	Uint8 *s = game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
 
 	for (int i = 184 * game_screen->w; i > 0; i--)
 	{

@@ -72,6 +72,11 @@ char *strnztcpy( char *to, char *from, size_t count )
 	return strncpy(to, from, count);
 }
 
+int round( float x )
+{
+	return x >= 0 ? int(x + 0.5) : int(x - 0.5);
+}
+
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 /* endian-swapping fread */
 size_t efread( void *buffer, size_t size, size_t num, FILE *stream )
@@ -174,18 +179,14 @@ void opentyrian_menu( void )
 
 		for (int i = 0; i <= maxSel; i++)
 		{
-			const char *text = opentyrian_menu_items[i];
+			std::string text(opentyrian_menu_items[i]);
 			if (i == 1) /* fullscreen */
 			{
-				static char buf[12+3+17+1];
-				snprintf(buf, sizeof(buf), "Fullscreen: %s%s",
-				         (fullscreen_set ? "On" : "Off"),
-				         (fullscreen_set != fullscreen_enabled ? " -Please restart-" : ""));
-				text = buf;
+				text = std::string("Fullscreen: ") + (fullscreen_set ? "On" : "Off") + (fullscreen_set != fullscreen_enabled ? " -Please restart-" : "");
 			}
 
-			JE_outTextAdjust(JE_fontCenter(text, SMALL_FONT_SHAPES),
-			                 (i != maxSel) ? (i * 16 + 32) : 118, text,
+			JE_outTextAdjust(JE_fontCenter(text.c_str(), SMALL_FONT_SHAPES),
+			                 (i != maxSel) ? (i * 16 + 32) : 118, text.c_str(),
 			                 15, (i != sel ? -4 : -2), SMALL_FONT_SHAPES, true);
 		}
 
@@ -260,7 +261,7 @@ void opentyrian_menu( void )
 
 int main( int argc, char *argv[] )
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	if (SDL_Init(0))
 	{
@@ -359,9 +360,9 @@ int main( int argc, char *argv[] )
 		printf("Game will be recorded.\n");
 	}
 
-	megaData1 = malloc(sizeof(*megaData1));
-	megaData2 = malloc(sizeof(*megaData2));
-	megaData3 = malloc(sizeof(*megaData3));
+	megaData1 = new JE_MegaDataType1;
+	megaData2 = new JE_MegaDataType2;
+	megaData3 = new JE_MegaDataType3;
 
 	newshape_init();
 	JE_loadMainShapeTables();

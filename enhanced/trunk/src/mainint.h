@@ -39,7 +39,7 @@ extern bool useLastBank;
 void JE_drawTextWindow( char *text );
 void JE_initPlayerData( void );
 void JE_highScoreScreen( void );
-void JE_gammaCorrect_func( Uint8 *col, double r );
+void JE_gammaCorrect_func( Uint8 *col, float r );
 void JE_gammaCorrect( JE_ColorType *colorBuffer, int gamma );
 bool JE_gammaCheck( void );
 /* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
@@ -52,14 +52,12 @@ void JE_helpSystem( int startTopic );
 void JE_doInGameSetup( void );
 bool JE_inGameSetup( void );
 void JE_inGameHelp( void );
-void JE_sortHighScores( void );
 void JE_highScoreCheck( void );
 void JE_setNewGameVol( void );
 void JE_changeDifficulty( void );
 void JE_doDemoKeys( void );
 void JE_readDemoKeys( void );
 void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ );
-void JE_sort( void );
 
 JE_word JE_powerLevelCost( JE_word base, int level );
 unsigned long JE_getCost( int itemType, JE_word itemNum );
@@ -81,7 +79,7 @@ void JE_inGameDisplays( void );
 void JE_mainKeyboardInput( void );
 void JE_pauseGame( void );
 
-void JE_loadCompShapesB( Uint8 **shapes, FILE *f, JE_word shapeSize );
+void JE_loadCompShapesB( Uint8 **shapes, FILE *f, unsigned long shapeSize );
 
 void JE_loadMainShapeTables( void );
 void JE_playerMovement( int inputDevice, int playerNum, JE_word shipGr, Uint8 *shapes9ptr, int *armorLevel, int *baseArmor, int *shield, int *shieldMax, JE_word *playerInvulnerable, int *PX, int *PY, int *lastPX, int *lastPY, int *lastPX2, int *lastPY2, int *PXChange, int *PYChange, int *lastTurn, int *lastTurn2, int *tempLastTurn2, int *stopWaitX, int *stopWaitY, JE_word *mouseX, JE_word *mouseY, bool *playerAlive, int *playerStillExploding, JE_PItemsType pItems );

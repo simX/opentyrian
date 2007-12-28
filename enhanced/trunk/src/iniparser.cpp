@@ -31,7 +31,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 #include "iniparser.h"
 
@@ -42,7 +44,7 @@ extern "C" {
 static char *strdup2( const char *s )
 {
 	size_t size = strlen(s)+1;
-	return memcpy(malloc(size), s, size);
+	return (char *)memcpy(malloc(size), s, size);
 }
 
 
@@ -248,12 +250,12 @@ static void * mem_double(void * ptr, int size)
 
 static unsigned dictionary_hash(char * key)
 {
-    int         len ;
+    size_t      len ;
     unsigned    hash ;
     int         i ;
 
     len = strlen(key);
-    for (hash=0, i=0 ; i<len ; i++) {
+    for (hash=0, i=0 ; i<(int)len ; i++) {
         hash += (unsigned)key[i] ;
         hash += (hash<<10);
         hash ^= (hash>>6) ;
@@ -769,24 +771,24 @@ int iniparser_getint(dictionary * d, char * key, int notfound)
 
 /*-------------------------------------------------------------------------*/
 /**
-  @brief    Get the string associated to a key, convert to a double
+  @brief    Get the string associated to a key, convert to a float
   @param    d Dictionary to search
   @param    key Key string to look for
   @param    notfound Value to return in case of error
-  @return   double
+  @return   float
 
   This function queries a dictionary for a key. A key as read from an
   ini file is given as "section:key". If the key cannot be found,
   the notfound value is returned.
  */
 /*--------------------------------------------------------------------------*/
-double iniparser_getdouble(dictionary * d, char * key, double notfound)
+float iniparser_getdouble(dictionary * d, char * key, float notfound)
 {
     char    *   str ;
 
     str = iniparser_getstring(d, key, INI_INVALID_KEY);
     if (str==INI_INVALID_KEY) return notfound ;
-    return atof(str);
+    return (float)atof(str);
 }
 
 
@@ -823,10 +825,10 @@ double iniparser_getdouble(dictionary * d, char * key, double notfound)
   necessarily have to be 0 or 1.
  */
 /*--------------------------------------------------------------------------*/
-int iniparser_getboolean(dictionary * d, char * key, int notfound)
+bool iniparser_getboolean(dictionary * d, char * key, bool notfound)
 {
     char    *   c ;
-    int         ret ;
+    bool        ret ;
 
     c = iniparser_getstring(d, key, INI_INVALID_KEY);
     if (c==INI_INVALID_KEY) return notfound ;

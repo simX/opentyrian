@@ -48,7 +48,7 @@ Uint8 inputData[10]; /* [1..10] */
 bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 bool yourInGameMenuRequest, inGameMenuRequest;
 
-bool portConfigChange, portConfigDone;
+bool portConfigChange;
 
 int exchangeCount;
 

@@ -28,10 +28,7 @@
 
 #include <ctype.h>
 
-/*JE_word z;*/
-JE_word y;
 
-bool scanForJoystick;
 bool inputDetected;
 JE_word lastMouseX, lastMouseY;
 
@@ -41,7 +38,7 @@ int mouseCursor;
 bool mouse_threeButton;
 JE_word mouseX, mouseY, mouseButton;
 
-JE_word z, y;
+JE_word z;
 
 JE_word JE_btow(Uint8 a, Uint8 b)
 {
@@ -60,7 +57,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 
 	for (int x = 0; x < 304; x++)
 	{
-		active = getc(f);
+		active = (getc(f) != 0);
 
 		if (active)
 		{
@@ -89,7 +86,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 
 	for (int z = 0; z < 304; z++)
 	{
-		active = getc(f);
+		active = (getc(f) != 0);
 
 		if (active)
 		{
@@ -140,7 +137,7 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
 }
 
-void JE_loadCompShapes( Uint8 **shapes, JE_word *shapeSize, char s )
+void JE_loadCompShapes( Uint8 **shapes, unsigned long *shapeSize, char s )
 {
 	FILE *f;
 
@@ -158,7 +155,7 @@ void JE_loadCompShapes( Uint8 **shapes, JE_word *shapeSize, char s )
 	*shapeSize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 
-	*shapes = malloc(*shapeSize);
+	*shapes = (Uint8 *)	malloc(*shapeSize);
 
 	efread(*shapes, sizeof(Uint8), *shapeSize, f);
 

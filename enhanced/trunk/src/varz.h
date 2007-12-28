@@ -93,7 +93,7 @@ struct JE_SingleEnemyType
 	int ymaxbounce;
 };
 
-typedef struct JE_SingleEnemyType JE_MultiEnemyType[100]; /* [1..100] */
+typedef JE_SingleEnemyType JE_MultiEnemyType[100]; /* [1..100] */
 
 typedef JE_word JE_DanCShape[(24 * 28) / 2]; /* [1..(24*28) div 2] */
 
@@ -146,15 +146,17 @@ typedef int JE_EnemyAvailType[100]; /* [1..100] */
 
 typedef int JE_REXtype[20]; /* [1..20] */
 
-typedef struct {
+struct ExplosionsType
+{
 	Sint32 explodeLoc;
 	JE_word explodeGr;
 	int followPlayer;
 	int fixedExplode;
 	Sint16 fixedMovement;
-} ExplosionsType;
+};
 
-typedef struct {
+struct EnemyShotType
+{
 	int sx, sy;
 	int sxm, sym;
 	int sxc, syc;
@@ -164,9 +166,10 @@ typedef struct {
 	int duration;
 	JE_word animate;
 	JE_word animax;
-} EnemyShotType;
+};
 
-typedef struct {
+struct PlayerShotDataType
+{
 	int shotX, shotY, shotXM, shotYM, shotXC, shotYC;
 	bool shotComplicated;
 	int shotDevX, shotDirX, shotDevY, shotDirY, shotCirSizeX, shotCirSizeY;
@@ -174,19 +177,21 @@ typedef struct {
 	JE_word shotGr, shotAni, shotAniMax;
 	Uint8 shotDmg;
 	int shotBlastFilter, chainReaction, playerNumber, aimAtEnemy, aimDelay, aimDelayMax;
-} PlayerShotDataType;
+};
 
-typedef struct {
+struct REXDatType
+{
 	int delay;
 	JE_word ex, ey;
 	bool big;
-} REXDatType;
+};
 
-typedef struct {
+struct SPLType
+{
 	JE_word location;
 	JE_word movement;
 	Uint8 color;
-} SPLType;
+};
 
 extern int fromTime;
 extern int tempDat, tempDat2, tempDat3;
@@ -230,7 +235,7 @@ extern unsigned long galagaLife;
 extern bool debug;
 extern unsigned long debugTime, lastDebugTime;
 extern unsigned long debugHistCount;
-extern double debugHist;
+extern float debugHist;
 extern JE_word curLoc;
 extern bool firstGameOver, gameLoaded, enemyStillExploding;
 extern JE_word tempSS;
@@ -238,9 +243,9 @@ extern JE_word totalEnemy;
 extern JE_word enemyKilled;
 extern int statBar[2], statCol[2];
 extern JE_Map1Buffer *map1BufferTop, *map1BufferBot;
-extern struct JE_MegaDataType1 *megaData1;
-extern struct JE_MegaDataType2 *megaData2;
-extern struct JE_MegaDataType3 *megaData3;
+extern JE_MegaDataType1 *megaData1;
+extern JE_MegaDataType2 *megaData2;
+extern JE_MegaDataType3 *megaData3;
 extern int flash;
 extern int flashChange;
 extern int displayTime;
@@ -313,7 +318,7 @@ extern bool playerAlive, playerAliveB;
 extern int playerStillExploding, playerStillExploding2;
 extern Uint8 *eShapes1, *eShapes2, *eShapes3, *eShapes4, *eShapes5, *eShapes6;
 extern Uint8 *shapesC1, *shapes6, *shapes9, *shapesW2;
-extern JE_word eShapes1Size, eShapes2Size, eShapes3Size, eShapes4Size, eShapes5Size, eShapes6Size, shapesC1Size, shapes6Size, shapes9Size, shapesW2Size;
+extern unsigned long eShapes1Size, eShapes2Size, eShapes3Size, eShapes4Size, eShapes5Size, eShapes6Size, shapesC1Size, shapes6Size, shapes9Size, shapesW2Size;
 extern int sAni;
 extern int sAniX, sAniY, sAniXNeg, sAniYNeg;
 extern int baseSpeedOld, baseSpeedOld2, baseSpeed, baseSpeedB, baseSpeed2, baseSpeed2B, baseSpeedKeyH, baseSpeedKeyV;
@@ -333,7 +338,7 @@ extern JE_word option1AmmoRechargeWait, option2AmmoRechargeWait, option1AmmoRech
 extern int option1Ammo, option2Ammo;
 extern int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, optionCharge2Wait, option1X, option1LastX, option1Y, option1LastY, option2X, option2LastX, option2Y, option2LastY, option1MaxX, option1MinX, option2MaxX, option2MinX, option1MaxY, option1MinY, option2MaxY, option2MinY;
 extern bool optionAni1Go, optionAni2Go, option1Stop, option2Stop;
-extern double optionSatelliteRotate;
+extern float optionSatelliteRotate;
 extern int optionAttachmentMove;
 extern bool optionAttachmentLinked, optionAttachmentReturn;
 extern int chargeWait, chargeLevel, chargeMax, chargeGr, chargeGrWait;
@@ -350,7 +355,7 @@ extern JE_word avail;
 extern JE_word tempCount;
 extern int tempI, tempI2, tempI3, tempI4, tempI5;
 extern long tempL;
-extern double tempR, tempR2;
+extern float tempR, tempR2;
 extern bool tempB;
 extern int temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
 extern JE_word tempX, tempY, tempX2, tempY2;

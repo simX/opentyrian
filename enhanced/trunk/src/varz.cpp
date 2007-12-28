@@ -29,6 +29,8 @@
 
 #include "varz.h"
 
+#include <cmath>
+
 
 int fromTime;
 int tempDat, tempDat2, tempDat3;
@@ -200,7 +202,7 @@ unsigned long galagaLife;
 bool debug; /*Debug Mode*/
 unsigned long debugTime, lastDebugTime;
 unsigned long debugHistCount;
-double debugHist;
+float debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
 
 bool firstGameOver, gameLoaded, enemyStillExploding;
@@ -219,9 +221,9 @@ int statBar[2], statCol[2]; /* [1..2] */
 JE_Map1Buffer *map1BufferTop, *map1BufferBot;
 
 /* Shape/Map Data - All in one Segment! */
-struct JE_MegaDataType1 *megaData1;
-struct JE_MegaDataType2 *megaData2;
-struct JE_MegaDataType3 *megaData3;
+JE_MegaDataType1 *megaData1;
+JE_MegaDataType2 *megaData2;
+JE_MegaDataType3 *megaData3;
 
 /* Secret Level Display */
 int flash;
@@ -331,16 +333,7 @@ Uint8 *eShapes1 = NULL, *eShapes2 = NULL, *eShapes3 = NULL,
       *eShapes4 = NULL, *eShapes5 = NULL, *eShapes6 = NULL;
 Uint8 *shapesC1 = NULL, *shapes6  = NULL, *shapes9  = NULL, *shapesW2 = NULL;
 
-JE_word eShapes1Size,
-        eShapes2Size,
-        eShapes3Size,
-        eShapes4Size,
-        eShapes5Size,
-        eShapes6Size,
-        shapesC1Size,
-        shapes6Size,
-        shapes9Size,
-        shapesW2Size;
+unsigned long eShapes1Size, eShapes2Size, eShapes3Size, eShapes4Size, eShapes5Size, eShapes6Size, shapesC1Size, shapes6Size, shapes9Size, shapesW2Size;
 
 int sAni;
 int sAniX, sAniY, sAniXNeg, sAniYNeg;  /* X,Y ranges of field of hit */
@@ -377,7 +370,7 @@ int optionAni1, optionAni2, optionCharge1, optionCharge2, optionCharge1Wait, opt
     option1MaxX, option1MinX, option2MaxX, option2MinX,
     option1MaxY, option1MinY, option2MaxY, option2MinY;
 bool optionAni1Go, optionAni2Go, option1Stop, option2Stop;
-double optionSatelliteRotate;
+float optionSatelliteRotate;
 
 int optionAttachmentMove;
 bool optionAttachmentLinked, optionAttachmentReturn;
@@ -408,8 +401,7 @@ JE_word avail;
 JE_word tempCount;
 int tempI, tempI2, tempI3, tempI4, tempI5;
 long tempL;
-double tempR, tempR2;
-/*int tempX, tempY;*/
+float tempR, tempR2;
 
 bool tempB;
 int temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
@@ -578,12 +570,12 @@ void JE_drawOptions( void )
 
 	optionAni1Go = options[option1Item].option == 1;
 	optionAni2Go = options[option2Item].option == 1;
-	option1Stop  = options[option1Item].stop;
+	option1Stop  = (options[option1Item].stop != 0);
 	option1MaxX  = options[option1Item].opspd;
 	option1MinX  = -option1MaxX;
 	option1MaxY  = options[option1Item].opspd;
 	option1MinY  = -option1MaxY;
-	option2Stop  = options[option2Item].stop;
+	option2Stop  = (options[option2Item].stop != 0);
 	option2MaxX  = options[option2Item].opspd;
 	option2MinX  = -option2MaxX;
 	option2MaxY  = options[option2Item].opspd;
@@ -1608,8 +1600,8 @@ void JE_drawShield( void )
 {
 	if (twoPlayerMode && !galagaMode)
 	{
-		JE_dBar3(270, 60, round(shield * 0.8), 144);
-		JE_dBar3(270, 194, round(shield2 * 0.8), 144);
+		JE_dBar3(270, 60, round(shield * 0.8f), 144);
+		JE_dBar3(270, 194, round(shield2 * 0.8f), 144);
 	} else {
 		JE_dBar3(270, 194, shield, 144);
 		if (shield != shieldMax)
@@ -1632,8 +1624,8 @@ void JE_drawArmor( void )
 
 	if (twoPlayerMode && !galagaMode)
 	{
-		JE_dBar3(307, 60, round(armorLevel * 0.8), 224);
-		JE_dBar3(307, 194, round(armorLevel2 * 0.8), 224);
+		JE_dBar3(307, 60, round(armorLevel * 0.8f), 224);
+		JE_dBar3(307, 194, round(armorLevel2 * 0.8f), 224);
 	} else {
 		JE_dBar3(307, 194, armorLevel, 224);
 	}
@@ -1657,7 +1649,7 @@ void JE_resetPlayerH( void )
 
 void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ) /* superpixels */
 {
-	double tempr;
+	float tempr;
 	int tempx, tempy;
 	
 	for (int temp = 0; temp < num; temp++)

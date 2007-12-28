@@ -22,13 +22,13 @@
 
 #include "opentyr.h"
 
+#include <string>
 
 extern JE_word randomcount;
 extern bool dont_die;
 extern char dir[256];
 extern bool errorActive;
 extern bool errorOccurred;
-extern char err_msg[128];
 
 long get_stream_size( FILE *f );
 FILE *fopen_check( const char *file, const char *mode );
@@ -37,7 +37,7 @@ void JE_errorHand( const char *s );
 bool JE_find( const char *s );
 void JE_resetFile( FILE **f, const char *filename );
 void JE_resetText( FILE **f, const char *filename );
-char *JE_locateFile( const char *filename );
+std::string JE_locateFile( const char *filename );
 void JE_findTyrian( const char *filename );
 bool JE_isCFGThere( void );
 unsigned long JE_getFileSize( const char *filename );

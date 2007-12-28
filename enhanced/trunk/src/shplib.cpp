@@ -26,7 +26,6 @@
 
 
 JE_word shpnumb;
-JE_shppostype shppos;
 
 void JE_analyzeShp( void )
 {

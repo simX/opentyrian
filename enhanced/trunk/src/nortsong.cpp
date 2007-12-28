@@ -69,12 +69,12 @@ void setdelay( int delay )
 
 void setjasondelay( int delay )
 {
-	target = SDL_GetTicks() + delay * jasondelay;
+	target = (Uint32)(SDL_GetTicks() + delay * jasondelay);
 }
 
 void setjasondelay2( int delay )
 {
-	target2 = SDL_GetTicks() + delay * jasondelay;
+	target2 = (Uint32)(SDL_GetTicks() + delay * jasondelay);
 }
 
 int delaycount( void )
@@ -163,9 +163,9 @@ void JE_loadSndFile( void )
 	for (int z = 0; z < sndNum; z++)
 	{
 		fseek(fi, sndPos[0][z], SEEK_SET);
-		fxSize[z] = (sndPos[0][z+1] - sndPos[0][z]); /* Store sample sizes */
+		fxSize[z] = (JE_word)(sndPos[0][z+1] - sndPos[0][z]); /* Store sample sizes */
 		if (allocd_digifx) free(digiFx[z]);
-		digiFx[z] = malloc(fxSize[z]);
+		digiFx[z] = (Uint8 *)malloc(fxSize[z]);
 		efread(digiFx[z], 1, fxSize[z], fi); /* JE: Load sample to buffer */
 	}
 	allocd_digifx = true;
@@ -196,8 +196,8 @@ void JE_loadSndFile( void )
 
 		templ = (sndPos[1][y+1] - sndPos[1][y]) - 100; /* SYN: I'm not entirely sure what's going on here. */
 		if (templ < 1) templ = 1;
-		fxSize[z + y] = templ; /* Store sample sizes */
-		digiFx[z + y] = malloc(fxSize[z + y]);
+		fxSize[z + y] = (JE_word)templ; /* Store sample sizes */
+		digiFx[z + y] = (Uint8 *)malloc(fxSize[z + y]);
 		efread(digiFx[z + y], 1, fxSize[z + y], fi); /* JE: Load sample to buffer */
 	}
 

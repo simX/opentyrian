@@ -42,7 +42,7 @@ void opl_update( Sint16 *buf, int samples )
 				buf[i*2+1] = buf[i];
 			}
 	} else {
-		short *tempbuf = malloc(sizeof(Sint16) * (stereo ? samples * 2 : samples));
+		Sint16 *tempbuf = new Sint16[stereo ? samples * 2 : samples];
 
 		YM3812UpdateOne(opl, tempbuf, samples);
 
@@ -55,7 +55,7 @@ void opl_update( Sint16 *buf, int samples )
 		for (int i = 0; i < (stereo ? samples * 2 : samples); i++)
 			((char *)buf)[i] = (tempbuf[i] >> 8) ^ 0x80;
 
-		free(tempbuf);
+		delete[] tempbuf;
 	}
 }
 

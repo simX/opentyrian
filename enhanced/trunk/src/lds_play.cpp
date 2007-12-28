@@ -29,7 +29,7 @@
 
 
 /* Note frequency table (16 notes / octave) */
-const Uint16 frequency[] = {
+const Uint16 frequency[(13 * 15) - 3] = {
   343, 344, 345, 347, 348, 349, 350, 352, 353, 354, 356, 357, 358,
   359, 361, 362, 363, 365, 366, 367, 369, 370, 371, 373, 374, 375,
   377, 378, 379, 381, 382, 384, 385, 386, 388, 389, 391, 392, 393,
@@ -48,7 +48,7 @@ const Uint16 frequency[] = {
 };
 
 /* Vibrato (sine) table */
-const Uint8 vibtab[] = {
+const Uint8 vibtab[25 + (13 * 3)] = {
   0, 13, 25, 37, 50, 62, 74, 86, 98, 109, 120, 131, 142, 152, 162,
   171, 180, 189, 197, 205, 212, 219, 225, 231, 236, 240, 244, 247,
   250, 252, 254, 255, 255, 255, 254, 252, 250, 247, 244, 240, 236,
@@ -57,7 +57,7 @@ const Uint8 vibtab[] = {
 };
 
 /* Tremolo (sine * sine) table */
-const Uint8 tremtab[] = {
+const Uint8 tremtab[128] = {
   0, 0, 1, 1, 2, 4, 5, 7, 10, 12, 15, 18, 21, 25, 29, 33, 37, 42, 47,
   52, 57, 62, 67, 73, 79, 85, 90, 97, 103, 109, 115, 121, 128, 134,
   140, 146, 152, 158, 165, 170, 176, 182, 188, 193, 198, 203, 208,
@@ -69,19 +69,14 @@ const Uint8 tremtab[] = {
   25, 21, 18, 15, 12, 10, 7, 5, 4, 2, 1, 1, 0
 };
 
-const Uint16 frequency[(13 * 15) - 3];
-const Uint8 vibta[25 + (13 * 3)];
-const Uint8 tremtab[128];
-const Uint16 maxsound, maxpos;
-
 SoundBank *soundbank = NULL;
 Channel channel[9];
 Position *positions = NULL;
 
 Uint8 fmchip[0xff], jumping, fadeonoff, allvolume, hardfade, tempo_now, pattplay, tempo, regbd, chandelay[9], mode, pattlen;
-Uint16 posplay, jumppos, speed;
+Uint16 posplay, jumppos;
 Uint16 *patterns = NULL;
-bool playing, songlooped;
+bool songlooped;
 Uint16 numpatch, numposi, patterns_size, mainvolume;
 
 const Uint16 maxsound = 0x3f, maxpos = 0xff;
@@ -105,7 +100,7 @@ int lds_load(unsigned char *music_location)
 		return false; */
 	}
 
-	memcpy(&speed, pos, sizeof(Uint16)); speed = SDL_SwapLE16(speed); pos += 2;
+	pos += 2;
 	tempo = *(pos++);
 	pattlen = *(pos++);
 
@@ -119,8 +114,8 @@ int lds_load(unsigned char *music_location)
 	/* load patches */
 	memcpy(&numpatch, pos, sizeof(Uint16)); numpatch = SDL_SwapLE16(numpatch); pos += 2;
 
-	if (soundbank) free(soundbank);
-	soundbank = malloc(sizeof(SoundBank) * numpatch);
+	if (soundbank) delete[] soundbank;
+	soundbank = new SoundBank[numpatch];
 
 	for (int i = 0; i < numpatch; i++) {
 		sb = &soundbank[i];
@@ -164,8 +159,8 @@ int lds_load(unsigned char *music_location)
 	/* load positions */
 	memcpy(&numposi, pos, sizeof(Uint16)); numposi = SDL_SwapLE16(numposi); pos += 2;
 
-	if (positions) free(positions);
-	positions = malloc(sizeof(Position) * 9 * numposi);
+	if (positions) delete[] positions;
+	positions = new Position[9 * numposi];
 
 	for (int i = 0; i < numposi; i++)
 		for (int j = 0; j < 9; j++) {
@@ -183,8 +178,8 @@ int lds_load(unsigned char *music_location)
 	pos += 2; /* ignore # of digital sounds (dunno what this is for) */
 	remaining = (songPos[currentSong] - songPos[currentSong - 1]) - (pos - music_location); /* bytes remaining */
 
-	free(patterns);
-	patterns = malloc(sizeof(Uint16) * (remaining / 2 + 1));
+	delete[] patterns;
+	patterns = new Uint16[remaining / 2 + 1];
 	/* patterns = malloc(temp + 1); */
 	for (int i = 0; i < (remaining / 2 + 1); i++)
 	{
@@ -207,7 +202,8 @@ void lds_rewind(int subsong)
 	/* init all with 0 */
 	tempo_now = 3;
 	playing = true; songlooped = false;
-	jumping = fadeonoff = allvolume = hardfade = pattplay = posplay = jumppos =	mainvolume = 0;
+	jumping = fadeonoff = allvolume = hardfade = pattplay = 0;
+	posplay = jumppos = mainvolume = 0;
 	memset(channel, 0, sizeof(channel));
 	memset(fmchip, 0, sizeof(fmchip));
 
@@ -281,7 +277,7 @@ int lds_update( void )
 			{
 				allvolume += 0x100 - fadeonoff;
 			} else {
-				allvolume = mainvolume;
+				allvolume = (Uint8)mainvolume;
 				fadeonoff = 0;
 			}
 		}
@@ -380,7 +376,8 @@ int lds_update( void )
 							case 0xf4:
 								if(!hardfade)
 								{
-									allvolume = mainvolume = comlo;
+									allvolume = comlo;
+									mainvolume = comlo;
 									fadeonoff = 0;
 								}
 								break;

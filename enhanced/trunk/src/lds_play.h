@@ -29,13 +29,8 @@ void lds_rewind( int subsong ); /* default value: subsong = -1 */
 
 #define REFRESH 70.0f
 
-/*unsigned int getorders() { return numposi; }
-unsigned int getorder() { return posplay; }
-unsigned int getrow() { return pattplay; }
-unsigned int getspeed() { return speed; }
-unsigned int getinstruments() { return numpatch; }*/
-
-typedef struct {
+struct SoundBank
+{
 	unsigned char mod_misc, mod_vol, mod_ad, mod_sr, mod_wave,
 		car_misc, car_vol, car_ad, car_sr, car_wave, feedback, keyoff,
 		portamento, glide, finetune, vibrato, vibdelay, mod_trem, car_trem,
@@ -44,19 +39,21 @@ typedef struct {
 	unsigned char fms;
 	unsigned short transp;
 	unsigned char midinst, midvelo, midkey, midtrans, middum1, middum2;
-} SoundBank;
+};
 
-typedef struct {
+struct Channel
+{
 	unsigned short gototune, lasttune, packpos;
 	unsigned char finetune, glideto, portspeed, nextvol, volmod, volcar,
 		vibwait, vibspeed, vibrate, trmstay, trmwait, trmspeed, trmrate, trmcount,
 		trcwait, trcspeed, trcrate, trccount, arp_size, arp_speed, keycount,
 		vibcount, arp_pos, arp_count, packwait, arp_tab[12];
-	struct {
+	struct
+	{
 		unsigned char chandelay, sound;
 		unsigned short high;
 	} chancheat;
-} Channel;
+};
 
 typedef struct {
 	unsigned short patnum;

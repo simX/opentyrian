@@ -33,8 +33,6 @@ typedef JE_ShapeTypeOne JE_ShapeType[304]; /* [1..304] */
 typedef Uint8 JE_NewShapeTypeOne[182]; /* [0..168+14-1] */
 typedef JE_NewShapeTypeOne JE_NewShapeType[304]; /* [1..304] */
 
-extern JE_word y;
-extern bool scanForJoystick;
 extern bool inputDetected;
 extern JE_word lastMouseX, lastMouseY;
 extern int mouseCursor;
@@ -45,7 +43,7 @@ void JE_loadShapeFile( JE_ShapeType *shapes, char s );
 void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s );
 
 void JE_compressShapeFileC( char s );
-void JE_loadCompShapes( Uint8 **shapes, JE_word *shapeSize, char s );
+void JE_loadCompShapes( Uint8 **shapes, unsigned long *shapeSize, char s );
 
 JE_word JE_btow(Uint8 a, Uint8 b);
 
