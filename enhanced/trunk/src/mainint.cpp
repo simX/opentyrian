@@ -81,7 +81,7 @@ void JE_drawTextWindow( char *text )
 
 void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 {
-	int maxloc, loc, z;
+	int maxloc, loc;
 	char glowcol[60]; /* [1..60] */
 	char glowcolc[60]; /* [1..60] */
 	JE_word textloc[60]; /* [1..60] */
@@ -143,6 +143,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 						return;
 					}
 
+					int z;
 					for (z = loc - 28; z <= loc; z++)
 					{
 						if (z >= 0 && z < maxloc)
@@ -3379,7 +3380,8 @@ redo:
 								fputc(lastMoveWait >> 8, recordFile);
 								fputc(lastMoveWait & 0xff, recordFile);
 
-								for (int temp = 0; temp < 8; temp++)
+								int temp;
+								for (temp = 0; temp < 8; temp++)
 									lastKey[temp] = keysactive[keySettings[temp]];
 								temp = (lastKey[1-1]     ) + (lastKey[2-1] << 1) + (lastKey[3-1] << 2) + (lastKey[4-1] << 3) +
 								       (lastKey[5-1] << 4) + (lastKey[6-1] << 5) + (lastKey[7-1] << 6) + (lastKey[8-1] << 7);
