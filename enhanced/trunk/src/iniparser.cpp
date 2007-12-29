@@ -64,7 +64,7 @@ static char *strdup2( const char *s )
  */
 /*--------------------------------------------------------------------------*/
 
-static char * strlwc(char * s)
+static char * strlwc(const char * s)
 {
     static char l[ASCIILINESZ+1];
     int i ;
@@ -95,7 +95,7 @@ static char * strlwc(char * s)
  */
 /*--------------------------------------------------------------------------*/
 
-static char * strupc(char * s)
+static char * strupc(const char * s)
 {
     static char l[ASCIILINESZ+1];
     int i ;
@@ -387,7 +387,7 @@ static char * dictionary_get(dictionary * d, char * key, char * def)
  */
 /*--------------------------------------------------------------------------*/
 
-static void dictionary_set(dictionary * d, char * key, char * val)
+static void dictionary_set(dictionary * d, char * key, const char * val)
 {
     int         i ;
     unsigned    hash ;
@@ -709,7 +709,7 @@ void iniparser_dump_ini(dictionary * d, FILE * f)
   iniparser_getstring() instead.
  */
 /*--------------------------------------------------------------------------*/
-char * iniparser_getstr(dictionary * d, char * key)
+char * iniparser_getstr(dictionary * d, const char * key)
 {
     return iniparser_getstring(d, key, NULL);
 }
@@ -730,7 +730,7 @@ char * iniparser_getstr(dictionary * d, char * key)
   the dictionary, do not free or modify it.
  */
 /*--------------------------------------------------------------------------*/
-char * iniparser_getstring(dictionary * d, char * key, char * def)
+char * iniparser_getstring(dictionary * d, const char * key, char * def)
 {
     char * lc_key ;
     char * sval ;
@@ -759,7 +759,7 @@ char * iniparser_getstring(dictionary * d, char * key, char * def)
   the notfound value is returned.
  */
 /*--------------------------------------------------------------------------*/
-int iniparser_getint(dictionary * d, char * key, int notfound)
+int iniparser_getint(dictionary * d, const char * key, int notfound)
 {
     char    *   str ;
 
@@ -782,7 +782,7 @@ int iniparser_getint(dictionary * d, char * key, int notfound)
   the notfound value is returned.
  */
 /*--------------------------------------------------------------------------*/
-float iniparser_getdouble(dictionary * d, char * key, float notfound)
+float iniparser_getdouble(dictionary * d, const char * key, float notfound)
 {
     char    *   str ;
 
@@ -825,7 +825,7 @@ float iniparser_getdouble(dictionary * d, char * key, float notfound)
   necessarily have to be 0 or 1.
  */
 /*--------------------------------------------------------------------------*/
-bool iniparser_getboolean(dictionary * d, char * key, bool notfound)
+bool iniparser_getboolean(dictionary * d, const char * key, bool notfound)
 {
     char    *   c ;
     bool        ret ;
@@ -858,7 +858,7 @@ bool iniparser_getboolean(dictionary * d, char * key, bool notfound)
 
 int iniparser_find_entry(
     dictionary  *   ini,
-    char        *   entry
+    const char  *   entry
 )
 {
     int found=0 ;
@@ -884,7 +884,7 @@ int iniparser_find_entry(
  */
 /*--------------------------------------------------------------------------*/
 
-int iniparser_setstr(dictionary * ini, char * entry, char * val)
+int iniparser_setstr(dictionary * ini, const char * entry, const char * val)
 {
     dictionary_set(ini, strlwc(entry), val);
     return 0 ;
@@ -900,7 +900,7 @@ int iniparser_setstr(dictionary * ini, char * entry, char * val)
   If the given entry can be found, it is deleted from the dictionary.
  */
 /*--------------------------------------------------------------------------*/
-void iniparser_unset(dictionary * ini, char * entry)
+void iniparser_unset(dictionary * ini, const char * entry)
 {
     dictionary_unset(ini, strlwc(entry));
 }
@@ -921,7 +921,7 @@ void iniparser_unset(dictionary * ini, char * entry)
  */
 /*--------------------------------------------------------------------------*/
 
-dictionary * iniparser_new(char *ininame)
+dictionary * iniparser_new(const char *ininame)
 {
     dictionary  *   d ;
     char        lin[ASCIILINESZ+1];
