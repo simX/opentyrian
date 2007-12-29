@@ -7368,7 +7368,7 @@ void JE_itemScreen( void )
 					break;
 
 				case SDLK_x: /* alt-X */
-					if (lastkey_mod == SDLK_RALT || lastkey_mod == SDLK_LALT)
+					if (lastkey_mod == KMOD_RALT || lastkey_mod == KMOD_LALT)
 					{
 						JE_tyrianHalt(0);
 					}
