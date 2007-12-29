@@ -54,7 +54,7 @@ extern Uint8 mouseGrabShape[24*28];
 extern bool loadOverride;
 /*extern JE_word min, max;*/
 
-void JE_newLoadShapes( int table, char *shapefile );
+void JE_newLoadShapes( int table, const char *shapefile );
 void JE_newLoadShapesB( int table, FILE *f );
 void JE_newCompressBlock( Uint8 **shape, JE_word xsize, JE_word ysize, JE_word *shapesize );
 void JE_newDrawShape( Uint8 *shape, JE_word xsize, JE_word ysize );

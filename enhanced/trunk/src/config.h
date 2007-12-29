@@ -214,7 +214,7 @@ void JE_skipCryptLn( FILE* f );
 
 void JE_setupStars( void );
 
-void JE_saveGame( int slot, char *name );
+void JE_saveGame( int slot, const char *name );
 void JE_loadGame( int slot );
 
 void JE_decryptString( char *s, int len );

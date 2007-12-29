@@ -108,7 +108,7 @@ void JE_newLoadShapesB( int table, FILE *f )
 	}
 }
 
-void JE_newLoadShapes( int table, char *shapefile )
+void JE_newLoadShapes( int table, const char *shapefile )
 {
 	FILE *f;
 	

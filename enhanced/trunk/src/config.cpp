@@ -407,7 +407,7 @@ void JE_setupStars( void )
 	}
 }
 
-void JE_saveGame( int slot, char *name )
+void JE_saveGame( int slot, const char *name )
 {
 	saveFiles[slot-1].initialDifficulty = initialDifficulty;
 	saveFiles[slot-1].gameHasRepeated = gameHasRepeated;
