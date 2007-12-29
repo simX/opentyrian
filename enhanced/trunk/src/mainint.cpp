@@ -1683,7 +1683,7 @@ void JE_highScoreCheck( void )
 			do {
 				JE_dString(JE_fontCenter(miscText[51], FONT_SHAPES), 3, miscText[51], FONT_SHAPES);
 
-				const int temp = twoPlayerMode ? 56 + z : 52;
+				const int temp = twoPlayerMode ? 57 + real_player : 52;
 				JE_dString(JE_fontCenter(miscText[temp], SMALL_FONT_SHAPES), 30, miscText[temp], SMALL_FONT_SHAPES);
 				
 				JE_newDrawCShapeNum(OPTION_SHAPES, 36, 50, 50);
