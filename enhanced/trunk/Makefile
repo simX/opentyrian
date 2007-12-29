@@ -25,7 +25,7 @@ endif
 ifeq ($(PLATFORM), GP2X)
 	SDL_CFLAGS := `$(GP2X_CHAINPREFIX)/bin/sdl-config --cflags` -I$(GP2X_CHAINPREFIX)/include -DTARGET_GP2X -mcpu=arm920t -mtune=arm920t -msoft-float -ffast-math -funroll-loops
 	SDL_LDFLAGS := `$(GP2X_CHAINPREFIX)/bin/sdl-config --libs` -static -L$(GP2X_CHAINPREFIX)/lib
-	CC := $(GP2X_CHAIN)gcc
+	CXX := $(GP2X_CHAIN)g++
 	STRIP := $(GP2X_CHAIN)strip
 endif
 ifeq ($(PLATFORM), UNIX)
@@ -34,7 +34,7 @@ ifeq ($(PLATFORM), UNIX)
 endif
 
 
-CFLAGS := --std=c99 -pedantic -Wall -Wstrict-prototypes -Wold-style-definition -Wmissing-declarations -Wno-unused -Werror -I$(CURDIR)/src/ -DPASCAL_TYPES $(DEBUG_FLAGS) $(SDL_CFLAGS)
+CXXFLAGS := --std=c++98 -pedantic -Wall -Wno-unused -Werror -I$(CURDIR)/src/ -DPASCAL_TYPES $(DEBUG_FLAGS) $(SDL_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) -lm
 
 ####################################################
@@ -44,15 +44,15 @@ all : $(TARGET)
 OBJS := $(foreach obj, $(OBJS), obj/$(obj))
 
 $(TARGET) : $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 ifneq ($(MAKECMDGOALS), clean)
 -include $(OBJS:.o=.d)
 endif
 
 obj/%.d : obj/%.o
-obj/%.o : src/%.c
-	$(CC) -o $@ -MMD -c $(CFLAGS) $<
+obj/%.o : src/%.cpp
+	$(CXX) -o $@ -MMD -c $(CXXFLAGS) $<
 
 .PHONY : clean
 
