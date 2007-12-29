@@ -27,18 +27,18 @@
 
 
 /* MAIN Weapons Data */
-JE_WeaponPortType weaponPort;
-JE_WeaponType     weapons;
+JE_WeaponPortType weaponPort[PORT_NUM + 1];
+JE_WeaponType     weapons[WEAP_NUM + 1];
 
 /* Items */
-JE_PowerType   powerSys;
-JE_ShipType    ships;
-JE_OptionType  options;
-JE_ShieldType  shields;
-JE_SpecialType special;
+JE_PowerType   powerSys[POWER_NUM + 1];
+JE_ShipType    ships[SHIP_NUM + 1];
+JE_OptionType  options[OPTION_NUM + 1];
+JE_ShieldType  shields[SHIELD_NUM + 1];
+JE_SpecialType special[SPECIAL_NUM + 1];
 
 /* Enemy data */
-JE_EnemyDatType enemyDat;
+JE_EnemyDatType enemyDat[ENEMY_NUM + 1];
 
 /* EPISODE variables */
 int episodeNum = 0;
