@@ -363,7 +363,7 @@ extern JE_word tempW, tempW2, tempW3, tempW4, tempW5, tempOfs;
 extern bool doNotSaveBackup;
 extern bool tempSpecial;
 extern JE_word x, y;
-extern int a, b, c, d, z, zz;
+extern int a, b, c, d, zz;
 extern int playerNum;
 extern unsigned char **BKwrap1to, **BKwrap2to, **BKwrap3to, **BKwrap1, **BKwrap2, **BKwrap3;
 extern int min, max;

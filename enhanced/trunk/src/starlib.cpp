@@ -50,8 +50,6 @@ bool doChange;
 
 bool grayB;
 
-int x;
-
 Sint16 starlib_speed;
 Sint8 speedChange;
 

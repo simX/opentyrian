@@ -38,8 +38,6 @@ int mouseCursor;
 bool mouse_threeButton;
 JE_word mouseX, mouseY, mouseButton;
 
-JE_word z;
-
 JE_word JE_btow(Uint8 a, Uint8 b)
 {
 	return (JE_word)(((Uint16) b) * 256 + a);

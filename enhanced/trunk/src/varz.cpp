@@ -413,8 +413,7 @@ bool doNotSaveBackup;
 
 bool tempSpecial;
 
-JE_word x, y;
-int a, b, c, d, z, zz;
+int a, b, c, d, zz;
 int playerNum;
 
 unsigned char **BKwrap1to, **BKwrap2to, **BKwrap3to, **BKwrap1, **BKwrap2, **BKwrap3;
@@ -943,11 +942,11 @@ void JE_initPlayerShot( JE_word portNum, int temp, JE_word PX, JE_word PY, JE_wo
 						tempW3 = 65000;
 						temp3 = 0;
 						/*Find Closest Enemy*/
-						for (int x = 0; x < 100; x++)
+						for (JE_word x = 0; x < 100; x++)
 						{
 							if (enemyAvail[x] != 1 && !enemy[x].scoreitem)
 							{
-								y = abs(enemy[x].ex - playerShotData[b].shotX) + abs(enemy[x].ey - playerShotData[b].shotY);
+								JE_word y = abs(enemy[x].ex - playerShotData[b].shotX) + abs(enemy[x].ey - playerShotData[b].shotY);
 								if (y < tempW3)
 								{
 									tempW3 = y;

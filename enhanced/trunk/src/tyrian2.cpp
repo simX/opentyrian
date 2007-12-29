@@ -913,7 +913,7 @@ void JE_main( void )
 	/* Setup Player Items/General Data */
 	fixedExplosions = false;
 	explosionMoveUp = 0;
-	for (z = 0; z < 12; z++)
+	for (int z = 0; z < 12; z++)
 	{
 		pItems[z] = 0;
 	}
@@ -2015,7 +2015,7 @@ level_loop:
 	}
 
 	/* Player Shot Images */
-	for (z = 0; z < MAX_PWEAPON; z++)
+	for (int z = 0; z < MAX_PWEAPON; z++)
 	{
 		if (shotAvail[z] != 0)
 		{
@@ -2481,7 +2481,7 @@ draw_player_shot_loop_end:
 	{    /*MAIN DRAWING IS STOPPED STARTING HERE*/
 
 		/* Draw Enemy Shots */
-		for (z = 0; z < ENEMY_SHOT_MAX; z++)
+		for (int z = 0; z < ENEMY_SHOT_MAX; z++)
 		{
 			if (enemyShotAvail[z] == 0)
 			{
@@ -3030,7 +3030,7 @@ explosion_draw_overflow:
 				if (isNetworkGame)
 				{
 					JE_setNetByte(0);
-					for (x = 0; x < 1/* TODO streamLagFrames*/; x++)
+					for (int x = 0; x < 1/* TODO streamLagFrames*/; x++)
 					{
 						JE_updateStream();
 					}
@@ -5564,7 +5564,7 @@ void JE_eventSystem( void )
 			{
 				memset(enemyAvail, 1, sizeof(enemyAvail));
 			} else {
-				for (x = 0; x <= 24; x++)
+				for (JE_word x = 0; x <= 24; x++)
 				{
 					enemyAvail[x] = 1;
 				}
@@ -6032,7 +6032,7 @@ void JE_itemScreen( void )
 	cursor = 1;
 	curItem = 0;
 
-	for (x = 0; x < MAX_MENU; x++)
+	for (JE_word x = 0; x < MAX_MENU; x++)
 	{
 		curSel[x] = 2;
 	}
@@ -6044,12 +6044,12 @@ void JE_itemScreen( void )
 
 	/* JE: (* Check for where Pitems and Select match up - if no match then add to the
      itemavail list *) */
-	for (x = 0; x < 7; x++)
+	for (JE_word x = 0; x < 7; x++)
 	{
 		temp = pItemsBack2[pItemButtonMap[x] - 1];
 		temp2 = 0;
 
-		for (y = 0; y < itemAvailMax[itemAvailMap[x]-1]; y++)
+		for (int y = 0; y < itemAvailMax[itemAvailMap[x]-1]; y++)
 		{
 			if (itemAvail[itemAvailMap[x]-1][y] == temp)
 			{
@@ -6100,7 +6100,7 @@ void JE_itemScreen( void )
 		rightPower = false;
 
 		/* JE: Sort items in merchant inventory */
-		for (x = 0; x < 9; x++)
+		for (JE_word x = 0; x < 9; x++)
 		{
 			if (itemAvailMax[x] > 1)
 			{
@@ -6160,7 +6160,7 @@ void JE_itemScreen( void )
 		/* Data cube icons */
 		if (curMenu == 0)
 		{
-			for (x = 1; x <= cubeMax; x++)
+			for (JE_word x = 1; x <= cubeMax; x++)
 			{
 				JE_newDrawCShapeDarkenNum(OPTION_SHAPES, 35, 190 + x*18 + 2, 37+1);
 				JE_newDrawCShapeNum(OPTION_SHAPES, 35, 190 + x*18, 37);
@@ -6188,7 +6188,7 @@ void JE_itemScreen( void )
 				max = 13;
 			}
 
-			for (x = min; x <= max; x++)
+			for (JE_word x = min; x <= max; x++)
 			{
 				/* Highlight if current selection */
 				if (x - min + 2 == curSel[curMenu])
@@ -6255,7 +6255,7 @@ void JE_itemScreen( void )
 		/* keyboard settings menu */
 		if (curMenu == 5)
 		{
-			for (x = 2; x <= 11; x++)
+			for (JE_word x = 2; x <= 11; x++)
 			{
 				if (x == curSel[curMenu])
 				{
@@ -6579,7 +6579,7 @@ void JE_itemScreen( void )
 					tempW = 160;
 					temp2 = 252;
 				} else {
-					for (x = 1; x <= cubeMax; x++)
+					for (JE_word x = 1; x <= cubeMax; x++)
 					{
 						JE_drawCube(166, 38 + (x - 1) * 28, 13, 0);
 						if (x + 1 == curSel[curMenu])
@@ -6598,7 +6598,7 @@ void JE_itemScreen( void )
 						helpBoxShadeType = DARKEN;
 						JE_helpBox(192, 44 + (x - 1) * 28, cubeHdr[x - 1], 24);
 					}
-					x = cubeMax + 1;
+					JE_word x = cubeMax + 1;
 					if (x + 1 == curSel[curMenu])
 					{
 						if (keyboardUsed)
@@ -6651,8 +6651,11 @@ void JE_itemScreen( void )
 		/* 2 player input devices */
 		if (curMenu == 9)
 		{
+			/* TODO: Figure out what "x" is supposed to
+			   represent.
 			JE_dString(186, 38 + 2 * 16, JE_bright(curSel[3] == x) + inputDevices[inputDevice1-1], SMALL_FONT_SHAPES);
 			JE_dString(186, 38 + 4 * 16, JE_bright(curSel[4] == x) + inputDevices[inputDevice2-1], SMALL_FONT_SHAPES);
+			*/
 		}
 
 
@@ -6752,7 +6755,7 @@ void JE_itemScreen( void )
 					tempW = 38 + 12 - temp2;
 					temp3 = cubeMaxY[curSel[7] - 2];
 
-					for (x = temp + 1; x <= temp + 10; x++)
+					for (JE_word x = temp + 1; x <= temp + 10; x++)
 					{
 						/* if (x <= temp3 && x >= 0) */
 						if (x <= temp3)
@@ -9032,7 +9035,7 @@ void JE_weaponSimUpdate( void )
 		} else {
 			temp = portPower[2 - 1];
 		}
-		for (x = 1; x <= temp; x++)
+		for (JE_word x = 1; x <= temp; x++)
 		{
 			JE_bar(39 + x * 6, 151, 39 + x * 6 + 4, 151, 251);
 			JE_pix(39 + x * 6, 151, 252);
@@ -9150,7 +9153,7 @@ void JE_weaponViewFrame( int testshotnum )
 	}
 
 	/* Player Shot Images */
-	for (z = 0; z < MAX_PWEAPON; z++)
+	for (int z = 0; z < MAX_PWEAPON; z++)
 	{
 		if (shotAvail[z] != 0)
 		{

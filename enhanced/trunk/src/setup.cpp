@@ -230,7 +230,7 @@ void JE_jukeboxGo( void )
 		}
 
 		JE_joystick2();
-		if (JE_mousePosition(&x, &y) > 0 || button[0])
+		if (JE_mousePosition(&tempX, &tempY) > 0 || button[0])
 		{
 			quit = true;
 			JE_wipeKey();
