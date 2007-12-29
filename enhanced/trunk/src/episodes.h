@@ -31,7 +31,7 @@
 #define EPISODE_MAX 5
 const int NUM_EPISODES = 4;
 
-typedef struct
+struct JE_WeaponType
 {
 	JE_word drain;
 	int shotrepeat;
@@ -48,9 +48,9 @@ typedef struct
 	int sound;
 	int trail;
 	int shipblastfilter;
-} JE_WeaponType[WEAP_NUM + 1]; /* [0..weapnum] */
+};
 
-typedef struct
+struct JE_WeaponPortType
 {
 	char name[31]; /* string [30] */
 	int opnum;
@@ -58,36 +58,27 @@ typedef struct
 	JE_word cost;
 	JE_word itemgraphic;
 	JE_word poweruse;
-} JE_WeaponPortType[PORT_NUM + 1]; /* [0..portnum] */
+};
 
-typedef struct
+struct JE_PowerType
 {
 	char name[31]; /* string [30] */
 	JE_word itemgraphic;
 	int power;
 	int speed;
 	JE_word cost;
-} JE_PowerType[POWER_NUM + 1]; /* [0..powernum] */
+};
 
-typedef struct
+struct JE_SpecialType
 {
 	char name[31]; /* string [30] */
 	JE_word itemgraphic;
 	int pwr;
 	int stype;
 	JE_word wpn;
-} JE_SpecialType[SPECIAL_NUM + 1]; /* [0..specialnum] */
+};
 
-typedef struct
-{
-	char name[31]; /* string [30] */
-	JE_word itemgraphic;
-	int power;
-	int speed;
-	JE_word cost;
-} JE_EngineType[ENGINE_NUM + 1]; /* [0..enginenum] */
-
-typedef struct
+struct JE_OptionType
 {
 	char name[31]; /* string [30] */
 	int pwr;
@@ -102,18 +93,18 @@ typedef struct
 	int ammo;
 	int stop;
 	int icongr;
-} JE_OptionType[OPTION_NUM + 1]; /* [0..optionnum] */
+};
 
-typedef struct
+struct JE_ShieldType
 {
 	char name[31]; /* string [30] */
 	int tpwr;
 	int mpwr;
 	JE_word itemgraphic;
 	JE_word cost;
-} JE_ShieldType[SHIELD_NUM + 1]; /* [0..shieldnum] */
+};
 
-typedef struct
+struct JE_ShipType
 {
 	char    name[31]; /* string [30] */
 	JE_word shipgraphic;
@@ -123,10 +114,10 @@ typedef struct
 	int dmg;
 	JE_word cost;
 	int bigshipgraphic;
-} JE_ShipType[SHIP_NUM + 1]; /* [0..shipnum] */
+};
 
 /* EnemyData */
-typedef struct
+struct JE_EnemyDatType
 {
 	int ani;
 	int tur[3]; /* [1..3] */
@@ -155,16 +146,16 @@ typedef struct
 	JE_word elaunchtype;
 	int value;
 	JE_word eenemydie;
-} JE_EnemyDatType[ENEMY_NUM + 1]; /* [0..enemynum] */
+};
 
-extern JE_WeaponPortType weaponPort;
-extern JE_WeaponType weapons;
-extern JE_PowerType powerSys;
-extern JE_ShipType ships;
-extern JE_OptionType options;
-extern JE_ShieldType shields;
-extern JE_SpecialType special;
-extern JE_EnemyDatType enemyDat;
+extern JE_WeaponType weapons[WEAP_NUM + 1]; /* [0..weapnum] */
+extern JE_WeaponPortType weaponPort[PORT_NUM + 1]; /* [0..portnum] */
+extern JE_PowerType powerSys[POWER_NUM + 1]; /* [0..powernum] */
+extern JE_SpecialType special[SPECIAL_NUM + 1]; /* [0..specialnum] */
+extern JE_OptionType options[OPTION_NUM + 1]; /* [0..optionnum] */
+extern JE_ShieldType shields[SHIELD_NUM + 1]; /* [0..shieldnum] */
+extern JE_ShipType ships[SHIP_NUM + 1]; /* [0..shipnum] */
+extern JE_EnemyDatType enemyDat[ENEMY_NUM + 1]; /* [0..enemynum] */
 extern int episodeNum;
 extern bool episodeAvail[EPISODE_MAX];
 extern char macroFile[13], cubeFile[13];
