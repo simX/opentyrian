@@ -123,7 +123,7 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 			tempStr[y] = toupper(tempStr[y]);
 		}
 
-		for (int y = 0; y < COUNTOF(pars); y++)
+		for (unsigned int y = 0; y < COUNTOF(pars); y++)
 		{
 			if (strcmp(tempStr, pars[y]) == 0)
 			{

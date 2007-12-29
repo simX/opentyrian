@@ -7566,7 +7566,7 @@ void JE_loadCubes( void )
 	char s[256], s2[256], s3[256];
 	int cube;
 	JE_word x, y;
-	int startPos, endPos, pos;
+	unsigned int startPos, endPos, pos;
 	bool endString;
 	FILE *f;
 	int lastWidth, curWidth;

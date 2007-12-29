@@ -63,7 +63,7 @@ void JE_joystick1( void ) /* procedure to get x and y */
 		forceAveraging = true;
 	}
 
-	for (int i = 0; i < COUNTOF(joyButton); i++)
+	for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 	{
 		joyButton[i] = (SDL_JoystickGetButton(joystick, i) == 1);
 	}
@@ -106,7 +106,7 @@ void JE_updateButtons( void ) /* Uses ButtonAssign to find out */
 
 	memset(button, 0, sizeof(button));
 
-	for (int i = 0; i < COUNTOF(joyButton); i++)
+	for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 	{
 		switch (joyButtonAssign[i])
 		{
@@ -167,7 +167,7 @@ void JE_joystick2( void )
 		joystickUp    = joyButton[GP2X_VK_UP]   || joyButton[GP2X_VK_UP_LEFT]   || joyButton[GP2X_VK_UP_LEFT];
 		joystickDown  = joyButton[GP2X_VK_DOWN] || joyButton[GP2X_VK_DOWN_LEFT] || joyButton[GP2X_VK_DOWN_RIGHT];
 		
-		for (int i = 0; i < COUNTOF(joyButton) && joystickInput == 0; i++)
+		for (unsigned int i = 0; i < COUNTOF(joyButton) && joystickInput == 0; i++)
 		{
 			joystickInput = joystickInput || joyButton[i];
 		}
@@ -183,7 +183,7 @@ bool JE_nextJoystickCheck( void )
 		if (joystickWait > 0)
 			joystickWait--;
 		
-		for (int i = 0; i < COUNTOF(joyButton); i++)
+		for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 		{
 #ifndef TARGET_GP2X
 			if (joyButton[i])

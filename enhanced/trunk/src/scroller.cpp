@@ -252,7 +252,7 @@ void scroller_sine( const about_text_type text[] )
 				}
 			}
 		} else {
-			for (int i = 0; i < COUNTOF(beer); i++)
+			for (unsigned int i = 0; i < COUNTOF(beer); i++)
 			{
 				while (beer[i].vx == 0)
 				{

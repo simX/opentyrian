@@ -140,7 +140,7 @@ void JE_findTyrian( const char *filename )
 		/* Let's find it! */
 		std::cout << "Searching for Tyrian files...\n\n";
 
-		for (int i = 0; i < COUNTOF(tyrian_searchpaths); i++)
+		for (unsigned int i = 0; i < COUNTOF(tyrian_searchpaths); i++)
 		{			
 			strbuf = std::string(tyrian_searchpaths[i]) + "/" + filename;
 			if (JE_find(strbuf.c_str()))

@@ -582,8 +582,8 @@ static Sint32	LFO_PM;
 
 	/* LFO */
 	OPL->lfo_am_cnt += OPL->lfo_am_inc;
-	if (OPL->lfo_am_cnt >= (LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
-		OPL->lfo_am_cnt -= (LFO_AM_TAB_ELEMENTS<<LFO_SH);
+	if (OPL->lfo_am_cnt >= ((Uint32)LFO_AM_TAB_ELEMENTS<<LFO_SH) )	/* lfo_am_table is 210 elements long */
+		OPL->lfo_am_cnt -= ((Uint32)LFO_AM_TAB_ELEMENTS<<LFO_SH);
 
 	tmp = lfo_am_table[ OPL->lfo_am_cnt >> LFO_SH ];
 
@@ -699,7 +699,7 @@ static Sint32	LFO_PM;
 		if(op->vib)
 		{
 			Uint8 block;
-			unsigned int block_fnum = CH->block_fnum;
+			Uint32 block_fnum = CH->block_fnum;
 
 			unsigned int fnum_lfo   = (block_fnum&0x0380) >> 7;
 
@@ -1323,7 +1323,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 {
 	OPL_CH *CH;
 	int slot;
-	int block_fnum;
+	Uint32 block_fnum;
 	float interval;
 
 
