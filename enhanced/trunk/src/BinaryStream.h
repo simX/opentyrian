@@ -30,6 +30,7 @@ class OBinaryStream
 private:
 	std::ostream& mStream;
 
+	OBinaryStream& operator=(const OBinaryStream&);
 public:
 	OBinaryStream(std::ostream& stream)
 		: mStream(stream)
@@ -51,6 +52,7 @@ class IBinaryStream
 private:
 	std::istream& mStream;
 
+	IBinaryStream& operator=(const IBinaryStream&);
 public:
 	IBinaryStream(std::istream& stream)
 		: mStream(stream)

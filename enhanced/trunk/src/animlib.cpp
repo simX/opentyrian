@@ -47,7 +47,7 @@ void JE_drawFrame( JE_word framenumber )
 JE_word JE_findPage ( JE_word framenumber )
 {
 	STUB();
-	return -1;
+	return 0;
 }
 
 void JE_renderFrame( JE_word framenumber )

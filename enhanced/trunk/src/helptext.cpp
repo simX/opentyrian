@@ -135,7 +135,7 @@ void JE_helpBox( JE_word x, JE_word y, char *message, unsigned int boxwidth )
 	helpBoxShadeType = FULL_SHADE;
 }
 
-void JE_HBox( JE_word x, JE_word y, int messagenum, int boxwidth )
+void JE_HBox( JE_word x, JE_word y, int messagenum, unsigned int boxwidth )
 {
 	JE_helpBox(x, y, helpTxt[messagenum-1], boxwidth);
 }

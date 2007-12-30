@@ -3662,13 +3662,13 @@ redo:
 				*lastTurn_ = 4;
 
 				shotMultiPos[5-1] = 0;
-				JE_initPlayerShot(0, 5, *PX_ + 1 + round(sin(linkGunDirec + 0.2f) * 26), *PY_ + round(cos(linkGunDirec + 0.2f) * 26),
+				JE_initPlayerShot(0, 5, JE_word(*PX_ + 1 + round(sin(linkGunDirec + 0.2f) * 26)), JE_word(*PY_ + round(cos(linkGunDirec + 0.2f) * 26)),
 				                  *mouseX_, *mouseY_, 148, playerNum_);
 				shotMultiPos[5-1] = 0;
-				JE_initPlayerShot(0, 5, *PX_ + 1 + round(sin(linkGunDirec - 0.2f) * 26), *PY_ + round(cos(linkGunDirec - 0.2f) * 26),
+				JE_initPlayerShot(0, 5, JE_word(*PX_ + 1 + round(sin(linkGunDirec - 0.2f) * 26)), JE_word(*PY_ + round(cos(linkGunDirec - 0.2f) * 26)),
 				                  *mouseX_, *mouseY_, 148, playerNum_);
 				shotMultiPos[5-1] = 0;
-				JE_initPlayerShot(0, 5, *PX_ + 1 + round(sin(linkGunDirec) * 26), *PY_ + round(cos(linkGunDirec) * 26),
+				JE_initPlayerShot(0, 5, JE_word(*PX_ + 1 + round(sin(linkGunDirec) * 26)), JE_word(*PY_ + round(cos(linkGunDirec) * 26)),
 				                  *mouseX_, *mouseY_, 147, playerNum_);
 
 				if (shotRepeat[2-1] > 0)
@@ -3677,7 +3677,7 @@ redo:
 					if (button[1-1])
 					{
 						shotMultiPos[2-1] = 0;
-						JE_initPlayerShot(0, 2, *PX_ + 1 + round(sin(linkGunDirec) * 20), *PY_ + round(cos(linkGunDirec) * 20),
+						JE_initPlayerShot(0, 2, JE_word(*PX_ + 1 + round(sin(linkGunDirec) * 20)), JE_word(*PY_ + round(cos(linkGunDirec) * 20)),
 						                  *mouseX_, *mouseY_, linkGunWeapons[pItems_[2-1]-1], playerNum_);
 						playerShotData[b].shotXM = -round(sin(linkGunDirec) * playerShotData[b].shotYM);
 						playerShotData[b].shotYM = -round(cos(linkGunDirec) * playerShotData[b].shotYM);
