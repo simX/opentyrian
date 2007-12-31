@@ -457,14 +457,6 @@ void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize
 	}
 }
 
-/*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, float scale );
-{
-	Uint8 lookuphoriz[320];
-	Uint8 lookupvert[200];
-
-	for (x = 0; x < shapeX[table][shape]; x++);
-}*/
-
 JE_word JE_fontCenter( const char *s, int font )
 {
 	return 160 - (JE_textWidth(s, font) / 2);

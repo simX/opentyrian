@@ -25,10 +25,14 @@
 
 #include "SDL.h"
 
+//TODO: Remove
+#include "Console.h"
+
 
 bool ESCPressed;
 
 bool newkey, newmouse, keydown, mousedown;
+SDL_keysym lastkey_keysym;
 SDLKey lastkey_sym;
 SDLMod lastkey_mod;
 unsigned char lastkey_char;
@@ -118,7 +122,15 @@ void service_SDL_events( bool clear_new )
 					SDL_Quit();
 					exit(1);
 				}
+
+				// TODO: This shouldn't go here and should go on the loop that handles the input
+				if (ev.key.keysym.sym == SDLK_INSERT)
+				{
+					Console::getConsole().consoleMain();
+					return;
+				}
 				newkey = true;
+				lastkey_keysym = ev.key.keysym;
 				lastkey_sym = ev.key.keysym.sym;
 				lastkey_mod = ev.key.keysym.mod;
 				lastkey_char = (unsigned char)ev.key.keysym.unicode;

@@ -28,6 +28,7 @@
 
 extern bool ESCPressed;
 extern bool newkey, newmouse, keydown, mousedown;
+extern SDL_keysym lastkey_keysym;
 extern SDLKey lastkey_sym;
 extern SDLMod lastkey_mod;
 extern unsigned char lastkey_char;

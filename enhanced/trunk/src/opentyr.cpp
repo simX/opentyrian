@@ -44,6 +44,7 @@
 #include "tyrian2.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "Console.h"
 
 #include "SDL.h"
 
@@ -268,8 +269,7 @@ int main( int argc, char *argv[] )
 		printf("Failed to initialize SDL: %s\n", SDL_GetError());
 	}
 
-	/* JE_detectCFG(); YKS: Removed */
-
+	// TODO: Move to later so it's logged to console instead
 	printf("\nWelcome to... >> OpenTyrian Enhanced v0.1 <<\n\n");
 
 	printf("Copyright (C) 2007 The OpenTyrian Development Team\n\n");
@@ -288,6 +288,8 @@ int main( int argc, char *argv[] )
 
 	JE_initVGA256();
 	init_keyboard();
+
+	Console::initialize();
 
 	/* TODO: Tyrian originally checked availible memory here. */
 
@@ -376,6 +378,8 @@ int main( int argc, char *argv[] )
 	SDL_LockSurface(VGAScreen);
 	JE_main();
 	SDL_UnlockSurface(VGAScreen);
+
+	Console::deinitialize();
 
 	JE_closeVGA256();
 

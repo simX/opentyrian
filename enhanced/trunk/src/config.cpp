@@ -697,7 +697,8 @@ void JE_loadConfiguration( void )
 	{
 		JE_SaveFileType& save = saveFiles[i];
 
-		std::ifstream file((std::string("save/tyrian") + char('1'+i) + ".sav").c_str(), std::ios_base::in | std::ios_base::binary);
+		std::string fname = std::string("save/tyrian") + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
+		std::ifstream file(fname.c_str(), std::ios_base::in | std::ios_base::binary);
 
 		if (file)
 		{
@@ -771,11 +772,12 @@ void JE_saveConfiguration( void )
 	{
 		if (saveFiles[i].level != 0)
 		{
-			std::ofstream file((std::string("save/tyrian") + char('1'+i) + ".sav").c_str(), std::ios_base::out | std::ios_base::binary);
+			std::string fname = std::string("save/tyrian") + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
+			std::ofstream file(fname.c_str(), std::ios_base::out | std::ios_base::binary);
 
 			if (!file)
 			{
-				std::cerr << "Failed to write save/tyrian" << '1'+i << ".sav" << std::endl;
+				std::cerr << "Failed to write " << fname << std::endl;
 				continue;
 			}
 

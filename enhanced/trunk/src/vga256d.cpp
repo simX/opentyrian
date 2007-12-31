@@ -109,7 +109,7 @@ void JE_clr256( void )
 
 void JE_showVGA( void )
 {
-	SDL_Flip(VGAScreen);
+	SDL_Flip(VGAScreenSeg);
 }
 
 void JE_pix( JE_word x, JE_word y, Uint8 c )
