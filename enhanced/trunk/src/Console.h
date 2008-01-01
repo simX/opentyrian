@@ -30,11 +30,11 @@ private:
 	static const int CELL_WIDTH = 6;
 
 	bool mDown;
-	int mHeight;
-	int mConsoleHeight; // TODO: Replace with CVAR	
+	unsigned int mHeight;
+	unsigned int mConsoleHeight; // TODO: Replace with CVAR	
 	std::vector<std::string> mScrollback;
-	int mScrollbackHead;
-	int mCurScroll;
+	unsigned int mScrollbackHead;
+	unsigned int mCurScroll;
 
 	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text );
 

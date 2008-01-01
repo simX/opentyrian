@@ -27,6 +27,8 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
+#include <iostream>
+#include <string>
 
 /////
 // Singleton stuff
@@ -201,6 +203,18 @@ void Console::println( std::string text )
 	if (mScrollbackHead == mScrollback.size()) mScrollbackHead = 0;
 
 	mScrollback[mScrollbackHead] = text;
+
+	// Strips the control codes. Maybe there's a better way to do this?
+	for (unsigned int i = 0; i < text.length(); i++)
+	{
+		if (text[i] == '\a')
+		{
+			i++; // Skip next char
+		} else {
+			std::cout << text[i];
+		}
+	}
+	std::cout << '\n';
 }
 
 void Console::consoleMain()
