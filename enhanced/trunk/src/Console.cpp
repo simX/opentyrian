@@ -106,8 +106,8 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 }
 
 Console::Console()
-	: mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(4096), // TODO: Replace constant value with cvar
-	mScrollbackHead(0), mCurScroll(0), mColor(14), std::ostream(&mStreambuf)
+	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(4096), // TODO: Replace constant value with cvar
+	mScrollbackHead(0), mCurScroll(0), mColor(14)
 {
 	if (mConsoleHeight * LINE_HEIGHT > 200)
 	{
