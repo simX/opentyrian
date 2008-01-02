@@ -264,19 +264,22 @@ int main( int argc, char *argv[] )
 {
 	srand((unsigned int)time(NULL));
 
+	Console::initialize();
+
 	if (SDL_Init(0))
 	{
-		printf("Failed to initialize SDL: %s\n", SDL_GetError());
+		Console::get() << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
+		// TODO: We should totally bail out here =P
 	}
 
 	// TODO: Move to later so it's logged to console instead
-	printf("\nWelcome to... >> OpenTyrian Enhanced v0.1 <<\n\n");
+	Console::get() << "Welcome to... >> OpenTyrian Enhanced v0.1 <<\n";
 
-	printf("Copyright (C) 2007 The OpenTyrian Development Team\n\n");
+	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
 
-	printf("This program comes with ABSOLUTELY NO WARRANTY.\n");
-	printf("This is free software, and you are welcome to redistribute it\n");
-	printf("under certain conditions.  See the file GPL.txt for details.\n\n");
+	Console::get() << "This program comes with ABSOLUTELY NO WARRANTY.\n"
+		<< "This is free software, and you are welcome to redistribute it\n"
+		<< "under certain conditions.  See the file GPL.txt for details.\n\n";
 
 	JE_scanForEpisodes();
 
@@ -289,8 +292,6 @@ int main( int argc, char *argv[] )
 	JE_initVGA256();
 	init_keyboard();
 
-	Console::initialize();
-
 	/* TODO: Tyrian originally checked availible memory here. */
 
 	JE_paramCheck(argc, argv);
@@ -300,12 +301,12 @@ int main( int argc, char *argv[] )
 		JE_joystickInit();
 		if (joystick_installed)
 		{
-			printf("Joystick detected. %d %d\n", jCenterX, jCenterY);
+			Console::get() << "Joystick detected. " << jCenterX << " " << jCenterY;
 		} else {
-			printf("No joystick found.\n");
+			Console::get() << "No joystick found." << std::endl;
 		}
 	} else {
-		printf("Joystick override.\n");
+		Console::get() << "Joystick override." << std::endl;
 		joystick_installed = false;
 	}
 
@@ -319,17 +320,18 @@ int main( int argc, char *argv[] )
 #ifndef TARGET_GP2X
 		if (tyrianXmas)
 		{
-			printf("*****************************\n"
-			       "Christmas has been detected.\n"
-			       "  Activate Christmas? (Y/N)\n"
-			       "*****************************\n");
+			Console::get()
+				<< "********************************" << std::endl
+				<< "* Christmas has been detected. *" << std::endl
+				<< "*  Activate Christmas?  (Y/N)  *" << std::endl
+				<< "********************************" << std::endl;
 			wait_input(true, true, true);
 			if (lastkey_sym != SDLK_y)
 			{
 				tyrianXmas = false;
 			}
 		} else {
-			printf("Christmas is missing.\n");
+			Console::get() << "Christmas is missing." << std::endl;
 		}
 #endif /*TARGET_GP2X*/
 	}
@@ -340,7 +342,7 @@ int main( int argc, char *argv[] )
 	showMemLeft = false;
 	playerPasswordInput = true;
 
-	printf("Initializing SDL audio...\n");
+	Console::get() << "Initializing SDL audio..." << std::endl;
 	JE_loadSong(1);
 
 	if ( noSound ) /* TODO: Check if sound is enabled, handle either appropriately */
@@ -359,7 +361,7 @@ int main( int argc, char *argv[] )
 
 	if (recordDemo)
 	{
-		printf("Game will be recorded.\n");
+		Console::get() << "Game will be recorded." << std::endl;
 	}
 
 	megaData1 = new JE_MegaDataType1;

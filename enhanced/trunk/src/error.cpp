@@ -22,6 +22,7 @@
 #include "config.h"
 #include "joystick.h"
 #include "vga256d.h"
+#include "Console.h"
 
 #include "error.h"
 
@@ -107,9 +108,9 @@ void JE_errorHand( const char *s )
 	if (errorActive)
 	{
 		JE_closeVGA256();
-		printf("WARNING: Unable to find Tyrian data files.\n"
-		       "Stopped on file %s.\n"
-		       "OpenTyrian needs the Tyrian data files to run. Please read the README file.\n\n", s);
+		Console::get() << "WARNING: Unable to find Tyrian data files." << std::endl
+			<< "Stopped on file " << s << std::endl
+			<< "OpenTyrian needs the Tyrian data files to run. Please read the README file." << std::endl;
 		exit(1);
 	} else {
 		errorOccurred = 1;
@@ -209,7 +210,7 @@ bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config
 		fclose(f);
 		return false;
 	} else {
-		printf("\nInvalid or missing TYRIAN.CFG! Continuing using defaults.\n");
+		Console::get() << "Invalid or missing TYRIAN.CFG! Continuing using defaults." << std::endl;
 		return true;
 	}
 }

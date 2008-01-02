@@ -22,6 +22,7 @@
 #include "fm_synth.h"
 #include "lds_play.h"
 #include "params.h"
+#include "Console.h"
 
 #include "loudness.h"
 
@@ -55,7 +56,7 @@ void JE_initialize( void )
 
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
 	{
-		printf("Failed to initialize audio: %s\n", SDL_GetError());
+		Console::get() << "Failed to initialize audio: " << SDL_GetError() << std::endl;
 		noSound = true;
 		return;
 	}
@@ -66,7 +67,7 @@ void JE_initialize( void )
 
 	if (soundmutex == NULL)
 	{
-		printf("Couldn't create mutex! Oh noes!\n");
+		Console::get() << "Couldn't create mutex! Oh noes!" << std::endl;
 		exit(-1);
 	}
 
@@ -85,15 +86,15 @@ void JE_initialize( void )
 	plz.callback = audio_cb;
 	plz.userdata = soundmutex;
 
-	printf("\tRequested SDL frequency: %d; SDL buffer size: %d\n", plz.freq, plz.samples);
+	Console::get() << "\tRequested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
 
 	if ( SDL_OpenAudio(&plz, &got) < 0 )
 	{
-		printf("\tWARNING: Failed to initialize SDL audio. Bailing out.\n");
+		Console::get() << "\tWARNING: Failed to initialize SDL audio. Bailing out." << std::endl;
 		exit(1);
 	}
 
-	printf("\tObtained  SDL frequency: %d; SDL buffer size: %d\n", got.freq, got.samples);
+	Console::get() << "\tObtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
 
 	SDL_PauseAudio(0);
 }
@@ -105,7 +106,7 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(mut) == -1)
 	{
-		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
 		exit(1);
 	}
 
@@ -194,7 +195,7 @@ void JE_selectSong( JE_word value )
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(soundmutex) == -1)
 	{
-		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
 		exit(1);
 	}
 
@@ -209,7 +210,7 @@ void JE_selectSong( JE_word value )
 			music_playing = true;
 			break;
 		default:
-			printf("JE_selectSong: fading TODO!\n");
+			Console::get() << "JE_selectSong: fading TODO!" << std::endl;
 			/* TODO: Finish this FADING function! */
 			break;
 	}
@@ -220,9 +221,7 @@ void JE_selectSong( JE_word value )
 /* Call with 0x1-0x100 for music volume, and 0x10 to 0xf0 for sample volume. */
 /* SYN: Either I'm misunderstanding Andreas's comments, or the information in them is inaccurate. */
 void JE_setVol(JE_word volume, JE_word sample)
-{
-	/* printf("JE_setVol: music: %d, sample: %d\n", volume, sample); */
-	
+{	
 	if (volume > 0)
 		music_volume = volume * (float)(0.6 / 256.0);
 	if (sample > 240 || sample < 16)
@@ -238,7 +237,7 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	if (SDL_mutexP(soundmutex) == -1)
 	{
-		printf("Couldn't lock mutex! Argh! Line: %d\n", __LINE__);
+		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
 		exit(1);
 	}
 

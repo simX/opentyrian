@@ -5212,7 +5212,7 @@ void JE_eventSystem( void )
 		case 16:
 			if (eventRec[eventLoc-1].eventdat > 9)
 			{
-				printf("-!- EVENT 16: BAD EVENT DATA\n");
+				Console::get() << "-!- EVENT 16: BAD EVENT DATA" << std::endl;
 			} else {
 				JE_drawTextWindow(outputs[eventRec[eventLoc-1].eventdat-1]);
 				soundQueue[3] = windowTextSamples[eventRec[eventLoc-1].eventdat-1];
@@ -5789,7 +5789,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 71:
-			printf("-!- EVENT 71: POSSIBLY BAD MAP REPOSITONING\n");
+			Console::get() << "-!- EVENT 71: POSSIBLY BAD MAP REPOSITONING" << std::endl;
 			if (((((intptr_t)mapYPos - (intptr_t)&megaData1->mainmap) / sizeof(Uint8 *)) * 2) <= (unsigned int)eventRec[eventLoc-1].eventdat2) /* <MXD> ported correctly? */
 			{
 				JE_eventJump(eventRec[eventLoc-1].eventdat);
@@ -5866,7 +5866,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 77:
-			printf("-!- EVENT 77: POSSIBLY BAD MAP REPOSITONING\n");
+			Console::get() << "-!- EVENT 77: POSSIBLY BAD MAP REPOSITONING" << std::endl;
 			mapYPos = &megaData1->mainmap[0][0];
 			mapYPos += eventRec[eventLoc-1].eventdat / 2;
 			if (eventRec[eventLoc-1].eventdat2 > 0)
@@ -5899,7 +5899,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 81: /*WRAP2*/
-			printf("-!- EVENT 81: POSSIBLY BAD MAP REPOSITONING\n");
+			Console::get() << "-!- EVENT 81: POSSIBLY BAD MAP REPOSITONING" << std::endl;
 			BKwrap2   = &megaData2->mainmap[0][0];
 			BKwrap2   += eventRec[eventLoc-1].eventdat / 2;
 			BKwrap2to = &megaData2->mainmap[0][0];
@@ -5914,7 +5914,7 @@ void JE_eventSystem( void )
 			shotRepeat[11-1] = 0;
 			break;
 		default:
-			printf("-!- EVENT %d: UNHANDLED EVENT\n", eventRec[eventLoc-1].eventtype);
+			Console::get() << "-!- EVENT " << eventRec[eventLoc-1].eventtype << ": UNHANDLED EVENT" << std::endl;
 			break;
 	}
 

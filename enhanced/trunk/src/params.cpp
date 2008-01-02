@@ -137,7 +137,7 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 						break;
 					case 2:
 						recordDemo = true;
-						printf("Use a keyboard to record a demo.\n");
+						Console::get() << "Use a keyboard to record a demo." << std::endl;
 						break;
 					case 3:
 						scanForJoystick = false;
@@ -153,7 +153,7 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 						break;
 					case 7:
 						useBios = true;
-						printf("Keyboard redirection enabled.\n");
+						Console::get() << "Keyboard redirection enabled." << std::endl;
 						break;
 					case 8:
 						noSound = true;
@@ -187,7 +187,7 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 						break;
 					default:
 						/* YKS: This shouldn't ever be reached. */
-						printf("!!! WARNING: Something's very wrong on %s:%d!\n", __FILE__, __LINE__);
+						Console::get() << "!!! WARNING: Something's very wrong on " << __FILE__ << ":" << __LINE__ << std::endl;
 						break;
 				}
 			}

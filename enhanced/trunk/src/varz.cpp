@@ -738,18 +738,12 @@ void JE_tyrianHalt( int code )
 
 	if (trentWin)
 	{
-		printf("\n"
-		       "\n"
-		       "\n"
-		       "\n"
-		       "Sleep well, Trent, you deserve the rest.\n"
-		       "You now have permission to borrow my ship on your next mission.\n"
-		       "\n"
-		       "Also, you might want to try out the YESXMAS parameter.\n"
-		       "  Type: File0001 YESXMAS\n" /* < TODO? */
-		       "\n"
-		       "You'll need the 2.1 patch, though!\n"
-		       "\n");
+		Console::get() << std::endl << std::endl << std::endl
+			<< "Sleep well, Trent, you deserve the rest." << std::endl
+			<< "You now have permission to borrow my ship on your next mission." << std::endl
+			<< std::endl
+			<< "Also, you might want to try out the YESXMAS parameter." << std::endl
+			<< "\tType: File0001 YESXMAS" << std::endl;
 	}
 
 	exit(code);

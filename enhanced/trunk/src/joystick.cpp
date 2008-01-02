@@ -22,6 +22,7 @@
 #include "keyboard.h"
 #include "params.h"
 #include "vga256d.h"
+#include "Console.h"
 
 #include "joystick.h"
 
@@ -285,7 +286,7 @@ void JE_joystickInit( void )
 	{
 		if (SDL_InitSubSystem(SDL_INIT_JOYSTICK))
 		{
-			printf("Failed to initialize joystick: %s\n", SDL_GetError());
+			Console::get() << "Failed to initialize joystick: " << SDL_GetError() << std::endl;
 		}
 		if (SDL_NumJoysticks())
 		{

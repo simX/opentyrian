@@ -188,12 +188,6 @@ int lds_load(unsigned char *music_location)
 
 	lds_rewind(-1);
 
-	/*templ = 0.0f;
-	while(lds_update() && templ < 600000) templ += 1000.0f / REFRESH;
-	printf("> %f\n", templ);
-
-	lds_rewind(-1);*/
-
 	return true;
 }
 
@@ -303,7 +297,6 @@ int lds_update( void )
 			if(!c->packwait) {
 				Uint16 patnum = positions[posplay * 9 + chan].patnum;
 				Uint8 transpose = positions[posplay * 9 + chan].transpose;
-				/*printf("> %p", positions);*/
 
 				comword = patterns[patnum + c->packpos];
 				comhi = comword >> 8; comlo = comword & 0xff;

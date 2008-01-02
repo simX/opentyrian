@@ -23,15 +23,13 @@
 #include "SDL.h"
 #include "SDL_endian.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "Console.h"
 
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__
 #endif
 
-#define STUB() printf("!!! STUB: %s:%d:%s\n", __FILE__, __LINE__, __func__)
+#define STUB() (Console::get() << "!!! STUB: " << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl)
 
 /* Gets number of elements in an array.
  * !!! USE WITH ARRAYS ONLY !!! */

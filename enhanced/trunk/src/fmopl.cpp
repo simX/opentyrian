@@ -62,7 +62,10 @@ Revision History:
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <sstream>
+#include <iomanip>
 
+#include "Console.h"
 #include "fmopl.h"
 
 #ifndef PI
@@ -1446,7 +1449,7 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 			break;
 #endif
 		default:
-			printf("%s: write to unknown register: %02x\n", __FILE__, r);
+			Console::get() << __FILE__ << ": write to unknown register: " << std::setfill('0') << std::setw(2) << std::hex << r << std::endl;
 			break;
 		}
 		break;

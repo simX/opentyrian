@@ -22,10 +22,20 @@
 
 #include "SDL.h"
 #include <vector>
+#include <iostream>
 
-class Console
+class Console : public std::ostream
 {
 private:
+	class ConsoleStreamBuffer : public std::streambuf
+	{
+	private:
+		std::string mOutputStr;
+		typedef std::char_traits<char> mTraits;
+	protected:
+		virtual int overflow(int c = mTraits::eof());
+	};
+
 	static const int LINE_HEIGHT = 8;
 	static const int CELL_WIDTH = 6;
 
@@ -35,6 +45,10 @@ private:
 	std::vector<std::string> mScrollback;
 	unsigned int mScrollbackHead;
 	unsigned int mCurScroll;
+
+	unsigned int mColor;
+
+	ConsoleStreamBuffer mStreambuf;
 
 	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text );
 
@@ -55,7 +69,7 @@ public:
 
 	// Singleton stuff
 	static void initialize();
-	static Console& getConsole();
+	static Console& get();
 	static void deinitialize();
 };
 

@@ -27,6 +27,7 @@
 #include "pcxload.h"
 #include "starfade.h"
 #include "vga256d.h"
+#include "Console.h"
 
 #include "animlib.h"
 

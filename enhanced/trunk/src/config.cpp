@@ -29,6 +29,7 @@
 #include "vga256d.h"
 #include "iniparser.h"
 #include "BinaryStream.h"
+#include "Console.h"
 
 #include "config.h"
 
@@ -818,7 +819,7 @@ void JE_saveConfiguration( void )
 	FILE *ini = fopen("tyrian.ini", "w");
 	if (ini == NULL)
 	{
-		printf("Couldn't write tyrian.ini.");
+		Console::get() << "Couldn't write tyrian.ini." << std::endl;
 	} else {
 		// YKS: Yes, this is horrible, need to come up with a better way
 		fprintf(ini, tyrian_ini_template,

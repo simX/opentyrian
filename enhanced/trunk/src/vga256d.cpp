@@ -78,7 +78,7 @@ void JE_initVGA256( void )
 			}
 		} else {
 		video_error:
-			printf("Display initialization failed: %s\n", SDL_GetError());
+			Console::get() << "Display initialization failed: " << SDL_GetError() << std::endl;
 			exit(1);
 		}
 		
@@ -188,7 +188,7 @@ void JE_rectangle( JE_word a, JE_word b, JE_word c, JE_word d, JE_word e ) /* x1
 			vga[i] = (Uint8)e;
 		}
 	} else {
-		printf("!!! WARNING: Rectangle clipped: %d %d %d %d %d\n", a, b, c, d, e);
+		Console::get() << "!!! WARNING: Rectangle clipped: " << a << " " << b << " " << c << " " << d << " " << e << std::endl;
 	}
 }
 
@@ -207,7 +207,7 @@ void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e ) /* x1, y1, x2
 			memset(&vga[i], e, width);
 		}
 	} else {
-		printf("!!! WARNING: Filled Rectangle clipped: %d %d %d %d %d\n", a, b, c, d, e);
+		Console::get() << "!!! WARNING: Filled Rectangle clipped: " << a << " " << b << " " << c << " " << d << " " << e << std::endl;
 	}
 }
 
@@ -226,7 +226,7 @@ void JE_c_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e )
 			memset(&vga[i], e, width);
 		}
 	} else {
-		printf("!!! WARNING: Filled Rectangle clipped: %d %d %d %d %d\n", a,b,c,d,e);
+		Console::get() << "!!! WARNING: C Filled Rectangle clipped: " << a << " " << b << " " << c << " " << d << " " << e << std::endl;
 	}
 }
 
@@ -248,7 +248,7 @@ void JE_barShade( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y2
 			}
 		}
 	} else {
-		printf("!!! WARNING: Darker Rectangle clipped: %d %d %d %d\n", a,b,c,d);
+		Console::get() << "!!! WARNING: Darker clipped: " << a << " " << b << " " << c << " " << d << std::endl;
 	}
 }
 
@@ -286,7 +286,7 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 			}
 		}
 	} else {
-		printf("!!! WARNING: Brighter Rectangle clipped: %d %d %d %d\n", a,b,c,d);
+		Console::get() << "!!! WARNING: Brighter Rectangle clipped: " << a << " " << b << " " << c << " " << d << std::endl;
 	}
 }
 

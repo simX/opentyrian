@@ -126,7 +126,7 @@ void service_SDL_events( bool clear_new )
 				// TODO: This shouldn't go here and should go on the loop that handles the input
 				if (ev.key.keysym.sym == SDLK_INSERT)
 				{
-					Console::getConsole().consoleMain();
+					Console::get().consoleMain();
 					return;
 				}
 				newkey = true;

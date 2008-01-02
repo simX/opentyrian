@@ -42,7 +42,7 @@ void Console::initialize()
 	sInstance = new Console();
 }
 
-Console& Console::getConsole()
+Console& Console::get()
 {
 	assert(sInstance != 0);
 	return *sInstance;
@@ -56,9 +56,24 @@ void Console::deinitialize()
 
 ///// End singleton stuff
 
+int Console::ConsoleStreamBuffer::overflow( int c )
+{
+	if (c != mTraits::eof()) {
+		if (c == '\n') {
+			mOutputStr.append("\ae");
+			Console::get().println(mOutputStr);
+			mOutputStr.clear();
+		} else if (c == '\t') {
+			mOutputStr.append(8, ' ');
+		} else {
+			mOutputStr.append(1, c);
+		}
+	}
+	return c;
+}
+
 void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text )
 {
-	bool highlight = false;
 	int color = 14;
 
 	for (unsigned int i = 0; i < text.length(); i++)
@@ -67,21 +82,23 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 
 		if ((c > 32) && (c < 169) && (fontMap[c-33] != 255) && ((*shapeArray)[TINY_FONT][fontMap[c-33]] != NULL))
 		{
-			x += (6-shapeX[TINY_FONT][fontMap[c-33]])/2;
-			JE_newDrawCShapeBright((*shapeArray)[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x, y, color, 4);
+			const int xoff = CELL_WIDTH/2 - shapeX[TINY_FONT][fontMap[c-33]]/2;
+			JE_newDrawCShapeBright((*shapeArray)[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x+xoff, y, mColor, 4);
 			x += CELL_WIDTH;;
 		} else {
 			if (c == ' ')
 			{
 				x += CELL_WIDTH;
+			} else if (c == '\t') {
+				x += CELL_WIDTH*8;
 			} else if (c == '\a') {
 				i++;
 				const unsigned char c = text[i];
 				if (c >= '0' && c <= '9')
 				{
-					color = c-'0';
+					mColor = c-'0';
 				} else if (c >= 'a' && c <= 'f') {
-					color = c-'a'+10;
+					mColor = c-'a'+10;
 				}
 			}
 		}
@@ -90,7 +107,7 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 
 Console::Console()
 	: mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(4096), // TODO: Replace constant value with cvar
-	mScrollbackHead(0), mCurScroll(0)
+	mScrollbackHead(0), mCurScroll(0), mColor(14), std::ostream(&mStreambuf)
 {
 	if (mConsoleHeight * LINE_HEIGHT > 200)
 	{
@@ -149,19 +166,19 @@ void Console::think( const SDL_keysym& keysym )
 				disable();
 				break;
 			case SDLK_a:
-				println("Yuriks");
+				*this << "Test Text" << std::endl;
 				break;
 			case SDLK_s:
-				println("OpenTyrian");
+				*this << "\tTest Indent" << std::endl;
 				break;
 			case SDLK_d:
-				println("Highscore!");
+				*this << "Separate" << " " << "words" << std::endl;
 				break;
 			case SDLK_f:
-				println("Foobar?");
+				*this << "Number " << 15 << std::endl;
 				break;
 			case SDLK_g:
-				println("\a00\a11\a22\a33\a44\a55\a66\a77\a88\a99\aaA\abB\acC\adD\aeE\afF");
+				*this << "\a00\a11\a22\a33\a44\a55\a66\a77\a88\a99\aaA\abB\acC\adD\aeE\afF" << std::endl;
 				break;
 			default:
 				break;
@@ -199,12 +216,10 @@ bool Console::isDown( )
 
 void Console::println( std::string text )
 {
-	mScrollbackHead++;
-	if (mScrollbackHead == mScrollback.size()) mScrollbackHead = 0;
-
-	mScrollback[mScrollbackHead] = text;
-
-	// Strips the control codes. Maybe there's a better way to do this?
+	// Strips the control codes and calculates wrapping.
+	std::vector<unsigned int> wrap;
+	wrap.push_back(0);
+	unsigned int line_len = 0;
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
 		if (text[i] == '\a')
@@ -212,9 +227,25 @@ void Console::println( std::string text )
 			i++; // Skip next char
 		} else {
 			std::cout << text[i];
+			if (line_len == 52)
+			{
+				wrap.push_back(i);
+				line_len = 0;
+			}
+			line_len++;
 		}
 	}
 	std::cout << '\n';
+
+	wrap.push_back(text.length());
+
+	for (unsigned int i = 1; i < wrap.size(); i++)
+	{
+		mScrollbackHead++;
+		if (mScrollbackHead == mScrollback.size()) mScrollbackHead = 0;
+
+		mScrollback[mScrollbackHead] = std::string(text, wrap[i-1], wrap[i]-wrap[i-1]);
+	}
 }
 
 void Console::consoleMain()

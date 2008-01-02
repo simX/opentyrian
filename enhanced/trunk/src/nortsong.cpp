@@ -217,7 +217,7 @@ void JE_playSong ( JE_word songnum )
 
 
 	#ifndef NDEBUG
-	printf("Loading song number %d...\n", songnum);
+	Console::get() << "Loading song number " << songnum << std::endl;
 	#endif
 	if (songnum == 0) /* SYN: Trying to play song 0 was doing strange things D: */
 	{
