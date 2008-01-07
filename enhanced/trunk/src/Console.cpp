@@ -29,6 +29,8 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <cctype>
+#include <deque>
 
 /////
 // Singleton stuff
@@ -60,7 +62,7 @@ int Console::ConsoleStreamBuffer::overflow( int c )
 {
 	if (c != mTraits::eof()) {
 		if (c == '\n') {
-			mOutputStr.append("\ae");
+			mOutputStr.append("\ax");
 			Console::get().println(mOutputStr);
 			mOutputStr.clear();
 		} else if (c == '\t') {
@@ -97,6 +99,8 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 					mColor = c-'0';
 				} else if (c >= 'a' && c <= 'f') {
 					mColor = c-'a'+10;
+				} else if (c == 'x') {
+					mColor = TEXT_COLOR;
 				}
 			}
 		}
@@ -115,7 +119,7 @@ void Console::drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y
 
 Console::Console()
 	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(BUFFER_SIZE), // TODO: Replace constant value with cvar
-	mScrollbackHead(0), mCurScroll(0), mColor(14)
+	mScrollbackHead(0), mCurScroll(0), mColor(TEXT_COLOR), mCursorPos(0), mCursorVisible(true), mCursorTimeout(BLINK_RATE)
 {
 	if (mConsoleHeight * LINE_HEIGHT > 200)
 	{
@@ -162,13 +166,22 @@ void Console::draw( SDL_Surface* const surf )
 		++iter;
 	}
 
+	// Draw "more text" arrows
 	if (mCurScroll > 0)
 	{
 		const int base = (mHeight-1)*LINE_HEIGHT-1;
-		for (int i = 1; i <= 6; i += 2)
+		for (int i = 1; i <= 9; i += 3)
 		{
 			drawArrow(surf, 3, base-i, 0x0f);
 		}
+	}
+
+	// Draw input line
+	drawText(surf, 8, (mHeight-1)*LINE_HEIGHT, mEditLine);
+	if (mCursorVisible)
+	{
+		// TODO: Replace with JE_bar once it's fixed
+		JE_bar(mCursorPos*CELL_WIDTH+8, (mHeight-1)*LINE_HEIGHT+1, mCursorPos*CELL_WIDTH+8, mHeight*LINE_HEIGHT-2, 0x0f);
 	}
 }
 
@@ -183,6 +196,7 @@ void Console::think( const SDL_keysym& keysym )
 			case SDLK_BACKQUOTE:
 				disable();
 				break;
+			///// Console Resizing
 			case SDLK_EQUALS:
 				if (mConsoleHeight < 200/LINE_HEIGHT) mConsoleHeight++;
 
@@ -195,6 +209,7 @@ void Console::think( const SDL_keysym& keysym )
 				if (mConsoleHeight > 4) mConsoleHeight--;
 				if (mHeight > mConsoleHeight) mHeight = mConsoleHeight;
 				break;
+			///// Console scrolling
 			case SDLK_PAGEUP:
 				{
 				unsigned int amount = mConsoleHeight / 3;
@@ -221,37 +236,68 @@ void Console::think( const SDL_keysym& keysym )
 				}
 				break;
 				}
+			///// Line editing
 			case SDLK_END:
-				mCurScroll = 0;
-				break;
-			case SDLK_a:
-				*this << "Test Text" << std::endl;
-				break;
-			case SDLK_s:
-				*this << "\tTest Indent" << std::endl;
-				break;
-			case SDLK_d:
-				for (int i = 0; i < 64; i++)
+				if (lastkey_mod & KMOD_SHIFT)
 				{
-					*this << "Line " << i << std::endl;
+					mCurScroll = 0;
+				} else {
+					mCursorPos = mEditLine.length();
 				}
 				break;
-			case SDLK_f:
-				*this << "\a01234567890\a11234567890\a21234567890\a31234567890\a41234567890\a51234567890"
-					<< "\a61234567890\a71234567890\a81234567890\a91234567890\aa1234567890\ab1234567890"
-					<< "\ac1234567890\ad1234567890\ae1234567890\af1234567890" << std::endl;
+			case SDLK_HOME:
+				mCursorPos = 0;
 				break;
-			case SDLK_g:
-				*this << "\a00\a11\a22\a33\a44\a55\a66\a77\a88\a99\aaA\abB\acC\adD\aeE\afF" << std::endl;
+			case SDLK_LEFT:
+				if (mCursorPos > 0)
+				{
+					mCursorPos--;
+				}
+				break;
+			case SDLK_RIGHT:
+				if (mCursorPos < mEditLine.length())
+				{
+					mCursorPos++;
+				}
+				break;
+			case SDLK_BACKSPACE:
+				if (mCursorPos > 0) // Can't backspace at the start of the line!
+				{
+					mEditLine.erase(mCursorPos-1, 1);
+					mCursorPos--;
+				}
+				break;
+			case SDLK_DELETE:
+				if (mCursorPos < mEditLine.length()) // Can't delete at the end of the line!
+				{
+					mEditLine.erase(mCursorPos, 1);
+				}
+				break;
+			case SDLK_RETURN:
+				runCommand(parseLine(mEditLine));
+				mEditLine.clear();
+				mCursorPos = 0;
 				break;
 			default:
-				break;
+				if (std::isprint(lastkey_char))
+				{
+					mEditLine.insert(mCursorPos, 1, lastkey_char);
+					mCursorPos++;
+				}
 			}
 		}
 
 		if (mHeight < mConsoleHeight)
 		{
 			mHeight++;
+		}
+
+		if (mCursorTimeout > 0)
+		{
+			mCursorTimeout--;
+		} else {
+			mCursorVisible = !mCursorVisible;
+			mCursorTimeout = BLINK_RATE;
 		}
 	} else {
 		if (newkey)
@@ -312,6 +358,71 @@ void Console::println( std::string text )
 	}
 }
 
+std::deque<std::string> Console::parseLine( std::string text )
+{
+	text.append(1, ' ');
+
+	std::deque<std::string> tokens;
+	bool in_quote = false;
+	bool escaped = false;
+	std::string cur_token;
+
+	for (std::string::const_iterator i = text.begin(); i != text.end(); i++)
+	{
+		switch (*i)
+		{
+		case ' ':
+			if (in_quote)
+			{
+				cur_token.append(1, *i);
+			} else {
+				if (!cur_token.empty())
+				{
+					tokens.push_back(cur_token);
+					cur_token.clear();
+				}
+			}
+			break;
+		case '"':
+			if (!escaped)
+			{
+				in_quote = !in_quote;
+			} else {
+				cur_token.append(1, '"');
+				escaped = false;
+			}
+			break;
+		case '\\':
+			if (!escaped)
+			{
+				escaped = true;
+			} else {
+				cur_token.append(1, '\\');
+				escaped = false;
+			}
+			break;
+		default:
+			cur_token.append(1, *i);
+			break;
+		}
+	}
+
+	if (in_quote)
+	{
+		*this << "\a7Warning:\ax No quote at end of input!" << std::endl;
+	}
+
+	return tokens;
+}
+
+void Console::runCommand( std::deque<std::string> tokens )
+{
+	if (tokens.empty()) return;
+
+	// TODO: Rig this with the CCmds system
+	*this << tokens[0] << " command ran!" << std::endl;
+}
+
 void Console::consoleMain()
 {
 	SDL_Surface* const prev_VGAScreen = VGAScreen;
@@ -324,7 +435,7 @@ void Console::consoleMain()
 	std::copy(screen, screen+VGAScreen->h*VGAScreen->pitch, screen_copy);
 
 	service_SDL_events(true);
-	while (lastkey_keysym.sym != SDLK_DELETE)
+	while (lastkey_keysym.sym != SDLK_PAUSE)
 	{
 		service_SDL_events(true);
 		think(lastkey_keysym);

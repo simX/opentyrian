@@ -22,6 +22,7 @@
 
 #include "SDL.h"
 #include <vector>
+#include <deque>
 #include <iostream>
 
 class Console : public std::ostream
@@ -38,6 +39,8 @@ private:
 
 	static const int LINE_HEIGHT = 8;
 	static const int CELL_WIDTH = 6;
+	static const int BLINK_RATE = 5;
+	static const int TEXT_COLOR = 0xE;
 	static const int BUFFER_SIZE = 64; // TODO: Replace with CVAR
 
 	bool mDown;
@@ -46,8 +49,12 @@ private:
 	std::vector<std::string> mScrollback;
 	unsigned int mScrollbackHead;
 	unsigned int mCurScroll;
-
 	unsigned int mColor;
+
+	std::string mEditLine;
+	unsigned int mCursorPos;
+	bool mCursorVisible;
+	unsigned int mCursorTimeout;
 
 	ConsoleStreamBuffer mStreambuf;
 
@@ -63,6 +70,8 @@ public:
 	void draw( SDL_Surface* const surf );
 	void think( const SDL_keysym& keysym );
 	void println( std::string text );
+	std::deque<std::string> parseLine( std::string text );
+	void runCommand( std::deque<std::string> tokens );
 
 	bool isDown( );
 

@@ -198,9 +198,7 @@ void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e ) /* x1, y1, x2
 	    c < VGAScreen->w && d < VGAScreen->h)
 	{
 		Uint8 *vga = (Uint8 *)VGAScreen->pixels;
-		int width;
-
-		width = c - a + 1;
+		int width = c - a + 1;
 
 		for (int i = b * VGAScreen->w + a; i <= d * VGAScreen->w + a; i += VGAScreen->w)
 		{
