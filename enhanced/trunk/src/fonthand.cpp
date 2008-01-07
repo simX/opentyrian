@@ -67,9 +67,9 @@ void JE_dString( JE_word x, JE_word y, const char *s, int font )
 		{
 			if (fontMap[b-33] != 255)
 			{
-				JE_newDrawCShapeDarken((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]],
+				JE_newDrawCShapeDarken(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]],
 				                       shapeY[font][fontMap[b-33]], x + 2, y + 2);
-				JE_newDrawCShapeBright((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]],
+				JE_newDrawCShapeBright(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]],
 				                       shapeY[font][fontMap[b-33]], x, y, 15, defaultBrightness + (bright << 1));
 				x += shapeX[font][fontMap[b-33]] + 1;
 			}
@@ -226,7 +226,7 @@ void JE_newDrawCShapeDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, 
 void JE_newDrawCShapeDarkenNum( int table, int shape, int x, int y )
 {
 	shape--; /* re-index */
-	JE_newDrawCShapeDarken((*shapeArray)[table][shape], shapeX[table][shape], shapeY[table][shape], x, y);
+	JE_newDrawCShapeDarken(shapeArray[table][shape], shapeX[table][shape], shapeY[table][shape], x, y);
 }
 
 void JE_newDrawCShapeTrick( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y )
@@ -276,7 +276,7 @@ void JE_newDrawCShapeTrick( Uint8 *shape, JE_word xsize, JE_word ysize, int x, i
 void JE_newDrawCShapeTrickNum( int table, int shape, int x, int y )
 {
 	shape--; /* re-index */
-	JE_newDrawCShapeTrick((*shapeArray)[table][shape], shapeX[table][shape], shapeY[table][shape], x, y);
+	JE_newDrawCShapeTrick(shapeArray[table][shape], shapeX[table][shape], shapeY[table][shape], x, y);
 }
 
 void JE_newDrawCShapeModify( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness )
@@ -339,7 +339,7 @@ void JE_newDrawCShapeModify( Uint8 *shape, JE_word xsize, JE_word ysize, int x, 
 void JE_newDrawCShapeModifyNum( int table, int shape, int x, int y, int filter, int brightness )
 {
 	shape--; /* re-index */
-	JE_newDrawCShapeModify((*shapeArray)[table][shape], shapeX[table][shape], shapeY[table][shape], x, y, filter, brightness);
+	JE_newDrawCShapeModify(shapeArray[table][shape], shapeX[table][shape], shapeY[table][shape], x, y, filter, brightness);
 }
 
 void JE_newDrawCShapeAdjust( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness )
@@ -401,7 +401,7 @@ void JE_newDrawCShapeAdjust( Uint8 *shape, JE_word xsize, JE_word ysize, int x, 
 void JE_newDrawCShapeAdjustNum( int table, int shape, int x, int y, int filter, int brightness )
 {
 	shape--; /* re-index */
-	JE_newDrawCShapeAdjust((*shapeArray)[table][shape], shapeX[table][shape], shapeY[table][shape], x, y, filter, brightness);
+	JE_newDrawCShapeAdjust(shapeArray[table][shape], shapeX[table][shape], shapeY[table][shape], x, y, filter, brightness);
 }
 
 void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness )
@@ -520,14 +520,14 @@ void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightn
 	{
 		b = s[a];
 
-		if ((b > 32) && (b < 169) && (fontMap[b-33] != 255) && ((*shapeArray)[TINY_FONT][fontMap[b-33]] != NULL))
+		if ((b > 32) && (b < 169) && (fontMap[b-33] != 255) && (shapeArray[TINY_FONT][fontMap[b-33]] != NULL))
 		{
 			if (brightness >= 0)
 			{
-				JE_newDrawCShapeBright((*shapeArray)[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]],
+				JE_newDrawCShapeBright(shapeArray[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]],
 				                       shapeY[TINY_FONT][fontMap[b-33]], x, y, colorbank, brightness + bright);
 			} else {
-				JE_newDrawCShapeShadow((*shapeArray)[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]],
+				JE_newDrawCShapeShadow(shapeArray[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]],
 				                       shapeY[TINY_FONT][fontMap[b-33]], x, y);
 			}
 
@@ -565,7 +565,7 @@ void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brig
 
 		if ((b > 32) && (b < 169) && (fontMap[b-33] != 255))
 		{
-			JE_newDrawCShapeModify((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, filter, brightness);
+			JE_newDrawCShapeModify(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, filter, brightness);
 
 			x += shapeX[font][fontMap[b-33]] + 1;
 		} else {
@@ -587,7 +587,7 @@ void JE_outTextShade( JE_word x, JE_word y, const char *s, int font )
 
 		if ((b > 32) && (b < 169) && (fontMap[b-33] != 255))
 		{
-			JE_newDrawCShapeDarken((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y);
+			JE_newDrawCShapeDarken(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y);
 
 			x += shapeX[font][fontMap[b-33]] + 1;
 		} else {
@@ -611,10 +611,10 @@ void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brig
 		{
 			if (shadow)
 			{
-				JE_newDrawCShapeDarken((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x + 2, y + 2);
+				JE_newDrawCShapeDarken(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x + 2, y + 2);
 			}
 
-			JE_newDrawCShapeAdjust((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, filter, brightness + (bright << 2));
+			JE_newDrawCShapeAdjust(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, filter, brightness + (bright << 2));
 
 			x += shapeX[font][fontMap[b-33]] + 1;
 		} else {
@@ -642,7 +642,7 @@ void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, in
 
 		if ((b > 32) && (b < 169) && (fontMap[b-33] != 255))
 		{
-			JE_newDrawCShapeBrightAndDarken((*shapeArray)[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, colorbank, brightness + bright);
+			JE_newDrawCShapeBrightAndDarken(shapeArray[font][fontMap[b-33]], shapeX[font][fontMap[b-33]], shapeY[font][fontMap[b-33]], x, y, colorbank, brightness + bright);
 
 			x += shapeX[font][fontMap[b-33]] + 1;
 		} else {

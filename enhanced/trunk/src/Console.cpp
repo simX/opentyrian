@@ -80,10 +80,10 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 	{
 		const unsigned char c = text[i];
 
-		if ((c > 32) && (c < 169) && (fontMap[c-33] != 255) && ((*shapeArray)[TINY_FONT][fontMap[c-33]] != NULL))
+		if ((c > 32) && (c < 169) && (fontMap[c-33] != 255) && (shapeArray[TINY_FONT][fontMap[c-33]] != NULL))
 		{
 			const int xoff = CELL_WIDTH/2 - shapeX[TINY_FONT][fontMap[c-33]]/2;
-			JE_newDrawCShapeBright((*shapeArray)[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x+xoff, y, mColor, 4);
+			JE_newDrawCShapeBright(shapeArray[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x+xoff, y, mColor, 4);
 			x += CELL_WIDTH;
 		} else {
 			if (c == ' ')

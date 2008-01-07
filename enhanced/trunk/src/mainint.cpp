@@ -151,7 +151,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 							b = s[z];
 							if (b > 32 && b < 126)
 							{
-								JE_newDrawCShapeAdjust((*shapeArray)[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]], shapeY[TINY_FONT][fontMap[b-33]], textloc[z], y, bank, glowcol[z]);
+								JE_newDrawCShapeAdjust(shapeArray[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]], shapeY[TINY_FONT][fontMap[b-33]], textloc[z], y, bank, glowcol[z]);
 								glowcol[z] += glowcolc[z];
 								if (glowcol[z] > 9)
 								{
@@ -162,7 +162,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 					}
 					if (b > 32 && b < 126 && z < maxloc)
 					{
-						JE_newDrawCShapeShadow((*shapeArray)[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]], shapeY[TINY_FONT][fontMap[b-33]], textloc[z-1] + 1, y + 1);
+						JE_newDrawCShapeShadow(shapeArray[TINY_FONT][fontMap[b-33]], shapeX[TINY_FONT][fontMap[b-33]], shapeY[TINY_FONT][fontMap[b-33]], textloc[z-1] + 1, y + 1);
 					}
 					if (JE_anyButton())
 					{
@@ -2131,7 +2131,7 @@ void JE_playCredits( void )
 		setjasondelay2(1);
 		JE_clr256();
 		
-		JE_newDrawCShapeAdjust((*shapeArray)[EXTRA_SHAPES][currentpic-1], shapeX[EXTRA_SHAPES][currentpic-1], shapeY[EXTRA_SHAPES][currentpic-1], 319 - shapeX[EXTRA_SHAPES][currentpic-1], 100 - (shapeY[EXTRA_SHAPES][currentpic-1] / 2), 0, fade - 15);
+		JE_newDrawCShapeAdjust(shapeArray[EXTRA_SHAPES][currentpic-1], shapeX[EXTRA_SHAPES][currentpic-1], shapeY[EXTRA_SHAPES][currentpic-1], 319 - shapeX[EXTRA_SHAPES][currentpic-1], 100 - (shapeY[EXTRA_SHAPES][currentpic-1] / 2), 0, fade - 15);
 		
 		fade += fadechg;
 		if (fade == 0 && fadechg == -1)
@@ -2494,9 +2494,9 @@ void JE_endLevelAni( void )
 
 void JE_drawCube( JE_word x, JE_word y, int filter, int brightness )
 {
-	JE_newDrawCShapeDarken((*shapeArray)[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
+	JE_newDrawCShapeDarken(shapeArray[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
 	  shapeY[OPTION_SHAPES][26 - 1], x + 4, y + 4);
-	JE_newDrawCShapeDarken((*shapeArray)[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
+	JE_newDrawCShapeDarken(shapeArray[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
 	  shapeY[OPTION_SHAPES][26 - 1], x + 3, y + 3);
 	JE_newDrawCShapeAdjustNum(OPTION_SHAPES, 26, x, y, filter, brightness);
 }

@@ -32,9 +32,9 @@
 #include "newshape.h"
 
 
-SDL_Surface *tempScreenSeg = NULL;
+SDL_Surface *tempScreenSeg = VGAScreen;
 
-JE_ShapeArrayType *shapeArray;
+JE_ShapeArrayType shapeArray;
 
 JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],        /* [1..maxtable,1..maximumshape] */
         shapeY[MAX_TABLE][MAXIMUM_SHAPE];        /* [1..maxtable,1..maximumshape] */
@@ -101,9 +101,9 @@ void JE_newLoadShapesB( int table, FILE *f )
 			efread(&shapeY   [table][tempW], sizeof(JE_word), 1, f);
 			efread(&shapeSize[table][tempW], sizeof(JE_word), 1, f);
 
-			(*shapeArray)[table][tempW] = (Uint8 *)malloc(shapeX[table][tempW]*shapeY[table][tempW]);
+			shapeArray[table][tempW] = (Uint8 *)malloc(shapeX[table][tempW]*shapeY[table][tempW]);
 
-			efread((*shapeArray)[table][tempW], sizeof(Uint8), shapeSize[table][tempW], f);
+			efread(shapeArray[table][tempW], sizeof(Uint8), shapeSize[table][tempW], f);
 		}
 	}
 }
@@ -182,7 +182,7 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 	s_limit = (Uint8 *)tempScreenSeg->pixels;
 	s_limit += tempScreenSeg->h * tempScreenSeg->w;
 
-	for (p = (*shapeArray)[table][shape]; yloop < ysize; p++)
+	for (p = shapeArray[table][shape]; yloop < ysize; p++)
 	{
 		switch (*p)
 		{
@@ -223,7 +223,7 @@ void JE_newPurgeShapes( int table )
 		{
 			if (shapeExist[table][x])
 			{
-				free((*shapeArray)[table][x]);
+				free(shapeArray[table][x]);
 				shapeExist[table][x] = false;
 			}
 		}
@@ -355,22 +355,12 @@ void JE_mouseReplace( void )
 	JE_drawShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
 }
 
-void newshape_init( void )
-{
-	tempScreenSeg = VGAScreen;
-	for (int i = 0; i < MAX_TABLE; i++)
-	{
-		maxShape[i] = 0;
-	}
-	shapeArray = (JE_ShapeArrayType *)malloc(sizeof(JE_ShapeArrayType));
-}
-
 void JE_drawNext( Uint8 draw )
 {
 	STUB();
 }
 
-void JE_drawNShape (void *shape, JE_word xsize, JE_word ysize)
+void JE_drawNShape( void *shape, JE_word xsize, JE_word ysize )
 {
 	STUB();
 }

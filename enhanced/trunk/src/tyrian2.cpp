@@ -8059,7 +8059,7 @@ void JE_drawPlanet( int planetNum )
 		{
 			tempZ += planetAni;
 		}
-		JE_newDrawCShapeDarken((*shapeArray)[PLANET_SHAPES][tempZ], shapeX[PLANET_SHAPES][tempZ], shapeY[PLANET_SHAPES][tempZ], tempX + 3, tempY + 3);
+		JE_newDrawCShapeDarken(shapeArray[PLANET_SHAPES][tempZ], shapeX[PLANET_SHAPES][tempZ], shapeY[PLANET_SHAPES][tempZ], tempX + 3, tempY + 3);
 		JE_newDrawCShapeNum(PLANET_SHAPES, tempZ+1, tempX, tempY);
 	}
 }

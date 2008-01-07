@@ -44,7 +44,7 @@
 typedef Uint8 *JE_ShapeArrayType[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable, 1..maximumshape] */
 
 extern SDL_Surface *tempScreenSeg;
-extern JE_ShapeArrayType *shapeArray;
+extern JE_ShapeArrayType shapeArray;
 extern JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],
                shapeY[MAX_TABLE][MAXIMUM_SHAPE];
 extern JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];
@@ -70,9 +70,7 @@ bool JE_waitAction( int time, bool checkjoystick );
 void JE_mouseStart( void );
 void JE_mouseReplace( void );
 
-void newshape_init( void );
-
 void JE_drawNext( Uint8 draw );
-void JE_drawNShape (void *shape, JE_word xsize, JE_word ysize);
+void JE_drawNShape( void *shape, JE_word xsize, JE_word ysize );
 
 #endif /* NEWSHAPE_H */

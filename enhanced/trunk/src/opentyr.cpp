@@ -368,7 +368,6 @@ int main( int argc, char *argv[] )
 	megaData2 = new JE_MegaDataType2;
 	megaData3 = new JE_MegaDataType3;
 
-	newshape_init();
 	JE_loadMainShapeTables();
 	/* TODO JE_loadExtraShapes;*/  /*Editship*/
 
