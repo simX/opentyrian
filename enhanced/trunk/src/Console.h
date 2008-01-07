@@ -38,6 +38,7 @@ private:
 
 	static const int LINE_HEIGHT = 8;
 	static const int CELL_WIDTH = 6;
+	static const int BUFFER_SIZE = 64; // TODO: Replace with CVAR
 
 	bool mDown;
 	unsigned int mHeight;
@@ -51,6 +52,7 @@ private:
 	ConsoleStreamBuffer mStreambuf;
 
 	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text );
+	void drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col );
 
 	// Singleton stuff
 	static Console* sInstance;

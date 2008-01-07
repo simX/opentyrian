@@ -5562,7 +5562,7 @@ void JE_eventSystem( void )
 		case 41:
 			if (eventRec[eventLoc-1].eventdat == 0)
 			{
-				memset(enemyAvail, 1, sizeof(enemyAvail));
+				std::fill(enemyAvail, enemyAvail+COUNTOF(enemyAvail), 1);
 			} else {
 				for (JE_word x = 0; x <= 24; x++)
 				{

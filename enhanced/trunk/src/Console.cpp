@@ -84,7 +84,7 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 		{
 			const int xoff = CELL_WIDTH/2 - shapeX[TINY_FONT][fontMap[c-33]]/2;
 			JE_newDrawCShapeBright((*shapeArray)[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x+xoff, y, mColor, 4);
-			x += CELL_WIDTH;;
+			x += CELL_WIDTH;
 		} else {
 			if (c == ' ')
 			{
@@ -105,8 +105,18 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 	}
 }
 
+void Console::drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col )
+{
+	JE_pix(x, y, col);
+	for (int i = 1; i < 3; i++)
+	{
+		JE_pix(x-i, y-i, col);
+		JE_pix(x+i, y-i, col);
+	}
+}
+
 Console::Console()
-	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(4096), // TODO: Replace constant value with cvar
+	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(BUFFER_SIZE), // TODO: Replace constant value with cvar
 	mScrollbackHead(0), mCurScroll(0), mColor(14)
 {
 	if (mConsoleHeight * LINE_HEIGHT > 200)
@@ -139,11 +149,12 @@ void Console::draw( SDL_Surface* const surf )
 {
 	if (mHeight == 0) return;
 
-	JE_barShade(0, 0, 319, mHeight*LINE_HEIGHT);
-	JE_barShade(0, 0, 319, mHeight*LINE_HEIGHT);
+	JE_barShade(0, 0, 319, mHeight*LINE_HEIGHT-1);
+	JE_barShade(0, 0, 319, mHeight*LINE_HEIGHT-1);
 
+	// Draws text
 	int head = mScrollbackHead - mCurScroll;
-	if (head < 0) head = mScrollback.size()-head;
+	if (head < 0) head = mScrollback.size() + head;
 
 	std::vector<std::string>::const_iterator iter = mScrollback.begin() + head;
 	for (int i = mHeight-1; i >= 0; i--)
@@ -151,6 +162,15 @@ void Console::draw( SDL_Surface* const surf )
 		drawText(surf, 8, i*LINE_HEIGHT, *iter);
 		if (iter == mScrollback.begin()) iter = mScrollback.end();
 		--iter;
+	}
+
+	if (mCurScroll > 0)
+	{
+		const int base = mHeight*LINE_HEIGHT-1;
+		for (int i = 1; i <= 6; i += 2)
+		{
+			drawArrow(surf, 3, base-i, 0x0f);
+		}
 	}
 }
 
@@ -165,6 +185,44 @@ void Console::think( const SDL_keysym& keysym )
 			case SDLK_BACKQUOTE:
 				disable();
 				break;
+			case SDLK_EQUALS:
+				if (mConsoleHeight < 200/LINE_HEIGHT) mConsoleHeight++;
+
+				if (mCurScroll + mConsoleHeight >= BUFFER_SIZE)
+				{
+					mCurScroll = BUFFER_SIZE - mConsoleHeight;
+				}
+				break;
+			case SDLK_MINUS:
+				if (mConsoleHeight > 3) mConsoleHeight--;
+				if (mHeight > mConsoleHeight) mHeight = mConsoleHeight;
+				break;
+			case SDLK_PAGEUP:
+				{
+				unsigned int amount = mConsoleHeight / 3;
+				if (amount < 1) amount = 1;
+
+				if (mCurScroll + amount + mConsoleHeight >= BUFFER_SIZE)
+				{
+					mCurScroll = BUFFER_SIZE - mConsoleHeight;
+				} else {
+					mCurScroll += amount;
+				}
+				break;
+				}
+			case SDLK_PAGEDOWN:
+				{
+				unsigned int amount = mConsoleHeight / 3;
+				if (amount < 1) amount = 1;
+
+				if (amount < mCurScroll)
+				{
+					mCurScroll -= amount;
+				} else {
+					mCurScroll = 0;
+				}
+				break;
+				}
 			case SDLK_a:
 				*this << "Test Text" << std::endl;
 				break;
@@ -172,10 +230,15 @@ void Console::think( const SDL_keysym& keysym )
 				*this << "\tTest Indent" << std::endl;
 				break;
 			case SDLK_d:
-				*this << "Separate" << " " << "words" << std::endl;
+				for (int i = 0; i < 64; i++)
+				{
+					*this << "Line " << i << std::endl;
+				}
 				break;
 			case SDLK_f:
-				*this << "Number " << 15 << std::endl;
+				*this << "\a01234567890\a11234567890\a21234567890\a31234567890\a41234567890\a51234567890"
+					<< "\a61234567890\a71234567890\a81234567890\a91234567890\aa1234567890\ab1234567890"
+					<< "\ac1234567890\ad1234567890\ae1234567890\af1234567890" << std::endl;
 				break;
 			case SDLK_g:
 				*this << "\a00\a11\a22\a33\a44\a55\a66\a77\a88\a99\aaA\abB\acC\adD\aeE\afF" << std::endl;
