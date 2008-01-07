@@ -74,8 +74,6 @@ int Console::ConsoleStreamBuffer::overflow( int c )
 
 void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text )
 {
-	int color = 14;
-
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
 		const unsigned char c = text[i];
@@ -153,20 +151,20 @@ void Console::draw( SDL_Surface* const surf )
 	JE_barShade(0, 0, 319, mHeight*LINE_HEIGHT-1);
 
 	// Draws text
-	int head = mScrollbackHead - mCurScroll;
+	int head = mScrollbackHead - mCurScroll - mHeight + 2;
 	if (head < 0) head = mScrollback.size() + head;
 
 	std::vector<std::string>::const_iterator iter = mScrollback.begin() + head;
-	for (int i = mHeight-1; i >= 0; i--)
+	for (unsigned int i = 0; i < mHeight-1; ++i)
 	{
+		if (iter == mScrollback.end()) iter = mScrollback.begin();
 		drawText(surf, 8, i*LINE_HEIGHT, *iter);
-		if (iter == mScrollback.begin()) iter = mScrollback.end();
-		--iter;
+		++iter;
 	}
 
 	if (mCurScroll > 0)
 	{
-		const int base = mHeight*LINE_HEIGHT-1;
+		const int base = (mHeight-1)*LINE_HEIGHT-1;
 		for (int i = 1; i <= 6; i += 2)
 		{
 			drawArrow(surf, 3, base-i, 0x0f);
@@ -194,7 +192,7 @@ void Console::think( const SDL_keysym& keysym )
 				}
 				break;
 			case SDLK_MINUS:
-				if (mConsoleHeight > 3) mConsoleHeight--;
+				if (mConsoleHeight > 4) mConsoleHeight--;
 				if (mHeight > mConsoleHeight) mHeight = mConsoleHeight;
 				break;
 			case SDLK_PAGEUP:
@@ -202,9 +200,9 @@ void Console::think( const SDL_keysym& keysym )
 				unsigned int amount = mConsoleHeight / 3;
 				if (amount < 1) amount = 1;
 
-				if (mCurScroll + amount + mConsoleHeight >= BUFFER_SIZE)
+				if (mCurScroll + amount + mConsoleHeight-1 >= BUFFER_SIZE)
 				{
-					mCurScroll = BUFFER_SIZE - mConsoleHeight;
+					mCurScroll = BUFFER_SIZE - (mConsoleHeight-1);
 				} else {
 					mCurScroll += amount;
 				}
@@ -223,6 +221,9 @@ void Console::think( const SDL_keysym& keysym )
 				}
 				break;
 				}
+			case SDLK_END:
+				mCurScroll = 0;
+				break;
 			case SDLK_a:
 				*this << "Test Text" << std::endl;
 				break;
