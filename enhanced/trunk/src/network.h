@@ -41,7 +41,6 @@ extern bool haltGame;
 extern bool netQuit;
 extern bool done;
 extern bool moveOk;
-extern bool firstTime;
 extern bool netResult;
 extern int gameQuitDelay;
 extern Uint8 outputData[10];

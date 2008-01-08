@@ -36,7 +36,6 @@ bool netQuit;
 bool done;
 
 bool moveOk;
-bool firstTime;
 bool netResult;
 
 int gameQuitDelay;  /* Make sure the game doesn't quit within the first few frames of starting */

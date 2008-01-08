@@ -22,38 +22,6 @@
 
 #include "opentyr.h"
 
-
-extern JE_word tempscreenseg;
-extern int enddelay;
-extern bool died;
-extern bool firsttime;
-
-void JE_introScreen( void );
-
-void JE_makeExplosion( JE_word tempx, JE_word tempy, int shottype );
-
-void JE_tempScreenChecking( void );
-
-void JE_aliasDirt( void );
-
-void JE_generateTerrain( void );
-
-void JE_modeSelect( void );
-
 void JE_destructGame( void );
-
-void JE_destructMain( void );
-
-int JE_placementPosition( JE_word x, int width );
-
-bool JE_stabilityCheck( int x, int y );
-
-void JE_helpScreen( void );
-
-void JE_eSound( int sound );
-
-void JE_pauseScreen( void );
-
-void JE_superPixel( JE_word loc );
 
 #endif /* DESTRUCT_H */

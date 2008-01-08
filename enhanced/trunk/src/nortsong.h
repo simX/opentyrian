@@ -83,26 +83,6 @@ void JE_playSampleNum ( int samplenum );
 
 void JE_fxDestruct ( int samplenum );
 
-void JE_setvol (int musicvolume, int sample );
-
 void JE_waitFrameCount( void );
-
-/* SYN: This stuff is probably unneeded, as it deals with sound hardware issues abstracted
-   away by SDL. Pascal code is left here as reference, just in case we want this stuff
-   later.
-
-midiportlist : ARRAY [1..10] OF
-  WORD =
-  ($0000, $0000, $1000, $0666, $0330, $0320, $0332, $0334, $0336, $0300);
-
-fxportlist : ARRAY [1..4] OF
-  WORD =
-  ($FFFF, $0000, $0666, $1000);
-
-dmalist : ARRAY [1..3] OF
-  WORD =
-  ($0000, $0003, $0001);
-
-*/
 
 #endif /* NORTSONG_H */
