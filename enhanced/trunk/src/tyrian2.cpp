@@ -3568,10 +3568,8 @@ new_game:
 										JE_showVGA();
 										JE_fadeColor(1);
 									} else {
-										if (tempX == 0)
+										if (tempX != 0)
 										{
-											/* TODO JE_loadPcx("tshp2.pcx", false);*/
-										} else {
 											JE_loadPic(tempX, false);
 										}
 										JE_showVGA();

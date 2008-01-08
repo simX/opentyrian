@@ -93,8 +93,3 @@ void JE_loadPic( int PCXnumber, bool storepal )
 		JE_updateColorsFast(&colors);
 	}
 }
-
-/*void JE_unpackPCX( void )
-{
-	STUB();
-}*/
