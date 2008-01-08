@@ -22,6 +22,8 @@
 
 #include "opentyr.h"
 
+namespace destruct {
 void JE_destructGame( void );
+};
 
 #endif /* DESTRUCT_H */

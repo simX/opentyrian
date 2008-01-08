@@ -34,6 +34,7 @@
 
 #include <cmath>
 
+namespace destruct {
 
 void JE_destructMain( void );
 void JE_introScreen( void );
@@ -1918,3 +1919,5 @@ void JE_pauseScreen( void )
 	JE_showVGA();
 	JE_setVol(tyrMusicVolume, fxVolume);
 }
+
+};

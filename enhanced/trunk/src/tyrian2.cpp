@@ -1089,7 +1089,7 @@ start_level_first:
 		{
 			free(eShapes1);
 		}*/
-		JE_destructGame();
+		destruct::JE_destructGame();
 		loadDestruct = false;
 		loadTitleScreen = true;
 		goto start_level_first;
@@ -2921,7 +2921,7 @@ explosion_draw_overflow:
 		sprintf(buffer, "Enemies onscreen = %d", enemyOnScreen);
 		JE_outText(30, 90, buffer, 6, 0);
 
-		debugHist = debugHist + abs((float)(debugTime - lastDebugTime));
+		debugHist = debugHist + ot_abs((float)(debugTime - lastDebugTime));
 		debugHistCount++;
 		sprintf(tempStr, "%2.3f", 1000.0f / ot_round(debugHist / debugHistCount));
 		sprintf(buffer, "X:%d Y:%-5d  %s FPS  %d %d %d %d", (mapX - 1) * 12 + PX, curLoc, tempStr, lastTurn2, lastTurn, PX, PY);
@@ -7631,7 +7631,7 @@ void JE_loadCubes( void )
 						{
 							temp = s[pos - 1];
 
-							if (temp > 32 && temp < 169 && fontMap[temp] != 255 && (*shapeArray)[5][fontMap[temp]] != NULL)
+							if (temp > 32 && temp < 169 && fontMap[temp] != 255 && shapeArray[5][fontMap[temp]] != NULL)
 							{
 								curWidth += shapeX[5][fontMap[temp]] + 1;
 							} else {
@@ -7868,11 +7868,11 @@ void JE_updateNavScreen( void )
 	navX = navX + (newNavX - navX) / 2.f;
 	navY = navY + (newNavY - navY) / 2.f;
 
-	if (abs(newNavX - navX) < 1)
+	if (ot_abs(newNavX - navX) < 1.f)
 	{
 		navX = newNavX;
 	}
-	if (abs(newNavY - navY) < 1)
+	if (ot_abs(newNavY - navY) < 1.f)
 	{
 		navY = newNavY;
 	}

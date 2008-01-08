@@ -425,8 +425,8 @@ void JE_newStar( void )
 					{
 						nspVar2Inc = -nspVar2Inc;
 					}
-					tempX = (int)(cos(sin(nsp2 / 2.) / (sqrt(abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 32000);
-					tempY = (int)(sin(cos(nsp2 / 2.) / (sqrt(abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 30000);
+					tempX = (int)(cos(sin(nsp2 / 2.) / (sqrt(ot_abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 32000);
+					tempY = (int)(sin(cos(nsp2 / 2.) / (sqrt(ot_abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 30000);
 				}
 				break;
 			case 13:

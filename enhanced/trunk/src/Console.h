@@ -37,11 +37,11 @@ private:
 		virtual int overflow(int c = mTraits::eof());
 	};
 
-	static const int LINE_HEIGHT = 8;
-	static const int CELL_WIDTH = 6;
-	static const int BLINK_RATE = 5;
-	static const int TEXT_COLOR = 0xE;
-	static const int BUFFER_SIZE = 64; // TODO: Replace with CVAR
+	static const unsigned int LINE_HEIGHT = 8;
+	static const unsigned int CELL_WIDTH = 6;
+	static const unsigned int BLINK_RATE = 5;
+	static const unsigned int TEXT_COLOR = 0xE;
+	static const unsigned int BUFFER_SIZE = 64; // TODO: Replace with CVAR
 
 	bool mDown;
 	unsigned int mHeight;

@@ -42,7 +42,8 @@
 #define M_PI_2 1.57079632679489661923f
 #endif
 
-int ot_round(float x);
+int ot_round( const float x );
+float ot_abs( const float x );
 
 #ifdef PASCAL_TYPES
 //typedef Sint32 JE_longint; - Done

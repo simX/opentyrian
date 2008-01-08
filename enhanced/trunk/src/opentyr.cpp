@@ -78,6 +78,11 @@ int ot_round( float x )
 	return x >= 0 ? int(x + 0.5) : int(x - 0.5);
 }
 
+float ot_abs( float x )
+{
+	return x >= 0 ? x : -x;
+}
+
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 /* endian-swapping fread */
 size_t efread( void *buffer, size_t size, size_t num, FILE *stream )
