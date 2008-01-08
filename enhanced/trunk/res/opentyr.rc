@@ -1,0 +1,40 @@
+#include <windows.h>
+
+#define version_num 0,0,0,9
+
+#ifdef NDEBUG
+#define version version_num
+#else
+#define version 255,255,255,255 // Coding for SVN versions
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION version
+PRODUCTVERSION version
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+#ifdef NDEBUG
+FILEFLAGS (VS_FF_PRERELEASE)
+#else
+FILEFLAGS (VS_FF_DEBUG | VS_FF_PRERELEASE)
+#endif
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE 0L
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0" // U.S. English and 7-bit ASCII
+		BEGIN
+			VALUE "CompanyName", "The OpenTyrian Team\0"
+			VALUE "FileDescription", "OpenTyrian Enhanced\0"
+			VALUE "FileVersion", "SVN\0"
+			VALUE "InternalName", "tyrian.exe\0"
+			VALUE "LegalCopyright", "Copyright (C) 2007\0"
+			VALUE "OriginalFilename", "tyrian.exe\0"
+			VALUE "ProductName", "OpenTyrian Enhanced\0"
+			VALUE "ProductVersion", "SVN\0"
+		END
+	END
+END
+
+1 ICON "icons/tyrian.ico"

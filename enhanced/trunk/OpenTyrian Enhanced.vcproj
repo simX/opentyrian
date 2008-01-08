@@ -350,6 +350,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\res\opentyr.rc"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"
@@ -525,42 +529,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\COMMENTS"
-			>
-		</File>
-		<File
-			RelativePath=".\COPYING"
-			>
-		</File>
-		<File
-			RelativePath=".\CREDITS"
-			>
-		</File>
-		<File
-			RelativePath=".\LICENSE-TEMPLATE"
-			>
-		</File>
-		<File
-			RelativePath=".\lower-script.sh"
-			>
-		</File>
-		<File
-			RelativePath=".\Makefile"
-			>
-		</File>
-		<File
-			RelativePath=".\README"
-			>
-		</File>
-		<File
-			RelativePath=".\STYLE"
-			>
-		</File>
-		<File
-			RelativePath=".\TODO"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

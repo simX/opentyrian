@@ -4192,7 +4192,7 @@ void JE_titleScreen( bool animate )
 			goto trentWinsGame;
 		}
 
-		waitForDemo = -1; /* TODO Uh, fix this? */
+		waitForDemo = 65535; /* TODO Uh, fix this? */
 		JE_textMenuWait(&waitForDemo, false);
 
 		if (waitForDemo == 1)
