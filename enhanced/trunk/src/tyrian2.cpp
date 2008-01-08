@@ -798,8 +798,8 @@ enemy_still_exists:
 									} else {
 										tempI3 = abs(tempI2);
 									}
-									enemyShot[b].sxm = round(((float)tempI / tempI3) * temp4);
-									enemyShot[b].sym = round(((float)tempI2 / tempI3) * temp4);
+									enemyShot[b].sxm = ot_round(((float)tempI / tempI3) * temp4);
+									enemyShot[b].sym = ot_round(((float)tempI2 / tempI3) * temp4);
 								}
 							}
 
@@ -866,8 +866,8 @@ enemy_still_exists:
 								} else {
 									tempI3 = abs(tempI5);
 								}
-								enemy[b-1].exc = round(((float)tempI4 / tempI3) * enemy[b-1].launchtype);
-								enemy[b-1].eyc = round(((float)tempI5 / tempI3) * enemy[b-1].launchtype);
+								enemy[b-1].exc = ot_round(((float)tempI4 / tempI3) * enemy[b-1].launchtype);
+								enemy[b-1].eyc = ot_round(((float)tempI5 / tempI3) * enemy[b-1].launchtype);
 							}
 						}
 
@@ -2923,7 +2923,7 @@ explosion_draw_overflow:
 
 		debugHist = debugHist + abs((float)(debugTime - lastDebugTime));
 		debugHistCount++;
-		sprintf(tempStr, "%2.3f", 1000.0f / round(debugHist / debugHistCount));
+		sprintf(tempStr, "%2.3f", 1000.0f / ot_round(debugHist / debugHistCount));
 		sprintf(buffer, "X:%d Y:%-5d  %s FPS  %d %d %d %d", (mapX - 1) * 12 + PX, curLoc, tempStr, lastTurn2, lastTurn, PX, PY);
 		JE_outText(45, 175, buffer, 15, 3);
 		lastDebugTime = debugTime;
@@ -5402,7 +5402,7 @@ void JE_eventSystem( void )
 					enemy[temp].armorleft = eventRec[eventLoc-1].eventdat;
 					if (galagaMode)
 					{
-						enemy[temp].armorleft = round(eventRec[eventLoc-1].eventdat * (difficultyLevel / 2.f));
+						enemy[temp].armorleft = ot_round(eventRec[eventLoc-1].eventdat * (difficultyLevel / 2.f));
 					}
 				}
 			}
@@ -7828,8 +7828,8 @@ void JE_updateNavScreen( void )
 	   yellowish planet below Tyrian isn't visible for as many frames as in the
 	   original. */
 
-	tempNavX = round(navX);
-	tempNavY = round(navY);
+	tempNavX = ot_round(navX);
+	tempNavY = ot_round(navY);
 	JE_bar(19, 16, 135, 169, 2);
 	JE_drawNavLines(true);
 	JE_drawNavLines(false);
@@ -8140,7 +8140,7 @@ void JE_computeDots( void )
 
 		if (tempX != 0)
 		{
-			planetDots[x] = round(sqrt(sqrt((float)((distX * distX) + (distY * distY))))) - 1;
+			planetDots[x] = ot_round(sqrt(sqrt((float)((distX * distX) + (distY * distY))))) - 1;
 		} else {
 			planetDots[x] = 0;
 		}
@@ -9366,7 +9366,7 @@ void JE_scaleInPicture( void )
 	{
 		if (JE_anyButton())
 			i = 160;
-		JE_scaleBitmap(VGAScreen2, 320, 200, 160 - i, 0, 160 + i - 1, 100 + round(i * 0.625f) - 1);
+		JE_scaleBitmap(VGAScreen2, 320, 200, 160 - i, 0, 160 + i - 1, 100 + ot_round(i * 0.625f) - 1);
 		JE_showVGA();
 		
 		SDL_Delay(1);

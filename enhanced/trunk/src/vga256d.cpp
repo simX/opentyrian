@@ -312,7 +312,7 @@ void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 	int v;
 	Uint8 *vga;
 
-	v = round(sqrt((float)(abs((a*a)-(c*c))+abs((b*b)-(d*d))) / 4));
+	v = ot_round(sqrt((float)(abs((a*a)-(c*c))+abs((b*b)-(d*d))) / 4));
 	g = (c-a)/(float)v; h = (d-b)/(float)v;
 	x = a; y = (float)b;
 
@@ -320,7 +320,7 @@ void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 
 	for (int z = 0; z <= v; z++)
 	{
-		vga[(int)(round(x) + round(y)) * VGAScreen->w] = e;
+		vga[(int)(ot_round(x) + ot_round(y)) * VGAScreen->w] = e;
 		x += g; y += h;
 	}
 }

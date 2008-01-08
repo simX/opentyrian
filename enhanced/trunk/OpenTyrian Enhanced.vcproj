@@ -297,19 +297,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pcxload.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\pcxmast.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\picload.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\picload2.h"
 				>
 			</File>
 			<File
@@ -322,10 +314,6 @@
 			</File>
 			<File
 				RelativePath=".\src\shplib.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\shplib2.h"
 				>
 			</File>
 			<File
@@ -489,19 +477,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pcxload.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\pcxmast.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\picload.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\picload2.cpp"
 				>
 			</File>
 			<File
@@ -514,10 +494,6 @@
 			</File>
 			<File
 				RelativePath=".\src\shplib.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\shplib2.cpp"
 				>
 			</File>
 			<File

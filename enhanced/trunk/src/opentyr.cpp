@@ -73,7 +73,7 @@ char *strnztcpy( char *to, char *from, size_t count )
 	return strncpy(to, from, count);
 }
 
-int round( float x )
+int ot_round( float x )
 {
 	return x >= 0 ? int(x + 0.5) : int(x - 0.5);
 }

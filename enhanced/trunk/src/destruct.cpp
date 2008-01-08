@@ -321,13 +321,13 @@ void JE_destructMain( void )
 									} else {
 										leftYMov[z] += 0.03f;
 									}
-									if (!JE_stabilityCheck(leftX[z], round(leftY[z])))
+									if (!JE_stabilityCheck(leftX[z], ot_round(leftY[z])))
 									{
 										leftYMov[z] = 0;
 										leftYInAir[z] = false;
 									}
 								} else if (leftY[z] < 199) {
-									if (JE_stabilityCheck(leftX[z], round(leftY[z])))
+									if (JE_stabilityCheck(leftX[z], ot_round(leftY[z])))
 										leftY[z] += 1;
 								}
 								temp = leftGraphicBase[leftSystem[z]-1] + leftAni[z];
@@ -343,9 +343,9 @@ void JE_destructMain( void )
 									temp += int(leftAngle[z] * 9.99f / M_PI);
 								}
 								
-								JE_drawShape2(leftX[z], round(leftY[z]) - 13, temp, eShapes1);
+								JE_drawShape2(leftX[z], ot_round(leftY[z]) - 13, temp, eShapes1);
 							} else {
-								JE_drawShape2(leftX[z], round(leftY[z]) - 13, leftGraphicBase[leftSystem[z]-1] + leftAni[z], eShapes1);
+								JE_drawShape2(leftX[z], ot_round(leftY[z]) - 13, leftGraphicBase[leftSystem[z]-1] + leftAni[z], eShapes1);
 							}
 						}
 					for (int z = 0; z < MAX_INSTALLATIONS; z++)
@@ -372,13 +372,13 @@ void JE_destructMain( void )
 									} else {
 										rightYMov[z] += 0.03f;
 									}
-									if (!JE_stabilityCheck(rightX[z], round(rightY[z])))
+									if (!JE_stabilityCheck(rightX[z], ot_round(rightY[z])))
 									{
 										rightYMov[z] = 0;
 										rightYInAir[z] = false;
 									}
 								} else if (rightY[z] < 199)
-									if (JE_stabilityCheck(rightX[z], round(rightY[z])))
+									if (JE_stabilityCheck(rightX[z], ot_round(rightY[z])))
 									{
 										if (rightSystem[z] == 8)
 										{
@@ -401,9 +401,9 @@ void JE_destructMain( void )
 									temp += int(rightAngle[z] * 9.99f / M_PI);
 								}
 								
-								JE_drawShape2(rightX[z], round(rightY[z]) - 13, temp, eShapes1);
+								JE_drawShape2(rightX[z], ot_round(rightY[z]) - 13, temp, eShapes1);
 							} else {
-								JE_drawShape2(rightX[z], round(rightY[z]) - 13, rightGraphicBase[rightSystem[z]-1] + rightAni[z], eShapes1);
+								JE_drawShape2(rightX[z], ot_round(rightY[z]) - 13, rightGraphicBase[rightSystem[z]-1] + rightAni[z], eShapes1);
 							}
 						}
 					
@@ -446,8 +446,8 @@ void JE_destructMain( void )
 						for (temp = 0; temp < exploRec[z].explofill; temp++)
 						{
 							tempR = ((float)rand() / RAND_MAX) * (M_PI * 2);
-							destructTempY = exploRec[z].y + round(std::cos(tempR) * ((float)rand() / RAND_MAX) * exploRec[z].explowidth);
-							destructTempX = exploRec[z].x + round(std::sin(tempR) * ((float)rand() / RAND_MAX) * exploRec[z].explowidth);
+							destructTempY = exploRec[z].y + ot_round(std::cos(tempR) * ((float)rand() / RAND_MAX) * exploRec[z].explowidth);
+							destructTempX = exploRec[z].x + ot_round(std::sin(tempR) * ((float)rand() / RAND_MAX) * exploRec[z].explowidth);
 							
 							if (destructTempY < 200 && destructTempY > 15)
 							{
@@ -466,7 +466,7 @@ void JE_destructMain( void )
 										leftDmg[temp2]--;
 										if (leftDmg[temp2] == 0)
 										{
-											JE_makeExplosion(leftX[temp2] + 5, round(leftY[temp2]) - 5, (leftSystem[temp2] == 8) * 2);
+											JE_makeExplosion(leftX[temp2] + 5, ot_round(leftY[temp2]) - 5, (leftSystem[temp2] == 8) * 2);
 											if (leftSystem[temp2] != 4)
 											{
 												leftAvail--;
@@ -479,7 +479,7 @@ void JE_destructMain( void )
 										rightDmg[temp2]--;
 										if (rightDmg[temp2] == 0)
 										{
-											JE_makeExplosion(rightX[temp2] + 5, round(rightY[temp2]) - 5, (rightSystem[temp2] == 8) * 2);
+											JE_makeExplosion(rightX[temp2] + 5, ot_round(rightY[temp2]) - 5, (rightSystem[temp2] == 8) * 2);
 											if (rightSystem[temp2] != 4)
 											{
 												rightAvail--;
@@ -530,8 +530,8 @@ void JE_destructMain( void )
 							destructShotAvail[z] = true;
 						} else {
 							
-							destructTempX = round(shotRec[z].x);
-							destructTempY = round(shotRec[z].y);
+							destructTempX = ot_round(shotRec[z].x);
+							destructTempY = ot_round(shotRec[z].y);
 							
 							if (shotRec[z].y > 14)
 							{
@@ -629,8 +629,8 @@ void JE_destructMain( void )
 													shotRec[z].ymov = -shotRec[z].ymov * 0.8f;
 											}
 											
-											destructTempX = round(shotRec[z].x);
-											destructTempY = round(shotRec[z].y);
+											destructTempX = ot_round(shotRec[z].x);
+											destructTempY = ot_round(shotRec[z].y);
 										}
 									}
 								}
@@ -724,7 +724,7 @@ void JE_destructMain( void )
 								}
 								if (leftSystem[leftSel-1] != 8 || leftLastMove[leftSel-1] > 3 || (leftX[leftSel-1] > 160 && leftLastMove[leftSel-1] > -3))
 								{
-									if (rand() % (int)round(leftY[leftSel-1]) < 150 && leftYMov[leftSel-1] < 0.01f && (leftX[leftSel-1] < 160 || leftLastMove[leftSel-1] < 2))
+									if (rand() % (int)ot_round(leftY[leftSel-1]) < 150 && leftYMov[leftSel-1] < 0.01f && (leftX[leftSel-1] < 160 || leftLastMove[leftSel-1] < 2))
 										L_Fire = true;
 									NoL_Down = (5 - abs(leftLastMove[leftSel-1])) * (5 - abs(leftLastMove[leftSel-1])) + 3;
 									Lc_Power = 1;
@@ -778,11 +778,11 @@ void JE_destructMain( void )
 					
 					if (leftSystem[leftSel-1] == 8)
 					{
-						destructTempX = leftX[leftSel-1] + round(0.1f * leftLastMove[leftSel-1] * leftLastMove[leftSel-1] * leftLastMove[leftSel-1]) + 5;
-						destructTempY = round(leftY[leftSel-1]) + 1;
+						destructTempX = leftX[leftSel-1] + ot_round(0.1f * leftLastMove[leftSel-1] * leftLastMove[leftSel-1] * leftLastMove[leftSel-1]) + 5;
+						destructTempY = ot_round(leftY[leftSel-1]) + 1;
 					} else {
-						destructTempX = round(leftX[leftSel-1] + 6 + cos(leftAngle[leftSel-1]) * (leftPower[leftSel-1] * 8 + 7));
-						destructTempY = round(leftY[leftSel-1] - 7 - sin(leftAngle[leftSel-1]) * (leftPower[leftSel-1] * 8 + 7));
+						destructTempX = ot_round(leftX[leftSel-1] + 6 + cos(leftAngle[leftSel-1]) * (leftPower[leftSel-1] * 8 + 7));
+						destructTempY = ot_round(leftY[leftSel-1] - 7 - sin(leftAngle[leftSel-1]) * (leftPower[leftSel-1] * 8 + 7));
 					}
 					JE_pix(destructTempX, destructTempY,  14);
 					JE_pix(destructTempX + 3, destructTempY, 3);
@@ -791,11 +791,11 @@ void JE_destructMain( void )
 					JE_pix(destructTempX, destructTempY - 2, 3);
 					if (rightSystem[rightSel-1] == 8)
 					{  /*Heli*/
-						destructTempX = rightX[rightSel-1] + round(0.1f * rightLastMove[rightSel-1] * rightLastMove[rightSel-1] * rightLastMove[rightSel-1]) + 5;
-						destructTempY = round(rightY[rightSel-1]) + 1;
+						destructTempX = rightX[rightSel-1] + ot_round(0.1f * rightLastMove[rightSel-1] * rightLastMove[rightSel-1] * rightLastMove[rightSel-1]) + 5;
+						destructTempY = ot_round(rightY[rightSel-1]) + 1;
 					} else {
-						destructTempX = round(rightX[rightSel-1] + 6 - cos(rightAngle[rightSel-1]) * (rightPower[rightSel-1] * 8 + 7));
-						destructTempY = round(rightY[rightSel-1] - 7 - sin(rightAngle[rightSel-1]) * (rightPower[rightSel-1] * 8 + 7));
+						destructTempX = ot_round(rightX[rightSel-1] + 6 - cos(rightAngle[rightSel-1]) * (rightPower[rightSel-1] * 8 + 7));
+						destructTempY = ot_round(rightY[rightSel-1] - 7 - sin(rightAngle[rightSel-1]) * (rightPower[rightSel-1] * 8 + 7));
 					}
 					JE_pix(destructTempX, destructTempY,  14);
 					JE_pix(destructTempX + 3, destructTempY, 3);
@@ -858,21 +858,21 @@ void JE_destructMain( void )
 							}
 						} else if (leftSystem[leftSel-1] == 8) {
 							if ((keysactive[SDLK_c] || L_Left) && leftX[leftSel-1] > 5)
-								if (JE_stabilityCheck(leftX[rightSel-1] - 5, round(leftY[leftSel-1]))) /** NOTE: BUG! **/
+								if (JE_stabilityCheck(leftX[rightSel-1] - 5, ot_round(leftY[leftSel-1]))) /** NOTE: BUG! **/
 								{
 									if (leftLastMove[leftSel-1] > -5)
 										leftLastMove[leftSel-1]--;
 									leftX[leftSel-1]--;
-									if (JE_stabilityCheck(leftX[leftSel-1], round(leftY[leftSel-1])))
+									if (JE_stabilityCheck(leftX[leftSel-1], ot_round(leftY[leftSel-1])))
 										leftYInAir[leftSel-1] = true;
 								}
 							if ((keysactive[SDLK_v] || L_Right) && leftX[leftSel-1] < 305)
-								if (JE_stabilityCheck(leftX[leftSel-1] + 5, round(leftY[leftSel-1])))
+								if (JE_stabilityCheck(leftX[leftSel-1] + 5, ot_round(leftY[leftSel-1])))
 								{
 									if (leftLastMove[leftSel-1] < 5)
 										leftLastMove[leftSel-1]++;
 									leftX[leftSel-1]++;
-									if (JE_stabilityCheck(leftX[leftSel-1], round(leftY[leftSel-1])))
+									if (JE_stabilityCheck(leftX[leftSel-1], ot_round(leftY[leftSel-1])))
 										leftYInAir[leftSel-1] = true;
 								}
 						}
@@ -1039,21 +1039,21 @@ void JE_destructMain( void )
 							}
 						} else if (rightSystem[rightSel-1] == 8) { /*Helicopter*/
 							if (keysactive[SDLK_KP4] && rightX[rightSel-1] > 5)
-								if (JE_stabilityCheck(rightX[rightSel-1] - 5, round(rightY[rightSel-1])))
+								if (JE_stabilityCheck(rightX[rightSel-1] - 5, ot_round(rightY[rightSel-1])))
 								{
 									if (rightLastMove[rightSel-1] > -5)
 										rightLastMove[rightSel-1]--;
 									rightX[rightSel-1]--;
-									if (JE_stabilityCheck(rightX[rightSel-1], round(rightY[rightSel-1])))
+									if (JE_stabilityCheck(rightX[rightSel-1], ot_round(rightY[rightSel-1])))
 										rightYInAir[rightSel-1] = true;
 								}
 							if (keysactive[SDLK_KP6] && rightX[rightSel-1] < 305)
-								if (JE_stabilityCheck(rightX[rightSel-1] + 5, round(rightY[rightSel-1])))
+								if (JE_stabilityCheck(rightX[rightSel-1] + 5, ot_round(rightY[rightSel-1])))
 								{
 									if (rightLastMove[rightSel-1] < 5)
 										rightLastMove[rightSel-1]++;
 									rightX[rightSel-1]++;
-									if (JE_stabilityCheck(rightX[rightSel-1], round(rightY[rightSel-1])))
+									if (JE_stabilityCheck(rightX[rightSel-1], ot_round(rightY[rightSel-1])))
 										rightYInAir[rightSel-1] = true;
 								}
 						}
@@ -1429,7 +1429,7 @@ void JE_generateTerrain( void )
 	
 	for (x = 1; x <= 318; x++)
 	{
-		newheight = round(
+		newheight = ot_round(
 			sin(sinewave * x) * HC1 + sin(sinewave2 * x) * 15.0f +
 			cos(cosinewave * x) * 10.0f + sin(cosinewave2 * x) * 15.0f
 		) + 130;
@@ -1547,8 +1547,8 @@ void JE_generateTerrain( void )
 			for (z = 1; z <= y * y * 2; z++)
 			{
 				tempR = ((float)rand() / RAND_MAX) * (M_PI * 2);
-				destructTempY2 = destructTempY + round(cos(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
-				destructTempX2 = destructTempX + round(sin(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
+				destructTempY2 = destructTempY + ot_round(cos(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
+				destructTempX2 = destructTempX + ot_round(sin(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
 				if ((destructTempY2 > 12) && (destructTempY2 < 200) && (destructTempX2 > 0) && (destructTempX2 < 319))
 					((Uint8 *)VGAScreen->pixels)[destructTempX2 + destructTempY2 * VGAScreen->w] = 25;
 			}
@@ -1566,8 +1566,8 @@ void JE_generateTerrain( void )
 			for (z = 1; z < y * y * 2; z++)
 			{
 				tempR = ((float)rand() / RAND_MAX) * (M_PI * 2);
-				destructTempY2 = destructTempY + round(cos(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
-				destructTempX2 = destructTempX + round(sin(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
+				destructTempY2 = destructTempY + ot_round(cos(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
+				destructTempX2 = destructTempX + ot_round(sin(tempR) * (((float)rand() / RAND_MAX) * 0.1f + 0.9f) * y);
 				if ((destructTempY2 > 12) && (destructTempY2 < 200) && (destructTempX2 > 0) && (destructTempX2 < 319))
 					((Uint8 *)VGAScreen->pixels)[destructTempX2 + destructTempY2 * VGAScreen->w] = 0;
 			}

@@ -1038,7 +1038,7 @@ static int init_tables(void)
 
 		n = (int)m;		/* 16 bits here */
 		n >>= 4;		/* 12 bits here */
-		if (n&1)		/* round to nearest */
+		if (n&1)		/* ot_round to nearest */
 			n = (n>>1)+1;
 		else
 			n = n>>1;
@@ -1077,7 +1077,7 @@ static int init_tables(void)
 		o = o / (ENV_STEP/4);
 
 		n = (int)(2.0*o);
-		if (n&1)						/* round to nearest */
+		if (n&1)						/* ot_round to nearest */
 			n = (n>>1)+1;
 		else
 			n = n>>1;

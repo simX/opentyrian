@@ -1593,8 +1593,8 @@ void JE_drawShield( void )
 {
 	if (twoPlayerMode && !galagaMode)
 	{
-		JE_dBar3(270, 60, round(shield * 0.8f), 144);
-		JE_dBar3(270, 194, round(shield2 * 0.8f), 144);
+		JE_dBar3(270, 60, ot_round(shield * 0.8f), 144);
+		JE_dBar3(270, 194, ot_round(shield2 * 0.8f), 144);
 	} else {
 		JE_dBar3(270, 194, shield, 144);
 		if (shield != shieldMax)
@@ -1617,8 +1617,8 @@ void JE_drawArmor( void )
 
 	if (twoPlayerMode && !galagaMode)
 	{
-		JE_dBar3(307, 60, round(armorLevel * 0.8f), 224);
-		JE_dBar3(307, 194, round(armorLevel2 * 0.8f), 224);
+		JE_dBar3(307, 60, ot_round(armorLevel * 0.8f), 224);
+		JE_dBar3(307, 194, ot_round(armorLevel2 * 0.8f), 224);
 	} else {
 		JE_dBar3(307, 194, armorLevel, 224);
 	}
@@ -1650,8 +1650,8 @@ void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ) /
 		if (++lastSP > MAX_SP)
 			lastSP = 0;
 		tempr = ((float)rand() / RAND_MAX) * (M_PI * 2);
-		tempy = round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		tempx = round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
+		tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
+		tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
 		SPL[lastSP].location = (tempy + y) * VGAScreen->w + (tempx + x);
 		SPL[lastSP].movement = tempy * VGAScreen->w + tempx + VGAScreen->w;
 		SPL[lastSP].color = color;
