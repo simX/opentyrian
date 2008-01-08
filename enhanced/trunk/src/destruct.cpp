@@ -144,7 +144,7 @@ JE_byte wallsX[20], wallsY[20]; /*[1..20]*/
 JE_byte dirtHeight[320]; /*[0..319]*/
 
 bool destructShotAvail[SHOT_MAX]; /*[1..shotmax]*/
-struct {
+struct ShotRec {
 	float x;
 	float y;
 	float xmov;
@@ -156,7 +156,8 @@ struct {
 	        trail3x, trail3y, trail3c,
 	        trail2x, trail2y, trail2c,
 	        trail1x, trail1y, trail1c;
-} shotRec[SHOT_MAX]; /*[1..shotmax]*/
+};
+ShotRec shotRec[SHOT_MAX]; /*[1..shotmax]*/
 
 bool endOfGame, destructQuit;
 
@@ -168,14 +169,15 @@ int destructTempY;
 
 JE_byte exploSoundChannel;
 bool explosionAvail[EXPLO_MAX]; /*[1..explomax]*/
-struct {
+struct ExploRec {
 	int x;
 	int y;
 	JE_byte explowidth;
 	JE_byte explomax;
 	JE_byte explofill;
 	JE_byte explocolor;
-} exploRec[EXPLO_MAX]; /*[1..explomax]*/
+};
+ExploRec exploRec[EXPLO_MAX]; /*[1..explomax]*/
 
 JE_word x;
 JE_word y;
