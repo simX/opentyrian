@@ -1920,4 +1920,4 @@ void JE_pauseScreen( void )
 	JE_setVol(tyrMusicVolume, fxVolume);
 }
 
-};
+}
