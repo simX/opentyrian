@@ -92,7 +92,7 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 		}
 #endif
 
-		SDL_Delay(1); /* <MXD> attempt non-processor-based wait, implement a real delay later */
+		SDL_Delay(16); /* <MXD> attempt non-processor-based wait, implement a real delay later */
 		if (*waitTime > 0)
 		{
 			(*waitTime)--;
