@@ -101,7 +101,7 @@ public:
 	const std::list<CCmd*> getCCmds( CCmd::Flags flags, bool all );
 };
 
-template<> inline static std::string CCmd::convertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
+template<> inline std::string CCmd::convertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
 {
 	assertParam(vec, index);
 	return vec[index];

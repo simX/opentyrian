@@ -76,5 +76,8 @@ namespace CVars
 	CCmd echo("echo", CCmd::NONE, "Prints a message to console. Usage: echo [message]", Func::echo);
 	CCmd help("help", CCmd::NONE, "Prints help text for a CCmd or CVar. Usage: help [cvar|ccmd]", Func::help);
 
-	CVarInt testvar("testvar", CVar::NONE, "This is a test ConVar, hello", 0);
+	CVarInt testint("testint", CVar::NONE, "This is a test ConVar, hello", 0);
+	CVarFloat testfloat("testfloat", CVar::NONE, "This is a test ConVar, hello", 3.14);
+	CVarBool testbool("testbool", CVar::NONE, "This is a test ConVar, hello", true);
+	CVarString teststr("teststr", CVar::NONE, "This is a test ConVar, hello", "");
 }

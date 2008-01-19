@@ -45,6 +45,7 @@ public:
 	};
 
 	CVar( std::string name, Flags flags, std::string help );
+	virtual ~CVar() {}
 
 	std::string getName() const { return mName; }
 	Flags getFlags() const { return mFlags; }
@@ -73,7 +74,7 @@ public:
 	void registerCVar( CVar* cvar );
 	CVar* getCVar( std::string name );
 	const MapType& getCVars( ) { return mCVars; }
-	const std::list<CVar*> CVarManager::getCVars( CVar::Flags flags, bool all );
+	const std::list<CVar*> getCVars( CVar::Flags flags, bool all );
 };
 
 
@@ -83,6 +84,7 @@ protected:
 	T mValue;
 public:
 	CVarTemplate( std::string name, Flags flags, std::string help, T def ) : CVar(name, flags, help), mValue(def) {}
+	virtual ~CVarTemplate() {}
 	T get( ) const { return mValue; }
 	void set( T val ) { mValue = val; }
 	virtual std::string serialize( ) const {
@@ -105,8 +107,9 @@ public:
 class CVarString : public CVarTemplate<std::string>
 {
 public:
-	virtual std::string serialize( ) const { return get(); }
-	virtual void unserialize( std::string str ) { set(str); }
+	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate(name, flags, help, def) {}
+	std::string serialize( ) const { return get(); }
+	void unserialize( std::string str ) { set(str); }
 };
 
 #endif // CVAR_H
