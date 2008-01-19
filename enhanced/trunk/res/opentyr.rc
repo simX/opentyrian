@@ -1,12 +1,6 @@
 #include <windows.h>
 
-#define version_num 0,0,0,9
-
-#ifdef NDEBUG
-#define version version_num
-#else
-#define version 255,255,255,255 // Coding for SVN versions
-#endif
+#define version 255,255,255,255 // SVN version
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION version
@@ -23,7 +17,7 @@ FILESUBTYPE 0L
 BEGIN
 	BLOCK "StringFileInfo"
 	BEGIN
-		BLOCK "040904B0" // U.S. English and 7-bit ASCII
+		BLOCK "040904B0" // U.S. English and Unicode
 		BEGIN
 			VALUE "CompanyName", "The OpenTyrian Team\0"
 			VALUE "FileDescription", "OpenTyrian Enhanced\0"
@@ -34,6 +28,11 @@ BEGIN
 			VALUE "ProductName", "OpenTyrian Enhanced\0"
 			VALUE "ProductVersion", "SVN\0"
 		END
+	END
+
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x0409, 0x04B0
 	END
 END
 
