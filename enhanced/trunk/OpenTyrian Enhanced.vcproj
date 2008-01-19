@@ -55,6 +55,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				Culture="0"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -75,6 +76,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -97,7 +99,7 @@
 			OutputDirectory="."
 			IntermediateDirectory=".\obj"
 			ConfigurationType="1"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -116,6 +118,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
+				OmitFramePointers="true"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;PASCAL_TYPES"
 				RuntimeLibrary="2"
@@ -139,7 +144,8 @@
 				AdditionalDependencies="SDL.lib SDLmain.lib"
 				OutputFile="$(OutDir)\tyrian.exe"
 				LinkIncremental="2"
-				GenerateDebugInformation="true"
+				GenerateManifest="true"
+				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -150,6 +156,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -186,6 +193,10 @@
 			</File>
 			<File
 				RelativePath=".\src\BinaryStream.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CCmd.h"
 				>
 			</File>
 			<File
@@ -321,6 +332,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Singleton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\sndmast.h"
 				>
 			</File>
@@ -373,11 +388,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CCmd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\config.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Console.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CVar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CVar.h"
 				>
 			</File>
 			<File
@@ -446,6 +473,10 @@
 			</File>
 			<File
 				RelativePath=".\src\mainint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\MiscCVars.cpp"
 				>
 			</File>
 			<File

@@ -32,31 +32,7 @@
 #include <cctype>
 #include <deque>
 
-/////
-// Singleton stuff
-/////
-
-Console* Console::sInstance = 0;
-
-void Console::initialize()
-{
-	assert(sInstance == 0);
-	sInstance = new Console();
-}
-
-Console& Console::get()
-{
-	assert(sInstance != 0);
-	return *sInstance;
-}
-
-void Console::deinitialize()
-{
-	assert(sInstance != 0);
-	delete sInstance;
-}
-
-///// End singleton stuff
+#include "CCmd.h"
 
 int Console::ConsoleStreamBuffer::overflow( int c )
 {
@@ -198,6 +174,8 @@ void Console::think( const SDL_keysym& keysym )
 				break;
 			///// Console Resizing
 			case SDLK_EQUALS:
+				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
+
 				if (mConsoleHeight < 200/LINE_HEIGHT) mConsoleHeight++;
 
 				if (mCurScroll + mConsoleHeight >= BUFFER_SIZE)
@@ -206,6 +184,8 @@ void Console::think( const SDL_keysym& keysym )
 				}
 				break;
 			case SDLK_MINUS:
+				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
+
 				if (mConsoleHeight > 4) mConsoleHeight--;
 				if (mHeight > mConsoleHeight) mHeight = mConsoleHeight;
 				break;
@@ -274,11 +254,13 @@ void Console::think( const SDL_keysym& keysym )
 				}
 				break;
 			case SDLK_RETURN:
+				*this << "\a3" << mEditLine << std::endl;
 				runCommand(parseLine(mEditLine));
 				mEditLine.clear();
 				mCursorPos = 0;
 				break;
 			default:
+type_char:
 				if (std::isprint(lastkey_char))
 				{
 					mEditLine.insert(mCursorPos, 1, lastkey_char);
@@ -358,11 +340,11 @@ void Console::println( std::string text )
 	}
 }
 
-std::deque<std::string> Console::parseLine( std::string text )
+std::vector<std::string> Console::parseLine( std::string text )
 {
 	text.append(1, ' ');
 
-	std::deque<std::string> tokens;
+	std::vector<std::string> tokens;
 	bool in_quote = false;
 	bool escaped = false;
 	std::string cur_token;
@@ -415,12 +397,25 @@ std::deque<std::string> Console::parseLine( std::string text )
 	return tokens;
 }
 
-void Console::runCommand( std::deque<std::string> tokens )
+void Console::runCommand( std::vector<std::string> tokens )
 {
 	if (tokens.empty()) return;
 
-	// TODO: Rig this with the CCmds system
-	*this << tokens[0] << " command ran!" << std::endl;
+	const std::string command_name = tokens[0];
+	tokens.erase(tokens.begin());
+
+	CCmd* const command = CCmdManager::get().getCCmd(command_name);
+	if (command)
+	{
+		try
+		{
+			(*command)(tokens);
+		} catch(CCmd::RuntimeCCmdErrorException& e) {
+			*this << "\a7Warning:\ax " << e.what() << std::endl;
+		}
+	} else {
+		*this << "\a7Warning:\ax Unknown CCmd: " << command_name << std::endl;
+	}
 }
 
 void Console::consoleMain()

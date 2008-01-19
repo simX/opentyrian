@@ -20,12 +20,14 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
+#include "Singleton.h"
+
 #include "SDL.h"
 #include <vector>
 #include <deque>
 #include <iostream>
 
-class Console : public std::ostream
+class Console : public std::ostream, public Singleton<Console>
 {
 private:
 	class ConsoleStreamBuffer : public std::streambuf
@@ -61,8 +63,9 @@ private:
 	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text );
 	void drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col );
 
-	// Singleton stuff
-	static Console* sInstance;
+	Console( const Console& );
+	Console& operator=( const Console& );
+
 public:
 	Console();
 	void enable( const bool anim = true );
@@ -70,18 +73,32 @@ public:
 	void draw( SDL_Surface* const surf );
 	void think( const SDL_keysym& keysym );
 	void println( std::string text );
-	std::deque<std::string> parseLine( std::string text );
-	void runCommand( std::deque<std::string> tokens );
+	std::vector<std::string> parseLine( std::string text );
+	void runCommand( std::vector<std::string> tokens );
 
 	bool isDown( );
 
 	// TODO: When we have a real main loop, remove this
 	void consoleMain( void );
-
-	// Singleton stuff
-	static void initialize();
-	static Console& get();
-	static void deinitialize();
 };
+
+/*
+0: Gray
+1: Light Brown
+2: Dark Green
+3: Dark Blue (?)
+4: Pinky Red
+5: Desaturated Purple
+6: Grayish Blue
+7: Bright Orange
+8: Sky Blue
+9: Bright Blue
+A: Light Brown
+B: Light Brown
+C: Green
+D: Light Blue
+E: Lighter Brown
+F: Brown
+*/
 
 #endif // CONSOLE_H

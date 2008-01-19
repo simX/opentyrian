@@ -277,7 +277,6 @@ int main( int argc, char *argv[] )
 		// TODO: We should totally bail out here =P
 	}
 
-	// TODO: Move to later so it's logged to console instead
 	Console::get() << "Welcome to... >> OpenTyrian Enhanced v0.1 <<\n";
 
 	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
