@@ -27,7 +27,7 @@ namespace CVars
 	{
 		void set( const std::vector<std::string>& params )
 		{
-			std::string param1 = CCmd::assertParam<std::string>(params, 0);
+			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 			CVar* const var = CVarManager::get().getCVar(param1);
 			if (!var) throw CCmd::RuntimeCCmdErrorException("Unknow CVar/CCmd");
 
@@ -35,7 +35,7 @@ namespace CVars
 			{
 				Console::get() << var->serialize() << std::endl;
 			} else {
-				std::string param2 = CCmd::assertParam<std::string>(params, 1);
+				std::string param2 = CCmd::convertParam<std::string>(params, 1);
 				try
 				{
 					var->unserialize(param2);
@@ -47,14 +47,14 @@ namespace CVars
 
 		void echo( const std::vector<std::string>& params )
 		{
-			std::string str = CCmd::assertParam<std::string>(params, 0);
+			std::string str = CCmd::convertParam<std::string>(params, 0);
 
 			Console::get() << str << std::endl;
 		}
 
 		void help( const std::vector<std::string>& params )
 		{
-			std::string param1 = CCmd::assertParam<std::string>(params, 0);
+			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 
 			const CCmd* cmd = CCmdManager::get().getCCmd(param1);
 			if (cmd)

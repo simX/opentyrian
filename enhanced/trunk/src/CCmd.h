@@ -47,7 +47,7 @@ public:
 		}
 	}
 
-	template<class T> static T assertParam( const std::vector<std::string>& vec, unsigned int index )
+	template<class T> static T convertParam( const std::vector<std::string>& vec, unsigned int index )
 	{
 		assertParam(vec, index);
 
@@ -65,10 +65,9 @@ public:
 		}
 	}
 
-	template<> static std::string assertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
-	{
+	template<> static std::string convertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
+	{	
 		assertParam(vec, index);
-
 		return vec[index];
 	}
 
@@ -105,8 +104,7 @@ public:
 	void registerCCmd( CCmd* cvar );
 	CCmd* getCCmd( std::string name );
 	const MapType& getCCmds( ) { return mCCmds; }
-	const std::list<CCmd*> CCmdManager::getCCmds( CCmd::Flags flags, bool all );
+	const std::list<CCmd*> getCCmds( CCmd::Flags flags, bool all );
 };
 
 #endif // CCMD_H
-	
