@@ -65,12 +65,6 @@ public:
 		}
 	}
 
-	template<> static std::string convertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
-	{	
-		assertParam(vec, index);
-		return vec[index];
-	}
-
 	enum Flags {
 		NONE = 0
 	};
@@ -106,5 +100,11 @@ public:
 	const MapType& getCCmds( ) { return mCCmds; }
 	const std::list<CCmd*> getCCmds( CCmd::Flags flags, bool all );
 };
+
+template<> inline static std::string CCmd::convertParam<std::string>( const std::vector<std::string>& vec, unsigned int index )
+{
+	assertParam(vec, index);
+	return vec[index];
+}
 
 #endif // CCMD_H
