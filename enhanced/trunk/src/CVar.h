@@ -107,7 +107,7 @@ public:
 class CVarString : public CVarTemplate<std::string>
 {
 public:
-	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate(name, flags, help, def) {}
+	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate<std::string>(name, flags, help, def) {}
 	std::string serialize( ) const { return get(); }
 	void unserialize( std::string str ) { set(str); }
 };
