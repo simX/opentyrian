@@ -840,8 +840,6 @@ void JE_loadScreen( void )
 
 	tempstr = NULL;
 
-	/* TODO: Most of the actual save logic, string handling */
-
 	JE_fadeBlack(10);
 	JE_loadPic(2, false);
 	JE_showVGA();
@@ -871,15 +869,11 @@ void JE_loadScreen( void )
 		case 1:
 			min = 1;
 			max = 12;
-			/* {drawshape2x2(290,6 ,281,shapes6ofs,shapes6seg);} */
 			break;
 		case 2:
 			min = 12;
 			max = 23;
-			/* {drawshape2x2( 10,6 ,279,shapes6ofs,shapes6seg);} */
 		}
-
-		/* {extshade(fontcenter(misctext[56],_TinyFont),192,misctext[56], 15,2,_FullShade);} */
 
 		/* SYN: Go through text line by line */
 		for (int x = min; x <= max; x++)
@@ -1368,7 +1362,7 @@ void JE_loadOrderingInfo( void )
 void JE_doInGameSetup( void )
 {
 	haltGame = false;
-	/* TODO syncnet (0);*/
+	/* TODO: NETWORK */
 	if (yourInGameMenuRequest)
 	{
 		useButtonAssign = false; /*Joystick button remapping*/
@@ -1379,7 +1373,7 @@ void JE_doInGameSetup( void )
 		}
 		if (!isNetworkGame)
 		{
-			/* TODO */
+			/* TODO: NETWORK */
 		}
 		quitRequested = false;
 		keysactive[SDLK_RETURN] = false;
@@ -1387,16 +1381,16 @@ void JE_doInGameSetup( void )
 	
 	if (isNetworkActive && !isNetworkGame)
 	{
-		/* TODO JE_arenaPoll();*/
+		/* TODO: NETWORK */
 	}
 	
 	if (isNetworkGame)
 	{
-		/* TODO */
+		/* TODO: NETWORK */
 	}
 	
 	useButtonAssign = true;  /*Joystick button remapping*/
-	/* TODO gameQuitDelay = streamLagFrames + 1;*/
+	/* TODO: NETWORK */
 	yourInGameMenuRequest = false;
 	skipStarShowVGA = true;
 }
@@ -1605,7 +1599,7 @@ void JE_inGameHelp( void )
 	VGAScreen = VGAScreenSeg; /* side-effect of game_screen */
 	
 	tempScreenSeg = VGAScreenSeg;
-	/* TODO callbioshandler := TRUE; */
+	/* TODO callbioshandler = true; */
 	JE_clearKeyboard();
 	JE_wipeKey();
 	/* TODO JE_getVGA(); */
@@ -1692,10 +1686,10 @@ void JE_inGameHelp( void )
 	
 	if (isNetworkGame)
 	{
-	  /* TODO */
+		/* TODO: NETWORK */
 	}
 	
-	/* TODO callbioshandler := FALSE; */
+	/* TODO callbioshandler = false; */
 	
 	VGAScreen = temp_surface;
 }
@@ -1813,7 +1807,6 @@ void JE_highScoreCheck( void )
 				} else {
 					if (newkey)
 					{
-						bool validkey = false;
 						switch(lastkey_sym)
 						{
 						case SDLK_BACKSPACE:
@@ -2545,22 +2538,10 @@ void JE_endLevelAni( void )
 		
 		exchangeCount = 1;
 		
-		/* TODO
-		REPEAT
-			SetNetByte (249);
-			framecount := 1;
-			UpdateStream;
-			IF NetQuit THEN
-				EXIT;
-			REPEAT
-			UNTIL framecount = 0;
-		UNTIL (InPacket^.Data [0] = 249) AND (UseOutPacket.Data [0] = 249);
-		*/
-	} else {
-		if (isNetworkActive)
-		{
-			/* TODO ArenaPoll;*/
-		}
+		/* TODO: NETWORK */
+	} else if (isNetworkActive)
+	{
+		/* TODO: NETWORK */
 	}
 	
 	JE_fadeBlack(15);
@@ -2688,7 +2669,6 @@ void JE_operation( int slot )
 				{
 					bool validkey = false;
 					lastkey_char = toupper(lastkey_char);
-					lastkey_char = lastkey_char ? lastkey_char : lastkey_sym;
 					switch(lastkey_char)
 					{
 						case ' ':

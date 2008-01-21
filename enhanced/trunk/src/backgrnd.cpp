@@ -601,7 +601,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 			for (int x = 264; x > 0; x--)
 			{
 				unsigned int temp = (*s & 0x0f) + brightness;
-				*s = (*s & 0xf0) | (temp > 0x1f ? 0 : (temp > 0x0f ? 0x0f : temp));
+				*s = (*s & 0xf0) | (temp >= 0x1f ? 0 : (temp >= 0x0f ? 0x0f : temp));
 				s++;
 			}
 			s += VGAScreen->w - 264;

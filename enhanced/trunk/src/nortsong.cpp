@@ -46,8 +46,8 @@ JE_word frameCount, frameCount2, frameCountMax;
 
 int currentSong = 0;
 
-int soundActive = true; /* I'm not sure if these two are ever false. */
-int musicActive = true; /* TODO: Make sure these get proper values. */
+int soundActive = true;
+int musicActive = true;
 
 Uint8 *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
