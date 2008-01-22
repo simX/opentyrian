@@ -559,8 +559,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 	if (filterFade)
 	{
 		levelBrightness += levelBrightnessChg;
-		if (filterFadeStart &&
-		    (levelBrightness < -14 || levelBrightness > 14))
+		if ((filterFadeStart && levelBrightness < -14) || levelBrightness > 14)
 		{
 			levelBrightnessChg = -levelBrightnessChg;
 			filterFadeStart = false;
