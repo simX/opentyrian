@@ -27,6 +27,7 @@
 #include "joystick.h"
 
 #include "SDL.h"
+#include <algorithm>
 
 #ifndef TARGET_GP2X
 const JE_ButtonAssign defaultJoyButtonAssign = {1, 4, 5, 5};
@@ -173,6 +174,8 @@ void JE_joystick2( void )
 			joystickInput = joystickInput || joyButton[i];
 		}
 #endif  /* TARGET_GP2X */
+	} else {
+		std::fill(button, button+COUNTOF(button), 0);
 	}
 }
 
