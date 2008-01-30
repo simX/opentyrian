@@ -175,7 +175,7 @@ void JE_joystick2( void )
 		}
 #endif  /* TARGET_GP2X */
 	} else {
-		std::fill(button, button+COUNTOF(button), 0);
+		std::fill(button, button+COUNTOF(button), false);
 	}
 }
 
