@@ -959,9 +959,7 @@ start_level:
 
 	useButtonAssign = true; /*Joystick button remapping*/
 
-	/*Set keyboard to NO BIOS*/
-	/* TODO callBIOShandler = true; */
-	/* TODO JE_clearKeyboard(); */
+	JE_clearKeyboard();
 
 	if (eShapes1 != NULL)
 	{
@@ -1306,9 +1304,6 @@ start_level_first:
 		temp = twoPlayerMode ? 22 : 11;
 		JE_saveGame(temp, "LAST LEVEL    ");
 	}
-
-	/*Set keyboard to NO BIOS*/
-	/* NOTE callBIOShandler = false; */
 
 	memset(lastKey, 0, sizeof(lastKey));
 	if (recordDemo && !playDemo)
@@ -8281,8 +8276,6 @@ bool JE_quitRequest( bool useMouse )
 
 	JE_showVGA();
 
-	/* JE: (*Set keyboard to BIOS*) */
-	/* callBIOSHandler = true; */
 	JE_clearKeyboard();
 
 	quit = false;
@@ -8290,7 +8283,7 @@ bool JE_quitRequest( bool useMouse )
 
 	sel = 1;
 
-	// JE_wipeKey();
+	JE_wipeKey();
 	wait_noinput(true,true,true);
 
 	JE_barShade(65, 55, 255, 155);
@@ -8644,7 +8637,6 @@ void JE_menuFunction( int select )
 
 			newkey = false;
 
-			/*callBIOSHandler = false;*/
 			do {
 				col += colC;
 				if (col < 243 || col > 248)
@@ -8682,7 +8674,6 @@ void JE_menuFunction( int select )
 				keySettings[curSelect-2] = lastkey_sym;
 				curSelect++;
 			}
-			/* callBIOSHandler = true; */
 			JE_wipeKey();
 
 		}
