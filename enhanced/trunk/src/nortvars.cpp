@@ -169,10 +169,10 @@ void JE_drawShape2( int x, int y, int s_, Uint8 *shape )
 	int i;
 
 	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->w + x;
+	s += y * VGAScreen->pitch + x;
 
 	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->w;
+	s_limit += VGAScreen->h * VGAScreen->pitch;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -194,7 +194,7 @@ void JE_drawShape2( int x, int y, int s_, Uint8 *shape )
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->w;
+			s += VGAScreen->pitch;
 		}
 		p++;
 	}
@@ -209,10 +209,10 @@ void JE_superDrawShape2( int x, int y, int s_, Uint8 *shape )
 	int i;
 
 	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->w + x;
+	s += y * VGAScreen->pitch + x;
 
 	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->w;
+	s_limit += VGAScreen->h * VGAScreen->pitch;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -234,7 +234,7 @@ void JE_superDrawShape2( int x, int y, int s_, Uint8 *shape )
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->w;
+			s += VGAScreen->pitch;
 		}
 		p++;
 	}
@@ -249,10 +249,10 @@ void JE_drawShape2Shadow( int x, int y, int s_, Uint8 *shape )
 	int i;
 
 	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->w + x;
+	s += y * VGAScreen->pitch + x;
 
 	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->w;
+	s_limit += VGAScreen->h * VGAScreen->pitch;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -274,7 +274,7 @@ void JE_drawShape2Shadow( int x, int y, int s_, Uint8 *shape )
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->w;
+			s += VGAScreen->pitch;
 		}
 		p++;
 	}

@@ -83,7 +83,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 		}
 		if (i && (i % 320 == 0))
 		{
-			s += VGAScreen->w - 320;
+			s += VGAScreen->pitch - 320;
 		}
 	}
 
