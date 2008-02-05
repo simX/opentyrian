@@ -4096,7 +4096,7 @@ void JE_titleScreen( bool animate )
 						colors[temp].g = 0;
 						colors[temp].b = 0;
 					}
-					colors2[temp].r = 0;
+					colors2[temp-1].r = 0;
 	
 					JE_showVGA();
 					JE_fadeColor(10);
