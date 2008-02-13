@@ -86,15 +86,15 @@ void JE_initialize( void )
 	plz.callback = audio_cb;
 	plz.userdata = soundmutex;
 
-	Console::get() << "\tRequested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
+	Console::get() << "Requested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
 
 	if ( SDL_OpenAudio(&plz, &got) < 0 )
 	{
-		Console::get() << "\tWARNING: Failed to initialize SDL audio. Bailing out." << std::endl;
+		Console::get() << "WARNING: Failed to initialize SDL audio. Bailing out." << std::endl;
 		exit(1);
 	}
 
-	Console::get() << "\tObtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
+	Console::get() << "Obtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
 
 	SDL_PauseAudio(0);
 }

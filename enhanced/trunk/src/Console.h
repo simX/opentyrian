@@ -39,15 +39,15 @@ private:
 		virtual int overflow(int c = mTraits::eof());
 	};
 
+public:
 	static const unsigned int LINE_HEIGHT = 8;
+private:
 	static const unsigned int CELL_WIDTH = 6;
 	static const unsigned int BLINK_RATE = 5;
 	static const unsigned int TEXT_COLOR = 0xE;
-	static const unsigned int BUFFER_SIZE = 64; // TODO: Replace with CVAR
 
 	bool mDown;
 	unsigned int mHeight;
-	unsigned int mConsoleHeight; // TODO: Replace with CVAR	
 	std::vector<std::string> mScrollback;
 	unsigned int mScrollbackHead;
 	unsigned int mCurScroll;

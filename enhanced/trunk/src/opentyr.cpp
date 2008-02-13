@@ -346,14 +346,11 @@ int main( int argc, char *argv[] )
 	showMemLeft = false;
 	playerPasswordInput = true;
 
-	Console::get() << "Initializing SDL audio..." << std::endl;
 	JE_loadSong(1);
 
-	if ( noSound ) /* TODO: Check if sound is enabled, handle either appropriately */
+	if (!noSound)
 	{
-		/* TODO: Do we actually need to do anything here? */
-		/* JE_initialize(0, 0, 0, 0, 0); */
-	} else {
+		Console::get() << "Initializing SDL audio..." << std::endl;
 		JE_initialize();
 		soundEffects = true; /* TODO: find a real way to give this a value */
 		if (soundEffects)

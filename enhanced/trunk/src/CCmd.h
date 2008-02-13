@@ -79,10 +79,10 @@ private:
 	CCmd( const CCmd& );
 	CCmd& operator=( const CCmd& );
 
-	std::string mName;
-	Flags mFlags;
-	std::string mHelp;
-	void (*mFunction)(const std::vector<std::string>&);
+	const std::string mName;
+	const Flags mFlags;
+	const std::string mHelp;
+	void (* const mFunction) (const std::vector<std::string>&);
 };
 
 class CCmdManager : public Singleton<CCmdManager>

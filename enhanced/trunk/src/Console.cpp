@@ -33,6 +33,14 @@
 #include <deque>
 
 #include "CCmd.h"
+#include "CVar.h"
+
+namespace CVars
+{
+	CVarInt ConBufferSize("con_buffer_size", CVar::CONFIG, "Size of the console scrollback in lines.", 64);
+	CVarInt ConHeight("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeCheck<4, 200/Console::LINE_HEIGHT>);
+}
+
 
 int Console::ConsoleStreamBuffer::overflow( int c )
 {
@@ -62,10 +70,7 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 			JE_newDrawCShapeBright(shapeArray[TINY_FONT][fontMap[c-33]], shapeX[TINY_FONT][fontMap[c-33]], shapeY[TINY_FONT][fontMap[c-33]], x+xoff, y, mColor, 4);
 			x += CELL_WIDTH;
 		} else {
-			if (c == ' ')
-			{
-				x += CELL_WIDTH;
-			} else if (c == '\t') {
+			if (c == '\t') {
 				x += CELL_WIDTH*8;
 			} else if (c == '\a') {
 				i++;
@@ -78,6 +83,8 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 				} else if (c == 'x') {
 					mColor = TEXT_COLOR;
 				}
+			} else {
+				x += CELL_WIDTH;
 			}
 		}
 	}
@@ -94,14 +101,9 @@ void Console::drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y
 }
 
 Console::Console()
-	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mConsoleHeight(10), mScrollback(BUFFER_SIZE), // TODO: Replace constant value with cvar
+	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mScrollback(CVars::ConBufferSize.get()),
 	mScrollbackHead(0), mCurScroll(0), mColor(TEXT_COLOR), mCursorPos(0), mCursorVisible(true), mCursorTimeout(BLINK_RATE)
-{
-	if (mConsoleHeight * LINE_HEIGHT > 200)
-	{
-		mConsoleHeight = 200 / LINE_HEIGHT;
-	}
-}
+{ }
 
 void Console::enable( const bool anim )
 {
@@ -109,7 +111,7 @@ void Console::enable( const bool anim )
 	
 	if (!anim)
 	{
-		mHeight = mConsoleHeight;
+		mHeight = CVars::ConHeight.get();
 	}
 }
 
@@ -156,7 +158,6 @@ void Console::draw( SDL_Surface* const surf )
 	drawText(surf, 8, (mHeight-1)*LINE_HEIGHT, mEditLine);
 	if (mCursorVisible)
 	{
-		// TODO: Replace with JE_bar once it's fixed
 		JE_bar(mCursorPos*CELL_WIDTH+8, (mHeight-1)*LINE_HEIGHT+1, mCursorPos*CELL_WIDTH+8, mHeight*LINE_HEIGHT-2, 0x0f);
 	}
 }
@@ -176,28 +177,26 @@ void Console::think( const SDL_keysym& keysym )
 			case SDLK_EQUALS:
 				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
 
-				if (mConsoleHeight < 200/LINE_HEIGHT) mConsoleHeight++;
+				CVars::ConHeight.set(CVars::ConHeight.get()+1);
 
-				if (mCurScroll + mConsoleHeight >= BUFFER_SIZE)
+				if (mCurScroll + CVars::ConHeight.get() >= static_cast<unsigned long>(CVars::ConBufferSize.get()))
 				{
-					mCurScroll = BUFFER_SIZE - mConsoleHeight;
+					mCurScroll = CVars::ConBufferSize.get() - CVars::ConHeight.get();
 				}
 				break;
 			case SDLK_MINUS:
 				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
-
-				if (mConsoleHeight > 4) mConsoleHeight--;
-				if (mHeight > mConsoleHeight) mHeight = mConsoleHeight;
+				CVars::ConHeight.set(CVars::ConHeight.get()-1);
 				break;
 			///// Console scrolling
 			case SDLK_PAGEUP:
 				{
-				unsigned int amount = mConsoleHeight / 3;
+				unsigned int amount = CVars::ConHeight.get() / 3;
 				if (amount < 1) amount = 1;
 
-				if (mCurScroll + amount + mConsoleHeight-1 >= BUFFER_SIZE)
+				if (mCurScroll + amount + CVars::ConHeight.get()-1 >= static_cast<unsigned long>(CVars::ConBufferSize.get()))
 				{
-					mCurScroll = BUFFER_SIZE - (mConsoleHeight-1);
+					mCurScroll = CVars::ConBufferSize.get() - (CVars::ConHeight.get()-1);
 				} else {
 					mCurScroll += amount;
 				}
@@ -205,7 +204,7 @@ void Console::think( const SDL_keysym& keysym )
 				}
 			case SDLK_PAGEDOWN:
 				{
-				unsigned int amount = mConsoleHeight / 3;
+				unsigned int amount = CVars::ConHeight.get() / 3;
 				if (amount < 1) amount = 1;
 
 				if (amount < mCurScroll)
@@ -269,10 +268,8 @@ type_char:
 			}
 		}
 
-		if (mHeight < mConsoleHeight)
-		{
-			mHeight++;
-		}
+		if (mHeight < static_cast<unsigned long>(CVars::ConHeight.get())) mHeight++;
+		if (mHeight > static_cast<unsigned long>(CVars::ConHeight.get())) mHeight--;
 
 		if (mCursorTimeout > 0)
 		{

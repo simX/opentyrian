@@ -56,9 +56,9 @@ private:
 	CVar( const CVar& );
 	CVar& operator=( const CVar& );
 
-	std::string mName;
-	Flags mFlags;
-	std::string mHelp;
+	const std::string mName;
+	const Flags mFlags;
+	const std::string mHelp;
 };
 
 class CVarManager : public Singleton<CVarManager>
@@ -78,21 +78,37 @@ public:
 };
 
 
+template<long low, long hi> long rangeCheck( const long& val )
+{
+	if (val < low) return low;
+	if (val > hi) return hi;
+	return val;
+}
+
 template<class T> class CVarTemplate : public CVar
 {
 protected:
 	T mValue;
+private:
+	T (* const mValidationFunc) (const T& value);
 public:
-	CVarTemplate( std::string name, Flags flags, std::string help, T def ) : CVar(name, flags, help), mValue(def) {}
+	CVarTemplate( std::string name, Flags flags, std::string help, T def, T (*validationFunc)(const T& value) = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
 	virtual ~CVarTemplate() {}
 	T get( ) const { return mValue; }
-	void set( T val ) { mValue = val; }
+ 	void set( T val ) {
+		if (mValidationFunc)
+		{
+			mValue = (*mValidationFunc)(val);
+		} else {
+			mValue = val;
+		}
+	}
 	virtual std::string serialize( ) const {
 		std::ostringstream s;
 		if (!(s << get())) throw CVar::ConversionErrorException();
 		return s.str();
 	}
-	virtual void unserialize( std::string str ) { std::istringstream s(str); s >> mValue; }
+	virtual void unserialize( std::string str ) { T tmp; std::istringstream s(str); s >> tmp; set(tmp); }
 };
 
 typedef CVarTemplate<long> CVarInt;
