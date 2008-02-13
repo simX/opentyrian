@@ -106,7 +106,7 @@ struct JE_ShieldType
 
 struct JE_ShipType
 {
-	char    name[31]; /* string [30] */
+	char name[31]; /* string [30] */
 	JE_word shipgraphic;
 	JE_word itemgraphic;
 	int ani;
