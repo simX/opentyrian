@@ -52,6 +52,7 @@ public:
 	std::string getHelp() const { return mHelp; }
 	virtual std::string serialize( ) const = 0;
 	virtual void unserialize( std::string str ) = 0;
+	virtual std::string getType() const = 0;
 private:
 	CVar( const CVar& );
 	CVar& operator=( const CVar& );
@@ -85,7 +86,7 @@ template<long low, long hi> long rangeCheck( const long& val )
 	return val;
 }
 
-template<class T> class CVarTemplate : public CVar
+template<class T, class NAME> class CVarTemplate : public CVar
 {
 protected:
 	T mValue;
@@ -109,21 +110,27 @@ public:
 		return s.str();
 	}
 	virtual void unserialize( std::string str ) { T tmp; std::istringstream s(str); s >> tmp; set(tmp); }
+	virtual std::string getType() const { return NAME::get(); }
 };
 
-typedef CVarTemplate<long> CVarInt;
-typedef CVarTemplate<double> CVarFloat;
-typedef CVarTemplate<bool> CVarBool;
+struct IntString { inline static const char* get() { return "int"; } };
+struct FloatString { inline static const char* get() { return "float"; } };
+struct BoolString { inline static const char* get() { return "bool"; } };
+
+typedef CVarTemplate<long, IntString> CVarInt;
+typedef CVarTemplate<double, FloatString> CVarFloat;
+typedef CVarTemplate<bool, BoolString> CVarBool;
 
 class ParseErrorException : public std::runtime_error {
 public:
 	ParseErrorException( const std::string& text ) : runtime_error(text) {};
 };
 
-class CVarString : public CVarTemplate<std::string>
+struct StringString { inline static const char* get() { return "string"; } };
+class CVarString : public CVarTemplate<std::string, StringString>
 {
 public:
-	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate<std::string>(name, flags, help, def) {}
+	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate<std::string, StringString>(name, flags, help, def) {}
 	std::string serialize( ) const { return get(); }
 	void unserialize( std::string str ) { set(str); }
 };

@@ -70,11 +70,58 @@ namespace CVars
 				}
 			}
 		}
+
+		void list( const std::vector<std::string>& params )
+		{
+			std::string param1 = CCmd::convertParam<std::string>(params, 0);
+
+			if (param1 == "cvar") // Lists all CVars
+			{
+				const CVarManager::MapType& map = CVarManager::get().getCVars();
+				for (CVarManager::MapType::const_iterator i = map.begin(); i != map.end(); ++i)
+				{
+					CVar& cvar = *i->second;
+					Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType() << "] " << cvar.getHelp() << std::endl;
+				}
+			} else if (param1 == "ccmd") { // Lists all CCmds
+				const CCmdManager::MapType& map = CCmdManager::get().getCCmds();
+				for (CCmdManager::MapType::const_iterator i = map.begin(); i != map.end(); ++i)
+				{
+					CCmd& ccmd = *i->second;
+					Console::get() << "\a2" << ccmd.getName() << "\ax: " << ccmd.getHelp() << std::endl;
+				}
+			} else { // Searches for given text
+				using std::string;
+
+				// Search CVars first
+				const CVarManager::MapType& varmap = CVarManager::get().getCVars();
+				for (CVarManager::MapType::const_iterator i = varmap.begin(); i != varmap.end(); ++i)
+				{
+					CVar& cvar = *i->second;
+					if (cvar.getName().find(param1) != string::npos || cvar.getHelp().find(param1) != string::npos)
+					{
+						Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType() << "] " << cvar.getHelp() << std::endl;
+					}
+				}
+
+				// Search CCmds aftewards
+				const CCmdManager::MapType& cmdmap = CCmdManager::get().getCCmds();
+				for (CCmdManager::MapType::const_iterator i = cmdmap.begin(); i != cmdmap.end(); ++i)
+				{
+					CCmd& ccmd = *i->second;
+					if (ccmd.getName().find(param1) != string::npos || ccmd.getHelp().find(param1) != string::npos)
+					{
+						Console::get() << "\a2" << ccmd.getName() << "\ax: " << ccmd.getHelp() << std::endl;
+					}
+				}
+			}
+		}
 	}
  
 	CCmd set("set", CCmd::NONE, "Sets the value of a CVar. Usage: set [cvar] [value]", Func::set);
 	CCmd echo("echo", CCmd::NONE, "Prints a message to console. Usage: echo [message]", Func::echo);
 	CCmd help("help", CCmd::NONE, "Prints help text for a CCmd or CVar. Usage: help [cvar|ccmd]", Func::help);
+	CCmd list("list", CCmd::NONE, "Searches cvar help text or lists all cvars or ccmds. Usage: list [cvar|ccmd|string to search]", Func::list);
 
 	CVarInt testint("testint", CVar::NONE, "This is a test ConVar, hello", 0);
 	CVarFloat testfloat("testfloat", CVar::NONE, "This is a test ConVar, hello", 3.14);
