@@ -25,9 +25,7 @@
 #include "varz.h"
 #include "helptext.h"
 
-
-#define CUBE_WIDTH 35
-#define LINE_WIDTH 150
+static const int LINE_WIDTH = 150;
 
 extern JE_word statDmg[2];
 

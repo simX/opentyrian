@@ -55,6 +55,9 @@
 
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <utility>
+#include <algorithm>
 
 
 JE_word statDmg[2]; /* [1..2] */
@@ -3183,7 +3186,9 @@ void JE_loadMap( void )
 
 	if (loadTitleScreen || playDemo)
 	{
+#ifdef NDEBUG
 		JE_openingAnim();
+#endif
 		JE_titleScreen(true);
 		loadTitleScreen = false;
 	}
@@ -5925,9 +5930,9 @@ int curItemType, curItem, cursor;
 bool buyActive, sellActive, sellViewActive, buyViewActive, /*flash,*/ purchase, cannotAfford, slotFull;
 bool leftPower, rightPower, rightPowerAfford;
 
-char cubeHdr[4][81];
-char cubeText[4][90][CUBE_WIDTH];
-char cubeHdr2[4][13];
+std::string cubeHdr[4];
+std::string cubeText[4][90];
+std::string cubeHdr2[4];
 int faceNum[4];
 JE_word cubeMaxY[4];
 int currentCube;
@@ -6355,7 +6360,7 @@ void JE_itemScreen( void )
 						{
 							std::ostringstream buf;
 							buf << "Custom Ship " << temp - 90;
-							buf.str().copy(tempStr, sizeof tempStr);
+							tempStr[buf.str().copy(tempStr, 30)] = '\0';
 						} else {
 							strcpy(tempStr, ships[temp].name);
 						}
@@ -6576,7 +6581,7 @@ void JE_itemScreen( void )
 						helpBoxColor = temp2 / 16;
 						helpBoxBrightness = (temp2 % 16) - 8;
 						helpBoxShadeType = DARKEN;
-						JE_helpBox(192, 44 + (x - 1) * 28, cubeHdr[x - 1], 24);
+						JE_helpBox(192, 44 + (x - 1) * 28, cubeHdr[x-1].c_str(), 24);
 					}
 					JE_word x = cubeMax + 1;
 					if (x + 1 == curSel[curMenu])
@@ -6664,8 +6669,8 @@ void JE_itemScreen( void )
 		/* datacube title */
 		if ( ( (curMenu == 7) || (curMenu == 8) ) && (curSel[7] < menuChoices[7]) )
 		{
-			JE_textShade (75 - JE_textWidth(cubeHdr2[curSel[7] - 2], TINY_FONT) / 2, 173,
-				cubeHdr2[curSel[7] - 2], 14, 3, DARKEN);
+			JE_textShade (75 - JE_textWidth(cubeHdr2[curSel[7]-2].c_str(), TINY_FONT) / 2, 173,
+				cubeHdr2[curSel[7]-2].c_str(), 14, 3, DARKEN);
 		}
 
 		/* SYN: Everything above was just drawing the screen. In the rest of it, we process
@@ -6703,9 +6708,6 @@ void JE_itemScreen( void )
 
 				if (curMenu == 8)
 				{
-					/* TODO: The text wrapping on the datacubes is incorrect. Not a big deal really, but should
-					   probably be fixed at some point. */
-
 					if (mouseX > 164 && mouseX < 299 && mouseY > 47 && mouseY < 153)
 					{
 						if (mouseY > 100)
@@ -6734,7 +6736,7 @@ void JE_itemScreen( void )
 						/* if (x <= temp3 && x >= 0) */
 						if (x <= temp3)
 						{
-							JE_outTextAndDarken(161, tempW, cubeText[curSel[7] - 2][x-1], 14, 3, TINY_FONT);
+							JE_outTextAndDarken(161, tempW, cubeText[curSel[7]-2][x-1].c_str(), 14, 3, TINY_FONT);
 							tempW += 12;
 						}
 					}
@@ -7540,143 +7542,113 @@ void JE_itemScreen( void )
 
 }
 
+struct pair_second_cmp
+{
+	template<class A, class B> inline bool operator()( const std::pair<A,B>& a, const std::pair<A,B>& b )
+	{
+		return a.second < b.second;
+	}
+};
+
+// TODO refactor globals into arguments
 void JE_loadCubes( void )
 {
-	char s[256], s2[256], s3[256];
-	int cube;
-	JE_word x, y;
-	unsigned int startPos, endPos, pos;
-	bool endString;
-	FILE *f;
-	int lastWidth, curWidth;
-	bool pastStringLen, pastStringWidth;
-	unsigned char temp;
-
-	char buffer[256];
-
-	memset(cubeText, 0, sizeof(cubeText));
-
-	for (cube = 0; cube < cubeMax; cube++)
+	std::vector<std::pair<int,int> > cubes(cubeMax);
+	for (unsigned int i = 0; i < cubeMax; ++i)
 	{
+		cubes[i].first = i;
+		cubes[i].second = cubeList[i];
+	}
+	std::sort(cubes.begin(), cubes.end(), pair_second_cmp());
 
-		JE_resetFile(&f, cubeFile);
+	int current_cube = 0; // In which cube we are in the file
+	std::ifstream f;
+	open_datafile(f, cubeFile);
 
-		tempW = cubeList[cube];
-
-		do
+	std::string file_line;
+	for (unsigned int cube = 0; cube < cubeMax; ++cube)
+	{
+		// Seek to correct cube
+		for (;current_cube < cubes[cube].second; ++current_cube)
 		{
 			do
 			{
-				JE_readCryptLn(f, s);
-			} while (s[0] != '*');
-			tempW--;
-		} while (tempW != 0);
+				file_line = JE_readCryptLn(f);
+			} while (file_line[0] != '*');
+		}
+		
+		// Index into the other cube structures
+		unsigned int cubei = cubes[cube].first;
 
-		faceNum[cube] = atoi(strnztcpy(buffer, s + 4, 2));
+		// Read face number, or assign a blank one if it's missing
+		if (file_line.length() >= 6)
+		{
+			std::istringstream str(file_line.substr(4, 2));
+			if (!(str >> faceNum[cubei]))
+			{
+				Console::get() << "\a7Warning:\ax Couldn't read face number for datacube " << cubes[cube].second << std::endl;
+				faceNum[cubei] = 0;
+			}
+		} else {
+			faceNum[cubei] = 0;
+		}
 
-		JE_readCryptLn(f, cubeHdr[cube]);
-		JE_readCryptLn(f, cubeHdr2[cube]);
+		// Read cube titles
+		cubeHdr[cubei] = JE_readCryptLn(f);
+		cubeHdr2[cubei] = JE_readCryptLn(f);
 
-		curWidth = 0;
-		x = 5;
-		y = 0;
-		strcpy(s3, "");
-
-		s2[0] = ' ';
-
+		unsigned int cur_cube_line = 0;
 		do
 		{
-		JE_readCryptLn(f, s2);
+			// This is a complete line, after joining several lines in the file
+			std::string line;
 
-			if (s2[0] != '*')
+			for (;;)
 			{
+				file_line = JE_readCryptLn(f);
+				if (file_line.empty() || file_line[0] == '*') break;
 
-				sprintf(s, "%s %s", s3, s2);
-
-				pos = 1;
-				endPos = 0;
-				endString = false;
-
-				do
-				{
-					startPos = endPos + 1;
-
-					do
-					{
-						endPos = pos;
-						lastWidth = curWidth;
-						do
-						{
-							temp = s[pos - 1];
-
-							if (temp > 32 && temp < 169 && fontMap[temp] != 255 && shapeArray[5][fontMap[temp]] != NULL)
-							{
-								curWidth += shapeX[5][fontMap[temp]] + 1;
-							} else {
-								if (temp == 32)
-								{
-									curWidth += 6;
-								}
-							}
-
-							pos++;
-							if (pos == strlen(s))
-							{
-								endString = true;
-								if ((pos - startPos < CUBE_WIDTH) /*check for string length*/ && (curWidth <= LINE_WIDTH))
-								{
-									endPos = pos + 1;
-									lastWidth = curWidth;
-								}
-							}
-
-						} while (!(s[pos - 1] == ' ' || endString));
-
-						pastStringLen = (pos - startPos > CUBE_WIDTH);
-						pastStringWidth = (curWidth > LINE_WIDTH);
-
-					} while (!(pastStringLen || pastStringWidth || endString));
-
-					if (!endString || pastStringLen || pastStringWidth)
-					{    /*Start new line*/
-						strnztcpy(cubeText[cube][y], s + startPos - 1, endPos - startPos);
-						y++;
-						strnztcpy(s3, s + endPos, 255);
-						curWidth = curWidth - lastWidth;
-						if (s[endPos] == ' ')
-						{
-							curWidth -= 6;
-						}
-					} else {
-						strnztcpy(s3, s + startPos - 1, 255);
-						curWidth = 0;
-					}
-
-				} while (!endString);
-
-				if (strlen(s2) == 0)
-				{
-					if (strlen(s3) != 0)
-					{
-						strcpy(cubeText[cube][y], s3);
-					}
-					y++;
-					strcpy(s3, "");
-				}
-
+				line += ' ';
+				line += file_line;
 			}
 
-		} while (s2[0] != '*');
+			// Now find the wrapping points and copy the text!
+			// current line width, in pixels
+			unsigned int line_w = 0;
+			// index of string of last word
+			unsigned int last_index = 0;
+			// index of start of current wrapped line
+			unsigned int start_index = 0;
+			for (unsigned int i = 0; i < line.length(); ++i)
+			{
+				char c = line[i];
+				if (c > ' ' && c < 169 && c != '~' && fontMap[c] != 255 && shapeArray[5][fontMap[c]] != 0)
+				{
+					line_w += shapeX[5][fontMap[c]]+1;
+				} else if (c == ' ') {
+					line_w += 6;
+					last_index = i;
+				}
 
-		strcpy(cubeText[cube][y], s3);
-		while (!strcmp(cubeText[cube][y], ""))
-		{
-			y--;
-		}
-		cubeMaxY[cube] = y + 1;
+				// If we're on the last character, force to print rest of the line
+				if (i == line.length()-1)
+				{
+					line_w = LINE_WIDTH;
+					last_index = i+1;
+				}
 
-
-		fclose(f);
+				if (line_w >= LINE_WIDTH)
+				{
+					cubeText[cubei][cur_cube_line] = line.substr(start_index, last_index-start_index);
+					line_w = 0;
+					i = last_index;
+					start_index = ++last_index;
+					++cur_cube_line;
+				}
+			}
+		} while (file_line[0] != '*');
+		cubeMaxY[cubei] = cur_cube_line;
+		++current_cube;
 	}
 }
 
@@ -7728,7 +7700,7 @@ void JE_drawMenuHeader( void )
 	switch (curMenu)
 	{
 		case 8:
-			strcpy(tempStr, cubeHdr2[curSel[7]-2]);
+			tempStr[cubeHdr2[curSel[7]-2].copy(tempStr, 30)] = '\0';
 			break;
 		case 7:
 			strcpy(tempStr, menuInt[0][1]);

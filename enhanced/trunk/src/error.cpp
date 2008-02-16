@@ -30,9 +30,10 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 JE_word randomcount;
-char dir[256]; /* increase me */
+std::string dir; /* increase me */
 
 bool errorActive = true;
 bool errorOccurred = false;
@@ -103,7 +104,7 @@ unsigned long JE_getFileSize( const char *filename )
 	return size;
 }
 
-void JE_errorHand( const char *s )
+void JE_errorHand( std::string s )
 {
 	if (errorActive)
 	{
@@ -117,11 +118,11 @@ void JE_errorHand( const char *s )
 	}
 }
 
-bool JE_find( const char *s )
+bool JE_find( std::string s )
 {
 	FILE *f;
 
-	if ((f = fopen(s, "r")))
+	if ((f = fopen(s.c_str(), "r")))
 	{
 		fclose(f);
 		return true;
@@ -130,7 +131,7 @@ bool JE_find( const char *s )
 	}
 }
 
-void JE_findTyrian( const char *filename )
+void JE_findTyrian( std::string filename )
 {
 	std::string strbuf;
 
@@ -139,22 +140,22 @@ void JE_findTyrian( const char *filename )
 		dir[0] = '\0';
 	} else {
 		/* Let's find it! */
-		std::cout << "Searching for Tyrian files...\n\n";
+		Console::get() << "Searching for Tyrian files...\n" << std::endl;
 
 		for (unsigned int i = 0; i < COUNTOF(tyrian_searchpaths); i++)
 		{			
 			strbuf = std::string(tyrian_searchpaths[i]) + "/" + filename;
-			if (JE_find(strbuf.c_str()))
+			if (JE_find(strbuf))
 			{				
-				sprintf(dir, "%s/", tyrian_searchpaths[i]);
-				std::cout << "Tyrian data files found at " << dir << "\n\n";
+				dir = std::string(tyrian_searchpaths[i]) + "/";
+				Console::get() << "Tyrian data files found at " << dir << "\n" << std::endl;
 				return;
 			}
 		}
 	}
 }
 
-std::string JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant !!! */
+std::string JE_locateFile( std::string filename ) /* !!! WARNING: Non-reentrant !!! */
 {
 	std::string buf;
 
@@ -162,7 +163,7 @@ std::string JE_locateFile( const char *filename ) /* !!! WARNING: Non-reentrant 
 	{
 		buf = std::string(filename);
 	} else {
-		if (strcmp(dir, "") == 0 && errorActive)
+		if (dir.empty() && errorActive)
 		{
 			JE_findTyrian(filename);
 		}
@@ -189,6 +190,16 @@ void JE_resetFile( FILE **f, const char *filename )
 
 	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "rb");
 }
+
+void open_datafile( std::ifstream& stream, std::string filename, bool binary )
+{
+	std::string path = JE_locateFile(filename);
+	if (path.empty()) throw FileOpenErrorException(filename);
+	stream.open(path.c_str(), std::ios::in | (binary ? std::ios::binary : 0));
+	if (stream.fail()) throw FileOpenErrorException(filename);
+}
+
+
 
 void JE_resetText( FILE **f, const char *filename )
 {

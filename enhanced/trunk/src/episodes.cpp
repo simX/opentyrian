@@ -238,14 +238,11 @@ void JE_initEpisode( int newEpisode )
 
 void JE_scanForEpisodes( void )
 {
-	char buf[sizeof(dir) + 11];
-
 	JE_findTyrian("tyrian1.lvl"); /* need to know where to scan */
 
 	for (int temp = 0; temp < EPISODE_MAX; temp++)
 	{
-		sprintf(buf, "%styrian%d.lvl", dir, temp + 1);
-		episodeAvail[temp] = JE_find(buf);
+		episodeAvail[temp] = JE_find(dir+"tyrian"+static_cast<char>('1'+temp)+".lvl");
 	}
 }
 

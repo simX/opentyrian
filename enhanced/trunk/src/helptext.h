@@ -60,7 +60,7 @@ extern const int menuHelp[MAX_MENU][11];   /* [1..maxmenu, 1..11] */
 
 /*int temp, temp2;*/
 
-void JE_helpBox( JE_word x, JE_word y, char *message, unsigned int boxwidth );
+void JE_helpBox( JE_word x, JE_word y, const char *message, unsigned int boxwidth );
 void JE_HBox( JE_word x, JE_word y, int messagenum, unsigned int boxwidth );
 void JE_loadHelpText( void );
 

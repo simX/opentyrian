@@ -377,6 +377,19 @@ void JE_decryptString( char *s, int len )
 	}
 }
 
+std::string JE_decryptString( std::string s )
+{
+	for (int i = s.length()-1; i >= 0; i--)
+	{
+		s[i] ^= StringCryptKey[((i+1) % 10)];
+		if (i > 0)
+		{
+			s[i] ^= s[i-1];
+		}
+	}
+	return s;
+}
+
 void JE_readCryptLn( FILE* f, char *s )
 {
 	int size = getc(f);
@@ -384,6 +397,17 @@ void JE_readCryptLn( FILE* f, char *s )
 	efread(s, 1, size, f);
 	s[size] = '\0';
 	JE_decryptString(s, size);
+}
+
+std::string JE_readCryptLn( std::ifstream& f )
+{
+	unsigned int size = f.get();
+	char* buf = new char[size];
+	f.read(buf, size);
+	std::string str(buf, size);
+	delete buf;
+
+	return JE_decryptString(str);
 }
 
 void JE_skipCryptLn( FILE* f )

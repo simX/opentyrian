@@ -210,6 +210,7 @@ void JE_setNewGameSpeed( void );
 void JE_loadConfiguration( void );
 void JE_saveConfiguration( void );
 void JE_readCryptLn( FILE* f, char *s );
+std::string JE_readCryptLn( std::ifstream& f );
 void JE_skipCryptLn( FILE* f );
 
 void JE_setupStars( void );
@@ -218,5 +219,6 @@ void JE_saveGame( int slot, const char *name );
 void JE_loadGame( int slot );
 
 void JE_decryptString( char *s, int len );
+std::string JE_decryptString( std::string s );
 
 #endif /* CONFIG_H */

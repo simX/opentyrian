@@ -81,7 +81,7 @@ char shipInfo[13][2][256];
 char menuInt[MAX_MENU + 1][11][18];   /* [0..maxmenu, 1..11] of string [17] */
 
 
-void JE_helpBox( JE_word x, JE_word y, char *message, unsigned int boxwidth )
+void JE_helpBox( JE_word x, JE_word y, const char* message, unsigned int boxwidth )
 {
 	unsigned int startpos, endpos, pos;
 	bool endstring;
