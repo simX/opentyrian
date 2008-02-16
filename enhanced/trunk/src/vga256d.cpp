@@ -93,6 +93,8 @@ void JE_initVGA256( void )
 		game_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, surface_width, surface_height, 8, 0, 0, 0, 0);
 	}
 
+	SDL_WM_SetCaption("OpenTyrian Enhanced (ctrl-backspace to kill)", NULL);
+
 #if defined(TARGET_GP2X) || defined(NDEBUG)
 	/* Remove the cursor from the top-left corner of the screen  */
 	SDL_ShowCursor(0);
