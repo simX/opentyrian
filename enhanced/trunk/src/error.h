@@ -48,6 +48,6 @@ std::string JE_locateFile( std::string filename );
 void JE_findTyrian( std::string filename );
 bool JE_isCFGThere( void );
 unsigned long JE_getFileSize( const char *filename );
-void open_datafile( std::ifstream& stream, std::string filename, bool binary = true );
+void open_datafile( std::ifstream& stream, std::string filename  );
 
 #endif /* ERROR_H */

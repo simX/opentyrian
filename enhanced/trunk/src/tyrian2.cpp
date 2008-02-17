@@ -7621,7 +7621,7 @@ void JE_loadCubes( void )
 			unsigned int start_index = 0;
 			for (unsigned int i = 0; i < line.length(); ++i)
 			{
-				char c = line[i];
+				unsigned char c = static_cast<unsigned char>(line[i]);
 				if (c > ' ' && c < 169 && c != '~' && fontMap[c] != 255 && shapeArray[5][fontMap[c]] != 0)
 				{
 					line_w += shapeX[5][fontMap[c]]+1;

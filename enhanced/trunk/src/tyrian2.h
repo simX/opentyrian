@@ -25,7 +25,7 @@
 #include "varz.h"
 #include "helptext.h"
 
-static const int LINE_WIDTH = 150;
+static const unsigned int LINE_WIDTH = 150;
 
 extern JE_word statDmg[2];
 

@@ -191,11 +191,11 @@ void JE_resetFile( FILE **f, const char *filename )
 	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "rb");
 }
 
-void open_datafile( std::ifstream& stream, std::string filename, bool binary )
+void open_datafile( std::ifstream& stream, std::string filename )
 {
 	std::string path = JE_locateFile(filename);
 	if (path.empty()) throw FileOpenErrorException(filename);
-	stream.open(path.c_str(), std::ios::in | (binary ? std::ios::binary : 0));
+	stream.open(path.c_str(), std::ios_base::in);
 	if (stream.fail()) throw FileOpenErrorException(filename);
 }
 
