@@ -1,34 +1,35 @@
 #summary Frequently Asked Questions
 #labels Featured
 
-== Q: What is OpenTyrian? ==
+=== Q: What is OpenTyrian? ===
 
-A: [OpenTyrian] is rewrite of the Tyrian's Pascal and Assembly source-code in C, adapting it to use modern technologies instead of arcane DOS techniques.
+*A:* [OpenTyrian] is rewrite of the Tyrian's Pascal and Assembly source-code in C, adapting it to use modern technologies instead of arcane DOS techniques.
 
 Right now we plan to create two versions of the port:
 
   * *[OpenTyrianClassic OpenTyrian Classic]:* Currently being worked on, will try to faithfully recreate Tyrian, both in game and source code behavior, won't receive any new features apart from those considered very important.
   * *[OpenTyrian]:* Starting out of the Classic port, will feature cleaned up code, and brand new features, bug fixes and customization.
 
-== Q: Is Tyrian open source? ==
+=== Q: Is Tyrian open source? ===
 
-A: No, only OpenTyrian is open source.  The Tyrian source code was (more or less) licensed to the OpenTyrian developers for an open-source port.
+*A:* No, only OpenTyrian is open source.  The Tyrian source code was (more or less) licensed to the OpenTyrian developers for an open-source port.
 
-== Q: Why do I get a message along the lines of "`OpenTyrian needs the Tyrian data files to run.`"? ==
+=== Q: Why do I get a message along the lines of "`OpenTyrian needs the Tyrian data files to run.`"? ===
 
-A: You need to have the Tyrian 2.1 data files to run the game (1.x, 2.0, or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
+*A:* You need to have the Tyrian 2.1 data files to run the game (1.x, 2.0, or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
 
-== Q: I have all the data files inside the ./data/ directory.  Why does OpenTyrian still not find them? ==
+=== Q: I have all the data files inside the ./data/ directory.  Why does OpenTyrian still not find them? ===
 
-A: If you're using a case-sensitive filesystem (most Unix-related filesystems), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
+*A:* If you're using a case-sensitive filesystem (most Unix-related filesystems), make sure the filenames are all lower-case. You can use the provided `lower-script.sh` script to rename the files.
 
-== Q: Why isn't the mouse working as a controller? ==
+=== Q: Why isn't the mouse working as a controller? ===
 
-A: OpenTyrian must be built without debug enabled to use the mouse as a controller.  If you didn't build Tyrian yourself, you will have to find a build that does not have debug enabled in order to use the mouse.
+*A:* OpenTyrian must be built without debug enabled to use the mouse as a controller.  If you didn't build Tyrian yourself, you will have to find a build that does not have debug enabled in order to use the mouse.
 
-== Q: Why do I get an error about SDL being missing? ==
-A: You need the [http://www.libsdl.org/download.php SDL runtime].  On Windows, just put SDL.dll in OpenTyrian's directory.
+=== Q: Why do I get an error about SDL being missing? ===
 
-== Q: Do you have an IRC channel? ==
+*A:* You need the [http://www.libsdl.org/download.php SDL runtime].  On Windows, just put SDL.dll in OpenTyrian's directory.
 
-A: Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
+=== Q: Do you have an IRC channel? ===
+
+*A:* Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
