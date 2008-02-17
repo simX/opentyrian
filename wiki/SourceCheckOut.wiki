@@ -1,4 +1,4 @@
-#summary Source checkout instructions
+#summary Instructions for anonymously checking out project source
 
 ====Classic====
  Use this command to anonymously check out the latest OpenTyrian Classic source code:
