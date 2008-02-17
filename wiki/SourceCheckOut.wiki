@@ -1,0 +1,15 @@
+#summary Source checkout instructions
+
+====Classic====
+ Use this command to anonymously check out the latest OpenTyrian Classic source code:
+{{{
+# Non-members may check out a read-only working copy anonymously over HTTP.
+svn checkout http://opentyrian.googlecode.com/svn/classic/trunk/ opentyrian-read-only 
+}}}
+
+====Enhanced====
+ Use this command to anonymously check out the latest OpenTyrian Enhanced source code:
+{{{
+# Non-members may check out a read-only working copy anonymously over HTTP.
+svn checkout http://opentyrian.googlecode.com/svn/enhanced/trunk/ opentyrian-read-only 
+}}}
