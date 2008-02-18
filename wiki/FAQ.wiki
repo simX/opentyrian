@@ -16,7 +16,7 @@ Right now we plan to create two versions of the port:
 
 === Q: Why do I get a message along the lines of "`OpenTyrian needs the Tyrian data files to run.`"? ===
 
-*A:* You need to have the Tyrian 2.1 data files to run the game (1.x, 2.0, or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://it.travisbsd.org/foo/tyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
+*A:* You need to have the Tyrian 2.1 data files to run the game (1.x, 2.0, or 2000 data files will *NOT* work.)  If you have them (can be obtained from any installed copy of the game) just create a `data` folder and place all the files there.  If you don't, [http://camanis.net/opentyrian/tyrian21.zip get yourself a copy] ([http://darklomax.org/tyrian/tyrian21.zip mirror]).
 
 === Q: I have all the data files inside the ./data/ directory.  Why does OpenTyrian still not find them? ===
 
