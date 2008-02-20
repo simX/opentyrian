@@ -195,7 +195,7 @@ void open_datafile( std::ifstream& stream, std::string filename )
 {
 	std::string path = JE_locateFile(filename);
 	if (path.empty()) throw FileOpenErrorException(filename);
-	stream.open(path.c_str(), std::ios_base::in);
+	stream.open(path.c_str(), std::ios_base::in | std::ios_base::binary);
 	if (stream.fail()) throw FileOpenErrorException(filename);
 }
 

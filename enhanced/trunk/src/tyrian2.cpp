@@ -5988,7 +5988,11 @@ void JE_itemScreen( void )
 		12: joystick settings
 	*/
 
-	JE_loadCubes();
+	// Load data cubes only in full game mode
+	if (!(onePlayerAction || twoPlayerMode))
+	{
+		JE_loadCubes();
+	}
 
 	JE_wipeKey();
 
@@ -6636,10 +6640,8 @@ void JE_itemScreen( void )
 		/* 2 player input devices */
 		if (curMenu == 9)
 		{
-			/* TODO: Figure out what "x" is supposed to represent.
-			JE_dString(186, 38 + 2 * 16, JE_bright(curSel[3] == x) + inputDevices[inputDevice1-1], SMALL_FONT_SHAPES);
-			JE_dString(186, 38 + 4 * 16, JE_bright(curSel[4] == x) + inputDevices[inputDevice2-1], SMALL_FONT_SHAPES);
-			*/
+			JE_dString(186, 38 + 2 * 16, inputDevices[inputDevice1-1], SMALL_FONT_SHAPES, curSel[9] == 3);
+			JE_dString(186, 38 + 4 * 16, inputDevices[inputDevice2-1], SMALL_FONT_SHAPES, curSel[9] == 4);
 		}
 
 

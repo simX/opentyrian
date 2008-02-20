@@ -54,10 +54,9 @@ JE_word armorShipDelay;
 int warningCol;
 int warningColChange;
 
-void JE_dString( JE_word x, JE_word y, const char *s, int font )
+void JE_dString( JE_word x, JE_word y, const char *s, int font, bool bright )
 {
 	char b;
-	bool bright = false;
 
 	for (int a = 0; s[a] != 0; a++)
 	{
@@ -661,16 +660,6 @@ void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, in
 				}
 			}
 		}
-	}
-}
-
-char JE_bright( bool makebright )
-{
-	if (makebright)
-	{
-		return '~';
-	} else {
-		return '\0';
 	}
 }
 

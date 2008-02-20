@@ -41,7 +41,7 @@ extern JE_word armorShipDelay;
 extern int warningCol;
 extern int warningColChange;
 
-void JE_dString( JE_word x, JE_word y, const char *s, int font );
+void JE_dString( JE_word x, JE_word y, const char *s, int font, bool bright = false );
 void JE_newDrawCShapeBright( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
 void JE_newDrawCShapeShadow( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
 void JE_newDrawCShapeDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
@@ -62,7 +62,6 @@ void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brig
 void JE_outTextShade( JE_word x, JE_word y, const char *s, int font );
 void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow );
 void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int font );
-char JE_bright( bool makebright );
 
 void JE_updateWarning( void );
 void JE_outTextGlow( JE_word x, JE_word y, const char *s );

@@ -467,7 +467,7 @@ bool JE_playerSelect( void )
 		}
 
 		/*BETA TEST VERSION*/
-		/*  JE_Dstring(JE_FontCenter(misctext[34], FONT_SHAPES), 170, misctext[34], FONT_SHAPES);*/
+		//JE_dString(JE_fontCenter(miscText[34], FONT_SHAPES), 170, miscText[34], FONT_SHAPES);
 
 		JE_showVGA();
 		tempW = 0;
