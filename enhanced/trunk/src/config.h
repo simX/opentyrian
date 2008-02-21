@@ -170,6 +170,7 @@ extern int shield, shieldMax, shieldSet;
 extern int shield2, shieldMax2;
 extern int armorLevel, armorLevel2;
 extern int shieldWait, shieldT;
+extern int special_recharge_time;
 extern int shotRepeat[11], shotMultiPos[11];
 extern int portConfig[10];
 extern bool portConfigDone;

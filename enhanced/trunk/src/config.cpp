@@ -162,6 +162,7 @@ int shield2, shieldMax2;
 int armorLevel, armorLevel2;
 int shieldWait, shieldT;
 
+int special_recharge_time;
 int shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
 int portConfig[10]; /* [1..10] */
 bool portConfigDone;

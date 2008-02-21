@@ -26,10 +26,12 @@
 #include "newshape.h"
 #include "nortsong.h"
 #include "vga256d.h"
+#include "fonthand.h"
 
 #include "varz.h"
 
 #include <cmath>
+#include <sstream>
 
 
 int fromTime;
@@ -945,7 +947,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			} else {
 				JE_initPlayerShot(0, 11, PXB, PYB, mouseX, mouseY, special[specialType].wpn, playerNum);
 			}
-			shotRepeat[9-1] = shotRepeat[11-1];
+			shotRepeat[8] = shotRepeat[10];
 			break;
 		/*Repulsor*/
 		case 2:
@@ -969,7 +971,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 		/*Zinglon Blast*/
 		case 3:
 			zinglonDuration = 50;
-			shotRepeat[9-1] = 100;
+			shotRepeat[8] = 100;
 			soundQueue[7] = 21;
 			break;
 		/*Attractor*/
@@ -1026,7 +1028,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 					specialWeaponFreq = 3;
 					flareDuration = 50 + portPower[1-1] * 10;
 					zinglonDuration = 50;
-					shotRepeat[9-1] = 100;
+					shotRepeat[8] = 100;
 					soundQueue[7] = 21;
 					break;
 				case 8:
@@ -1074,7 +1076,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			}
 			if (superArcadeMode > 0 && superArcadeMode <= SA)
 			{
-				shotRepeat[9-1] = 250;
+				shotRepeat[8] = 250;
 				JE_initPlayerShot(0, 11, PX, PY, mouseX, mouseY, 707, 1);
 				playerInvulnerable1 = 100;
 			}
@@ -1099,12 +1101,12 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			break;
 		case 17:
 			soundQueue[3] = 29;
-			if (pItems[4-1] == special[specialType].wpn)
+			if (pItems[3] == special[specialType].wpn)
 			{
-				pItems[5-1] = special[specialType].wpn;
+				pItems[4] = special[specialType].wpn;
 				shotMultiPos[4] = 0;
 			} else {
-				pItems[4-1] = special[specialType].wpn;
+				pItems[3] = special[specialType].wpn;
 				shotMultiPos[3] = 0;
 			}
 			
@@ -1112,39 +1114,58 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			JE_drawOptions();
 			break;
 		case 18:
-			pItems[5-1] = special[specialType].wpn;
+			pItems[4] = special[specialType].wpn;
 			
 			tempScreenSeg = VGAScreenSeg;
 			JE_drawOptions();
 			soundQueue[4] = 29;
-			shotMultiPos[4-1] = 0;
+			shotMultiPos[3] = 0;
 			break;
 	}
+
+	special_recharge_time = shotRepeat[8];
+	if (special_recharge_time == 0) special_recharge_time = 1;
 }
 
+#include "keyboard.h"
 void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 {
-	if (pItems[11-1] > 0)
+	if (pItems[10] > 0)
 	{
-		if (shotRepeat[9-1] == 0 && specialWait == 0 && flareDuration < 2 &&
-		    zinglonDuration < 2)
+		int special_progress;
+		bool done = false;
+		JE_drawShape2(47, 4, 93, shapes9);
+		if (shotRepeat[8] == 0 && specialWait == 0 && flareDuration < 1 && zinglonDuration < 2)
 		{
-			JE_drawShape2(47, 4, 94, shapes9);
+			// Special is done
+			special_progress = 10;
+			done = true;
 		} else {
-			JE_drawShape2(47, 4, 93, shapes9);
+			if (flareDuration > 0)
+			{
+				special_progress = 0;
+			} else {
+				special_progress = 10-shotRepeat[8]*10/special_recharge_time;
+			}
+		}
+
+		// Draw progress bar
+		if (special_progress > 0)
+		{
+			JE_bar(51,6+10-special_progress,51+3,6+9, done ? 0x77: 0x74);
 		}
 	}
 	
-	if (shotRepeat[9-1] > 0)
+	if (shotRepeat[8] > 0)
 	{
-		shotRepeat[9-1]--;
+		shotRepeat[8]--;
 	}
 	if (specialWait > 0)
 	{
 		specialWait--;
 	}
 	temp = SFExecuted[playerNum-1];
-	if (temp > 0 && shotRepeat[9-1] == 0 && flareDuration == 0)
+	if (temp > 0 && shotRepeat[8] == 0 && flareDuration == 0)
 	{
 		temp2 = special[temp].pwr;
 		
@@ -1180,8 +1201,8 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 			}
 		}
 		
-		shotMultiPos[ 9-1] = 0;
-		shotMultiPos[11-1] = 0;
+		shotMultiPos[8] = 0;
+		shotMultiPos[10] = 0;
 		if (tempB)
 		{
 			JE_specialComplete(playerNum, armor, shield, temp);
@@ -1195,19 +1216,19 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 		VGAScreen = game_screen; /* side-effect of game_screen */
 	}
 	
-	if (playerNum == 1 && pItems[11-1] > 0)
+	if (playerNum == 1 && pItems[10] > 0)
 	{  /*Main Begin*/
 		
-		if (superArcadeMode > 0 && (button[2-1] || button[3-1]))
+		if (superArcadeMode > 0 && (button[1] || button[2]))
 		{
 			fireButtonHeld = false;
 		}
-		if (!button[1-1] && !(superArcadeMode > 0 && (button[2-1] || button[3-1])))
+		if (!button[0] && !(superArcadeMode > 0 && (button[1] || button[2])))
 		{
 			fireButtonHeld = false;
-		} else if (shotRepeat[9-1] == 0 && !fireButtonHeld && !(flareDuration > 0) && specialWait == 0) {
+		} else if (shotRepeat[8] == 0 && !fireButtonHeld && !(flareDuration > 0) && specialWait == 0) {
 			fireButtonHeld = true;
-			JE_specialComplete(playerNum, armor, shield, pItems[11-1]);
+			JE_specialComplete(playerNum, armor, shield, pItems[10]);
 		}
 		
 	}  /*Main End*/
@@ -1261,7 +1282,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 			
 			if (linkToPlayer)
 			{
-				if (shotRepeat[9-1] == 0)
+				if (shotRepeat[8] == 0)
 				{
 					JE_initPlayerShot(0, 9, PX, PY, mouseX, mouseY, specialWeaponWpn, playerNum);
 				}
@@ -1289,9 +1310,11 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 		flareStart = false;
 		if (linkToPlayer)
 		{
-			shotRepeat[9-1] = 15;
+			shotRepeat[8] = 15;
+			special_recharge_time = 15;
 		} else {
-			shotRepeat[9-1] = 200;
+			shotRepeat[8] = 200;
+			special_recharge_time = 200;
 		}
 		flareDuration = 0;
 		if (levelFilter == specialWeaponFilter)
