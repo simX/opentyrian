@@ -143,7 +143,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDLmain.lib"
 				OutputFile="$(OutDir)\tyrian.exe"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				GenerateManifest="true"
 				GenerateDebugInformation="false"
 				SubSystem="1"

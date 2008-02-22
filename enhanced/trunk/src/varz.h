@@ -385,6 +385,7 @@ void JE_initPlayerShot( JE_word portnum, int temp, JE_word px, JE_word py,
                         JE_word wpnum, int playernum );
 void JE_specialComplete( int playernum, int *armor, int *shield, int specialType );
 void JE_doSpecialShot( int playernum, int *armor, int *shield );
+void draw_special_shot_info();
 
 void JE_powerUp( int port );
 void JE_wipeShieldArmorBars( void );

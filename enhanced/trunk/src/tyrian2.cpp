@@ -1408,10 +1408,7 @@ start_level_first:
 	memset(playerShotData,   0, sizeof(playerShotData));
 	memset(shotAvail,        0, sizeof(shotAvail));
 	memset(shotMultiPos,     0, sizeof(shotMultiPos));
-	for (int i = 0; i < 11; i++) {
-		shotRepeat[i] = 1;
-	}
-	//memset(shotRepeat,       1, sizeof(shotRepeat));
+	std::fill(shotRepeat, shotRepeat+COUNTOF(shotRepeat), 0);
 
 	memset(button,           0, sizeof(button));
 
@@ -7912,9 +7909,6 @@ void JE_drawLines( bool dark )
 	}
 }
 
-/* SYN: This was originally PROC drawlines... yes, there were two different procs called
-   drawlines in different scopes in the same file. Dammit, Jason, why do you do this to me? */
-
 void JE_drawNavLines( bool dark )
 {
 	int x, y;
@@ -8072,7 +8066,9 @@ void JE_initWeaponView( void )
 
 	memset(shotAvail, sizeof(shotAvail), 0);
 
-	memset(shotRepeat, sizeof(shotRepeat), 1);
+	for (int i = 0; i < 11; i++) {
+		shotRepeat[i] = 1;
+	}
 	memset(shotMultiPos, sizeof(shotMultiPos), 0);
 
 	JE_setupStars();
@@ -9302,11 +9298,6 @@ void JE_doNetwork( void )
 {
 	STUB();
 }
-
-/* located in backgrnd.c
-void JE_drawBackground3( void )
-{
-}*/
 
 void JE_scaleInPicture( void )
 {

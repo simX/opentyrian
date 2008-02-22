@@ -1127,35 +1127,8 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 	if (special_recharge_time == 0) special_recharge_time = 1;
 }
 
-#include "keyboard.h"
 void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 {
-	if (pItems[10] > 0)
-	{
-		int special_progress;
-		bool done = false;
-		JE_drawShape2(47, 4, 93, shapes9);
-		if (shotRepeat[8] == 0 && specialWait == 0 && flareDuration < 1 && zinglonDuration < 2)
-		{
-			// Special is done
-			special_progress = 10;
-			done = true;
-		} else {
-			if (flareDuration > 0)
-			{
-				special_progress = 0;
-			} else {
-				special_progress = 10-shotRepeat[8]*10/special_recharge_time;
-			}
-		}
-
-		// Draw progress bar
-		if (special_progress > 0)
-		{
-			JE_bar(51,6+10-special_progress,51+3,6+9, done ? 0x77: 0x74);
-		}
-	}
-	
 	if (shotRepeat[8] > 0)
 	{
 		shotRepeat[8]--;
@@ -1336,6 +1309,35 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 		if (zinglonDuration % 5 == 0)
 		{
 			shotAvail[MAX_PWEAPON-1] = 1;
+		}
+	}
+}
+
+void draw_special_shot_info()
+{
+	if (pItems[10] > 0)
+	{
+		int special_progress;
+		bool done = false;
+		JE_drawShape2(47, 4, 93, shapes9);
+		if (shotRepeat[8] == 0 && specialWait == 0 && flareDuration < 1 && zinglonDuration < 2)
+		{
+			// Special is done
+			special_progress = 10;
+			done = true;
+		} else {
+			if (flareDuration > 0)
+			{
+				special_progress = 0;
+			} else {
+				special_progress = 10-shotRepeat[8]*10/special_recharge_time;
+			}
+		}
+
+		// Draw progress bar
+		if (special_progress > 0)
+		{
+			JE_bar(51,6+10-special_progress,51+3,6+9, done ? 0x77: 0x74);
 		}
 	}
 }

@@ -2745,6 +2745,7 @@ void JE_inGameDisplays( void )
 	{
 		JE_drawShape2x2(25, 1, special[pItems[11-1]].itemgraphic, eShapes6);
 	}
+	draw_special_shot_info();
 
 	/*Lives Left*/
 	if (onePlayerAction || twoPlayerMode)
