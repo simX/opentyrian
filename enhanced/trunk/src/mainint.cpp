@@ -2079,8 +2079,8 @@ void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_
 		
 		temp2 = (mouseY_ > PY_) +    /*UP*/
 		        (mouseY_ < PY_) +    /*DOWN*/
-		        (PX < mouseX_) +    /*LEFT*/
-		        (PX > mouseX_);     /*RIGHT*/
+		        (PX_ < mouseX_) +    /*LEFT*/
+		        (PX_ > mouseX_);     /*RIGHT*/
 		temp = (mouseY_ > PY_) * 1 + /*UP*/
 		       (mouseY_ < PY_) * 2 + /*DOWN*/
 		       (PX_ < mouseX_) * 3 + /*LEFT*/
