@@ -25,7 +25,7 @@
 #include "nortvars.h"
 
 
-#define MAX_PAL 23
+static const int MAX_PAL = 23;
 
 typedef JE_ColorType JE_PalType[MAX_PAL]; /* [1..maxpal] */
 

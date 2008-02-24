@@ -25,17 +25,17 @@
 #include "SDL.h"
 
 
-#define SFX_CHANNELS 8
+static const int SFX_CHANNELS = 8;
 
 #ifndef TARGET_GP2X
-#define OUTPUT_QUALITY 4
+static const int OUTPUT_QUALITY = 4;
 #else  /* TARGET_GP2X */
-#define OUTPUT_QUALITY 2
+static const int OUTPUT_QUALITY = 2;
 #endif /* TARGET_GP2X */
 
-#define SAMPLE_SCALING OUTPUT_QUALITY
+static const int SAMPLE_SCALING = OUTPUT_QUALITY;
 typedef Sint16 SAMPLE_TYPE;
-#define BYTES_PER_SAMPLE sizeof(SAMPLE_TYPE)
+static const int BYTES_PER_SAMPLE = sizeof(SAMPLE_TYPE);
 
 typedef unsigned char JE_MusicType [20000];
 

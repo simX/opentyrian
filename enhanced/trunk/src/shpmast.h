@@ -23,7 +23,7 @@
 #include "opentyr.h"
 
 
-#define SHP_NUM 12
+static const int SHP_NUM = 12;
 
 typedef unsigned long JE_shppostype[SHP_NUM + 1]; /* [1..SHPnum + 1] */
 

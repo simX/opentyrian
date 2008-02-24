@@ -23,11 +23,11 @@
 #include "opentyr.h"
 
 
-#define PART_SHADE 0
-#define FULL_SHADE 1
-#define DARKEN     2
-#define TRICK      3
-#define NO_SHADE 255
+static const int PART_SHADE = 0;
+static const int FULL_SHADE = 1;
+static const int DARKEN = 2;
+static const int TRICK = 3;
+static const int NO_SHADE = 255;
 
 extern const unsigned char fontMap[136];
 extern int defaultBrightness;

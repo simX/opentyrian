@@ -23,10 +23,10 @@
 #include "opentyr.h"
 
 
-#define MAX_HELP_MESSAGE 39
-#define MAX_MENU 14
+static const int MAX_HELP_MESSAGE = 39;
+static const int MAX_MENU = 14;
 
-#define DESTRUCT_MODES 5
+static const int DESTRUCT_MODES = 5;
 
 extern int verticalHeight;
 extern int helpBoxColor, helpBoxBrightness, helpBoxShadeType;

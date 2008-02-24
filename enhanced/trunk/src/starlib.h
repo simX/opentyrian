@@ -23,8 +23,8 @@
 #include "opentyr.h"
 
 
-#define starlib_MAX_STARS 1000
-#define MAX_TYPES 14
+static const int starlib_MAX_STARS = 1000;
+static const int MAX_TYPES = 14;
 
 struct JE_StarType
 {

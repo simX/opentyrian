@@ -23,15 +23,15 @@
 #include "opentyr.h"
 
 
-#define DEFAULT_SONG_BUY 3
-#define SONG_LEVELEND    10
-#define SONG_GAMEOVER    11
-#define SONG_MAPVIEW     20
-#define SONG_ENDGAME1    8
-#define SONG_ZANAC       32
-#define SONG_TITLE       30
+static const int DEFAULT_SONG_BUY = 3;
+static const int SONG_LEVELEND = 10;
+static const int SONG_GAMEOVER = 11;
+static const int SONG_MAPVIEW = 20;
+static const int SONG_ENDGAME1 = 8;
+static const int SONG_ZANAC = 32;
+static const int SONG_TITLE = 30;
 
-#define MUSIC_NUM 41
+static const int MUSIC_NUM = 41;
 
 extern int songBuy;
 extern const char musicFile[MUSIC_NUM][13];

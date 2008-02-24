@@ -25,15 +25,15 @@
 #include "episodes.h"
 
 
-#define SA 7
+static const int SA = 7;
 
-#define MAX_PWEAPON     81 /* 81*/
-#define EXPLOSION_MAX  200 /*200*/
-#define ENEMY_SHOT_MAX  60 /* 60*/
+static const int MAX_PWEAPON = 81;
+static const int EXPLOSION_MAX = 200;
+static const int ENEMY_SHOT_MAX = 60;
 
-#define CURRENT_KEY_SPEED 1  /*Keyboard/Joystick movement rate*/
+static const int CURRENT_KEY_SPEED = 1; // Keyboard/Joystick movement rate
 
-#define MAX_SP 100
+static const int MAX_SP = 100;
 
 struct JE_SingleEnemyType
 {

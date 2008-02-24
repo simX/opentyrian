@@ -74,59 +74,54 @@ Revision History:
 
 
 
-/* output final shift */
+// output final shift
 #if (OPL_SAMPLE_BITS==16)
-	#define FINAL_SH	(0)
-	#define MAXOUT		(+32767)
-	#define MINOUT		(-32768)
+	static const int FINAL_SH = 0;
+	static const int MAXOUT	= 32767;
+	static const int MINOUT	= -32768;
 #else
-	#define FINAL_SH	(8)
-	#define MAXOUT		(+127)
-	#define MINOUT		(-128)
+	static const int FINAL_SH = 8;
+	static const int MAXOUT = 127;
+	static const int MINOUT	= -128;
 #endif
 
 
-#define FREQ_SH			16  /* 16.16 fixed point (frequency calculations) */
-#define EG_SH			16  /* 16.16 fixed point (EG timing)              */
-#define LFO_SH			24  /*  8.24 fixed point (LFO calculations)       */
-#define TIMER_SH		16  /* 16.16 fixed point (timers calculations)    */
+static const int FREQ_SH = 16; // 16.16 fixed point (frequency calculations)
+static const int EG_SH = 16; // 16.16 fixed point (EG timing)
+static const int LFO_SH = 24; //  8.24 fixed point (LFO calculations)
+static const int TIMER_SH = 16; // 16.16 fixed point (timers calculations)
+static const int FREQ_MASK = (1<<FREQ_SH)-1;
 
-#define FREQ_MASK		((1<<FREQ_SH)-1)
+// envelope output entries
+static const int ENV_BITS = 10;
+static const int ENV_LEN = 1<<ENV_BITS;
+static const float ENV_STEP = 128.f/ENV_LEN;
 
-/* envelope output entries */
-#define ENV_BITS		10
-#define ENV_LEN			(1<<ENV_BITS)
-#define ENV_STEP		(128.f/ENV_LEN)
+static const int MAX_ATT_INDEX = (1<<(ENV_BITS-1))-1; //511
+static const int MIN_ATT_INDEX = 0;
 
-#define MAX_ATT_INDEX	((1<<(ENV_BITS-1))-1) /*511*/
-#define MIN_ATT_INDEX	(0)
+// sinwave entries
+static const int SIN_BITS = 10;
+static const int SIN_LEN = 1<<SIN_BITS;
+static const int SIN_MASK = SIN_LEN-1;
 
-/* sinwave entries */
-#define SIN_BITS		10
-#define SIN_LEN			(1<<SIN_BITS)
-#define SIN_MASK		(SIN_LEN-1)
-
-#define TL_RES_LEN		(256)	/* 8 bits addressing (real chip) */
-
+static const int TL_RES_LEN = 256; // 8 bits addressing (real chip)
 
 
-/* register number to channel number , slot offset */
-#define SLOT1 0
-#define SLOT2 1
+// register number to channel number, slot offset
+static const int SLOT1 = 0;
+static const int SLOT2 = 1;
 
-/* Envelope Generator phases */
+// Envelope Generator phases
+static const int EG_ATT = 4;
+static const int EG_DEC = 3;
+static const int EG_SUS = 2;
+static const int EG_REL = 1;
+static const int EG_OFF = 0;
 
-#define EG_ATT			4
-#define EG_DEC			3
-#define EG_SUS			2
-#define EG_REL			1
-#define EG_OFF			0
 
-
-/* save output as raw 16-bit sample */
-
-/*#define SAVE_SAMPLE*/
-
+// save output as raw 16-bit sample
+//#define SAVE_SAMPLE
 #ifdef SAVE_SAMPLE
 /*INLINE*/ signed int acc_calc(signed int value)
 {
@@ -182,22 +177,22 @@ static FILE *sample[1];
 	#endif
 #endif
 
-/* #define LOG_CYM_FILE */
+//#define LOG_CYM_FILE
 #ifdef LOG_CYM_FILE
 	FILE * cymfile = NULL;
 #endif
 
 
 
-#define OPL_TYPE_WAVESEL   0x01  /* waveform select		*/
-#define OPL_TYPE_ADPCM     0x02  /* DELTA-T ADPCM unit	*/
-#define OPL_TYPE_KEYBOARD  0x04  /* keyboard interface	*/
-#define OPL_TYPE_IO        0x08  /* I/O port			*/
+static const int OPL_TYPE_WAVESEL = 0x01; // waveform select
+static const int OPL_TYPE_ADPCM = 0x02; // DELTA-T ADPCM unit
+static const int OPL_TYPE_KEYBOARD = 0x04; // keyboard interface
+static const int OPL_TYPE_IO = 0x08; // I/O port
 
-/* ---------- Generic interface section ---------- */
-#define OPL_TYPE_YM3526 (0)
-#define OPL_TYPE_YM3812 (OPL_TYPE_WAVESEL)
-#define OPL_TYPE_Y8950  (OPL_TYPE_ADPCM|OPL_TYPE_KEYBOARD|OPL_TYPE_IO)
+// ---------- Generic interface section ----------
+static const int OPL_TYPE_YM3526 = 0;
+static const int OPL_TYPE_YM3812 = OPL_TYPE_WAVESEL;
+static const int OPL_TYPE_Y8950 = OPL_TYPE_ADPCM|OPL_TYPE_KEYBOARD|OPL_TYPE_IO;
 
 
 
@@ -261,7 +256,7 @@ static const Uint32 ksl_tab[8*16]=
 
 /* sustain level table (3dB per step) */
 /* 0 - 15: 0, 3, 6, 9,12,15,18,21,24,27,30,33,36,39,42,93 (dB)*/
-#define SC(db) (Uint32) ( db * (2.0/ENV_STEP) )
+#define SC(db) ((Uint32)(db*(2.0/ENV_STEP)))
 static const Uint32 sl_tab[16]={
  SC( 0),SC( 1),SC( 2),SC(3 ),SC(4 ),SC(5 ),SC(6 ),SC( 7),
  SC( 8),SC( 9),SC(10),SC(11),SC(12),SC(13),SC(14),SC(31)
@@ -269,7 +264,7 @@ static const Uint32 sl_tab[16]={
 #undef SC
 
 
-#define RATE_STEPS (8)
+static const int RATE_STEPS = 8;
 static const unsigned char eg_inc[15*RATE_STEPS]={
 
 /*cycle:0 1  2 3  4 5  6 7*/
@@ -296,7 +291,6 @@ static const unsigned char eg_inc[15*RATE_STEPS]={
 
 
 #define O(a) (a*RATE_STEPS)
-
 /*note that there is no O(13) in this table - it's directly in the code */
 static const unsigned char eg_rate_select[16+64+16]={	/* Envelope Generator rates (16 + 64 rates + 16 RKS) */
 /* 16 infinite time rates */
@@ -390,10 +384,10 @@ static const Uint8 mul_tab[16]= {
 *	2  - sinus sign bit           (Y axis)
 *	TL_RES_LEN - sinus resolution (X axis)
 */
-#define TL_TAB_LEN (12*2*TL_RES_LEN)
+static const int TL_TAB_LEN = 12*2*TL_RES_LEN;
 static signed int tl_tab[TL_TAB_LEN];
 
-#define ENV_QUIET		(TL_TAB_LEN>>4)
+static const int ENV_QUIET = TL_TAB_LEN>>4;
 
 /* sin waveform table in 'decibel' scale */
 /* four waveforms on OPL2 type chips */
@@ -413,7 +407,7 @@ static unsigned int sin_tab[SIN_LEN * 4];
 	When AM = 0 data is divided by 4 before being used (loosing precision is important)
 */
 
-#define LFO_AM_TAB_ELEMENTS 210
+static const int LFO_AM_TAB_ELEMENTS = 210;
 
 static const Uint8 lfo_am_table[LFO_AM_TAB_ELEMENTS] = {
 0,0,0,0,0,0,0,
@@ -1895,7 +1889,7 @@ static int OPLTimerOver(FM_OPL *OPL,int c)
 }
 
 
-#define MAX_OPL_CHIPS 1
+static const int MAX_OPL_CHIPS = 1;
 
 
 #if (BUILD_YM3812)

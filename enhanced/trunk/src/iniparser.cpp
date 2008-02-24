@@ -50,7 +50,7 @@ static char *strdup2( const char *s )
 
 /* strlib.c following */
 
-#define ASCIILINESZ 1024
+static const int ASCIILINESZ = 1024;
 /*-------------------------------------------------------------------------*/
 /**
   @brief    Convert a string to lowercase.
@@ -208,13 +208,13 @@ static char * strstrip(char * s)
 
 /* dictionary.c.c following */
 /** Maximum value size for integers and doubles. */
-#define MAXVALSZ    1024
+static const int MAXVALSZ = 1024;
 
 /** Minimal allocated number of entries in a dictionary */
-#define DICTMINSZ   128
+static const int DICTMINSZ = 128;
 
 /** Invalid key token */
-#define DICT_INVALID_KEY    ((char*)-1)
+static const char* DICT_INVALID_KEY = reinterpret_cast<char*>(-1);
 
 /*
  Doubles the allocated size associated to a pointer
@@ -520,8 +520,7 @@ static void dictionary_dump(dictionary *d, FILE *f)
 
 
 /* iniparser.c.c following */
-#define ASCIILINESZ         1024
-#define INI_INVALID_KEY     ((char*)-1)
+static char* const INI_INVALID_KEY = reinterpret_cast<char*>(-1);
 
 /* Private: add an entry to the dictionary */
 static void iniparser_add_entry(

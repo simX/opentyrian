@@ -25,21 +25,21 @@
 #include "SDL.h"
 
 
-#define OLD_BLACK         0
-#define NEW_BLACK         253
+static const int OLD_BLACK = 0;
+static const int NEW_BLACK = 253;
 
 /* Font faces */
-#define PLANET_SHAPES     0
-#define FONT_SHAPES       1
-#define SMALL_FONT_SHAPES 2
-#define FACE_SHAPES       3
-#define OPTION_SHAPES     4 /*Also contains help shapes*/
-#define TINY_FONT         5
-#define WEAPON_SHAPES     6
-#define EXTRA_SHAPES      7 /*Used for Ending pics*/
+static const int PLANET_SHAPES = 0;
+static const int FONT_SHAPES = 1;
+static const int SMALL_FONT_SHAPES = 2;
+static const int FACE_SHAPES = 3;
+static const int OPTION_SHAPES = 4; // Also contains help shapes
+static const int TINY_FONT = 5;
+static const int WEAPON_SHAPES = 6;
+static const int EXTRA_SHAPES = 7; // Used for Ending pics
 
-#define MAXIMUM_SHAPE     151
-#define MAX_TABLE         8
+static const int MAXIMUM_SHAPE = 151;
+static const int MAX_TABLE = 8;
 
 typedef Uint8 *JE_ShapeArrayType[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable, 1..maximumshape] */
 

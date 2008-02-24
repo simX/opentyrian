@@ -27,9 +27,9 @@
 
 /* Episodes and general data */
 
-#define FIRST_LEVEL 1
-#define EPISODE_MAX 5
-const int NUM_EPISODES = 4;
+static const int FIRST_LEVEL = 1;
+static const int EPISODE_MAX = 5;
+static const int NUM_EPISODES = 4;
 
 struct JE_WeaponType
 {

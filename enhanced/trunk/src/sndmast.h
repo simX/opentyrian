@@ -23,19 +23,19 @@
 #include "opentyr.h"
 
 
-#define SOUND_NUM 29
+static const int SOUND_NUM = 29;
 
-#define CLICK        24
-#define WRONG        23
-#define ESC          16
-#define ITEM         18
-#define SELECT       8
-#define CURSOR_MOVE  28
-#define POWERUP      29
+static const int CLICK = 24;
+static const int WRONG = 23;
+static const int ESC = 16;
+static const int ITEM = 18;
+static const int SELECT = 8;
+static const int CURSOR_MOVE = 28;
+static const int POWERUP = 29;
 
-#define V_GOOD_LUCK (SOUND_NUM + 4)
-#define V_LEVEL_END (SOUND_NUM + 5)
-#define V_DATA_CUBE (SOUND_NUM + 8)
+static const int V_GOOD_LUCK = SOUND_NUM+4;
+static const int V_LEVEL_END = SOUND_NUM+5;
+static const int V_DATA_CUBE = SOUND_NUM+8;
 
 extern const char soundTitle[SOUND_NUM + 9][9];
 extern const int windowTextSamples[9];

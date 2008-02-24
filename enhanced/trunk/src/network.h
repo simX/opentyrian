@@ -23,7 +23,7 @@
 #include "opentyr.h"
 
 
-#define PACKET_MAXIMUM 3
+static const int PACKET_MAXIMUM = 3;
 
 struct JE_PacketData
 {

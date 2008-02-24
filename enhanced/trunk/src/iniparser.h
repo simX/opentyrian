@@ -28,8 +28,8 @@
  */
 
 
-#ifndef _INIPARSER_H_
-#define _INIPARSER_H_
+#ifndef INIPARSER_H
+#define INIPARSER_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

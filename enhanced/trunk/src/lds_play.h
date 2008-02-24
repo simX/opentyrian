@@ -27,7 +27,7 @@ int lds_update( void );
 int lds_load( unsigned char *music_location );
 void lds_rewind( int subsong ); /* default value: subsong = -1 */
 
-#define REFRESH 70.0f
+static const float REFRESH = 70.0f;
 
 struct SoundBank
 {

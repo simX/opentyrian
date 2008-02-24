@@ -53,8 +53,8 @@
 #include <sstream>
 
 
-#define MAX_PAGE 8
-#define TOPICS 6
+static const int MAX_PAGE = 8;
+static const int TOPICS = 6;
 const int topicStart[TOPICS] = { 0, 1, 2, 3, 7, 255 };
 
 int constantLastX;
@@ -3362,23 +3362,23 @@ redo:
 							}
 
 						} else {
-							if (keysactive[keySettings[1-1]])
+							if (keysactive[keySettings[0]])
 								*PY_ -= CURRENT_KEY_SPEED;
-							if (keysactive[keySettings[2-1]])
+							if (keysactive[keySettings[1]])
 								*PY_ += CURRENT_KEY_SPEED;
 
-							if (keysactive[keySettings[3-1]])
+							if (keysactive[keySettings[2]])
 								*PX_ -= CURRENT_KEY_SPEED;
-							if (keysactive[keySettings[4-1]])
+							if (keysactive[keySettings[3]])
 								*PX_ += CURRENT_KEY_SPEED;
 
-							if (keysactive[keySettings[5-1]])
+							if (keysactive[keySettings[4]])
 								button[1-1] = true;
-							if (keysactive[keySettings[6-1]])
+							if (keysactive[keySettings[5]])
 								button[4-1] = true;
-							if (keysactive[keySettings[7-1]])
+							if (keysactive[keySettings[6]])
 								button[2-1] = true;
-							if (keysactive[keySettings[8-1]])
+							if (keysactive[keySettings[7]])
 								button[3-1] = true;
 						}
 

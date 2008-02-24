@@ -43,23 +43,6 @@
 #include <functional>
 
 
-/******** MAJOR TODO:
-  SYN: High score data is stored one per save file slot. That makes 2 * 11 = 22 high scores.
-  Each episode has six high scores. 6 * 4 = 24 OH SHI--
-
-  I have no idea what is up with this, but I'm going to have to change substantial amounts and
-  possibly partially break compatibility with the original. This will also get sorted out
-  if/when we add support for Tyrian2000 data files, as I'll have to figure out what its save
-  file format is (besides a couple kilobytes larger...).
-
-  As it stands high scores are going to be broked for episode 4 (nevermind 5) and there's not
-  much I can do about it. *emo tear* :'(
-
-  I hope there aren't any other surprises like this waiting. We are using the code for v2.0,
-  right? Right? :|
-*/
-
-
 /* Configuration Load/Save handler */
 
 const unsigned char cryptKey[10] = /* [1..10] */

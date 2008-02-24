@@ -26,7 +26,7 @@
 
 #include "SDL.h"
 
-#define surface_width 320
+static const int surface_width = 320;
 #ifdef TARGET_GP2X
 #      define surface_height 240
 #else

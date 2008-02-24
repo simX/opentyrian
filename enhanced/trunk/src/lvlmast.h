@@ -23,25 +23,25 @@
 #include "opentyr.h"
 
 
-#define EVENT_MAXIMUM 2500
+static const int EVENT_MAXIMUM = 2500;
 
-#define WEAP_NUM    780
-#define PORT_NUM    42
-#define ARMOR_NUM   4
-#define POWER_NUM   6
-#define ENGINE_NUM  6
-#define OPTION_NUM  30
-#define SHIP_NUM    13
-#define SHIELD_NUM  10
-#define SPECIAL_NUM 46
+static const int WEAP_NUM = 780;
+static const int PORT_NUM = 42;
+static const int ARMOR_NUM = 4;
+static const int POWER_NUM = 6;
+static const int ENGINE_NUM = 6;
+static const int OPTION_NUM = 30;
+static const int SHIP_NUM = 13;
+static const int SHIELD_NUM = 10;
+static const int SPECIAL_NUM = 46;
 
-#define ENEMY_NUM   850
+static const int ENEMY_NUM = 850;
 
-#define LVL_NUM   (18 * 2)
-#define LVL_NUM_2 (12 * 2)
-#define LVL_NUM_3 (12 * 2)
-#define LVL_NUM_4 (20 * 2)
-#define LVL_NUM_5 (1 * 2)
+static const int LVL_NUM = 18*2;
+static const int LVL_NUM_2 = 12*2;
+static const int LVL_NUM_3 = 12*2;
+static const int LVL_NUM_4 = 20*2;
+static const int LVL_NUM_5 = 1*2;
 
 /*! typedef unsigned long JE_LvlPosType[LVLNum + 2];*/ /* [1..LVLnum + 2] */
 

@@ -60,13 +60,13 @@ JE_byte endDelay;
 bool died = false;
 bool firstTime;
 
-#define SHOT_MAX 40
-#define EXPLO_MAX 40
+static const int SHOT_MAX = 40;
+static const int EXPLO_MAX = 40;
 
-#define SHOT_TYPES 17
-#define SYSTEM_TYPES 8
+static const int SHOT_TYPES = 17;
+static const int SYSTEM_TYPES = 8;
 
-#define MAX_INSTALLATIONS 20
+static const int MAX_INSTALLATIONS = 20;
 
 const bool demolish[SHOT_TYPES] /*[1..SHOT_TYPES]*/ = {false, false, false, false, false, true, true, true, false, false, false, false, true, false, true, false, true};
 const JE_byte shotGr[SHOT_TYPES] /*[1..SHOT_TYPES]*/ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 101};

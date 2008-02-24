@@ -85,10 +85,10 @@ const about_text_type about_text[] =
 	{0x00, NULL}
 };
 
-#define LINE_HEIGHT 15
+static const int LINE_HEIGHT = 15;
 
-#define MAX_BEER 5
-#define BEER_SHAPE 241
+static const int MAX_BEER = 5;
+static const int BEER_SHAPE = 241;
 
 struct coin_def_type {
 	int shape_num;
@@ -96,7 +96,7 @@ struct coin_def_type {
 	bool reverse_anim;
 };
 
-#define MAX_COINS 20
+static const int MAX_COINS = 20;
 coin_def_type coin_defs[] =
 {
 	{1, 6}, {7, 6}, {20, 6}, {26, 6}, // Coins
