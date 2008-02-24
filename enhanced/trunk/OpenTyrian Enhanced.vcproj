@@ -67,6 +67,7 @@
 				Version=""
 				LinkIncremental="2"
 				GenerateManifest="true"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

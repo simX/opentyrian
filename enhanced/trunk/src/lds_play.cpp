@@ -114,7 +114,7 @@ int lds_load(unsigned char *music_location)
 	/* load patches */
 	memcpy(&numpatch, pos, sizeof(Uint16)); numpatch = SDL_SwapLE16(numpatch); pos += 2;
 
-	if (soundbank) delete[] soundbank;
+	delete[] soundbank;
 	soundbank = new SoundBank[numpatch];
 
 	for (int i = 0; i < numpatch; i++) {
@@ -159,7 +159,7 @@ int lds_load(unsigned char *music_location)
 	/* load positions */
 	memcpy(&numposi, pos, sizeof(Uint16)); numposi = SDL_SwapLE16(numposi); pos += 2;
 
-	if (positions) delete[] positions;
+	delete[] positions;
 	positions = new Position[9 * numposi];
 
 	for (int i = 0; i < numposi; i++)
