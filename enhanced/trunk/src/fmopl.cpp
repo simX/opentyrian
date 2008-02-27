@@ -384,10 +384,10 @@ static const Uint8 mul_tab[16]= {
 *	2  - sinus sign bit           (Y axis)
 *	TL_RES_LEN - sinus resolution (X axis)
 */
-static const int TL_TAB_LEN = 12*2*TL_RES_LEN;
+static const unsigned int TL_TAB_LEN = 12*2*TL_RES_LEN;
 static signed int tl_tab[TL_TAB_LEN];
 
-static const int ENV_QUIET = TL_TAB_LEN>>4;
+static const unsigned int ENV_QUIET = TL_TAB_LEN>>4;
 
 /* sin waveform table in 'decibel' scale */
 /* four waveforms on OPL2 type chips */

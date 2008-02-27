@@ -24,7 +24,7 @@
 
 #include "SDL.h"
 
-static const int SDL_POLL_INTERVAL = 5;
+static const unsigned int SDL_POLL_INTERVAL = 5;
 
 extern bool ESCPressed;
 extern bool newkey, newmouse, keydown, mousedown;
