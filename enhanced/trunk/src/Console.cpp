@@ -179,7 +179,7 @@ void Console::think( const SDL_keysym& keysym )
 
 				CVars::ConHeight.set(CVars::ConHeight.get()+1);
 
-				if (mCurScroll + CVars::ConHeight.get() >= static_cast<unsigned long>(CVars::ConBufferSize.get()))
+				if (mCurScroll + static_cast<unsigned int>(CVars::ConHeight.get()) >= static_cast<unsigned int>(CVars::ConBufferSize.get()))
 				{
 					mCurScroll = CVars::ConBufferSize.get() - CVars::ConHeight.get();
 				}
@@ -194,7 +194,7 @@ void Console::think( const SDL_keysym& keysym )
 				unsigned int amount = CVars::ConHeight.get() / 3;
 				if (amount < 1) amount = 1;
 
-				if (mCurScroll + amount + CVars::ConHeight.get()-1 >= static_cast<unsigned long>(CVars::ConBufferSize.get()))
+				if (mCurScroll + amount + static_cast<unsigned int>(CVars::ConHeight.get())-1 >= static_cast<unsigned int>(CVars::ConBufferSize.get()))
 				{
 					mCurScroll = CVars::ConBufferSize.get() - (CVars::ConHeight.get()-1);
 				} else {
