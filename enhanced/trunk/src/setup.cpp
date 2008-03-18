@@ -67,30 +67,31 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 			lastkey_sym = SDLK_RETURN;
 		}
 
-#ifdef NDEBUG
-		if (abs(mouse_y - 100) > 10)
+		if (input_grabbed)
 		{
-			inputDetected = true;
-			if (mouse_y - 100 < 0)
+			if (abs(mouse_y - 100) > 10)
 			{
-				lastkey_sym = SDLK_UP;
-			} else {
-				lastkey_sym = SDLK_DOWN;
+				inputDetected = true;
+				if (mouse_y - 100 < 0)
+				{
+					lastkey_sym = SDLK_UP;
+				} else {
+					lastkey_sym = SDLK_DOWN;
+				}
+				newkey = true;
 			}
-			newkey = true;
-		}
-		if (abs(mouse_x - 160) > 10)
-		{
-			inputDetected = true;
-			if (mouse_x - 160 < 0)
+			if (abs(mouse_x - 160) > 10)
 			{
-				lastkey_sym = SDLK_LEFT;
-			} else {
-				lastkey_sym = SDLK_RIGHT;
+				inputDetected = true;
+				if (mouse_x - 160 < 0)
+				{
+					lastkey_sym = SDLK_LEFT;
+				} else {
+					lastkey_sym = SDLK_RIGHT;
+				}
+				newkey = true;
 			}
-			newkey = true;
 		}
-#endif
 
 		SDL_Delay(16); /* <MXD> attempt non-processor-based wait, implement a real delay later */
 		if (*waitTime > 0)
@@ -124,7 +125,7 @@ void JE_jukeboxGo( void )
 	JE_fadeBlack(10);
 	SDL_FillRect(VGAScreenSeg, NULL, 0x0);
 	JE_showVGA();
-	SDL_SetColors(VGAScreen, vga_palette, 0, 256); //JE_fadeColor(10);
+	SDL_SetColors(display_surface, const_cast<SDL_Color*>(vga_palette), 0, 256); //JE_fadeColor(10); // TODO: remove the const_cast if SDL ever gets fixed
 
 	JE_starlib_init();
 

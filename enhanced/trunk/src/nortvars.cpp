@@ -314,9 +314,10 @@ bool JE_anyButton( void )
 
 void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 {
-#ifdef NDEBUG
-	SDL_WarpMouse(mouseX, mouseY);
-#endif
+	if (input_grabbed)
+	{
+		SDL_WarpMouse(mouseX, mouseY);
+	}
 }
 
 void JE_dBar3( int x, int y, int num, int col )

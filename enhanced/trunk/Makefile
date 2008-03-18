@@ -1,5 +1,6 @@
 # BUILD SETTINGS ###################################
 DEBUG := 1
+SCALE_2X := 1
 # Valid values: WINDOWS, UNIX, GP2X
 PLATFORM := UNIX
 
@@ -36,6 +37,10 @@ endif
 
 CXXFLAGS := --std=c++98 -pedantic -Wall -Wno-unused -Werror -I$(CURDIR)/src/ -DPASCAL_TYPES $(DEBUG_FLAGS) $(SDL_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) -lm
+
+ifeq ($(SCALE_2X), 1)
+	CXXFLAGS += -DSCALE_2X
+endif
 
 ####################################################
 

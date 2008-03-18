@@ -201,7 +201,7 @@ JE_SaveFilesType *saveFilePointer = &saveFiles;
 JE_SaveGameTemp saveTemp;
 JE_SaveGameTemp *saveTempPointer = &saveTemp;
 
-bool fullscreen_set = false, fullscreen_enabled;
+bool fullscreen_enabled;
 
 const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
 
@@ -666,7 +666,7 @@ void JE_loadConfiguration( void )
 	gameSpeed = iniparser_getint(ini, "video:game_speed", 4);
 	processorType = iniparser_getint(ini, "video:processor_type", 3);
 	gammaCorrection = iniparser_getint(ini, "video:gamma_correction", 0);
-	fullscreen_set = iniparser_getboolean(ini, "video:fullscreen", false);
+	fullscreen_enabled = iniparser_getboolean(ini, "video:fullscreen", false);
 
 	soundEffects = iniparser_getboolean(ini, "sound:sound_effects", true);
 	tyrMusicVolume = iniparser_getint(ini, "sound:music_volume", 255);
@@ -828,7 +828,7 @@ void JE_saveConfiguration( void )
 	} else {
 		// YKS: Yes, this is horrible, need to come up with a better way
 		fprintf(ini, tyrian_ini_template,
-			gameSpeed, processorType, gammaCorrection, (fullscreen_set ? "true" : "false"), // [video]
+			gameSpeed, processorType, gammaCorrection, (fullscreen_enabled ? "true" : "false"), // [video]
 			(soundEffects ? "true" : "false"), tyrMusicVolume, fxVolume, // [sound]
 			inputDevice1, inputDevice2, // [input]
 			keySettings[0], keySettings[1], keySettings[2], keySettings[3], // [keyboard]

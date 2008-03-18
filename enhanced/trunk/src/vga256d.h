@@ -39,7 +39,8 @@ typedef JE_shape16B *JE_shape16;
 typedef Uint8 JE_screentype[65535]; /* [0..65534] */
 typedef JE_screentype *JE_screenptr;
 
-extern SDL_Color vga_palette[];
+extern const SDL_Color vga_palette[];
+extern SDL_Surface *display_surface;
 extern SDL_Surface *VGAScreen, *VGAScreenSeg;
 extern SDL_Surface *game_screen;
 extern SDL_Surface *VGAScreen2;

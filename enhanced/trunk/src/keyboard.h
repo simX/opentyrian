@@ -39,10 +39,13 @@ extern Uint16 mouse_x, mouse_y, mouse_xrel, mouse_yrel;
 extern int numkeys;
 extern Uint8 *keysactive;
 
+extern bool input_grab_enabled, input_grabbed;
+
 void flush_events_buffer( void );
 void wait_input( bool keyboard, bool mouse, bool joystick );
 void wait_noinput( bool keyboard, bool mouse, bool joystick );
 void init_keyboard( void );
+void input_grab( void );
 void service_SDL_events( bool clear_new );
 void sleep_game( void );
 

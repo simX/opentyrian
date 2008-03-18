@@ -201,7 +201,7 @@ extern JE_SaveFilesType *saveFilePointer;
 extern JE_SaveGameTemp saveTemp;
 extern JE_SaveGameTemp *saveTempPointer;
 
-extern bool fullscreen_set, fullscreen_enabled;
+extern bool fullscreen_enabled;
 
 void JE_initProcessorType( void );
 void JE_setNewGameSpeed( void );

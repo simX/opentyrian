@@ -186,10 +186,6 @@ void opentyrian_menu( void )
 		for (int i = 0; i <= maxSel; i++)
 		{
 			std::string text(opentyrian_menu_items[i]);
-			if (i == 1) /* fullscreen */
-			{
-				text = std::string("Fullscreen: ") + (fullscreen_set ? "On" : "Off") + (fullscreen_set != fullscreen_enabled ? " -Please restart-" : "");
-			}
 
 			JE_outTextAdjust(JE_fontCenter(text.c_str(), SMALL_FONT_SHAPES),
 			                 (i != maxSel) ? (i * 16 + 32) : 118, text.c_str(),
@@ -238,8 +234,9 @@ void opentyrian_menu( void )
 							fade_in = true;
 							break;
 						case 1: /* Fullscreen */
-							fullscreen_set = !fullscreen_set;
+							fullscreen_enabled = !fullscreen_enabled;
 							JE_playSampleNum(SELECT);
+							JE_initVGA256();
 							break;
 						case 2: /* Jukebox */
 							JE_playSampleNum(SELECT);
