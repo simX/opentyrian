@@ -75,7 +75,7 @@ void JE_initVGA256( void )
 
 		memcpy(palette_buffer, display_surface->format->palette->colors, sizeof(palette_buffer));
 	} else {
-#ifdef _WIN32
+#if 0 //_WIN32
 		if (!SDL_getenv("SDL_VIDEODRIVER"))
 		{
 			SDL_putenv("SDL_VIDEODRIVER=directx");
@@ -94,7 +94,7 @@ video_error:
 		memcpy(palette_buffer, vga_palette, sizeof(palette_buffer)); // TODO std::copy
 	}
 
-#ifdef SCALE2X
+#ifdef SCALE_2X
 	const int w = surface_width*2, h = surface_height*2;
 #else
 	const int w = surface_width, h = surface_height;
@@ -146,15 +146,18 @@ void JE_showVGA( void )
 {
 #ifndef TARGET_GP2X
 #ifdef SCALE_2X
+	Uint8* const s = static_cast<Uint8*>(display_surface->pixels);
 	for (int y = 0; y < surface_height; y++)
 	{
 		for (int x = 0; x < surface_width; x++)
 		{
-			((Uint8 *)display_surface->pixels)[(y * display_surface->pitch + x) * 2] =
-			((Uint8 *)display_surface->pixels)[(y * display_surface->pitch + x) * 2 + 1] = ((Uint8 *)VGAScreen->pixels)[y * VGAScreen->pitch + x];
+			const Uint8 c = ((Uint8 *)VGAScreen->pixels)[y * VGAScreen->pitch + x];
+
+			s[y*2 * display_surface->pitch + x*2] = c;
+			s[y*2 * display_surface->pitch + x*2+1] = c;
+			s[(y*2+1) * display_surface->pitch + x*2] = c;
+			s[(y*2+1) * display_surface->pitch + x*2+1] = c;
 		}
-		 memcpy(&((Uint8 *)display_surface->pixels)[(y * 2 + 1) * display_surface->pitch],
-		        &((Uint8 *)display_surface->pixels)[(y * 2) * display_surface->pitch], surface_width * 2);
 	}
 #else
 	for (int y = 0; y < surface_height; y++)
