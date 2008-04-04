@@ -8815,8 +8815,7 @@ void JE_menuFunction( int select )
 
 				if (button[0] || button[1] || button[2] || button[3])
 				{
-					jCenterX = joyX;
-					jCenterY = joyY;
+					/* TODO?  joystick calibration seems unnecessary */
 				}
 			}
 			break;

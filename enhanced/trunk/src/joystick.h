@@ -58,7 +58,7 @@ extern JE_ButtonType tempButton, button, joyButton;
 extern bool buttonHeld;
 extern JE_ButtonAssign joyButtonAssign;
 extern bool useButtonAssign;
-extern Sint16 jMinX, jMaxX, jMinY, jMaxY, jCenterX, jCenterY, joyX, joyY;
+extern Sint16 joyX, joyY;
 extern int joystickError;
 extern bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 extern bool joystick_installed;

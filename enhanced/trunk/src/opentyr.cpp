@@ -302,7 +302,7 @@ int main( int argc, char *argv[] )
 		JE_joystickInit();
 		if (joystick_installed)
 		{
-			Console::get() << "Joystick detected. " << jCenterX << " " << jCenterY;
+			Console::get() << "Joystick detected." << std::endl;
 		} else {
 			Console::get() << "No joystick found." << std::endl;
 		}
