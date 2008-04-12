@@ -42,6 +42,15 @@ ifeq ($(SCALE_2X), 1)
 	CXXFLAGS += -DSCALE_2X
 endif
 
+SVN_REV := $(shell svnversion -n)
+ifneq ($(SVN_REV), )
+	ifeq ($(SVN_REV), exported)
+		SVN_REV := unknown
+	endif
+	
+	CXXFLAGS += -DSVN_REV=\"$(SVN_REV)\"
+endif
+
 ####################################################
 
 all : $(TARGET)

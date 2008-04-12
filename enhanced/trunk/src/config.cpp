@@ -396,9 +396,7 @@ std::string JE_readCryptLn( std::ifstream& f )
 
 void JE_skipCryptLn( FILE* f )
 {
-	char size;
-
-	size = getc(f);
+	unsigned int size = getc(f);
 	fseek(f, size, SEEK_CUR);
 }
 

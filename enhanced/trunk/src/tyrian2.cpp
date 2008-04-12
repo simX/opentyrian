@@ -4078,6 +4078,8 @@ void JE_titleScreen( bool animate )
 						JE_fadeBlack(10);
 					}
 					JE_loadPic(4, false);
+
+					JE_textShade(2, 192, "Enhanced revision " SVN_REV, 15, 0, PART_SHADE);
 	
 					memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
 	
@@ -5194,7 +5196,7 @@ void JE_eventSystem( void )
 		case 16:
 			if (eventRec[eventLoc-1].eventdat > 9)
 			{
-				Console::get() << "-!- EVENT 16: BAD EVENT DATA" << std::endl;
+				Console::get() << "error: event 16: bad event data" << std::endl;
 			} else {
 				JE_drawTextWindow(outputs[eventRec[eventLoc-1].eventdat-1]);
 				soundQueue[3] = windowTextSamples[eventRec[eventLoc-1].eventdat-1];
@@ -5771,7 +5773,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 71:
-			Console::get() << "-!- EVENT 71: POSSIBLY BAD MAP REPOSITONING" << std::endl;
+			Console::get() << "warning: event 71: possibly bad map repositioning" << std::endl;
 			if (((((intptr_t)mapYPos - (intptr_t)&megaData1->mainmap) / sizeof(Uint8 *)) * 2) <= (unsigned int)eventRec[eventLoc-1].eventdat2) /* <MXD> ported correctly? */
 			{
 				JE_eventJump(eventRec[eventLoc-1].eventdat);
@@ -5848,7 +5850,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 77:
-			Console::get() << "-!- EVENT 77: POSSIBLY BAD MAP REPOSITONING" << std::endl;
+			Console::get() << "warning: event 77: possibly bad map repositioning" << std::endl;
 			mapYPos = &megaData1->mainmap[0][0];
 			mapYPos += eventRec[eventLoc-1].eventdat / 2;
 			if (eventRec[eventLoc-1].eventdat2 > 0)
@@ -5881,7 +5883,7 @@ void JE_eventSystem( void )
 			break;
 
 		case 81: /*WRAP2*/
-			Console::get() << "-!- EVENT 81: POSSIBLY BAD MAP REPOSITONING" << std::endl;
+			Console::get() << "warning: event 81: possibly bad map repositioning" << std::endl;
 			BKwrap2   = &megaData2->mainmap[0][0];
 			BKwrap2   += eventRec[eventLoc-1].eventdat / 2;
 			BKwrap2to = &megaData2->mainmap[0][0];
@@ -5896,7 +5898,7 @@ void JE_eventSystem( void )
 			shotRepeat[11-1] = 0;
 			break;
 		default:
-			Console::get() << "-!- EVENT " << eventRec[eventLoc-1].eventtype << ": UNHANDLED EVENT" << std::endl;
+			Console::get() << "warning: event " << eventRec[eventLoc-1].eventtype << ": unhandled event" << std::endl;
 			break;
 	}
 

@@ -164,7 +164,7 @@ size_t efwrite( void *buffer, size_t size, size_t num, FILE *stream )
 void opentyrian_menu( void )
 {
 	int sel = 0;
-	int maxSel = COUNTOF(opentyrian_menu_items) - 1;
+	const int maxSel = COUNTOF(opentyrian_menu_items) - 1;
 	bool quit = false, fade_in = true;
 
 	JE_fadeBlack(10);
@@ -274,7 +274,7 @@ int main( int argc, char *argv[] )
 		// TODO: We should totally bail out here =P
 	}
 
-	Console::get() << "Welcome to... >> OpenTyrian Enhanced v0.1 <<\n";
+	Console::get() << "Welcome to... >> OpenTyrian Enhanced revision " SVN_REV " <<\n";
 
 	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
 

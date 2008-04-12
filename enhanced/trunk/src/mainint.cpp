@@ -501,7 +501,7 @@ bool JE_playerSelect( void )
 					if (sel == 4)
 					{
 						/* TODO: NETWORK */
-						Console::get() << "-!- networking not implemented" << std::endl;
+						Console::get() << "error: networking not implemented" << std::endl;
 						exit(-1);
 					}
 					break;

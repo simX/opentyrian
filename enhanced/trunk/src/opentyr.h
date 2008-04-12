@@ -20,6 +20,10 @@
 #ifndef OPENTYR_H
 #define OPENTYR_H
 
+#ifndef SVN_REV
+#define SVN_REV "unknown"
+#endif
+
 #include "SDL.h"
 #include "SDL_endian.h"
 
