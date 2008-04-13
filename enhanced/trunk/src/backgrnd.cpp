@@ -45,6 +45,17 @@ SDL_Surface *smoothiesScreen;
 bool anySmoothies;
 int SDAT[9]; /* [1..9] */
 
+namespace CVars
+{
+	CVarBool r_background2_blend("r_background2_blend", CVar::CONFIG, "Determines wether the second background will be alpha blended.", true);
+	CVarInt  r_smoothies_detail("r_smoothies_detail", CVar::CONFIG, "Detail levels of smoothies. (Special effects) 0-2", 2, rangeCheck<0,2>);
+	CVarBool r_headlight("r_headlight", CVar::CONFIG, "Determines wether to draw the headlight lamp effect.", true);
+	CVarBool r_wild("r_wild", CVar::CONFIG, "Enables the swaying grass effect.", false);
+	CVarBool r_background2("r_background2", CVar::CONFIG, "Enables second background layer.", true);
+	CVarBool r_explosion_blend("r_explosion_blend", CVar::CONFIG, "Determines wether explosion will be transparent.", true);
+	CVarBool r_enable_filters("r_enable_filters", CVar::CONFIG, "Enables color tinting.", true);
+}
+
 void JE_darkenBackground( JE_word neat )
 {
 	Uint8 *s = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
@@ -88,138 +99,133 @@ void JE_drawBackground2( void )
 
 	/* BP is used by all backgrounds */
 
-	if (background2 != 0)
+	/*Offset for top*/
+	s = (Uint8 *)VGAScreen->pixels;
+	s += 11 * 24;
+
+	if (useBackground1ofs != 0)
 	{
+		s += mapXPos;
+		/* Map location number in BP */
+		bp = mapY2Pos + mapXbpPos;
+	} else {
+		s += mapX2Pos;
+		/* Map location number in BP */
+		bp = mapY2Pos + mapX2bpPos;
+	}
 
-		/*Offset for top*/
-		s = (Uint8 *)VGAScreen->pixels;
-		s += 11 * 24;
-
-		if (useBackground1ofs != 0)
+	/*============BACKGROUND 2 TOP=============*/
+	if (backPos2 != 0)
+	{
+		for (int i = 12; i > 0; i--)
 		{
-			s += mapXPos;
-			/* Map location number in BP */
-			bp = mapY2Pos + mapXbpPos;
-		} else {
-			s += mapX2Pos;
-			/* Map location number in BP */
-			bp = mapY2Pos + mapX2bpPos;
-		}
+			/* move to previous map X location */
+			bp--;
 
-		/*============BACKGROUND 2 TOP=============*/
-		if (backPos2 != 0)
-		{
-			for (int i = 12; i > 0; i--)
+			src = *bp;
+			if (src != NULL)
 			{
-				/* move to previous map X location */
-				bp--;
+				src += (28 - backPos2) * 24;
 
-				src = *bp;
-				if (src != NULL)
+				for (int y = backPos2; y > 0; y--)
 				{
-					src += (28 - backPos2) * 24;
-
-					for (int y = backPos2; y > 0; y--)
+					for(int x = 0; x < 24; x++)
 					{
-						for(int x = 0; x < 24; x++)
+						if (src[x])
 						{
-							if (src[x])
-							{
-								s[x] = src[x];
-							}
+							s[x] = src[x];
 						}
-
-						s += VGAScreen->pitch;
-						src += 24;
 					}
 
-					s -= backPos2 * VGAScreen->pitch;
+					s += VGAScreen->pitch;
+					src += 24;
 				}
 
-				s -= 24;
+				s -= backPos2 * VGAScreen->pitch;
 			}
 
-			s += backPos2 * VGAScreen->pitch;
-			s += 24 * 12;
-
-			/* Increment Map Location for next line */
-			bp += 14 - 2;   /* 44+44 +4 (Map Width) */
+			s -= 24;
 		}
 
-		bp += 14;
+		s += backPos2 * VGAScreen->pitch;
+		s += 24 * 12;
 
-		/*============BACKGROUND 2 CENTER=============*/
+		/* Increment Map Location for next line */
+		bp += 14 - 2;   /* 44+44 +4 (Map Width) */
+	}
 
-		/* Screen 6 lines high */
-		for (int i = 6; i > 0; i--)
+	bp += 14;
+
+	/*============BACKGROUND 2 CENTER=============*/
+
+	/* Screen 6 lines high */
+	for (int i = 6; i > 0; i--)
+	{
+		for (int j = 12; j > 0; j--)
 		{
-			for (int j = 12; j > 0; j--)
+			/* move to previous map X location */
+			bp--;
+
+			src = *bp;
+			if (src != NULL)
 			{
-				/* move to previous map X location */
-				bp--;
-
-				src = *bp;
-				if (src != NULL)
+				for (int y = 28; y > 0; y--)
 				{
-					for (int y = 28; y > 0; y--)
+					for(int x = 0; x < 24; x++)
 					{
-						for(int x = 0; x < 24; x++)
+						if (src[x])
 						{
-							if (src[x])
-							{
-								s[x] = src[x];
-							}
+							s[x] = src[x];
 						}
-
-						s += VGAScreen->pitch;
-						src += 24;
 					}
 
-					/* AX=320*13+12 for subtracting from DI when done drawing a shape */
-					s -= VGAScreen->pitch * 28;
+					s += VGAScreen->pitch;
+					src += 24;
 				}
 
-				s -= 24;
+				/* AX=320*13+12 for subtracting from DI when done drawing a shape */
+				s -= VGAScreen->pitch * 28;
 			}
 
-			/* Increment Map Location for next line */
-			bp += 14 + 14 - 2;  /* 44+44 +6 (Map Width) */
-			s += VGAScreen->pitch * 28 + 24 * 12;
+			s -= 24;
 		}
 
-		if (backPos2 <= 15)
+		/* Increment Map Location for next line */
+		bp += 14 + 14 - 2;  /* 44+44 +6 (Map Width) */
+		s += VGAScreen->pitch * 28 + 24 * 12;
+	}
+
+	if (backPos2 <= 15)
+	{
+		/*============BACKGROUND 2 BOTTOM=============*/
+		for (int i = 12; i > 0; i--)
 		{
-			/*============BACKGROUND 2 BOTTOM=============*/
-			for (int i = 12; i > 0; i--)
+			/* move to previous map X location */
+			bp--;
+
+			src = *bp;
+			if (src != NULL)
 			{
-				/* move to previous map X location */
-				bp--;
 
-				src = *bp;
-				if (src != NULL)
+				for (int y = 15 - backPos2 + 1; y > 0; y--)
 				{
-
-					for (int y = 15 - backPos2 + 1; y > 0; y--)
+					for(int x = 0; x < 24; x++)
 					{
-						for(int x = 0; x < 24; x++)
+						if (src[x])
 						{
-							if (src[x])
-							{
-								s[x] = src[x];
-							}
+							s[x] = src[x];
 						}
-
-						s += VGAScreen->pitch;
-						src += 24;
 					}
 
-					s -= (15 - backPos2 + 1) * VGAScreen->pitch;
+					s += VGAScreen->pitch;
+					src += 24;
 				}
 
-				s -= 24;
+				s -= (15 - backPos2 + 1) * VGAScreen->pitch;
 			}
-		}
 
+			s -= 24;
+		}
 	}
 
 	/*Set Movement of background*/
@@ -572,7 +578,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 		}
 	}
 	
-	if (color != -99 && filtrationAvail)
+	if (color != -99 && CVars::r_enable_filters)
 	{
 		s = (Uint8 *)VGAScreen->pixels;
 		s += 24;
@@ -590,7 +596,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 		}
 	}
 	
-	if (brightness != -99 && explosionTransparent)
+	if (brightness != -99 && CVars::r_explosion_blend)
 	{
 		s = (Uint8 *)VGAScreen->pixels;
 		s += 24;
@@ -611,7 +617,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 void JE_checkSmoothies( void )
 {
 	anySmoothies = false;
-	if ((processorType > 2 && (smoothies[1-1] || smoothies[2-1])) || (processorType > 1 && (smoothies[3-1] || smoothies[4-1] || smoothies[5-1])))
+	if ((CVars::r_smoothies_detail == 2 && (smoothies[0] || smoothies[1])) || (CVars::r_smoothies_detail >= 1 && (smoothies[2] || smoothies[3] || smoothies[4])))
 	{
 		anySmoothies = true;
 		JE_initSmoothies();

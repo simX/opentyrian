@@ -27,6 +27,7 @@
 #include "nortsong.h"
 #include "vga256d.h"
 #include "fonthand.h"
+#include "loudness.h"
 
 #include "varz.h"
 
@@ -1525,7 +1526,7 @@ int JE_playerDamage( JE_word tempX, JE_word tempY,
 					*playerAlive = false;
 					*playerStillExploding = 60;
 					levelEnd = 40;
-					tempVolume = tyrMusicVolume;
+					tempVolume = CVars::s_music_vol;
 					soundQueue[1] = 22;
 				}
 				

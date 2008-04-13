@@ -107,4 +107,19 @@ template<> inline std::string CCmd::convertParam<std::string>( const std::vector
 	return vec[index];
 }
 
+template<> inline bool CCmd::convertParam<bool>( const std::vector<std::string>& vec, unsigned int index )
+{
+	assertParam(vec, index);
+	if (vec[index] == "true")
+	{
+		return true;
+	} else if (vec[index] == "false") {
+		return false;
+	} else {
+		std::ostringstream s;
+		s << index+1;
+		throw RuntimeCCmdErrorException("Incorrect format on param " + s.str());
+	}
+}
+
 #endif // CCMD_H

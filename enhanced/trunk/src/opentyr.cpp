@@ -45,6 +45,7 @@
 #include "varz.h"
 #include "vga256d.h"
 #include "Console.h"
+#include "KeyNames.h"
 
 #include "SDL.h"
 
@@ -267,6 +268,7 @@ int main( int argc, char *argv[] )
 	srand((unsigned int)time(NULL));
 
 	Console::initialize();
+	KeyNames::initialize();
 
 	if (SDL_Init(0))
 	{
@@ -339,22 +341,21 @@ int main( int argc, char *argv[] )
 
 	/* Default Options */
 	youAreCheating = false;
-	smoothScroll = true;
 	showMemLeft = false;
 	playerPasswordInput = true;
 
 	JE_loadSong(1);
 
+	
 	if (!noSound)
 	{
-		Console::get() << "Initializing SDL audio..." << std::endl;
-		JE_initialize();
-		soundEffects = true; /* TODO: find a real way to give this a value */
-		if (soundEffects)
-		{
+		if (!CVars::s_enabled) {
+			noSound = true;
+		} else {
+			Console::get() << "Initializing SDL audio..." << std::endl;
+			JE_initialize();
 			JE_loadSndFile();
 		}
-
 	}
 
 	if (recordDemo)

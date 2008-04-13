@@ -22,6 +22,8 @@
 
 #include "opentyr.h"
 
+#include "Cvar.h"
+
 //#include <inttypes.h>
 
 extern JE_word backPos, backPos2, backPos3;
@@ -35,6 +37,17 @@ extern int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 extern SDL_Surface *smoothiesScreen;
 extern bool anySmoothies;
 extern int SDAT[9];
+
+namespace CVars
+{
+	extern CVarBool r_background2_blend;
+	extern CVarInt  r_smoothies_detail;
+	extern CVarBool r_headlight;
+	extern CVarBool r_wild;
+	extern CVarBool r_background2;
+	extern CVarBool r_explosion_blend;
+	extern CVarBool r_enable_filters;
+}
 
 void JE_darkenBackground( JE_word neat );
 void JE_drawBackground2( void );

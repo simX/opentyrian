@@ -37,19 +37,14 @@ extern bool mixEnable;
 extern bool notYetLoadedSound, notYetLoadedMusic;
 extern JE_SongPosType songPos;
 
-extern int soundEffects;
-
 extern JE_word frameCount, frameCount2, frameCountMax;
 
 extern int currentSong;
-extern int soundActive, musicActive;
 
 extern Uint8 *digiFx[SOUND_NUM + 9];
 extern JE_word fxSize[SOUND_NUM + 9];
 
-extern JE_word fxVolume, fxPlayVol;
-extern JE_word tempVolume;
-extern JE_word tyrMusicVolume;
+extern float tempVolume;
 
 extern float jasondelay;
 
@@ -73,8 +68,6 @@ void JE_restartSong( void );
 void JE_reinit ( bool redo );
 void JE_aweStuff( void );
 void JE_setTimerInt( void );
-void JE_calcFXVol( void );
-void JE_changeVolume( JE_word *temp, int change, JE_word *fxvol, int fxchange );
 void JE_frameDelay( int delay );
 
 void JE_loadSmpFile ( const char *name, int samplenum);

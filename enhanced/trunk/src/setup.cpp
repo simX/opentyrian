@@ -33,6 +33,7 @@
 #include "starlib.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "loudness.h"
 
 #include "setup.h"
 
@@ -109,7 +110,7 @@ void JE_jukeboxGo( void )
 	char tempStr[64];
 
 	int lastSong;
-	int tempVolume;
+	float tempVolume;
 	bool youStopped, drawText, quit, fade;
 
 
@@ -133,7 +134,7 @@ void JE_jukeboxGo( void )
 	fade = false;
 	repeatedFade = false;
 
-	tempVolume = tyrMusicVolume;
+	tempVolume = CVars::s_music_vol;
 	youStopped = false;
 
 	JE_wipeKey();
@@ -150,9 +151,9 @@ void JE_jukeboxGo( void )
 
 				if (weirdCurrent)
 				{
-					JE_setVol(tempVolume / 2, fxVolume);
+					music_vol_multiplier = .5f;
 				} else {
-					JE_setVol(tempVolume, fxVolume);
+					music_vol_multiplier = 1.f;
 				}
 
 				weirdCurrent = !weirdCurrent;
@@ -214,7 +215,7 @@ void JE_jukeboxGo( void )
 				if (tempVolume > 5)
 				{
 					tempVolume -= 2;
-					JE_setVol(tempVolume, fxVolume);
+					music_vol_multiplier = tempVolume; // TODO
 				} else {
 					fade = false;
 				}
@@ -324,7 +325,7 @@ void JE_jukeboxGo( void )
 					weirdMusic = false;
 					if (!fade)
 					{
-						JE_setVol(tempVolume, fxVolume);
+						music_vol_multiplier = tempVolume;
 					}
 				}
 				break;
@@ -354,7 +355,6 @@ void JE_jukeboxGo( void )
 	} while (!quit);
 	
 	JE_fadeBlack(10);
-	JE_setVol(255, fxVolume);
 }
 
 void JE_newSpeed( void )
@@ -368,6 +368,5 @@ void JE_playNewSong( void )
 	JE_playSong(currentJukeboxSong);
 	playing = true;
 	repeatedFade = false;
-	tempVolume = tyrMusicVolume;
-	JE_setVol(tempVolume, fxVolume);
+	tempVolume = CVars::s_music_vol;
 }

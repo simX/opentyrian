@@ -63,7 +63,7 @@ char outputs[9][31];               /* [1..9] of string [30] */
 char topicName[6][21];             /* [1..6] of string [20] */
 char mainMenuHelp[34][66];
 char inGameText[6][21];            /* [1..6] of string [20] */
-char detailLevel[6][13];           /* [1..6] of string [12] */
+char detailLevel[5][13];           /* [1..6] of string [12] */
 char gameSpeedText[5][13];         /* [1..5] of string [12] */
 char episodeName[6][31];           /* [0..5] of string [30] */
 char difficultyName[7][21];        /* [0..6] of string [20] */
@@ -226,8 +226,11 @@ void JE_loadHelpText( void )
 	}
 	JE_skipCryptLn(f); JE_skipCryptLn(f);
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 5; i++)
 	{
+		if (i == 4) {
+			JE_skipCryptLn(f);
+		}
 		JE_readCryptLn(f,detailLevel[i]);   /*Detail Level*/
 	}
 	JE_skipCryptLn(f); JE_skipCryptLn(f);

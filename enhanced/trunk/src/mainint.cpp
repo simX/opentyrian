@@ -44,6 +44,9 @@
 #include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "GameActions.h"
+#include "HighScores.h"
+#include "CVar.h"
 
 #include "mainint.h"
 
@@ -1428,13 +1431,13 @@ bool JE_inGameSetup( void )
 			JE_outTextAdjust(10, (x + 1) * 20, inGameText[x], 15, ((sel == x+1) << 1) - 4, SMALL_FONT_SHAPES, true);
 		}
 		
-		JE_outTextAdjust(120, 3 * 20, detailLevel[processorType-1], 15, ((sel == 3) << 1) - 4, SMALL_FONT_SHAPES, true);
-		JE_outTextAdjust(120, 4 * 20, gameSpeedText[gameSpeed-1],   15, ((sel == 4) << 1) - 4, SMALL_FONT_SHAPES, true);
+		//JE_outTextAdjust(120, 3 * 20, detailLevel[CVars::detail_level], 15, ((sel == 3) << 1) - 4, SMALL_FONT_SHAPES, true);
+		JE_outTextAdjust(120, 4 * 20, gameSpeedText[CVars::game_speed],   15, ((sel == 4) << 1) - 4, SMALL_FONT_SHAPES, true);
 		
 		JE_outTextAdjust(10, 147, mainMenuHelp[help[sel-1]-1], 14, 6, TINY_FONT, true);
 		
-		JE_barDrawShadow(120, 20, 1, 16, tyrMusicVolume / 12, 3, 13);
-		JE_barDrawShadow(120, 40, 1, 16, fxVolume / 12, 3, 13);
+		JE_barDrawShadow(120, 20, 1, 16, int(CVars::s_music_vol*14.f), 3, 13);
+		JE_barDrawShadow(120, 40, 1, 16, int(CVars::s_fx_vol*14.f), 3, 13);
 		
 		JE_showVGA();
 		
@@ -1497,31 +1500,40 @@ bool JE_inGameSetup( void )
 					switch (sel)
 					{
 						case 1:
-							JE_changeVolume(&tyrMusicVolume, -16, &fxVolume, 0);
-							if (!musicActive)
 							{
-								musicActive = true;
-								temp = currentSong;
-								currentSong = 0;
-								JE_playSong(temp);
+							float vol = CVars::s_music_vol;
+							if (vol == 0) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_music_vol = vol - .05f;
+							}
 							}
 							break;
 						case 2:
-							JE_changeVolume(&tyrMusicVolume, 0, &fxVolume, -16);
-							soundActive = true;
+							{
+							float vol = CVars::s_fx_vol;
+							if (vol == 0) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_fx_vol = vol - .05f;
+							}
+							}
+							//soundActive = true;
 							break;
 						case 3:
-							if (--processorType < 1)
-							{
-								processorType = 4;
+							/*if (CVars::detail_level == 0) {
+								CVars::detail_level = 3;
+							} else {
+								CVars::detail_level = CVars::detail_level - 1;
 							}
 							JE_initProcessorType();
-							JE_setNewGameSpeed();
+							JE_setNewGameSpeed();*/
 							break;
 						case 4:
-							if (--gameSpeed < 1)
-							{
-								gameSpeed = 5;
+							if (CVars::game_speed == 0) {
+								CVars::game_speed = 4;
+							} else {
+								CVars::game_speed = CVars::game_speed - 1;
 							}
 							JE_initProcessorType();
 							JE_setNewGameSpeed();
@@ -1536,31 +1548,40 @@ bool JE_inGameSetup( void )
 					switch (sel)
 					{
 						case 1:
-							JE_changeVolume(&tyrMusicVolume, 16, &fxVolume, 0);
-							if (!musicActive)
 							{
-								musicActive = true;
-								temp = currentSong;
-								currentSong = 0;
-								JE_playSong(temp);
+							float vol = CVars::s_music_vol;
+							if (vol == 1.5f) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_music_vol = vol + .05f;
+							}
 							}
 							break;
 						case 2:
-							JE_changeVolume(&tyrMusicVolume, 0, &fxVolume, 16);
-							soundActive = true;
+							{
+							float vol = CVars::s_fx_vol;
+							if (vol == 1.5f) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_fx_vol = vol + .05f;
+							}
+							}
+							//soundActive = true;
 							break;
 						case 3:
-							if (++processorType > 4)
-							{
-								processorType = 1;
+							/*if (CVars::detail_level >= 3) {
+								CVars::detail_level = 0;
+							} else {
+								CVars::detail_level = CVars::detail_level + 1;
 							}
 							JE_initProcessorType();
-							JE_setNewGameSpeed();
+							JE_setNewGameSpeed();*/
 							break;
 						case 4:
-							if (++gameSpeed > 5)
-							{
-								gameSpeed = 1;
+							if (CVars::game_speed >= 4) {
+								CVars::game_speed = 0;
+							} else {
+								CVars::game_speed = CVars::game_speed + 1;
 							}
 							JE_initProcessorType();
 							JE_setNewGameSpeed();
@@ -1572,11 +1593,11 @@ bool JE_inGameSetup( void )
 					}
 					break;
 				case SDLK_w:
-					if (sel == 3)
+					/*if (sel == 3)
 					{
-						processorType = 6;
+						CVars::detail_level = 4;
 						JE_initProcessorType();
-					}
+					}*/
 				default:
 					break;
 			}
@@ -1898,24 +1919,6 @@ void JE_highScoreCheck( void )
 			}
 		}
 	}
-}
-
-void JE_setNewGameVol( void )
-{
-	if (!soundActive)
-	{
-		temp = 5;
-	} else {
-		temp = fxVolume;
-	}
-	if (!musicActive)
-	{
-		temp2 = 15;
-	} else {
-		temp2 = tyrMusicVolume;
-	}
-
-	JE_setVol(temp2, temp);
 }
 
 void JE_changeDifficulty( void )
@@ -2947,32 +2950,19 @@ void JE_mainKeyboardInput( void )
 		}
 	}
 
-	/* {MUTE SOUND} */
-	if (keysactive[SDLK_s])
-	{
-		keysactive[SDLK_s] = false;
-		soundActive = !soundActive;
-		if (soundActive)
-		{
-			JE_drawTextWindow(miscText[18]);
-		} else {
-			JE_drawTextWindow(miscText[17]);
-		}
-		JE_setNewGameVol();
-	}
-
-	/* {MUTE MUSIC} */
+	// Mute Sound // TODO Replace with CVar/CCmd!!!
 	if (keysactive[SDLK_m])
 	{
 		keysactive[SDLK_m] = false;
-		musicActive = !musicActive;
-		if (musicActive)
+		if (CVars::s_mute)
 		{
-			JE_drawTextWindow(miscText[36]);
-			JE_selectSong(2);
+			CVars::s_mute = false;
+			JE_drawTextWindow(miscText[18]);
+			//JE_selectSong(2);
 		} else {
-			JE_drawTextWindow(miscText[35]);
-			JE_stopSong();
+			CVars::s_mute = true;
+			JE_drawTextWindow(miscText[17]);
+			//JE_stopSong();
 		}
 	}
 
@@ -3055,7 +3045,7 @@ void JE_pauseGame( void )
 		JE_showVGA();
 		VGAScreen = temp_surface;
 	}
-	JE_setVol((tyrMusicVolume >> 1) + 10, fxVolume);
+	music_vol_multiplier = .54f;
 
 	newkey = false;
 
@@ -3115,7 +3105,7 @@ void JE_pauseGame( void )
 		wait_delay();
 	} while (!done);
 
-	JE_setVol(tyrMusicVolume, fxVolume);
+	music_vol_multiplier = 1.f;
 
 	/* TODO: NETWORK */
 	tempScreenSeg = VGAScreen;
@@ -3362,24 +3352,24 @@ redo:
 							}
 
 						} else {
-							if (keysactive[keySettings[0]])
+							if (gameInputEnabled[UP])
 								*PY_ -= CURRENT_KEY_SPEED;
-							if (keysactive[keySettings[1]])
+							if (gameInputEnabled[DOWN])
 								*PY_ += CURRENT_KEY_SPEED;
 
-							if (keysactive[keySettings[2]])
+							if (gameInputEnabled[LEFT])
 								*PX_ -= CURRENT_KEY_SPEED;
-							if (keysactive[keySettings[3]])
+							if (gameInputEnabled[RIGHT])
 								*PX_ += CURRENT_KEY_SPEED;
 
-							if (keysactive[keySettings[4]])
-								button[1-1] = true;
-							if (keysactive[keySettings[5]])
-								button[4-1] = true;
-							if (keysactive[keySettings[6]])
-								button[2-1] = true;
-							if (keysactive[keySettings[7]])
-								button[3-1] = true;
+							if (gameInputEnabled[FIRE])
+								button[0] = true;
+							if (gameInputEnabled[CHANGE_FIRE])
+								button[3] = true;
+							if (gameInputEnabled[LEFT_SIDEKICK])
+								button[1] = true;
+							if (gameInputEnabled[RIGHT_SIDEKICK])
+								button[2] = true;
 						}
 
 						if (constantPlay)
@@ -3790,36 +3780,30 @@ redo:
 			*lastPX2_ = *PX_;
 			*lastPY2_ = *PY_;
 
-			if (shipGr_ == 0)
-			{
-				if (background2)
+			if (CVars::r_background2 || background2over == 3) {
+				if (shipGr_ == 0)
 				{
 					JE_drawShape2x2Shadow(*PX_ - 17 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI + 13, shapes9ptr_);
 					JE_drawShape2x2Shadow(*PX_ + 7 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI + 51, shapes9ptr_);
-					if (superWild)
+					if (CVars::r_wild)
 					{
 						JE_drawShape2x2Shadow(*PX_ - 16 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI + 13, shapes9ptr_);
 						JE_drawShape2x2Shadow(*PX_ + 6 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI + 51, shapes9ptr_);
 					}
-				}
-			} else
-				if (shipGr_ == 1)
-				{
-					if (background2)
+				} else {
+					if (shipGr_ == 1)
 					{
 						JE_drawShape2x2Shadow(*PX_ - 17 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, 220, shapes9ptr_);
 						JE_drawShape2x2Shadow(*PX_ + 7 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, 222, shapes9ptr_);
-					}
-				} else {
-					if (background2)
-					{
+					} else {
 						JE_drawShape2x2Shadow(*PX_ - 5 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI, shapes9ptr_);
-						if (superWild)
+						if (CVars::r_wild)
 						{
 							JE_drawShape2x2Shadow(*PX_ - 4 - mapX2Ofs + 30, *PY_ - 7 + shadowyDist, tempI, shapes9ptr_);
 						}
 					}
 				}
+			}
 
 			if (*playerInvulnerable_ > 0)
 			{

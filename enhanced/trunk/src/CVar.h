@@ -96,7 +96,7 @@ public:
 	CVarTemplate( std::string name, Flags flags, std::string help, T def, T (*validationFunc)(const T& value) = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
 	virtual ~CVarTemplate() {}
 	T get( ) const { return mValue; }
- 	void set( T val ) {
+ 	void set( const T& val ) {
 		if (mValidationFunc)
 		{
 			mValue = (*mValidationFunc)(val);
@@ -106,11 +106,20 @@ public:
 	}
 	virtual std::string serialize( ) const {
 		std::ostringstream s;
-		if (!(s << get())) throw CVar::ConversionErrorException();
+		s << get();
 		return s.str();
 	}
-	virtual void unserialize( std::string str ) { T tmp; std::istringstream s(str); s >> tmp; set(tmp); }
-	virtual std::string getType() const { return NAME::get(); }
+	virtual void unserialize( std::string str ) {
+		T tmp;
+		std::istringstream s(str);
+		if (!(s >> tmp)) throw CVar::ConversionErrorException();
+		s >> tmp;
+		set(tmp);
+	}
+	std::string getType() const { return NAME::get(); }
+
+	virtual operator T() const { return get(); }
+	virtual void operator=( const T& val ) { set(val); }
 };
 
 struct IntString { inline static const char* get() { return "int"; } };
@@ -118,8 +127,37 @@ struct FloatString { inline static const char* get() { return "float"; } };
 struct BoolString { inline static const char* get() { return "bool"; } };
 
 typedef CVarTemplate<long, IntString> CVarInt;
-typedef CVarTemplate<double, FloatString> CVarFloat;
-typedef CVarTemplate<bool, BoolString> CVarBool;
+typedef CVarTemplate<float, FloatString> CVarFloat;
+
+class CVarBool : public CVarTemplate<bool, BoolString>
+{
+public:
+	CVarBool( std::string name, Flags flags, std::string help, bool def, bool (*validationFunc)(const bool& value) = 0 )
+		: CVarTemplate(name, flags, help, def, validationFunc)
+	{}
+
+	std::string serialize( ) const
+	{
+		return get() ? "true" : "false";
+	}
+
+	void unserialize( std::string str )
+	{
+		if (str == "true") {
+			set(true);
+		} else if (str == "false") {
+			set(false);
+		} else {
+			std::istringstream s(str);
+			int tmp;
+			s >> tmp;
+			set(s > 0 ? true : false);
+		}
+	}
+
+	void operator=( const bool& val ) { set(val); }
+};
+//typedef CVarTemplate<bool, BoolString> CVarBool;
 
 class ParseErrorException : public std::runtime_error {
 public:

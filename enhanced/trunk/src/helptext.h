@@ -40,7 +40,7 @@ extern char outputs[9][31];             /* [1..9] of string [30] */
 extern char topicName[6][21];           /* [1..6] of string [20] */
 extern char mainMenuHelp[34][66];
 extern char inGameText[6][21];          /* [1..6] of string [20] */
-extern char detailLevel[6][13];         /* [1..6] of string [12] */
+extern char detailLevel[5][13];         /* [1..6] of string [12] */
 extern char gameSpeedText[5][13];       /* [1..5] of string [12] */
 extern char episodeName[6][31];         /* [0..5] of string [30] */
 extern char difficultyName[7][21];      /* [0..6] of string [20] */

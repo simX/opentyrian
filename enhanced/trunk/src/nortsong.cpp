@@ -40,25 +40,15 @@ bool notYetLoadedMusic = true;
 
 JE_SongPosType songPos;
 
-int soundEffects = 1; /* TODO: Give this a real value, figure out what they mean. */
-
 JE_word frameCount, frameCount2, frameCountMax;
 
 int currentSong = 0;
-
-int soundActive = true;
-int musicActive = true;
 
 Uint8 *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 int allocd_digifx = false;
 
-
-JE_word fxVolume = 128; /* Default value, should be loaded from config */
-JE_word fxPlayVol = (128 - 1) >> 5; /* Same result as calling calcFXVol with default value of fxvolume*/
-
-JE_word tempVolume;
-JE_word tyrMusicVolume;
+float tempVolume;
 
 float jasondelay = 1000.0f / (1193180.0f / 0x4300);
 
@@ -215,9 +205,7 @@ void JE_playSong ( JE_word songnum )
 		return;
 	}
 
-#ifndef NDEBUG
-	Console::get() << "Loading song number " << songnum << std::endl;
-#endif
+	DEBUG_MSG("Loading song number " << songnum);
 
 	if (songnum == 0) /* SYN: Trying to play song 0 was doing strange things D: */
 	{
@@ -225,33 +213,15 @@ void JE_playSong ( JE_word songnum )
 		currentSong = 0;
 		return;
 	}
-	if (currentSong != songnum && musicActive) /* Original also checked for midiport > 1 */
+	if (currentSong != songnum && !noSound)
 	{
-		 /*ASM
-		 IN   al, $21
-		 push ax
-		 OR   al, 3
-		 out  $21, al
-		 END;*/
-
-		 JE_stopSong();
+		JE_stopSong();
 		currentSong = songnum;
-		 JE_loadSong (songnum);
-		 repeated = false;
-		 playing = true;
-		 JE_selectSong (1);
-		 /* JE_waitRetrace(); */
-
-		 /*ASM
-		 mov al, $36
-		 out $43, al
-		 mov ax, speed
-		 out $40, al
-		 mov al, ah
-		 out $40, al
-		 pop ax
-		 out $21, al
-		 END;*/
+		JE_loadSong (songnum);
+		repeated = false;
+		playing = true;
+		JE_selectSong (1);
+		/* JE_waitRetrace(); */
 	}
 }
 
@@ -267,16 +237,11 @@ void JE_restartSong( void )
 
 void JE_playSampleNum( int samplenum )
 {
-	if (soundEffects > 0 && soundActive)
+	if (!noSound)
 	{
 		/* SYN: Reindexing by -1 because of Jason's arrays starting at 1. Dammit. */
-		JE_multiSamplePlay( digiFx[samplenum-1], fxSize[samplenum-1], 0, fxPlayVol );
+		JE_multiSamplePlay( digiFx[samplenum-1], fxSize[samplenum-1], 0, 1.f );
 	}
-}
-
-void JE_calcFXVol( void )
-{
-	fxPlayVol = (fxVolume - 1) >> 5;
 }
 
 void JE_setTimerInt( void )
@@ -292,42 +257,6 @@ void JE_resetTimerInt( void )
 void JE_timerInt( void )
 {
 	STUB();
-}
-
-void JE_changeVolume( JE_word *temp, int change, JE_word *fxvol, int fxchange )
-{
-	if (change != 0)
-	{
-		if (*temp + change > 254)
-		{
-			*temp = 256 - change;
-			JE_playSampleNum(WRONG);
-		}
-		*temp += change;
-		if (*temp < 16)
-		{
-			*temp = 16;
-			JE_playSampleNum(WRONG);
-		}
-	}
-	
-	if (fxchange != 0)
-	{
-		if (*fxvol + fxchange > 254)
-		{
-			*fxvol = 256 - fxchange;
-			JE_playSampleNum(WRONG);
-		}
-		*fxvol += fxchange;
-		if (*fxvol < 16)
-		{
-			*fxvol = 16;
-			JE_playSampleNum(WRONG);
-		}
-	}
-	
-	JE_calcFXVol();
-	JE_setVol(*temp, fxPlayVol);
 }
 
 void JE_waitFrameCount( void )

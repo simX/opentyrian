@@ -44,6 +44,8 @@
 #include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "HighScores.h"
+#include "loudness.h"
 
 #include "tyrian2.h"
 
@@ -145,7 +147,7 @@ void JE_starShowVGA( void )
 		src = (Uint8 *)game_screen->pixels;
 		src += 24;
 
-		if (smoothScroll != 0 && thisPlayerNum != 2)
+		if (fastPlay != 2 && thisPlayerNum != 2)
 		{
 			int delaycount_temp;
 			if ((delaycount_temp = target - SDL_GetTicks()) > 0)
@@ -162,7 +164,7 @@ void JE_starShowVGA( void )
 				s += VGAScreenSeg->pitch;
 				src -= game_screen->pitch;
 			}
-		} else if (starShowVGASpecialCode == 2 && processorType >= 2) {
+		} else if (starShowVGASpecialCode == 2 && CVars::r_headlight) {
 			lighty = 172 - PY;
 			lightx = 281 - PX;
 			
@@ -988,7 +990,6 @@ start_level:
 	/* Normal speed */
 	if (fastPlay != 0)
 	{
-		smoothScroll = true;
 		speed = 0x4300;
 		JE_resetTimerInt();
 		JE_setTimerInt();
@@ -1054,7 +1055,6 @@ start_level_first:
 
 	/*stopsequence;*/
 	/*debuginfo('Setting Master Sound Volume');*/
-	JE_setVol(tyrMusicVolume, fxVolume);
 
 	JE_loadCompShapes(&shapes6, &shapes6Size, '1');  /* Items */
 
@@ -1299,8 +1299,6 @@ start_level_first:
 
 	JE_setNewGameSpeed();
 
-	JE_setVol(tyrMusicVolume, fxPlayVol >> 2);
-
 	/*Save backup game*/
 	if (!playDemo && !doNotSaveBackup)
 	{
@@ -1498,10 +1496,10 @@ level_loop:
 	/*-----MUSIC FADE------*/
 	if (musicFade)
 	{
-		if (tempVolume > 10)
+		if (tempVolume > 0.f)
 		{
-			tempVolume--;
-			JE_setVol(tempVolume, fxVolume);
+			tempVolume -= .01f;
+			music_vol_multiplier = tempVolume;
 		} else {
 			musicFade = false;
 		}
@@ -1512,7 +1510,7 @@ level_loop:
 		JE_playSong(10);
 		musicFade = false;
 	} else {
-		if (!playing && musicActive && firstGameOver)
+		if (!playing && !noSound && firstGameOver)
 		{
 			JE_playSong(levelSong);
 			playing = true;
@@ -1868,7 +1866,7 @@ level_loop:
 		}
 	}
 
-	if (processorType > 1 && smoothies[5-1])
+	if (CVars::r_smoothies_detail > 0 && smoothies[4])
 	{
 		JE_smoothies3();
 	}
@@ -1878,27 +1876,25 @@ level_loop:
 	if (background2over == 3)
 	{
 		JE_drawBackground2();
-		background2 = true;
 	}
 
-	if (background2over == 0)
+	if (background2over == 0 && CVars::r_background2)
 	{
-		if (!(smoothies[2-1] && processorType < 4) && !(smoothies[1-1] && processorType == 3))
-		{
-			if (wild && !background2notTransparent)
-			{
+		//if (!(smoothies[1] && CVars::detail_level < 3) && !(smoothies[0] && CVars::detail_level == 1))
+		//{
+			if (CVars::r_background2_blend && !background2notTransparent) {
 				JE_superBackground2();
 			} else {
 				JE_drawBackground2();
 			}
-		}
+		//}
 	}
 
-	if (smoothies[1-1] && processorType > 2 && SDAT[1-1] == 0)
+	if (smoothies[0] && CVars::r_smoothies_detail > 0 && SDAT[0] == 0)
 	{
 		JE_smoothies1();
 	}
-	if (smoothies[2-1] && processorType > 2)
+	if (smoothies[1] && CVars::r_smoothies_detail > 0)
 	{
 		JE_smoothies2();
 	}
@@ -1919,12 +1915,12 @@ level_loop:
 		}
 	}
 
-	if (smoothies[1-1] && processorType > 2 && SDAT[1-1] > 0)
+	if (smoothies[0] && CVars::r_smoothies_detail > 0 && SDAT[0] > 0)
 	{
 		JE_smoothies1();
 	}
 
-	if (superWild)
+	if (CVars::r_wild)
 	{
 		neat += 3;
 		JE_darkenBackground(neat);
@@ -1932,21 +1928,20 @@ level_loop:
 
 	/*-----------------------BACKGROUNDS------------------------*/
 	/*-----------------------BACKGROUND 2------------------------*/
-	if (!(smoothies[2-1] && processorType < 4) &&
-	    !(smoothies[1-1] && processorType == 3))
-	{
-		if (background2over == 1)
+	//if (!(smoothies[1] && CVars::detail_level < 3) &&
+	//    !(smoothies[0] && CVars::detail_level == 2))
+	//{
+		if (background2over == 1 && CVars::r_background2)
 		{
-			if (wild && !background2notTransparent)
-			{
+			if (CVars::r_background2_blend && !background2notTransparent) {
 				JE_superBackground2();
 			} else {
 				JE_drawBackground2();
 			}
 		}
-	}
+	//}
 
-	if (superWild)
+	if (CVars::r_wild)
 	{
 		neat++;
 		JE_darkenBackground(neat);
@@ -1968,11 +1963,11 @@ level_loop:
 		JE_newEnemy(0);
 	}
 
-	if (processorType > 1 && smoothies[3-1])
+	if (CVars::r_smoothies_detail > 0 && smoothies[2])
 	{
 		JE_smoothies3();
 	}
-	if (processorType > 1 && smoothies[4-1])
+	if (CVars::r_smoothies_detail > 0 && smoothies[3])
 	{
 		JE_smoothies4();
 	}
@@ -2139,13 +2134,13 @@ level_loop:
 					}
 					if (tempW > 500)
 					{
-						if (background2 && tempShotY + shadowyDist < 190 && tempI4 < 100)
+						if ((CVars::r_background2 || background2over == 3) && tempShotY + shadowyDist < 190 && tempI4 < 100)
 						{
 							JE_drawShape2Shadow(tempShotX+1, tempShotY + shadowyDist, tempW - 500, shapesW2);
 						}
 						JE_drawShape2(tempShotX+1, tempShotY, tempW - 500, shapesW2);
 					} else {
-						if (background2 && tempShotY + shadowyDist < 190 && tempI4 < 100)
+						if ((CVars::r_background2 || background2over == 3) && tempShotY + shadowyDist < 190 && tempI4 < 100)
 						{
 							JE_drawShape2Shadow(tempShotX+1, tempShotY + shadowyDist, tempW, shapesC1);
 						}
@@ -2713,7 +2708,7 @@ enemy_shot_draw_overflow:
 				p = shapes6;
 				p += SDL_SwapLE16(((JE_word *)p)[explosions[j].explodeGr - 1]);
 				
-				if (explosionTransparent)
+				if (CVars::r_explosion_blend)
 				{
 					while (*p != 0x0f)
 					{
@@ -2774,19 +2769,18 @@ explosion_draw_overflow:
 
 	/*-----------------------BACKGROUNDS------------------------*/
 	/*-----------------------BACKGROUND 2------------------------*/
-	if (!(smoothies[2-1] && processorType < 4) &&
-	    !(smoothies[1-1] && processorType == 3))
-	{
-		if (background2over == 2)
+	//if (!(smoothies[1] && CVars::detail_level < 3) &&
+	//    !(smoothies[0] && CVars::detail_level == 2))
+	//{
+		if (background2over == 2 && CVars::r_background2)
 		{
-			if (wild && !background2notTransparent)
-			{
+			if (CVars::r_background2_blend && !background2notTransparent) {
 				JE_superBackground2();
 			} else {
 				JE_drawBackground2();
 			}
 		}
-	}
+	//}
 
 	/*-------------------------Warning---------------------------*/
 	if ((playerAlive && armorLevel < 6) ||
@@ -2862,26 +2856,27 @@ explosion_draw_overflow:
 	/*=================================*/
 	/*=======The Sound Routine=========*/
 	/*=================================*/
-	if (soundEffects > 0 && soundActive && firstGameOver)
+	if (!noSound && firstGameOver)
 	{
 		temp = 0;
 		for (temp2 = 0; temp2 < SFX_CHANNELS; temp2++)
 		{
 			if (soundQueue[temp2] > 0)
 			{
+				float fx_vol;
 				temp = soundQueue[temp2];
 				if (temp2 == 3)
 				{
-					temp3 = fxPlayVol;
+					fx_vol = 1.f;
 				} else {
 					if (temp == 15)
 					{
-						temp3 = fxPlayVol / 4;
+						fx_vol = .25f;
 					} else {   /*Lightning*/
-						temp3 = fxPlayVol / 2;
+						fx_vol = .5f;
 					}
 				}
-				JE_multiSamplePlay(digiFx[temp-1], fxSize[temp-1], temp2, temp3);
+				JE_multiSamplePlay(digiFx[temp-1], fxSize[temp-1], temp2, fx_vol);
 				soundQueue[temp2] = 0;
 			}
 		}
@@ -3004,7 +2999,6 @@ explosion_draw_overflow:
 					if (!playDemo)
 					{
 						JE_playSong(SONG_GAMEOVER);
-						JE_setVol(tyrMusicVolume, fxVolume);
 					}
 					firstGameOver = false;
 				}
@@ -5498,18 +5492,17 @@ void JE_eventSystem( void )
 			if (firstGameOver)
 			{
 				musicFade = true;
-				tempVolume = tyrMusicVolume;
+				tempVolume = CVars::s_music_vol;
 			}
 			break;
 		case 35: /* Play new song */
 			if (firstGameOver)
 			{
 				JE_playSong(eventRec[eventLoc-1].eventdat);
-				if (!musicActive)
+				if (!noSound)
 				{
-					JE_selectSong (0);
+					JE_selectSong(0);
 				}
-				JE_setVol(tyrMusicVolume, fxVolume);
 			}
 			musicFade = false;
 			break;
@@ -6543,11 +6536,11 @@ void JE_itemScreen( void )
 			}
 		}
 
-		/* Changing the volume? */
+		// Draw volume bars
 		if ((curMenu == 2) || (curMenu == 11))
 		{
-			JE_barDrawShadow(225, 70, 1, 16, tyrMusicVolume / 12, 3, 13);
-			JE_barDrawShadow(225, 86, 1, 16, fxVolume / 12, 3, 13);
+			JE_barDrawShadow(225, 70, 1, 16, int(CVars::s_music_vol*14.f), 3, 13); // TODO: Implement a barDraw that can draw partial bars
+			JE_barDrawShadow(225, 86, 1, 16, int(CVars::s_fx_vol*14.f), 3, 13);
 		}
 
 		/* 7 is data cubes menu, 8 is reading a data cube, "firstmenu9" refers to menu 8 because of reindexing */
@@ -6746,7 +6739,8 @@ void JE_itemScreen( void )
 					JE_bar(160, 157, 310, 166, 228);
 
 					std::ostringstream buf;
-					buf << miscText[11] << " " << (yLoc * 100) / ((cubeMaxY[currentCube] - 9) * 12) << "%";
+					int percent = cubeMaxY[currentCube] > 9 ? (yLoc * 100) / ((cubeMaxY[currentCube] - 9) * 12) : 100;
+					buf << miscText[11] << " " << percent << "%";
 					JE_outTextAndDarken(176, 160, buf.str().c_str(), 14, 1, TINY_FONT);
 
 					JE_dString(260, 160, miscText[13 - 1], SMALL_FONT_SHAPES);
@@ -7011,56 +7005,41 @@ void JE_itemScreen( void )
 			{
 				if ((mouseX >= 221) && (mouseX <= 303) && (mouseY >= 70) && (mouseY <= 82))
 				{
-					if (!musicActive)
+					if (!noSound)
 					{
-						musicActive = true;
 						temp = currentSong;
 						currentSong = 0;
 						JE_playSong(temp);
 					}
 
 					curSel[2] = 4;
-					temp = (mouseX - 221) / 4 * 12;
 
-					if (abs(tyrMusicVolume - temp) < 12)
-					{
-						tyrMusicVolume = temp;
+					float tmp_vol = (mouseX - 221) / 14.f;
+
+					if (tmp_vol < 0.f) {
+						CVars::s_music_vol = CVars::s_music_vol-.05f;
+					} else if (tmp_vol > 1.5f) {
+						CVars::s_music_vol = CVars::s_music_vol+.05f;
 					} else {
-						if (tyrMusicVolume < temp)
-						{
-							tyrMusicVolume += 12;
-						} else {
-							tyrMusicVolume -= 12;
-						}
+						CVars::s_music_vol = tmp_vol;
 					}
 					tempB = false;
 				}
 
 				if ((mouseX >= 221) && (mouseX <= 303) && (mouseY >= 86) && (mouseY <= 98))
 				{
-					soundActive = true;
 					curSel[2] = 5;
-					temp = (mouseX - 221) / 4 * 12;
-					if (abs(fxVolume - temp) < 12)
-					{
-						fxVolume = temp;
+					float tmp_vol = (mouseX - 221) / 14.f;
+
+					if (tmp_vol < 0.f) {
+						CVars::s_fx_vol = CVars::s_fx_vol-.05f;
+					} else if (tmp_vol > 1.5f) {
+						CVars::s_fx_vol = CVars::s_fx_vol+.05f;
 					} else {
-						if (fxVolume < temp)
-						{
-							fxVolume += 12;
-						} else {
-							fxVolume -= 12;
-						}
+						CVars::s_fx_vol = tmp_vol;
 					}
 				}
 
-				if (fxVolume > 254)
-				{
-					fxVolume = 254;
-				}
-
-				JE_calcFXVol();
-				JE_setVol(tyrMusicVolume, fxPlayVol);
 				JE_playSampleNum(CURSOR_MOVE);
 			}
 
@@ -7397,18 +7376,24 @@ void JE_itemScreen( void )
 						switch (curSel[curMenu])
 						{
 						case 4:
-							JE_changeVolume(&tyrMusicVolume, -16, &fxVolume, 0);
-							if (!musicActive)
 							{
-								musicActive = true;
-								temp = currentSong;
-								currentSong = 0;
-								JE_playSong(temp);
+							float vol = CVars::s_music_vol;
+							if (vol == 0) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_music_vol = vol - .05f;
+							}
 							}
 							break;
 						case 5:
-							JE_changeVolume(&tyrMusicVolume, 0, &fxVolume, -16);
-							soundActive = true;
+							{
+							float vol = CVars::s_fx_vol;
+							if (vol == 0) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_fx_vol = vol - .05f;
+							}
+							}
 							break;
 						}
 						break;
@@ -7484,18 +7469,24 @@ void JE_itemScreen( void )
 						switch (curSel[curMenu])
 						{
 						case 4:
-							JE_changeVolume(&tyrMusicVolume, 16, &fxVolume, 0);
-							if (!musicActive)
 							{
-								musicActive = true;
-								temp = currentSong;
-								currentSong = 0;
-								JE_playSong(temp);
+							float vol = CVars::s_music_vol;
+							if (vol == 1.5f) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_music_vol = vol + .05f;
+							}
 							}
 							break;
 						case 5:
-							JE_changeVolume(&tyrMusicVolume, 0, &fxVolume, 16);
-							soundActive = true;
+							{
+							float vol = CVars::s_fx_vol;
+							if (vol == 1.5f) {
+								JE_playSampleNum(WRONG);
+							} else {
+								CVars::s_fx_vol = vol + .05f;
+							}
+							}
 							break;
 						}
 						break;

@@ -37,8 +37,8 @@
 
 namespace CVars
 {
-	CVarInt ConBufferSize("con_buffer_size", CVar::CONFIG, "Size of the console scrollback in lines.", 64);
-	CVarInt ConHeight("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeCheck<4, 200/Console::LINE_HEIGHT>);
+	CVarInt con_buffer_size("con_buffer_size", CVar::CONFIG, "Size of the console scrollback in lines.", 64);
+	CVarInt con_height("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeCheck<4, 200/Console::LINE_HEIGHT>);
 }
 
 
@@ -101,7 +101,7 @@ void Console::drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y
 }
 
 Console::Console()
-	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mScrollback(CVars::ConBufferSize.get()),
+	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mScrollback(CVars::con_buffer_size),
 	mScrollbackHead(0), mCurScroll(0), mColor(TEXT_COLOR), mCursorPos(0), mCursorVisible(true), mCursorTimeout(BLINK_RATE)
 { }
 
@@ -111,7 +111,7 @@ void Console::enable( const bool anim )
 	
 	if (!anim)
 	{
-		mHeight = CVars::ConHeight.get();
+		mHeight = CVars::con_height;
 	}
 }
 
@@ -177,26 +177,26 @@ void Console::think( const SDL_keysym& keysym )
 			case SDLK_EQUALS:
 				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
 
-				CVars::ConHeight.set(CVars::ConHeight.get()+1);
+				CVars::con_height = CVars::con_height+1;
 
-				if (mCurScroll + static_cast<unsigned int>(CVars::ConHeight.get()) >= static_cast<unsigned int>(CVars::ConBufferSize.get()))
+				if (mCurScroll + static_cast<unsigned int>(CVars::con_height) >= static_cast<unsigned int>(CVars::con_buffer_size))
 				{
-					mCurScroll = CVars::ConBufferSize.get() - CVars::ConHeight.get();
+					mCurScroll = CVars::con_buffer_size - CVars::con_height;
 				}
 				break;
 			case SDLK_MINUS:
 				if (!(keysym.mod & KMOD_CTRL)) goto type_char;
-				CVars::ConHeight.set(CVars::ConHeight.get()-1);
+				CVars::con_height = CVars::con_height-1;
 				break;
 			///// Console scrolling
 			case SDLK_PAGEUP:
 				{
-				unsigned int amount = CVars::ConHeight.get() / 3;
+				unsigned int amount = CVars::con_height / 3;
 				if (amount < 1) amount = 1;
 
-				if (mCurScroll + amount + static_cast<unsigned int>(CVars::ConHeight.get())-1 >= static_cast<unsigned int>(CVars::ConBufferSize.get()))
+				if (mCurScroll + amount + static_cast<unsigned int>(CVars::con_height)-1 >= static_cast<unsigned int>(CVars::con_buffer_size))
 				{
-					mCurScroll = CVars::ConBufferSize.get() - (CVars::ConHeight.get()-1);
+					mCurScroll = CVars::con_buffer_size - (CVars::con_height-1);
 				} else {
 					mCurScroll += amount;
 				}
@@ -204,7 +204,7 @@ void Console::think( const SDL_keysym& keysym )
 				}
 			case SDLK_PAGEDOWN:
 				{
-				unsigned int amount = CVars::ConHeight.get() / 3;
+				unsigned int amount = CVars::con_height / 3;
 				if (amount < 1) amount = 1;
 
 				if (amount < mCurScroll)
@@ -254,7 +254,7 @@ void Console::think( const SDL_keysym& keysym )
 				break;
 			case SDLK_RETURN:
 				*this << "\a3" << mEditLine << std::endl;
-				runCommand(parseLine(mEditLine));
+				runCommand(mEditLine);
 				mEditLine.clear();
 				mCursorPos = 0;
 				break;
@@ -268,8 +268,8 @@ type_char:
 			}
 		}
 
-		if (mHeight < static_cast<unsigned long>(CVars::ConHeight.get())) mHeight++;
-		if (mHeight > static_cast<unsigned long>(CVars::ConHeight.get())) mHeight--;
+		if (mHeight < static_cast<unsigned long>(CVars::con_height)) mHeight++;
+		if (mHeight > static_cast<unsigned long>(CVars::con_height)) mHeight--;
 
 		if (mCursorTimeout > 0)
 		{
@@ -388,7 +388,7 @@ std::vector<std::string> Console::parseLine( std::string text )
 
 	if (in_quote)
 	{
-		*this << "\a7Warning:\ax No quote at end of input!" << std::endl;
+		Console::get() << "\a7Warning:\ax No quote at end of input!" << std::endl;
 	}
 
 	return tokens;
@@ -427,7 +427,7 @@ void Console::consoleMain()
 	std::copy(screen, screen+VGAScreen->h*VGAScreen->pitch, screen_copy);
 
 	service_SDL_events(true);
-	while (lastkey_keysym.sym != SDLK_PAUSE)
+	while (!(lastkey_keysym.sym == SDLK_DELETE && lastkey_keysym.mod & KMOD_CTRL))
 	{
 		service_SDL_events(true);
 		think(lastkey_keysym);

@@ -155,7 +155,7 @@ void JE_findTyrian( std::string filename )
 	}
 }
 
-std::string JE_locateFile( std::string filename ) /* !!! WARNING: Non-reentrant !!! */
+std::string JE_locateFile( std::string filename )
 {
 	std::string buf;
 

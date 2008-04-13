@@ -26,6 +26,7 @@
 #include <vector>
 #include <deque>
 #include <iostream>
+#include <string>
 
 class Console : public std::ostream, public Singleton<Console>
 {
@@ -73,14 +74,21 @@ public:
 	void draw( SDL_Surface* const surf );
 	void think( const SDL_keysym& keysym );
 	void println( std::string text );
-	std::vector<std::string> parseLine( std::string text );
+	static std::vector<std::string> parseLine( std::string text );
 	void runCommand( std::vector<std::string> tokens );
+	void runCommand( std::string str ) { runCommand(parseLine(str)); }
 
 	bool isDown( );
 
 	// TODO: When we have a real main loop, remove this
 	void consoleMain( void );
 };
+
+#ifdef NDEBUG
+#	define DEBUG_MSG(str)
+#else
+#	define DEBUG_MSG(str) {Console::get() << "\a4" << str << std::endl;}
+#endif
 
 /*
 0: Gray

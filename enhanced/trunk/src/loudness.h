@@ -22,6 +22,8 @@
 
 #include "opentyr.h"
 
+#include "CVar.h"
+
 #include "SDL.h"
 
 
@@ -43,8 +45,15 @@ extern JE_MusicType musicData;
 extern bool repeated;
 extern bool playing;
 
-extern float sample_volume;
-extern float music_volume;
+extern float music_vol_multiplier;
+
+namespace CVars
+{
+	extern CVarBool s_enabled;
+	extern CVarBool s_mute;
+	extern CVarFloat s_music_vol;
+	extern CVarFloat s_fx_vol;
+}
 
 void JE_initialize( void );
 void JE_deinitialize( void );
@@ -53,8 +62,6 @@ void JE_deinitialize( void );
    or restart it if it is. */
 void JE_selectSong( JE_word value );
 
-void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol);
-
-void JE_setVol(JE_word volume, JE_word sample); /* Call with 0x1-0x100 for music volume, and 0x10 to 0xf0 for sample volume. */
+void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol);
 
 #endif /* LOUDNESS_H */

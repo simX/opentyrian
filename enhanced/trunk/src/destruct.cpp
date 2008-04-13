@@ -31,6 +31,8 @@
 #include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "loudness.h"
+#include "params.h"
 
 #include <cmath>
 
@@ -1229,19 +1231,20 @@ void JE_destructMain( void )
 						}
 					}
 					
-					if (soundEffects > 0 && soundActive)
-					{
-						
+					if (!noSound)
+					{						
 						temp = 0;
 						for (temp2 = 0; temp2 < 8; temp2++)
 							if (soundQueue[temp2] > 0)
 							{
+								float fx_vol;
 								temp = soundQueue[temp2];
-								if (temp2 == 7)
-									temp3 = fxPlayVol;
-								else
-									temp3 = fxPlayVol / 2;
-								JE_multiSamplePlay(digiFx[temp-1], fxSize[temp-1], temp2, temp3);
+								if (temp2 == 7) {
+									fx_vol = 1.f;
+								} else {
+									fx_vol = .5f;
+								}
+								JE_multiSamplePlay(digiFx[temp-1], fxSize[temp-1], temp2, fx_vol);
 								soundQueue[temp2] = 0;
 							}
 					}
@@ -1902,7 +1905,7 @@ void JE_helpScreen( void )
 
 void JE_pauseScreen( void )
 {
-	JE_setVol(tyrMusicVolume / 2 + 10, fxVolume);
+	music_vol_multiplier = .54f;
 	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->h * VGAScreen2->pitch);
 	JE_outText(JE_fontCenter(miscText[23-1], TINY_FONT), 90, miscText[23-1], 12, 5);
 	JE_showVGA();
@@ -1914,7 +1917,7 @@ void JE_pauseScreen( void )
 	
 	memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->h * VGAScreen->pitch);
 	JE_showVGA();
-	JE_setVol(tyrMusicVolume, fxVolume);
+	music_vol_multiplier = 1.f;
 }
 
 }

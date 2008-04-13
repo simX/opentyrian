@@ -22,6 +22,7 @@
 #include "joystick.h"
 #include "config.h"
 #include "vga256d.h"
+#include "BindManager.h"
 
 #include "keyboard.h"
 
@@ -47,7 +48,7 @@ int numkeys;
 Uint8 *keysactive;
 
 bool input_grab_enabled =
-#ifndef DEBUG
+#ifdef NDEBUG
 	true;
 #else
 	false;
@@ -174,6 +175,8 @@ void service_SDL_events( bool clear_new )
 					}
 				}
 
+				BindManager::get().runBind(ev.key.keysym.sym, true);
+
 				newkey = true;
 				lastkey_keysym = ev.key.keysym;
 				lastkey_sym = ev.key.keysym.sym;
@@ -182,6 +185,8 @@ void service_SDL_events( bool clear_new )
 				keydown = true;
 				return;
 			case SDL_KEYUP:
+				BindManager::get().runBind(ev.key.keysym.sym, false);
+
 				keydown = false;
 				return;
 			case SDL_MOUSEBUTTONDOWN:

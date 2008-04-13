@@ -30,6 +30,8 @@
 #include "iniparser.h"
 #include "BinaryStream.h"
 #include "Console.h"
+#include "HighScores.h"
+#include "CVar.h"
 
 #include "config.h"
 
@@ -39,8 +41,6 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <algorithm>
-#include <functional>
 
 
 /* Configuration Load/Save handler */
@@ -65,8 +65,8 @@ const char tyrian_ini_template[] = \
 	"\n"
 	"[sound]\n"
 	"sound_effects = %s\n"
-	"music_volume = %d\n"
-	"fx_volume = %d\n"
+	"s_music_vol = %d\n"
+	"s_fx_vol = %d\n"
 	"\n"
 	"[input]\n"
 	"device1 = %d\n"
@@ -161,7 +161,7 @@ JE_KeySettingType keySettings;
 
 /* Configuration */
 int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
-bool filtrationAvail, filterActive, filterFade, filterFadeStart;
+bool filterActive, filterFade, filterFadeStart;
 
 bool gameJustLoaded;
 
@@ -185,16 +185,13 @@ int background3over;
 int background2over;
 int gammaCorrection;
 bool superPause = false;
-bool explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll,
-     wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
+bool youAreCheating, displayScore, soundHasChanged, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 
 int fastPlay;
 bool pentiumMode;
 
 /* Savegame files */
 bool playerPasswordInput;
-int gameSpeed;
-int processorType;  /* 1=386 2=486 3=Pentium Hyper */
 
 JE_SaveFilesType saveFiles; /*array[1..saveLevelnum] of savefiletype;*/
 JE_SaveFilesType *saveFilePointer = &saveFiles;
@@ -204,150 +201,6 @@ JE_SaveGameTemp *saveTempPointer = &saveTemp;
 bool fullscreen_enabled;
 
 const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
-
-const unsigned long HighScore::defaultScores[3] = {5000, 2500, 1000};
-const char *HighScore::defaultHighScoreNames[] =
-{/*1P*/
-/*TYR*/   "The Prime Chair", /*13*/
-          "Transon Lohk",
-          "Javi Onukala",
-          "Mantori",
-          "Nortaneous",
-          "Dougan",
-          "Reid",
-          "General Zinglon",
-          "Late Gyges Phildren",
-          "Vykromod",
-          "Beppo",
-          "Borogar",
-          "ShipMaster Carlos",
-
-/*OTHER*/ "Jill", /*5*/
-          "Darcy",
-          "Jake Stone",
-          "Malvineous Havershim",
-          "Marta Louise Velasquez",
-
-/*JAZZ*/  "Jazz Jackrabbit", /*3*/
-          "Eva Earlong",
-          "Devan Shell",
-
-/*OMF*/   "Crystal Devroe", /*11*/
-          "Steffan Tommas",
-          "Milano Angston",
-          "Christian",
-          "Shirro",
-          "Jean-Paul",
-          "Ibrahim Hothe",
-          "Angel",
-          "Cossette Akira",
-          "Raven",
-          "Hans Kreissack",
-
-/*DARE*/  "Tyler", /*2*/
-          "Rennis the Rat Guard"
-};
-
-const char *HighScore::defaultTeamNames[] =
-{
-	"Jackrabbits",
-	"Team Tyrian",
-	"The Elam Brothers",
-	"Dare to Dream Team",
-	"Pinball Freaks",
-	"Extreme Pinball Freaks",
-	"Team Vykromod",
-	"Epic All-Stars",
-	"Hans Keissack's WARriors",
-	"Team Overkill",
-	"Pied Pipers",
-	"Gencore Growlers",
-	"Microsol Masters",
-	"Beta Warriors",
-	"Team Loco",
-	"The Shellians",
-	"Jungle Jills",
-	"Murderous Malvineous",
-	"The Traffic Department",
-	"Clan Mikal",
-	"Clan Patrok",
-	"Carlos' Crawlers"
-};
-
-HighScores::HighScores( )
-{
-	for (int i = 0; i < 4; i++) // Episode
-	{
-		for (int j = 0; j < 2; j++) // One or two players
-		{
-			for (int k = 0; k < 3; k++) // Place
-			{
-				mScores[i][j][k] = HighScore(i, j == 1, k);
-			}
-		}
-	}
-}
-
-void HighScores::serialize( OBinaryStream& f ) const
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			for (int k = 0; k < 3; k++)
-			{
-				mScores[i][j][k].serialize(f);
-			}
-		}
-	}
-}
-
-void HighScores::unserialize( IBinaryStream& f )
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			for (int k = 0; k < 3; k++)
-			{
-				mScores[i][j][k] = HighScore(f);
-			}
-		}
-	}
-}
-
-void HighScores::sort( )
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			std::sort(mScores[i][j], mScores[i][j]+3, std::greater<HighScore>());
-		}
-	}
-}
-
-int HighScores::insertScore( const int episode, const int players, const HighScore& score, bool dry_run )
-{
-	sort();
-	
-	HighScore(& arr)[3] = mScores[episode][players];
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (arr[i] < score)
-		{
-			if (!dry_run)
-			{
-				arr[i] = score;
-			}
-			return i;
-		}
-	}
-
-	return -1;
-}
-HighScores highScores;
 
 void JE_decryptString( char *s, int len )
 {
@@ -553,64 +406,83 @@ void JE_loadGame( int slot )
 	memcpy(&lastLevelName, &levelName, sizeof(levelName));
 }
 
+namespace CVars
+{
+	CVarInt game_speed("game_speed", CVar::CONFIG, "Game speed. 0-4", 3, rangeCheck<0,4>);
+}
+
 void JE_initProcessorType( void )
 {
-	/* SYN: Originally this proc looked at your hardware specs and chose appropriate options. We don't care, so I'll just set
-	   decent defaults here. */
+	/*
+	0 - Low
+	1 - Medium
+	2 - High
+	3 - Pentium
 
-	wild = false;
-	superWild = false;
-	smoothScroll = true;
-	explosionTransparent = true;
-	filtrationAvail = false;
-	background2 = true;
-	displayScore = true;
+	backgroundTransparent | 3-4
+	            superWild | 4
+	          background2 | 1-4
+	 explosionTransparent | 1-4
+	      filtrationAvail | 3-4
+	*/
 
-	switch (processorType)
+	/*switch (CVars::detail_level)
 	{
-		case 1: /* 386 */
+		case 0: // 386
+			backgroundTransparent = false;
+			superWild = false;
 			background2 = false;
-			displayScore = false;
 			explosionTransparent = false;
+			filtrationAvail = false;
 			break;
-		case 2: /* 486 - Default */
+		case 1: // 486
+			backgroundTransparent = false;
+			superWild = false;
+			background2 = true;
+			explosionTransparent = true;
+			filtrationAvail = false;
 			break;
-		case 3: /* High Detail */
-			smoothScroll = false;
+		case 2: // High Detail
+			backgroundTransparent = false;
+			superWild = false;
+			background2 = true;
+			explosionTransparent = true;
+			filtrationAvail = false;
 			break;
-		case 4: /* Pentium */
-			wild = true;
+		case 3: // Pentium
+			backgroundTransparent = true;
+			superWild = false;
+			background2 = true;
+			explosionTransparent = true;
 			filtrationAvail = true;
 			break;
-		case 5: /* Nonstandard VGA */
-			smoothScroll = false;
-			break;
-		case 6: /* SuperWild */
-			wild = true;
+		case 4: // SuperWild
+			backgroundTransparent = true;
 			superWild = true;
+			background2 = true;
+			explosionTransparent = true;
 			filtrationAvail = true;
 			break;
-	}
+	}*/
 
-	switch (gameSpeed)
+	switch (CVars::game_speed)
 	{
-		case 1:  /* Slug Mode */
+		case 0:  /* Slug Mode */
 			fastPlay = 3;
 			break;
-		case 2:  /* Slower */
+		case 1:  /* Slower */
 			fastPlay = 4;
 			break;
-		case 3: /* Slow */
+		case 2: /* Slow */
 			fastPlay = 5;
 			break;
-		case 4: /* Normal */
+		case 3: /* Normal */
 			fastPlay = 0;
 			break;
-		case 5: /* Pentium Hyper */
+		case 4: /* Pentium Hyper */
 			fastPlay = 1;
 			break;
 	}
-
 }
 
 void JE_setNewGameSpeed( void )
@@ -621,32 +493,26 @@ void JE_setNewGameSpeed( void )
 	{
 	case 0:
 		speed = 0x4300;
-		smoothScroll = true;
 		frameCountMax = 2;
 		break;
 	case 1:
 		speed = 0x3000;
-		smoothScroll = true;
 		frameCountMax = 2;
 		break;
 	case 2:
 		speed = 0x2000;
-		smoothScroll = false;
 		frameCountMax = 2;
 		break;
 	case 3:
 		speed = 0x5300;
-		smoothScroll = true;
 		frameCountMax = 4;
 		break;
 	case 4:
 		speed = 0x4300;
-		smoothScroll = true;
 		frameCountMax = 3;
 		break;
 	case 5:
 		speed = 0x4300;
-		smoothScroll = true;
 		frameCountMax = 2;
 		pentiumMode = true;
 		break;
@@ -657,8 +523,20 @@ void JE_setNewGameSpeed( void )
   JE_setTimerInt();
 }
 
+namespace CVars
+{
+	// Video
+	CVarInt gamma_correction("gamma_correction", CVar::CONFIG, "Gamma correction. 0-3", 0, rangeCheck<0,3>);
+	CVarBool fullscreen_enabled("fullscreen_enabled", CVar::CONFIG, "Fullscreen.", false);
+
+	// Input devices // TODO will probably be removed
+	CVarInt input_dev1("input_dev1", CVar::CONFIG, "Input device for player 1. 1-3", 1, rangeCheck<1,3>);
+	CVarInt input_dev2("input_dev2", CVar::CONFIG, "Input device for player 2. 1-3", 2, rangeCheck<1,3>);
+}
+
 void JE_loadConfiguration( void )
 {
+	/*
 	dictionary *ini = iniparser_new("tyrian.ini");
 
 	gameSpeed = iniparser_getint(ini, "video:game_speed", 4);
@@ -667,8 +545,8 @@ void JE_loadConfiguration( void )
 	fullscreen_enabled = iniparser_getboolean(ini, "video:fullscreen", false);
 
 	soundEffects = iniparser_getboolean(ini, "sound:sound_effects", true);
-	tyrMusicVolume = iniparser_getint(ini, "sound:music_volume", 255);
-	fxVolume = iniparser_getint(ini, "sound:fx_volume", 128);
+	tyrMusicVolume = iniparser_getint(ini, "sound:s_music_vol", 255);
+	fxVolume = iniparser_getint(ini, "sound:s_fx_vol", 128);
 
 	inputDevice1 = iniparser_getint(ini, "input:device1", 0);
 	inputDevice2 = iniparser_getint(ini, "input:device2", 0);
@@ -694,8 +572,7 @@ void JE_loadConfiguration( void )
 
 	soundActive = true;
 	musicActive = true;
-
-	JE_setVol(tyrMusicVolume, fxVolume);
+	*/
 
 	for (int i = 0; i < SAVE_FILES_NUM; i++)
 	{
@@ -750,7 +627,6 @@ void JE_loadConfiguration( void )
 		highScores.unserialize(s);
 	} // Making up random stuff handled by the default ctor
 
-	JE_calcFXVol();
 	JE_initProcessorType();
 }
 
@@ -825,14 +701,14 @@ void JE_saveConfiguration( void )
 		Console::get() << "Couldn't write tyrian.ini." << std::endl;
 	} else {
 		// YKS: Yes, this is horrible, need to come up with a better way
-		fprintf(ini, tyrian_ini_template,
+/*		fprintf(ini, tyrian_ini_template,
 			gameSpeed, processorType, gammaCorrection, (fullscreen_enabled ? "true" : "false"), // [video]
 			(soundEffects ? "true" : "false"), tyrMusicVolume, fxVolume, // [sound]
 			inputDevice1, inputDevice2, // [input]
 			keySettings[0], keySettings[1], keySettings[2], keySettings[3], // [keyboard]
 			keySettings[4], keySettings[5], keySettings[6], keySettings[7],
 			joyButtonAssign[0], joyButtonAssign[1], joyButtonAssign[2], joyButtonAssign[3] // [joystick]
-		);
+		);*/
 		fclose(ini);
 #if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
 		sync();

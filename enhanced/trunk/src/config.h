@@ -22,7 +22,7 @@
 
 #include "opentyr.h"
 
-#include "BinaryStream.h"
+#include "Cvar.h"
 
 #include <stdio.h>
 #include <string>
@@ -64,77 +64,6 @@ struct JE_SaveFileType
 	int initialDifficulty;
 };
 
-class HighScore
-{
-private:
-	static const unsigned long defaultScores[3];
-	static const char *defaultHighScoreNames[34];
-	static const char *defaultTeamNames[22];
-
-	unsigned long mScore;
-	std::string mName;
-	unsigned char mDifficulty;
-public:
-	HighScore( const unsigned long score = 0, const std::string& name = "", const unsigned char difficulty = 0 )
-		: mScore(score), mName(name), mDifficulty(difficulty)
-	{}
-
-	HighScore( const int episode, const bool two_player, const int place )
-		: mScore(!two_player ? defaultScores[place]*(episode+1) : defaultScores[place]*(episode+1)/2),
-		  mName(!two_player ? defaultHighScoreNames[rand() % 34] : defaultTeamNames[rand() % 22]),
-		  mDifficulty(0)
-	{}
-
-	HighScore( IBinaryStream& f )
-		: mScore(f.get32()), mName(f.getStr()), mDifficulty(f.get8())
-	{}
-
-	void serialize( OBinaryStream& f ) const
-	{
-		f.put32(mScore);
-		f.put(mName);
-		f.put8(mDifficulty);
-	}
-
-	bool operator<( const HighScore& o ) const
-	{
-		return getScore() < o.getScore();
-	}
-	bool operator>( const HighScore& o ) const
-	{
-		return getScore() > o.getScore();
-	}
-
-	unsigned long getScore() const { return mScore; }
-	std::string getName() const { return mName; }
-	unsigned char getDifficulty() const { return mDifficulty; }
-
-	void setScore( unsigned long score ) { mScore = score; }
-	void setName( const std::string& name ) { mName = name; }
-	void setDifficulty( unsigned char difficulty ) { mDifficulty = difficulty; }
-};
-
-class HighScores
-{
-private:
-	HighScore mScores[4][2][3];
-public:
-	HighScores( );
-	HighScores( IBinaryStream& f )
-	{
-		unserialize(f);
-	}
-	void serialize( OBinaryStream& f ) const;
-	void unserialize( IBinaryStream& f );
-
-	void sort( );
-
-	int insertScore( const int episode, const int players, const HighScore& score, bool dry_run = false );
-
-	HighScore& getScore( const int episode, const int players, const int place ) { return mScores[episode][players][place]; }
-};
-extern HighScores highScores;
-
 typedef JE_SaveFileType JE_SaveFilesType[SAVE_FILES_NUM]; /* [1..savefilesnum] */
 typedef Uint8 JE_SaveGameTemp[SAVE_FILES_SIZE + 4 + 100]; /* [1..sizeof(savefilestype) + 4 + 100] */
 
@@ -149,8 +78,7 @@ struct StarDatType
 
 extern const unsigned char cryptKey[10];
 extern const JE_KeySettingType defaultKeySettings;
-extern const char defaultHighScoreNames[34][23];
-extern const char defaultTeamNames[22][25];
+
 extern const JE_EditorItemAvailType initialItemAvail;
 extern bool smoothies[9];
 extern int starShowVGASpecialCode;
@@ -176,7 +104,7 @@ extern char lastLevelName[11], levelName[11];
 extern int mainLevel, nextLevel, saveLevel;
 extern JE_KeySettingType keySettings;
 extern signed int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
-extern bool filtrationAvail, filterActive, filterFade, filterFadeStart;
+extern bool filterActive, filterFade, filterFadeStart;
 extern bool gameJustLoaded;
 extern bool galagaMode;
 extern bool extraGame;
@@ -190,18 +118,21 @@ extern int secretHint;
 extern int background3over;
 extern int background2over;
 extern int gammaCorrection;
-extern bool superPause, explosionTransparent, youAreCheating, displayScore, soundHasChanged, background2, smoothScroll, wild, superWild, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
+extern bool superPause, youAreCheating, displayScore, soundHasChanged, starActive, topEnemyOver, skyEnemyOverAll, background2notTransparent, tempb;
 extern int fastPlay;
 extern bool pentiumMode;
 extern bool playerPasswordInput;
-extern int gameSpeed;
-extern int processorType;
 extern JE_SaveFilesType saveFiles;
 extern JE_SaveFilesType *saveFilePointer;
 extern JE_SaveGameTemp saveTemp;
 extern JE_SaveGameTemp *saveTempPointer;
 
 extern bool fullscreen_enabled;
+
+namespace CVars
+{
+	extern CVarInt game_speed;
+}
 
 void JE_initProcessorType( void );
 void JE_setNewGameSpeed( void );

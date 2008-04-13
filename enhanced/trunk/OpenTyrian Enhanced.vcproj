@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\BindManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CCmd.h"
 				>
 			</File>
@@ -241,7 +245,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\GameActions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\helptext.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HighScores.h"
 				>
 			</File>
 			<File
@@ -258,6 +270,10 @@
 			</File>
 			<File
 				RelativePath=".\src\keyboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\KeyNames.h"
 				>
 			</File>
 			<File
@@ -393,6 +409,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\BindManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CCmd.cpp"
 				>
 			</File>
@@ -437,7 +457,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\GameActions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\helptext.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HighScores.cpp"
 				>
 			</File>
 			<File
@@ -454,6 +482,10 @@
 			</File>
 			<File
 				RelativePath=".\src\keyboard.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\KeyNames.cpp"
 				>
 			</File>
 			<File

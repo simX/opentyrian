@@ -21,11 +21,11 @@
 #include "CCmd.h"
 #include "Console.h"
 
-namespace CVars
+namespace CCmds
 {
 	namespace Func
 	{
-		void set( const std::vector<std::string>& params )
+		static void set( const std::vector<std::string>& params )
 		{
 			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 			CVar* const var = CVarManager::get().getCVar(param1);
@@ -45,14 +45,14 @@ namespace CVars
 			}
 		}
 
-		void echo( const std::vector<std::string>& params )
+		static void echo( const std::vector<std::string>& params )
 		{
 			std::string str = CCmd::convertParam<std::string>(params, 0);
 
 			Console::get() << str << std::endl;
 		}
 
-		void help( const std::vector<std::string>& params )
+		static void help( const std::vector<std::string>& params )
 		{
 			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 
@@ -71,7 +71,7 @@ namespace CVars
 			}
 		}
 
-		void list( const std::vector<std::string>& params )
+		static void list( const std::vector<std::string>& params )
 		{
 			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 
@@ -122,9 +122,12 @@ namespace CVars
 	CCmd echo("echo", CCmd::NONE, "Prints a message to console. Usage: echo [message]", Func::echo);
 	CCmd help("help", CCmd::NONE, "Prints help text for a CCmd or CVar. Usage: help [cvar|ccmd]", Func::help);
 	CCmd list("list", CCmd::NONE, "Searches cvar help text or lists all cvars or ccmds. Usage: list [cvar|ccmd|string to search]", Func::list);
+};
 
+namespace CVars
+{
 	CVarInt testint("testint", CVar::NONE, "This is a test ConVar, hello", 0);
-	CVarFloat testfloat("testfloat", CVar::NONE, "This is a test ConVar, hello", 3.14);
+	CVarFloat testfloat("testfloat", CVar::NONE, "This is a test ConVar, hello", 3.14f);
 	CVarBool testbool("testbool", CVar::NONE, "This is a test ConVar, hello", true);
 	CVarString teststr("teststr", CVar::NONE, "This is a test ConVar, hello", "");
 }

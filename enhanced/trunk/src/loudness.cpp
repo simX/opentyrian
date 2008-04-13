@@ -23,6 +23,9 @@
 #include "lds_play.h"
 #include "params.h"
 #include "Console.h"
+#include "CVar.h"
+#include "sndmast.h"
+#include "nortsong.h"
 
 #include "loudness.h"
 
@@ -32,8 +35,7 @@ JE_MusicType musicData;
 bool repeated;
 bool playing;
 
-float sample_volume = 0.4f;
-float music_volume = 0.6f;
+float music_vol_multiplier = 1.f;
 
 SDL_mutex *soundmutex = NULL;
 
@@ -41,63 +43,26 @@ SDL_mutex *soundmutex = NULL;
 SAMPLE_TYPE *channel_buffer[SFX_CHANNELS];
 SAMPLE_TYPE *channel_pos[SFX_CHANNELS];
 Uint32 channel_len[SFX_CHANNELS];
-Uint8 channel_vol[SFX_CHANNELS];
+float channel_vol[SFX_CHANNELS];
 int sound_init_state = false;
 int freq = 11025 * OUTPUT_QUALITY;
 
 bool music_playing = false;
 
-
-void audio_cb( void *userdata, unsigned char *feedme, int howmuch );
-
-void JE_initialize( void )
+float volumeRangeCheck( const float& val )
 {
-	SDL_AudioSpec plz, got;
-
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
-	{
-		Console::get() << "Failed to initialize audio: " << SDL_GetError() << std::endl;
-		noSound = true;
-		return;
-	}
-
-	sound_init_state = true;
-
-	soundmutex = SDL_CreateMutex();
-
-	if (soundmutex == NULL)
-	{
-		Console::get() << "Couldn't create mutex! Oh noes!" << std::endl;
-		exit(-1);
-	}
-
-	for (int i = 0; i < SFX_CHANNELS; i++)
-	{
-		channel_buffer[i] = channel_pos[i] = NULL;
-		channel_len[i] = 0;
-	}
-
-	opl_init();
-
-	plz.freq = freq;
-	plz.format = AUDIO_S16SYS;
-	plz.channels = 1;
-	plz.samples = 512;
-	plz.callback = audio_cb;
-	plz.userdata = soundmutex;
-
-	Console::get() << "Requested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
-
-	if ( SDL_OpenAudio(&plz, &got) < 0 )
-	{
-		Console::get() << "WARNING: Failed to initialize SDL audio. Bailing out." << std::endl;
-		exit(1);
-	}
-
-	Console::get() << "Obtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
-
-	SDL_PauseAudio(0);
+	if (val < 0.f) return 0.f;
+	if (val > 1.5f) return 1.5f;
+	return val;
 }
+
+namespace CVars
+{
+	CVarBool s_enabled("s_enabled", CVar::CONFIG, "Enables sound subsystem. Requires a restart.", true);
+	CVarBool s_mute("s_mute", CVar::CONFIG, "Mutes all sound.", false);
+	CVarFloat s_music_vol("s_music_vol", CVar::CONFIG, "Music volume.", 1.f, volumeRangeCheck);
+	CVarFloat s_fx_vol("s_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, volumeRangeCheck);
+};
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 {
@@ -112,8 +77,12 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 
 	SAMPLE_TYPE *feedme = (SAMPLE_TYPE *) sdl_buffer;
 
-	if (music_playing)
+	float s_music_vol = CVars::s_mute ? 0.f : CVars::s_music_vol.get();
+
+	if (music_playing && s_music_vol > 0.f)
 	{
+		s_music_vol *= music_vol_multiplier;
+
 		/* SYN: Simulate the fm synth chip */
 		SAMPLE_TYPE *music_pos = feedme;
 		long remaining = howmuch / BYTES_PER_SAMPLE;
@@ -147,14 +116,16 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 		int qu = howmuch / BYTES_PER_SAMPLE;
 		for (int smp = 0; smp < qu; smp++)
 		{
-			feedme[smp] = (Sint16)((float)feedme[smp] * music_volume);
+			feedme[smp] = (Sint16)((float)feedme[smp] * s_music_vol);
 		}
 	}
+
+	float sample_volume = CVars::s_mute ? 0.f : CVars::s_fx_vol.get();
 
 	/* SYN: Mix sound channels and shove into audio buffer */
 	for (int ch = 0; ch < SFX_CHANNELS; ch++)
 	{
-		float volume = sample_volume * (channel_vol[ch] / 8.0f);
+		float volume = sample_volume * channel_vol[ch];
 		
 		/* SYN: Don't copy more data than is in the channel! */
 		int qu = ((unsigned int)howmuch > channel_len[ch] ? channel_len[ch] : howmuch) / BYTES_PER_SAMPLE;
@@ -178,11 +149,62 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	SDL_mutexV(mut); /* release mutex */
 }
 
+void JE_initialize( void )
+{
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
+	{
+		Console::get() << "Failed to initialize audio: " << SDL_GetError() << std::endl;
+		noSound = true;
+		return;
+	}
+
+	sound_init_state = true;
+
+	soundmutex = SDL_CreateMutex();
+
+	if (soundmutex == NULL)
+	{
+		Console::get() << "Couldn't create mutex! Oh noes!" << std::endl;
+		exit(-1);
+	}
+
+	for (int i = 0; i < SFX_CHANNELS; i++)
+	{
+		channel_buffer[i] = channel_pos[i] = NULL;
+		channel_len[i] = 0;
+	}
+
+	SDL_AudioSpec plz, got;
+	plz.freq = freq;
+	plz.format = AUDIO_S16SYS;
+	plz.channels = 1;
+	plz.samples = 512;
+	plz.callback = audio_cb;
+	plz.userdata = soundmutex;
+
+	Console::get() << "Requested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
+
+	if ( SDL_OpenAudio(&plz, &got) < 0 )
+	{
+		Console::get() << "WARNING: Failed to initialize SDL audio." << std::endl;
+		noSound = true;
+		SDL_DestroyMutex(soundmutex);
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	}
+
+	Console::get() << "Obtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
+
+	opl_init();
+
+	SDL_PauseAudio(0);
+}
+
 void JE_deinitialize( void )
 {
 	/* SYN: TODO: Clean up any other audio stuff, if necessary. This should only be called when we're quitting. */
-	opl_deinit();
 	SDL_CloseAudio();
+	opl_deinit();
+	SDL_DestroyMutex(soundmutex);
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
@@ -218,18 +240,7 @@ void JE_selectSong( JE_word value )
 	SDL_mutexV(soundmutex); /* release mutex */
 }
 
-/* Call with 0x1-0x100 for music volume, and 0x10 to 0xf0 for sample volume. */
-/* SYN: Either I'm misunderstanding Andreas's comments, or the information in them is inaccurate. */
-void JE_setVol(JE_word volume, JE_word sample)
-{	
-	if (volume > 0)
-		music_volume = volume * (float)(0.6 / 256.0);
-	if (sample > 240 || sample < 16)
-		sample = 240;
-	sample_volume = sample * (float)(0.4 / 240.0);
-}
-
-void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
+void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol)
 {
 	if (noSound)
 		return;
@@ -246,7 +257,7 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, int vol)
 	channel_len[chan] = size * BYTES_PER_SAMPLE * SAMPLE_SCALING;
 	channel_buffer[chan] = new SAMPLE_TYPE[channel_len[chan]];
 	channel_pos[chan] = channel_buffer[chan];
-	channel_vol[chan] = vol + 1;
+	channel_vol[chan] = vol;
 
 	for (int i = 0; i < size; i++)
 	{

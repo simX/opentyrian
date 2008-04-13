@@ -44,12 +44,9 @@ const char pars[18][9] = {
 
 void JE_paramCheck( int argc, char *argv[] )
 {
-	char *tempStr;
-	time_t now;
-
 	robertWeird     = true;
 	richMode        = false;
-	timMode        = false;
+	timMode         = false;
 	recordDemo      = false;
 	scanForJoystick = true;
 	constantPlay    = false;
@@ -62,7 +59,7 @@ void JE_paramCheck( int argc, char *argv[] )
 	joyMax          = false;
 	forceAveraging  = false;
 
-	now = time(NULL);
+	time_t now = time(NULL);
 	tyrianXmas = localtime(&now)->tm_mon == 11;
 
 /* JE: Note:
@@ -115,82 +112,88 @@ FLICKER  - This will force Tyrian and SETUP to NEVER WAIT FOR A RETRACE.
 JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 */
 
-	for (int x = 0; x < argc; x++)
+	for (int i = 1; i < argc; i++)
 	{
-		tempStr = argv[x];
-		for (int y = 0; y < 8; y++)
-		{
-			tempStr[y] = toupper(tempStr[y]);
-		}
-
-		for (unsigned int y = 0; y < COUNTOF(pars); y++)
-		{
-			if (strcmp(tempStr, pars[y]) == 0)
+		if (argv[i][0] == '+') {
+			Console::get().runCommand(std::string(argv[i]+1));
+		} else {
+			std::string tempStr(argv[i]);
+			for (std::string::iterator i = tempStr.begin(); i != tempStr.end(); i++)
 			{
-				switch (y)
+				*i = toupper(*i);
+			}
+
+			for (unsigned int j = 0; j < COUNTOF(pars); j++)
+			{
+				if (tempStr.compare(pars[j]) == 0)
 				{
-					case 0:
-						richMode = true;
-						break;
-					case 1:
-						timMode = true;
-						break;
-					case 2:
-						recordDemo = true;
-						Console::get() << "Use a keyboard to record a demo." << std::endl;
-						break;
-					case 3:
-						scanForJoystick = false;
-						break;
-					case 4:
-						robertWeird = false;
-						break;
-					case 5:
-						constantPlay = true;
-						break;
-					case 6:
-						constantDie = true;
-						break;
-					case 7:
-						useBios = true;
-						Console::get() << "Keyboard redirection enabled." << std::endl;
-						break;
-					case 8:
-						noSound = true;
-						break;
-					case 9:
-						quikJuke = true;
-						break;
-					case 10:
-						forceMaxVolume = true;
-						break;
-					case 11:
-						soundInfoReport = true;
-						break;
-					case 12:
-						noRetrace = true;
-						break;
-					case 13:
-						joyMax = true;
-						break;
-					case 14:
-						forceAveraging = true;
-						break;
-					case 15:
-						stupidWindows = false;
-						break;
-					case 16:
-						tyrianXmas = false;
-						break;
-					case 17:
-						tyrianXmas = true;
-						break;
-					default:
-						/* YKS: This shouldn't ever be reached. */
-						Console::get() << "!!! WARNING: Something's very wrong on " << __FILE__ << ":" << __LINE__ << std::endl;
-						break;
+					switch (j)
+					{
+						case 0:
+							richMode = true;
+							break;
+						case 1:
+							timMode = true;
+							break;
+						case 2:
+							recordDemo = true;
+							Console::get() << "Use a keyboard to record a demo." << std::endl;
+							break;
+						case 3:
+							scanForJoystick = false;
+							break;
+						case 4:
+							robertWeird = false;
+							break;
+						case 5:
+							constantPlay = true;
+							break;
+						case 6:
+							constantDie = true;
+							break;
+						case 7:
+							useBios = true;
+							Console::get() << "Keyboard redirection enabled." << std::endl;
+							break;
+						case 8:
+							noSound = true;
+							break;
+						case 9:
+							quikJuke = true;
+							break;
+						case 10:
+							forceMaxVolume = true;
+							break;
+						case 11:
+							soundInfoReport = true;
+							break;
+						case 12:
+							noRetrace = true;
+							break;
+						case 13:
+							joyMax = true;
+							break;
+						case 14:
+							forceAveraging = true;
+							break;
+						case 15:
+							stupidWindows = false;
+							break;
+						case 16:
+							tyrianXmas = false;
+							break;
+						case 17:
+							tyrianXmas = true;
+							break;
+						default:
+							/* YKS: This shouldn't ever be reached. */
+							Console::get() << "!!! WARNING: Something's very wrong on " << __FILE__ << ":" << __LINE__ << std::endl;
+							break;
+					}
+					goto outside_loop;
 				}
 			}
+outside_loop:;
 		}
 	}
 }
