@@ -486,7 +486,7 @@ JE_word JE_textWidth( const char *s, int font )
    return x;
 }
 
-void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int shadetype )
+void JE_textShade( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int shadetype )
 {
 	switch (shadetype)
 	{
@@ -510,7 +510,7 @@ void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brigh
    }
 }
 
-void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightness )
+void JE_outText( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness )
 {
 	unsigned char b;
 	int bright = 0;
@@ -554,7 +554,7 @@ void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightn
 	}
 }
 
-void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brightness, int font )
+void JE_outTextModify( JE_word x, JE_word y, const std::string& s, int filter, int brightness, int font )
 {
 	unsigned char b;
 
@@ -630,7 +630,7 @@ void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brig
 	}
 }
 
-void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int font )
+void JE_outTextAndDarken( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int font )
 {
 	unsigned char b;
 	int bright = 0;

@@ -46,6 +46,9 @@
 #include "vga256d.h"
 #include "HighScores.h"
 #include "loudness.h"
+#include "GameActions.h"
+#include "BindManager.h"
+#include "KeyNames.h"
 
 #include "tyrian2.h"
 
@@ -54,7 +57,6 @@
 #include <stdlib.h>
 #include <cstring>
 #include <cstddef>
-
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -6236,35 +6238,48 @@ void JE_itemScreen( void )
 		/* keyboard settings menu */
 		if (curMenu == 5)
 		{
-			for (JE_word x = 2; x <= 11; x++)
-			{
-				if (x == curSel[curMenu])
-				{
-					temp2 = 15;
-					if (keyboardUsed)
-					{
-						JE_setMousePosition(305, 38 + (x - 2)*12);
+			SDLKey keys[num_keyConfigs];
+
+			for (int i = 0; i < num_keyConfigs; i++) {
+				const Bind* b = BindManager::get().findBind(keyConfigs[i].command);
+				keys[i] = b ? b->key : SDLK_UNKNOWN;
+			}
+
+			for (int i = 0; i < num_keyConfigs+2; i++) {
+				int textBright;
+				if (i == curSel[curMenu]-2) {
+					textBright = 15;
+					if (keyboardUsed) {
+						JE_setMousePosition(305, 38 + (i)*12);
 					}
 				} else {
-					temp2 = 28;
+					textBright = 28;
 				}
 
-				JE_textShade(166, 38 + (x - 2)*12, menuInt[curMenu][x-1], temp2 / 16, temp2 % 16 - 8, DARKEN);
+				if (i < num_keyConfigs) {
+					JE_textShade(166, 38 + i*12, keyConfigs[i].title, textBright / 16, textBright % 16 - 8, DARKEN);
+				} else {
+					JE_textShade(166, 38 + i*12, menuInt[5][i-num_keyConfigs+1], textBright / 16, textBright % 16 - 8, DARKEN);
+				}
 
-				if (x < 10) /* 10 = reset to defaults, 11 = done */
-				{
-					if (x == curSel[curMenu])
-					{
-						temp2 = 252;
+				if (i < num_keyConfigs) {
+					if (i == curSel[curMenu]-2) {
+						textBright = 252;
 					} else {
-						temp2 = 250;
+						textBright = 250;
 					}
-					/*JE_textShade(236, 38 + (x - 2)*12, keyNames[keySettings[x-2]], temp2 / 16, temp2 % 16 - 8, DARKEN);*/
-					JE_textShade(236, 38 + (x - 2)*12, SDL_GetKeyName(keySettings[x-2]), temp2 / 16, temp2 % 16 - 8, DARKEN);
+
+					std::string key_name;
+					if (keys[i] == SDLK_UNKNOWN) {
+						key_name = "---";
+					} else {
+						key_name = KeyNames::get().getNameFromKey(keys[i]);
+					}
+					JE_textShade(236, 38 + (i)*12, key_name, textBright / 16, textBright % 16 - 8, DARKEN);
 				}
 			}
 
-			menuChoices[5] = 11;
+			menuChoices[5] = num_keyConfigs + 3;
 		}
 
 		/* Upgrade weapon submenus, with weapon sim */

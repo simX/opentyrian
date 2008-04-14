@@ -62,6 +62,16 @@ const Bind& BindManager::getBind( SDLKey key ) const
 	return p->second;
 }
 
+const Bind* BindManager::findBind( const std::string& cmd ) const
+{
+	for (std::map<SDLKey, Bind>::const_iterator i = bindMap.begin(); i != bindMap.end(); ++i) {
+		if (i->second.command == cmd) {
+			return &i->second;
+		}
+	}
+	return 0;
+}
+
 void BindManager::runBind( SDLKey key, bool press )
 {
 	try {
@@ -96,7 +106,7 @@ void BindManager::addBind( SDLKey key, std::string cmd )
 
 void BindManager::addBind( std::string key_name, const std::string& cmd )
 {
-	addBind(KeyNames::getKeyFromName(key_name), cmd);
+	addBind(KeyNames::get().getKeyFromName(key_name), cmd);
 }
 
 void BindManager::removeBind( SDLKey key )
@@ -109,6 +119,6 @@ void BindManager::removeBind( SDLKey key )
 
 void BindManager::removeBind( std::string key_name )
 {
-	removeBind(KeyNames::getKeyFromName(key_name));
+	removeBind(KeyNames::get().getKeyFromName(key_name));
 }
 	 

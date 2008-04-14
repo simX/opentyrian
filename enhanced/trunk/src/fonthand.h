@@ -56,12 +56,12 @@ void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize
 /*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, float scale );*/
 JE_word JE_fontCenter( const char *s, int font );
 JE_word JE_textWidth( const char *s, int font );
-void JE_textShade( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int shadetype );
-void JE_outText( JE_word x, JE_word y, const char *s, int colorbank, int brightness );
-void JE_outTextModify( JE_word x, JE_word y, const char *s, int filter, int brightness, int font );
+void JE_textShade( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int shadetype );
+void JE_outText( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness );
+void JE_outTextModify( JE_word x, JE_word y, const std::string& s, int filter, int brightness, int font );
 void JE_outTextShade( JE_word x, JE_word y, const char *s, int font );
 void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow );
-void JE_outTextAndDarken( JE_word x, JE_word y, const char *s, int colorbank, int brightness, int font );
+void JE_outTextAndDarken( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int font );
 
 void JE_updateWarning( void );
 void JE_outTextGlow( JE_word x, JE_word y, const char *s );

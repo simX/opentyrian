@@ -27,6 +27,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <stdexcept>
 
 struct Bind
 {
@@ -42,6 +43,8 @@ struct Bind
 
 class BindManager : public Singleton<BindManager>
 {
+private:
+	std::map<SDLKey, Bind> bindMap;
 public:
 	class UnknownBindError : public std::runtime_error
 	{
@@ -50,13 +53,12 @@ public:
 	};
 
 	const Bind& getBind( SDLKey key ) const;
+	const Bind* BindManager::findBind( const std::string& cmd ) const;
 	void runBind( SDLKey key, bool press = true );
 	void addBind( SDLKey key, std::string cmd );
 	void addBind( std::string key_name, const std::string& cmd );
 	void removeBind( SDLKey key );
 	void removeBind( std::string key_name );
-private:
-	std::map<SDLKey, Bind> bindMap;
 };
 
 #endif // BINDMANAGER_H

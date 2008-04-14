@@ -24,14 +24,8 @@
 
 #include "SDL.h"
 
-bool KeyNames::initialized;
-std::map<std::string, SDLKey> KeyNames::nameSymMap;
-std::map<SDLKey, std::string> KeyNames::symNameMap;
-
-void KeyNames::initialize()
+KeyNames::KeyNames( )
 {
-	if (initialized) return;
-
 	DEBUG_MSG("Initializing KeyNames...");
 
 	const KeyName* p = key_names;
@@ -41,14 +35,10 @@ void KeyNames::initialize()
 		symNameMap[p->key] = p->name;
 		++p;
 	}
-
-	initialized = true;
 }
 
 std::string KeyNames::getNameFromKey( const SDLKey sym )
 {
-	assert(initialized);
-
 	std::map<SDLKey, std::string>::const_iterator p = symNameMap.find(sym);
 	if (p == symNameMap.end())
 	{
@@ -62,8 +52,6 @@ std::string KeyNames::getNameFromKey( const SDLKey sym )
 
 SDLKey KeyNames::getKeyFromName( const std::string& name )
 {
-	assert(initialized);
-
 	std::map<std::string, SDLKey>::const_iterator p = nameSymMap.find(name);
 	if (p == nameSymMap.end())
 	{

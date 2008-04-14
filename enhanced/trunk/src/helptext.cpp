@@ -172,9 +172,13 @@ void JE_loadHelpText( void )
 	}
 	JE_skipCryptLn(f); JE_skipCryptLn(f);
 
-	for (int i = 0; i < 11; i++)
+	JE_readCryptLn(f, menuInt[5][0]);
+	for (int i = 0; i < 8; i++) {
+		JE_skipCryptLn(f);
+	}
+	for (int i = 0; i < 2; i++)
 	{
-		JE_readCryptLn(f,menuInt[5][i]);    /*Key names*/
+		JE_readCryptLn(f,menuInt[5][i+1]);    /*Key names*/
 	}
 	JE_skipCryptLn(f); JE_skipCryptLn(f);
 

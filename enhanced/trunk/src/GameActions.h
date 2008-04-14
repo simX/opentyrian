@@ -34,6 +34,10 @@ enum GameActionsEnum
 	NUM_GAME_ACTIONS
 };
 
+struct KeyConfig { std::string title; std::string command; bool toggle; };
+static const int num_keyConfigs = 8;
+extern KeyConfig keyConfigs[num_keyConfigs];
+
 extern bool gameInputEnabled[NUM_GAME_ACTIONS];
 
 #endif // GAMEACTIONS_H

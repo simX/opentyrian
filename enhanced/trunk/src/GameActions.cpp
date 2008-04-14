@@ -22,6 +22,18 @@
 
 #include "CCmd.h"
 
+KeyConfig keyConfigs[num_keyConfigs] =
+{
+	{"UP", "up", true},
+	{"DOWN", "down", true},
+	{"LEFT", "left", true},
+	{"RIGHT", "right", true},
+	{"FIRE", "fire", true},
+	{"CHANGE FIRE", "change_fire", true},
+	{"LEFT SIDEKICK", "left_sidekick", true},
+	{"RIGHT SIDEKICK", "right_sidekick", true}
+};
+
 bool gameInputEnabled[NUM_GAME_ACTIONS];
 
 namespace CCmds

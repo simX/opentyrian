@@ -22,10 +22,12 @@
 
 #include "SDL.h"
 
+#include "Singleton.h"
+
 #include <map>
 #include <stdexcept>
 
-class KeyNames
+class KeyNames : public Singleton<KeyNames>
 {
 public:
 	class UnknownKeyErrorException : public std::runtime_error
@@ -34,18 +36,16 @@ public:
 		UnknownKeyErrorException( const std::string& error ) : runtime_error(error) {}
 	};
 
-	static void initialize();
+	KeyNames( );
 
-	static std::string getNameFromKey( const SDLKey sym );
-	static SDLKey getKeyFromName( const std::string& name );
+	std::string getNameFromKey( const SDLKey sym );
+	SDLKey getKeyFromName( const std::string& name );
 private:
 	struct KeyName { const char* name; SDLKey key; };
 	static const KeyName key_names[];
 
-	static bool initialized;
-
-	static std::map<std::string, SDLKey> nameSymMap;
-	static std::map<SDLKey, std::string> symNameMap;
+	std::map<std::string, SDLKey> nameSymMap;
+	std::map<SDLKey, std::string> symNameMap;
 };
 
 #endif // KEYNAMES_H
