@@ -43,11 +43,11 @@ namespace CCmds
 
 			BindManager::get().removeBind(param1);
 		}
-	};
+	}
 
 	CCmd bind("bind", CCmd::NONE, "Binds a key to a command. Prefix the command with + to make it act as a toggle. Usage: bind [key name] [command]", Func::bind);
 	CCmd unbind("unbind", CCmd::NONE, "Unbinds all commands from a key. Usage: [key name]", Func::unbind);
-};
+}
 
 
 const Bind& BindManager::getBind( SDLKey key ) const
@@ -101,7 +101,7 @@ void BindManager::addBind( std::string key_name, const std::string& cmd )
 
 void BindManager::removeBind( SDLKey key )
 {
-	std::map<SDLKey, Bind>::const_iterator p = bindMap.find(key);
+	std::map<SDLKey, Bind>::iterator p = bindMap.find(key);
 	if (p != bindMap.end()) {
 		bindMap.erase(p);
 	}

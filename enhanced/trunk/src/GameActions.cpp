@@ -33,7 +33,7 @@ namespace CCmds
 			bool v = CCmd::convertParam<bool>(params,0);
 			gameInputEnabled[i] = v;
 		}
-	};
+	}
 
 	CCmd up("up", CCmd::NONE, "Moves up", Func::setGameInput<UP>);
 	CCmd down("down", CCmd::NONE, "Moves down", Func::setGameInput<DOWN>);

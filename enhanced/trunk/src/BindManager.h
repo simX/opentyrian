@@ -23,6 +23,7 @@
 #include "Singleton.h"
 
 #include "SDL.h"
+#include <stdexcept>
 #include <string>
 #include <map>
 #include <vector>

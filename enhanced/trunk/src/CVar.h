@@ -133,7 +133,7 @@ class CVarBool : public CVarTemplate<bool, BoolString>
 {
 public:
 	CVarBool( std::string name, Flags flags, std::string help, bool def, bool (*validationFunc)(const bool& value) = 0 )
-		: CVarTemplate(name, flags, help, def, validationFunc)
+		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
 	{}
 
 	std::string serialize( ) const

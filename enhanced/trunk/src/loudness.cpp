@@ -62,7 +62,7 @@ namespace CVars
 	CVarBool s_mute("s_mute", CVar::CONFIG, "Mutes all sound.", false);
 	CVarFloat s_music_vol("s_music_vol", CVar::CONFIG, "Music volume.", 1.f, volumeRangeCheck);
 	CVarFloat s_fx_vol("s_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, volumeRangeCheck);
-};
+}
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 {

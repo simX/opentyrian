@@ -22,7 +22,7 @@
 
 #include "opentyr.h"
 
-#include "Cvar.h"
+#include "CVar.h"
 
 //#include <inttypes.h>
 

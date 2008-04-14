@@ -23,6 +23,7 @@
 #include "SDL.h"
 
 #include <map>
+#include <stdexcept>
 
 class KeyNames
 {
