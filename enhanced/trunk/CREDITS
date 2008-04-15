@@ -1,10 +1,13 @@
-Main coders:
+OpenTyrian Development Team:
 
-MindlessXD - Unknown Name - <Unknown Email>
-yuriks - Yuri K. Schlesner - <yuriks.br@gmail.com>
-syntaxglitch - Casey A. McCann - <syntaxglitch@gmail.com>
+Mindless     -- Carl W. Reinke    -- <unknown email>
+yuriks       -- Yuri K. Schlesner -- <yuriks.br@gmail.com>
+syntaxglitch -- Casey A. McCann   -- <syntaxglitch@gmail.com>
+
 
 Further thanks to:
-Jason Emery - Original code for Tyrian
-AdPlug team - FM synthesis emulator code
-Nicolas Devillard - iniparser library and Freek for the single-file version (http://ndevilla.free.fr/iniparser/)
+
+Jason Emery       -- Tyrian source code
+MAME and DOSBox   -- FM emulator code
+AdPlug            -- Loudness player
+Nicolas Devillard -- iniparser library and Freek for the single-file version (http://ndevilla.free.fr/iniparser/)

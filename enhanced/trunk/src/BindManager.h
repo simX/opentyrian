@@ -53,7 +53,7 @@ public:
 	};
 
 	const Bind& getBind( SDLKey key ) const;
-	const Bind* BindManager::findBind( const std::string& cmd ) const;
+	const Bind* findBind( const std::string& cmd ) const;
 	void runBind( SDLKey key, bool press = true );
 	void addBind( SDLKey key, std::string cmd );
 	void addBind( std::string key_name, const std::string& cmd );

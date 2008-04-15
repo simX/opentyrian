@@ -57,7 +57,8 @@
 
 const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 
-const char *opentyrian_str = "OpenTyrian";
+const char *opentyrian_str = "OpenTyrian",
+           *opentyrian_version = "Enhanced revision " SVN_REV;
 const char *opentyrian_menu_items[] =
 {
 	"About OpenTyrian",
@@ -169,7 +170,7 @@ void opentyrian_menu( void )
 	bool quit = false, fade_in = true;
 
 	JE_fadeBlack(10);
-	JE_loadPic(13, false); /* 2, 5, or 13? */
+	JE_loadPic(13, false);
 
 	JE_outTextAdjust(JE_fontCenter(opentyrian_str, FONT_SHAPES), 5, opentyrian_str, 15, -3, FONT_SHAPES, false);
 
@@ -276,7 +277,7 @@ int main( int argc, char *argv[] )
 		// TODO: We should totally bail out here =P
 	}
 
-	Console::get() << "Welcome to... >> OpenTyrian Enhanced revision " SVN_REV " <<\n";
+	Console::get() << "Welcome to... >> " << opentyrian_str << " " << opentyrian_version << " <<\n";
 
 	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
 

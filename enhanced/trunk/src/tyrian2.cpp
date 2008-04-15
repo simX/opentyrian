@@ -4075,7 +4075,7 @@ void JE_titleScreen( bool animate )
 					}
 					JE_loadPic(4, false);
 
-					JE_textShade(2, 192, "Enhanced revision " SVN_REV, 15, 0, PART_SHADE);
+					JE_textShade(2, 192, opentyrian_version, 15, 0, PART_SHADE);
 	
 					memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
 	
