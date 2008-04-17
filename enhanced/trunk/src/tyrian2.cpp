@@ -6408,7 +6408,7 @@ void JE_itemScreen( void )
 				if (temp == pItemsBack[pItemButtonMap[curSel[1]-2]-1] && temp != 0 && tempW != menuChoices[curMenu]-1)
 				{
 					JE_bar(160, tempY+7, 300, tempY+11, 227);
-					JE_drawShape2(298, tempY+2, 247, shapes9);
+					JE_drawShape2(298, tempY+2, 247, shapes6);
 				}
 
 				/* Draw DONE */
