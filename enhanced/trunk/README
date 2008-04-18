@@ -11,7 +11,8 @@ Tyrian features a story mode, one- and two-player arcade modes, and networked
 multiplayer.
 
 == Additional Necessary Files ==========
-Tyrian 2.1 data files (http://camanis.net/opentyrian/tyrian21.zip)
+Tyrian 2.1 data files which have been released for free
+http://camanis.net/opentyrian/tyrian21.zip
 
 == Keyboard Controls ===================
 ctrl-backspace -- kill OpenTyrian
@@ -23,38 +24,13 @@ space          -- fire weapons
 enter          -- toggle rear weapon mode
 ctrl/alt       -- fire left/right sidekick
 
-== Network Multiplayer =================
-Currently OpenTyrian does not have an arena; as such, networked games must be
-initiated manually via the command line simultaniously by both players.
-
-syntax: tyrian --net host playernumber playername
-
-where host is the IP address of your opponent, playernumber is either 1 or 2
-depending on which ship you intend to pilot, and playername is your alias
-
 == Missing Features ====================
+Network has not yet been implemented in Enhanced
 ShipEdit is planned to be included in the future.  It has not yet been
 implemented because the developers keep procrastinating.
 
 == Links ===============================
 project: http://opentyrian.googlecode.com/
 forums:  http://tyrian2k.proboards23.com/index.cgi?board=opentyriangeneral
-
-== Credits =============================
-OpenTyrian Development Team:
- * Mindless
- * mwolson
- * syntaxglitch
- * yuriks
-
-Tyrian Development Team:
- * Jason Emery (programmer)
- * Robert Allen (producer)
- * Daniel Cook (artist)
- * Alexander Brandon and Andreas Molnar (music composers)
-
-FM emulator: MAME and DOSBox
-
-Loudness player: AdPlug
 
 README: AshTR
