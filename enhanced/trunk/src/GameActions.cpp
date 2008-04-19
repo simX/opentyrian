@@ -56,3 +56,4 @@ namespace CCmds
 	CCmd left_sidekick("left_sidekick", CCmd::NONE, "Fires left sidekick", Func::setGameInput<LEFT_SIDEKICK>);
 	CCmd right_sidekick("right_sidekick", CCmd::NONE, "Fires right sidekick", Func::setGameInput<RIGHT_SIDEKICK>);
 }
+

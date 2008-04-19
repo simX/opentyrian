@@ -128,4 +128,4 @@ void BindManager::removeBind( const std::string& key_name )
 {
 	removeBind(KeyNames::get().getKeyFromName(key_name));
 }
-	 
+

@@ -269,3 +269,4 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol
 
 	SDL_mutexV(soundmutex); /* release mutex */
 }
+
