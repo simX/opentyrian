@@ -33,7 +33,7 @@
 #include <fstream>
 
 JE_word randomcount;
-std::string dir; /* increase me */
+std::string dir;
 
 bool errorActive = true;
 bool errorOccurred = false;
@@ -104,7 +104,7 @@ unsigned long JE_getFileSize( const char *filename )
 	return size;
 }
 
-void JE_errorHand( std::string s )
+void JE_errorHand( const std::string& s )
 {
 	if (errorActive)
 	{
@@ -118,7 +118,7 @@ void JE_errorHand( std::string s )
 	}
 }
 
-bool JE_find( std::string s )
+bool JE_find( const std::string& s )
 {
 	FILE *f;
 
@@ -131,7 +131,7 @@ bool JE_find( std::string s )
 	}
 }
 
-void JE_findTyrian( std::string filename )
+void JE_findTyrian( const std::string& filename )
 {
 	std::string strbuf;
 
@@ -155,7 +155,7 @@ void JE_findTyrian( std::string filename )
 	}
 }
 
-std::string JE_locateFile( std::string filename )
+std::string JE_locateFile( const std::string& filename )
 {
 	std::string buf;
 
@@ -191,7 +191,7 @@ void JE_resetFile( FILE **f, const char *filename )
 	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "rb");
 }
 
-void open_datafile( std::ifstream& stream, std::string filename )
+void open_datafile( std::ifstream& stream, const std::string& filename )
 {
 	std::string path = JE_locateFile(filename);
 	if (path.empty()) throw FileOpenErrorException(filename);

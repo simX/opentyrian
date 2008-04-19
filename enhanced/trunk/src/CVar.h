@@ -44,14 +44,14 @@ public:
 		CONFIG = 1
 	};
 
-	CVar( std::string name, Flags flags, std::string help );
+	CVar( const std::string& name, Flags flags, const std::string& help );
 	virtual ~CVar() {}
 
-	std::string getName() const { return mName; }
+	const std::string& getName() const { return mName; }
 	Flags getFlags() const { return mFlags; }
-	std::string getHelp() const { return mHelp; }
+	const std::string& getHelp() const { return mHelp; }
 	virtual std::string serialize( ) const = 0;
-	virtual void unserialize( std::string str ) = 0;
+	virtual void unserialize( const std::string& str ) = 0;
 	virtual std::string getType() const = 0;
 private:
 	CVar( const CVar& );
@@ -73,7 +73,7 @@ private:
 
 public:
 	void registerCVar( CVar* cvar );
-	CVar* getCVar( std::string name );
+	CVar* getCVar( const std::string& name );
 	const MapType& getCVars( ) { return mCVars; }
 	const std::list<CVar*> getCVars( CVar::Flags flags, bool all );
 };
@@ -93,7 +93,7 @@ protected:
 private:
 	T (* const mValidationFunc) (const T& value);
 public:
-	CVarTemplate( std::string name, Flags flags, std::string help, T def, T (*validationFunc)(const T& value) = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
+	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, T (*validationFunc)(const T& value) = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
 	virtual ~CVarTemplate() {}
 	T get( ) const { return mValue; }
  	void set( const T& val ) {
@@ -109,7 +109,7 @@ public:
 		s << get();
 		return s.str();
 	}
-	virtual void unserialize( std::string str ) {
+	virtual void unserialize( const std::string& str ) {
 		T tmp;
 		std::istringstream s(str);
 		if (!(s >> tmp)) throw CVar::ConversionErrorException();
@@ -132,7 +132,7 @@ typedef CVarTemplate<float, FloatString> CVarFloat;
 class CVarBool : public CVarTemplate<bool, BoolString>
 {
 public:
-	CVarBool( std::string name, Flags flags, std::string help, bool def, bool (*validationFunc)(const bool& value) = 0 )
+	CVarBool( const std::string& name, Flags flags, const std::string& help, bool def, bool (*validationFunc)(const bool& value) = 0 )
 		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
 	{}
 
@@ -141,7 +141,7 @@ public:
 		return get() ? "true" : "false";
 	}
 
-	void unserialize( std::string str )
+	void unserialize( const std::string& str )
 	{
 		if (str == "true") {
 			set(true);
@@ -168,9 +168,9 @@ struct StringString { inline static const char* get() { return "string"; } };
 class CVarString : public CVarTemplate<std::string, StringString>
 {
 public:
-	CVarString( std::string name, Flags flags, std::string help, std::string def ) : CVarTemplate<std::string, StringString>(name, flags, help, def) {}
+	CVarString( const std::string& name, Flags flags, const std::string& help, const std::string& def ) : CVarTemplate<std::string, StringString>(name, flags, help, def) {}
 	std::string serialize( ) const { return get(); }
-	void unserialize( std::string str ) { set(str); }
+	void unserialize( const std::string& str ) { set(str); }
 };
 
 #endif // CVAR_H

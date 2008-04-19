@@ -69,11 +69,11 @@ public:
 		NONE = 0
 	};
 
-	CCmd( std::string name, Flags flags, std::string help, void (*func)(const std::vector<std::string>&));
+	CCmd( const std::string& name, Flags flags, const std::string& help, void (*func)(const std::vector<std::string>&));
 
-	std::string getName() const { return mName; }
+	const std::string& getName() const { return mName; }
 	Flags getFlags() const { return mFlags; }
-	std::string getHelp() const { return mHelp; }
+	const std::string& getHelp() const { return mHelp; }
 	void operator()( const std::vector<std::string>& params ) { (*mFunction)(params); }
 private:
 	CCmd( const CCmd& );
@@ -96,7 +96,7 @@ private:
 
 public:
 	void registerCCmd( CCmd* cvar );
-	CCmd* getCCmd( std::string name );
+	CCmd* getCCmd( const std::string& name );
 	const MapType& getCCmds( ) { return mCCmds; }
 	const std::list<CCmd*> getCCmds( CCmd::Flags flags, bool all );
 };

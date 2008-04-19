@@ -58,7 +58,7 @@ int Console::ConsoleStreamBuffer::overflow( int c )
 	return c;
 }
 
-void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text )
+void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, const std::string& text )
 {
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
@@ -303,7 +303,7 @@ bool Console::isDown( )
 	return mDown;
 }
 
-void Console::println( std::string text )
+void Console::println( const std::string& text )
 {
 	// Strips the control codes and calculates wrapping.
 	std::vector<unsigned int> wrap;

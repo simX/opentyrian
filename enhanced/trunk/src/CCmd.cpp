@@ -24,7 +24,7 @@
 
 #include "Console.h"
 
-CCmd::CCmd( std::string name, Flags flags, std::string help, void (*func)(const std::vector<std::string>&) )
+CCmd::CCmd( const std::string& name, Flags flags, const std::string& help, void (*func)(const std::vector<std::string>&) )
 	: mName(name), mFlags(flags), mHelp(help), mFunction(func)
 {
 	CCmdManager::get().registerCCmd(this);
@@ -38,7 +38,7 @@ void CCmdManager::registerCCmd( CCmd* const cvar )
 	}
 }
 
-CCmd* CCmdManager::getCCmd( std::string name )
+CCmd* CCmdManager::getCCmd( const std::string& name )
 {
 	const MapType::iterator i = mCCmds.find(name);
 	if (i != mCCmds.end())

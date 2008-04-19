@@ -44,7 +44,7 @@ public:
 	void put8( Uint8 data );
 	void put16( Uint16 data );
 	void put32( Uint32 data );
-	void put( std::string data );
+	void put( const std::string& data );
 };
 
 class IBinaryStream

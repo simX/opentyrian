@@ -24,7 +24,7 @@
 
 #include "Console.h"
 
-CVar::CVar( std::string name, Flags flags, std::string help )
+CVar::CVar( const std::string& name, Flags flags, const std::string& help )
 	: mName(name), mFlags(flags), mHelp(help)
 {
 	CVarManager::get().registerCVar(this);
@@ -38,7 +38,7 @@ void CVarManager::registerCVar( CVar* const cvar )
 	}
 }
 
-CVar* CVarManager::getCVar( std::string name )
+CVar* CVarManager::getCVar( const std::string& name )
 {
 	const MapType::iterator i = mCVars.find(name);
 	if (i != mCVars.end())

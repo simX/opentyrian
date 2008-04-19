@@ -90,6 +90,14 @@ void BindManager::runBind( SDLKey key, bool press )
 	}
 }
 
+void BindManager::addBind( SDLKey key, const std::string& cmd, bool toggle )
+{
+	if (cmd.empty()) return;
+
+	Bind bind(key, cmd, toggle);
+	bindMap[key] = bind;
+}
+
 void BindManager::addBind( SDLKey key, std::string cmd )
 {
 	if (cmd.empty()) return;
@@ -100,11 +108,10 @@ void BindManager::addBind( SDLKey key, std::string cmd )
 		cmd.erase(0,1);
 	}
 
-	Bind bind(key, cmd, toggle);
-	bindMap[key] = bind;
+	addBind(key, cmd, toggle);
 }
 
-void BindManager::addBind( std::string key_name, const std::string& cmd )
+void BindManager::addBind( const std::string& key_name, const std::string& cmd )
 {
 	addBind(KeyNames::get().getKeyFromName(key_name), cmd);
 }
@@ -117,7 +124,7 @@ void BindManager::removeBind( SDLKey key )
 	}
 }
 
-void BindManager::removeBind( std::string key_name )
+void BindManager::removeBind( const std::string& key_name )
 {
 	removeBind(KeyNames::get().getKeyFromName(key_name));
 }

@@ -8606,8 +8606,7 @@ void JE_menuFunction( int select )
 		{
 			temp2 = 254;
 			tempY = 38 + (curSelect - 2) * 12;
-			/*JE_textShade(236, tempY, keyNames[keySettings[curSelect-2]], (temp2 / 16), (temp2 % 16) - 8, DARKEN);*/
-			JE_textShade(236, tempY, SDL_GetKeyName(keySettings[curSelect-2]), (temp2 / 16), (temp2 % 16) - 8, DARKEN);
+			//JE_textShade(236, tempY, SDL_GetKeyName(keySettings[curSelect-2]), (temp2 / 16), (temp2 % 16) - 8, DARKEN);
 			JE_showVGA();
 
 			col = 248;
@@ -8629,28 +8628,24 @@ void JE_menuFunction( int select )
 				JE_showVGA();
 			} while (!newkey);
 
-			tempB = true;
-
-			for (x = 0; x < 8; x++)
-			{
-				if (keySettings[x] == lastkey_sym)
-				{
-					tempB = false;
-					JE_playSampleNum(false);
-				}
-			}
-
-			/* SYN: I don't know why some of these are disallowed */
+			// Assign new key bindings
 			if ( lastkey_sym != SDLK_ESCAPE &&
 				 lastkey_sym != SDLK_F11 &&
-				 lastkey_sym != SDLK_s &&
 				 lastkey_sym != SDLK_m &&
-				 lastkey_sym != SDLK_p &&
-				 tempB )
+				 lastkey_sym != SDLK_p )
 			{
+				const Bind* b = BindManager::get().findBind(keyConfigs[curSelect-2].command);
+				if (b) {
+					BindManager::get().removeBind(b->key);
+				}
+
+				BindManager::get().addBind(lastkey_sym, keyConfigs[curSelect-2].command, keyConfigs[curSelect-2].toggle);
+
 				JE_playSampleNum(CLICK);
-				keySettings[curSelect-2] = lastkey_sym;
+				//keySettings[curSelect-2] = lastkey_sym;
 				curSelect++;
+			} else {
+				JE_playSampleNum(WRONG);
 			}
 			JE_wipeKey();
 

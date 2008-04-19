@@ -61,7 +61,7 @@ private:
 
 	ConsoleStreamBuffer mStreambuf;
 
-	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, std::string text );
+	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, const std::string& text );
 	void drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col );
 
 	Console( const Console& );
@@ -73,10 +73,10 @@ public:
 	void disable( const bool anim = true );
 	void draw( SDL_Surface* const surf );
 	void think( const SDL_keysym& keysym );
-	void println( std::string text );
+	void println( const std::string& text );
 	static std::vector<std::string> parseLine( std::string text );
 	void runCommand( std::vector<std::string> tokens );
-	void runCommand( std::string str ) { runCommand(parseLine(str)); }
+	void runCommand( const std::string& str ) { runCommand(parseLine(str)); }
 
 	bool isDown( );
 

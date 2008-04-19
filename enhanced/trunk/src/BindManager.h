@@ -55,10 +55,11 @@ public:
 	const Bind& getBind( SDLKey key ) const;
 	const Bind* findBind( const std::string& cmd ) const;
 	void runBind( SDLKey key, bool press = true );
+	void addBind( SDLKey key, const std::string& cmd, bool toggle );
 	void addBind( SDLKey key, std::string cmd );
-	void addBind( std::string key_name, const std::string& cmd );
+	void addBind( const std::string& key_name, const std::string& cmd );
 	void removeBind( SDLKey key );
-	void removeBind( std::string key_name );
+	void removeBind( const std::string& key_name );
 };
 
 #endif // BINDMANAGER_H

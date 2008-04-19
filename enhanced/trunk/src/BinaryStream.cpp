@@ -54,7 +54,7 @@ void OBinaryStream::put32( Uint32 data )
 #endif
 }
 
-void OBinaryStream::put( std::string data )
+void OBinaryStream::put( const std::string& data )
 {
 	put32(data.length());
 
