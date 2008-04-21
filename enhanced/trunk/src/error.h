@@ -46,7 +46,6 @@ void JE_resetFile( FILE **f, const char *filename );
 void JE_resetText( FILE **f, const char *filename );
 std::string JE_locateFile( const std::string& filename );
 void JE_findTyrian( const std::string& filename );
-bool JE_isCFGThere( void );
 unsigned long JE_getFileSize( const char *filename );
 void open_datafile( std::ifstream& stream, const std::string& filename  );
 

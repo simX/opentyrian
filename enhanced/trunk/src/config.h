@@ -38,7 +38,7 @@ static const int SAVE_FILES_SIZE = 2398;
 static const int SIZEOF_SAVEGAMETEMP = SAVE_FILES_SIZE+4+100;
 static const int SAVE_FILE_SIZE = (SIZEOF_SAVEGAMETEMP - 4);
 
-typedef SDLKey JE_KeySettingType[8]; /* [1..8] */
+//typedef SDLKey JE_KeySettingType[8]; /* [1..8] */
 typedef int JE_PItemsType[12]; /* [1..12] */
 
 typedef char JE_EditorItemAvailType[100]; /* [1..100] */
@@ -77,7 +77,7 @@ struct StarDatType
 };
 
 extern const unsigned char cryptKey[10];
-extern const JE_KeySettingType defaultKeySettings;
+//extern const JE_KeySettingType defaultKeySettings;
 
 extern const JE_EditorItemAvailType initialItemAvail;
 extern bool smoothies[9];
@@ -102,7 +102,7 @@ extern bool portConfigDone;
 extern JE_PortPowerType portPower, lastPortPower;
 extern char lastLevelName[11], levelName[11];
 extern int mainLevel, nextLevel, saveLevel;
-extern JE_KeySettingType keySettings;
+//extern JE_KeySettingType keySettings;
 extern signed int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
 extern bool filterActive, filterFade, filterFadeStart;
 extern bool gameJustLoaded;

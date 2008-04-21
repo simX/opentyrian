@@ -407,7 +407,7 @@ void Console::runCommand( std::vector<std::string> tokens )
 		try
 		{
 			(*command)(tokens);
-		} catch(CCmd::RuntimeCCmdErrorException& e) {
+		} catch(CCmd::RuntimeCCmdError& e) {
 			*this << "\a7Warning:\ax " << e.what() << std::endl;
 		}
 	} else {

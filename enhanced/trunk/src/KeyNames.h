@@ -30,10 +30,10 @@
 class KeyNames : public Singleton<KeyNames>
 {
 public:
-	class UnknownKeyErrorException : public std::runtime_error
+	class UnknownKeyError : public std::runtime_error
 	{
 	public:
-		UnknownKeyErrorException( const std::string& error ) : runtime_error(error) {}
+		UnknownKeyError( const std::string& error ) : runtime_error(error) {}
 	};
 
 	KeyNames( );

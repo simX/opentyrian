@@ -50,10 +50,12 @@ const unsigned char cryptKey[10] = /* [1..10] */
 	15, 50, 89, 240, 147, 34, 86, 9, 32, 208
 };
 
+/*
 const JE_KeySettingType defaultKeySettings =
 {
 	SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_RETURN, SDLK_LCTRL, SDLK_LALT
 };
+*/
 
 
 const char tyrian_ini_template[] = \
@@ -157,7 +159,7 @@ char lastLevelName[11], levelName[11]; /* string [10] */
 int mainLevel, nextLevel, saveLevel;   /*Current Level #*/
 
 /* Keyboard Junk */
-JE_KeySettingType keySettings;
+//JE_KeySettingType keySettings;
 
 /* Configuration */
 int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;

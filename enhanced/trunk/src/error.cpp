@@ -207,21 +207,3 @@ void JE_resetText( FILE **f, const char *filename )
 
 	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "r");
 }
-
-bool JE_isCFGThere( void ) /* Warning: It actually returns false when the config file exists */
-{
-	FILE *f;
-
-	dont_die = true;
-	JE_resetFile(&f, "tyrian.cfg");
-	dont_die = false;
-
-	if (f && get_stream_size(f) == 17 + sizeof(keySettings) + sizeof(joyButtonAssign))
-	{
-		fclose(f);
-		return false;
-	} else {
-		Console::get() << "Invalid or missing TYRIAN.CFG! Continuing using defaults." << std::endl;
-		return true;
-	}
-}

@@ -196,6 +196,7 @@ void service_SDL_events( bool clear_new )
 					input_grab();
 					break;
 				}
+				// Intentional fall-through!
 			case SDL_MOUSEBUTTONUP:
 				if (ev.type == SDL_MOUSEBUTTONDOWN)
 				{
@@ -207,6 +208,9 @@ void service_SDL_events( bool clear_new )
 				} else {
 					mousedown = false;
 				}
+
+				BindManager::get().runBindMouse(ev.button.button, mousedown);
+
 				switch (ev.button.button)
 				{
 					case SDL_BUTTON_LEFT:

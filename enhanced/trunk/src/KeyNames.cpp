@@ -44,7 +44,7 @@ std::string KeyNames::getNameFromKey( const SDLKey sym )
 	{
 		std::ostringstream s;
 		s << sym;
-		throw UnknownKeyErrorException(s.str());
+		throw UnknownKeyError(s.str());
 	}
 
 	return p->second;
@@ -55,7 +55,7 @@ SDLKey KeyNames::getKeyFromName( const std::string& name )
 	std::map<std::string, SDLKey>::const_iterator p = nameSymMap.find(name);
 	if (p == nameSymMap.end())
 	{
-		throw UnknownKeyErrorException(name);
+		throw UnknownKeyError(name);
 	}
 
 	return p->second;

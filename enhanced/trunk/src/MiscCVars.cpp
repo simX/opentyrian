@@ -29,7 +29,7 @@ namespace CCmds
 		{
 			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 			CVar* const var = CVarManager::get().getCVar(param1);
-			if (!var) throw CCmd::RuntimeCCmdErrorException("Unknow CVar/CCmd");
+			if (!var) throw CCmd::RuntimeCCmdError("Unknow CVar/CCmd");
 
 			if (params.size() == 1)
 			{
@@ -40,7 +40,7 @@ namespace CCmds
 				{
 					var->unserialize(param2);
 				} catch (CVar::ConversionErrorException&) {
-					throw CCmd::RuntimeCCmdErrorException("Incorrect format");
+					throw CCmd::RuntimeCCmdError("Incorrect format");
 				}
 			}
 		}
@@ -66,7 +66,7 @@ namespace CCmds
 				{
 					Console::get() << var->getHelp() << std::endl;
 				} else {
-					throw CCmd::RuntimeCCmdErrorException("Unknow CVar/CCmd");
+					throw CCmd::RuntimeCCmdError("Unknow CVar/CCmd");
 				}
 			}
 		}

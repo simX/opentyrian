@@ -33,17 +33,17 @@
 class CCmd
 {
 public:
-	class RuntimeCCmdErrorException : public std::runtime_error
+	class RuntimeCCmdError : public std::runtime_error
 	{
 	public:
-		RuntimeCCmdErrorException( const std::string& error ) : runtime_error(error) {}
+		RuntimeCCmdError( const std::string& error ) : runtime_error(error) {}
 	};
 
 	static void assertParam( const std::vector<std::string>& vec, unsigned int index )
 	{
 		if (vec.size() <= index)
 		{
-			throw RuntimeCCmdErrorException("Insufficient number of parameters");
+			throw RuntimeCCmdError("Insufficient number of parameters");
 		}
 	}
 
@@ -61,7 +61,7 @@ public:
 			std::ostringstream s;
 			s << index+1;
 
-			throw RuntimeCCmdErrorException("Incorrect format on param " + s.str());
+			throw RuntimeCCmdError("Incorrect format on param " + s.str());
 		}
 	}
 
@@ -118,7 +118,7 @@ template<> inline bool CCmd::convertParam<bool>( const std::vector<std::string>&
 	} else {
 		std::ostringstream s;
 		s << index+1;
-		throw RuntimeCCmdErrorException("Incorrect format on param " + s.str());
+		throw RuntimeCCmdError("Incorrect format on param " + s.str());
 	}
 }
 

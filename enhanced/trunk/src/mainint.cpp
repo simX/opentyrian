@@ -3282,14 +3282,9 @@ redo:
 				else {
 					service_SDL_events(false);
 					/* ---- Mouse Input ---- */
-					if ((inputDevice_ == 2 || inputDevice_ == 0)
-					    && !playDemo && !recordDemo)
+					if (!playDemo)
 					{
 						/* Get Mouse Status */
-						button[1-1] = mouse_pressed[0];
-						button[2-1] = mouse_pressed[1];
-						button[3-1] = mouse_threeButton ? mouse_pressed[2] : mouse_pressed[1];
-
 						if (input_grabbed)
 						{
 							mouseXC = mouse_x - 159;
@@ -3388,7 +3383,7 @@ redo:
 							tempB = false;
 							for (int temp = 0; temp < 8; temp++)
 							{
-								if (lastKey[temp] != keysactive[keySettings[temp]])
+								if (0) //lastKey[temp] != keysactive[keySettings[temp]])
 								{
 									tempB = true;
 								}
@@ -3402,7 +3397,7 @@ redo:
 
 								int temp;
 								for (temp = 0; temp < 8; temp++)
-									lastKey[temp] = keysactive[keySettings[temp]];
+									;//lastKey[temp] = keysactive[keySettings[temp]];
 								temp = (lastKey[1-1]     ) + (lastKey[2-1] << 1) + (lastKey[3-1] << 2) + (lastKey[4-1] << 3) +
 								       (lastKey[5-1] << 4) + (lastKey[6-1] << 5) + (lastKey[7-1] << 6) + (lastKey[8-1] << 7);
 

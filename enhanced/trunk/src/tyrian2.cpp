@@ -6238,11 +6238,18 @@ void JE_itemScreen( void )
 		/* keyboard settings menu */
 		if (curMenu == 5)
 		{
-			SDLKey keys[num_keyConfigs];
+			std::string names[num_keyConfigs];
 
 			for (int i = 0; i < num_keyConfigs; i++) {
-				const Bind* b = BindManager::get().findBind(keyConfigs[i].command);
-				keys[i] = b ? b->key : SDLK_UNKNOWN;
+				const std::set<Bind*> b = BindManager::get().findBinds(keyConfigs[i].command);
+				if (b.empty()) {
+					names[i] = "---";
+				} else {
+					for (std::set<Bind*>::const_iterator j = b.begin(); j != b.end(); ++j) {
+						if (j != b.begin()) names[i].append(", ");
+						names[i].append((*j)->getKeyDescription());
+					}
+				}
 			}
 
 			for (int i = 0; i < num_keyConfigs+2; i++) {
@@ -6269,13 +6276,7 @@ void JE_itemScreen( void )
 						textBright = 250;
 					}
 
-					std::string key_name;
-					if (keys[i] == SDLK_UNKNOWN) {
-						key_name = "---";
-					} else {
-						key_name = KeyNames::get().getNameFromKey(keys[i]);
-					}
-					JE_textShade(236, 38 + (i)*12, key_name, textBright / 16, textBright % 16 - 8, DARKEN);
+					JE_textShade(236, 38 + (i)*12, names[i], textBright / 16, textBright % 16 - 8, DARKEN);
 				}
 			}
 
@@ -8588,13 +8589,11 @@ void JE_menuFunction( int select )
 		}
 		break;
 
-	case 5: /* keyboard settings */
-		if (curSelect == 10) /* reset to defaults */
+	case 5: // keyboard settings
+		if (curSelect == 10) // reset to defaults
 		{
-			memcpy(keySettings, defaultKeySettings, sizeof(keySettings));
-		}
-		else if (curSelect == 11) /* done */
-		{
+			// TODO : Write default bind script and load it here
+		} else if (curSelect == 11) { // done
 			if (isNetworkGame || onePlayerAction)
 			{
 				curMenu = 11;
@@ -8602,7 +8601,7 @@ void JE_menuFunction( int select )
 				curMenu = 2;
 			}
 		}
-		else /* change key */
+		else // change key
 		{
 			temp2 = 254;
 			tempY = 38 + (curSelect - 2) * 12;
@@ -8613,6 +8612,7 @@ void JE_menuFunction( int select )
 			colC = 1;
 
 			newkey = false;
+			newmouse = false;
 
 			do {
 				col += colC;
@@ -8626,26 +8626,34 @@ void JE_menuFunction( int select )
 				service_SDL_events(false);
 
 				JE_showVGA();
-			} while (!newkey);
+			} while (!newkey && !newmouse);
 
 			// Assign new key bindings
-			if ( lastkey_sym != SDLK_ESCAPE &&
-				 lastkey_sym != SDLK_F11 &&
-				 lastkey_sym != SDLK_m &&
-				 lastkey_sym != SDLK_p )
-			{
-				const Bind* b = BindManager::get().findBind(keyConfigs[curSelect-2].command);
-				if (b) {
-					BindManager::get().removeBind(b->key);
+			if (newkey) {
+				if ( lastkey_sym != SDLK_ESCAPE &&
+					 lastkey_sym != SDLK_F11 &&
+					 lastkey_sym != SDLK_m &&
+					 lastkey_sym != SDLK_p )
+				{
+					if (lastkey_sym == SDLK_DELETE) {
+						std::set<Bind*> b = BindManager::get().findBinds(keyConfigs[curSelect-2].command);
+						for (std::set<Bind*>::iterator i = b.begin(); i != b.end(); ++i) {
+							BindManager::get().removeBind(*i, keyConfigs[curSelect-2].command, keyConfigs[curSelect-2].toggle);
+						}
+					} else {
+						BindManager::get().addBind(lastkey_sym, keyConfigs[curSelect-2].command, keyConfigs[curSelect-2].toggle);
+						curSelect++;
+					}
+					JE_playSampleNum(CLICK);
+				} else {
+					JE_playSampleNum(WRONG);
 				}
-
-				BindManager::get().addBind(lastkey_sym, keyConfigs[curSelect-2].command, keyConfigs[curSelect-2].toggle);
-
-				JE_playSampleNum(CLICK);
-				//keySettings[curSelect-2] = lastkey_sym;
+			} else if (newmouse) {
+				BindManager::get().addBindMouse(lastmouse_but, keyConfigs[curSelect-2].command, keyConfigs[curSelect-2].toggle);
 				curSelect++;
-			} else {
-				JE_playSampleNum(WRONG);
+				JE_playSampleNum(CLICK);
+
+				newmouse = false;
 			}
 			JE_wipeKey();
 
