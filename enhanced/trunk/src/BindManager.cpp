@@ -40,7 +40,7 @@ static void printBind( const Bind* const bind )
 }
 
 // This isn't in CCmds::Func because then I can't friend it in BindManager
-static void bind( const std::vector<std::string>& params )
+void bind( const std::vector<std::string>& params )
 {
 	try {
 		if (params.empty()) {
@@ -80,7 +80,7 @@ namespace CCmds
 		}
 	}
 
-	CCmd bind("bind", CCmd::NONE, "Binds a key to a command. Prefix the command with + to make it act as a toggle. Usage: bind [key name] [command]", bind);
+	CCmd bind("bind", CCmd::NONE, "Binds a key to a command. Prefix the command with + to make it act as a toggle. Usage: bind [key name] [command]", ::bind);
 	CCmd unbind("unbind", CCmd::NONE, "Unbinds all commands from a key. Usage: [key name]", Func::unbind);
 }
 

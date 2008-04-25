@@ -162,7 +162,7 @@ public:
 	void removeBindMouse( Uint8 button );
 	void removeBind( const std::string& key_name );
 
-	friend static void bind( const std::vector<std::string>& params );
+	friend void bind( const std::vector<std::string>& params );
 };
 
 #endif // BINDMANAGER_H
