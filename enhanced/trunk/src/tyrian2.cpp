@@ -9295,7 +9295,7 @@ void JE_genItemMenu( int itemNum )
 	// YKS: I have no idea wtf this is doing, but I don't think it matters either, little of this function does
 	if (itemNum == 3 || itemNum == 4)
 	{
-		tempPowerLevel[tempW] = portPower[itemNum-1];
+		tempPowerLevel[tempW] = portPower[itemNum-3];
 		if (tempPowerLevel[tempW] < 1)
 		{
 			tempPowerLevel[tempW] = 1;
