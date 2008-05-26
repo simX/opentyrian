@@ -20,6 +20,7 @@
 #include "opentyr.h"
 
 #include "config.h"
+#include "editship.h"
 #include "episodes.h"
 #include "joystick.h"
 #include "network.h"
@@ -434,39 +435,31 @@ Uint8 *shipGrPtr, *shipGr2ptr;
 void JE_getShipInfo( void )
 {
 	bool extraShip, extraShip2;
-	int base, base2;
 
 	shipGrPtr = shapes9;
 	shipGr2ptr = shapes9;
 
+	powerAdd = powerSys[pItems[5]].power;
+
 	extraShip = pItems[11] > 90;
 	if (extraShip)
 	{
-		base = (pItems[11] - 91) * 15;
-	}
-
-	powerAdd  = powerSys[pItems[5]].power;
-	if (extraShip)
-	{
-		/* TODO armorLevel = editship.ships [base + 8]; */
-	} else {
-		armorLevel = ships[pItems[11]].dmg;
-	}
-
-	if (extraShip)
-	{
 		shipGr = JE_SGr(pItems[11] - 90, &shipGrPtr);
+
+		int base = (pItems[11] - 91) * 15;
+		armorLevel = extraShips[base+7];
 	} else {
 		shipGr = ships[pItems[11]].shipgraphic;
+		armorLevel = ships[pItems[11]].dmg;
 	}
 
 	extraShip2 = pItemsPlayer2[11] > 90;
 	if (extraShip2)
 	{
-		base2 = (pItemsPlayer2[11] - 91) * 15;
 		shipGr2 = JE_SGr(pItemsPlayer2[11] - 90, &shipGr2ptr);
 
-		/* TODO baseArmor2 = editship.ships [base2 + 8];*/
+		int base2 = (pItemsPlayer2[11] - 91) * 15;
+		baseArmor2 = extraShips[base2+7];
 	} else {
 		shipGr2 = 0;
 		armorLevel2 = 10;
@@ -481,6 +474,7 @@ void JE_getShipInfo( void )
 	} else {
 		sAni = ships[pItems[11]].ani;
 	}
+
 	if (sAni == 0)
 	{
 		sAniX = 12;
@@ -501,10 +495,10 @@ JE_word JE_SGr( JE_word ship, Uint8 **ptr )
 
 	JE_word tempW = 1;
 
-	/* TODO tempW = editship.ships [ (ship - 1) * 15 + 1];*/
+	tempW = extraShips[(ship-1)*15];
 	if (tempW > 7)
 	{
-		/* TODO *ptr = extraShape;*/
+		*ptr = extraShapes;
 	}
 	return GR[tempW-1];
 }

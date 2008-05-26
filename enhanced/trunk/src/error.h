@@ -44,9 +44,9 @@ void JE_errorHand( const std::string& s );
 bool JE_find( const std::string& s );
 void JE_resetFile( FILE **f, const char *filename );
 void JE_resetText( FILE **f, const char *filename );
-std::string JE_locateFile( const std::string& filename );
+std::string JE_locateFile( const std::string& filename, bool die = true );
 void JE_findTyrian( const std::string& filename );
 unsigned long JE_getFileSize( const char *filename );
-void open_datafile( std::ifstream& stream, const std::string& filename  );
+void open_datafile( std::ifstream& stream, const std::string& filename ) throw (FileOpenErrorException);
 
 #endif /* ERROR_H */

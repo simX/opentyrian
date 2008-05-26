@@ -2817,11 +2817,41 @@ void JE_mainKeyboardInput( void )
 		/* { Edited Ships } for Player 1 */
 		if (extraAvail && keysactive[SDLK_TAB] && !isNetworkGame && !superTyrian)
 		{
-			for (int x = 0; x < 10; x++)
+			for (int i = SDLK_0; i <= SDLK_9; ++i)
 			{
-				if (0 /* keyactive[x+1] The number keys, TODO: doesn't exactly work like that under SDL */)
+				if (keysactive[i])
 				{
-					/* TODO */
+					// TODO Refactor this and the one for player 2 into a function
+					int ship = (i == SDLK_0 ? 10 : i - SDLK_0);
+					pItems[11] = 90 + ship; // Ships
+					ship = (ship-1)*15;
+					pItems[0] = extraShips[ship+1];
+					pItems[1] = extraShips[ship+2];
+					pItems[10] = extraShips[ship+3];
+					pItems[3] = extraShips[ship+4];
+					pItems[4] = extraShips[ship+5];
+					pItems[5] = extraShips[ship+6];
+					// Armor
+					pItems[9] = extraShips[ship+8];
+					std::fill(shotMultiPos, shotMultiPos+COUNTOF(shotMultiPos), 0);
+					JE_portConfigs();
+					if (portConfig[1] > tempW) portConfig[1] = 1;
+					tempW = armorLevel;
+					JE_getShipInfo();
+					if (armorLevel > tempW && editShip1) armorLevel = tempW;
+					editShip1 = true;
+
+					SDL_Surface* temp_surface = VGAScreen;
+					VGAScreen = VGAScreenSeg;
+					JE_wipeShieldArmorBars();
+					JE_drawArmor();
+					JE_drawShield();
+					VGAScreen = temp_surface;
+					tempScreenSeg = VGAScreenSeg;
+					JE_drawOptions();
+					tempScreenSeg = VGAScreenSeg;
+
+					keysactive[i] = false;
 				}
 			}
 		}
@@ -2829,11 +2859,40 @@ void JE_mainKeyboardInput( void )
 		/* for Player 2 */
 		if (extraAvail && keysactive[SDLK_CAPSLOCK] && !isNetworkGame && !superTyrian)
 		{
-			for (int x = 0; x < 10; x++)
+			for (int i = SDLK_0; i <= SDLK_9; ++i)
 			{
-				if (0 /* keyactive[x+1] The number keys, TODO: doesn't exactly work like that under SDL */)
+				if (keysactive[i])
 				{
-					/* TODO */
+					int ship = (i == SDLK_0 ? 10 : i - SDLK_0);
+					pItemsPlayer2[11] = 90 + ship;
+					ship = (ship-1)*15;
+					pItemsPlayer2[0] = extraShips[ship+1];
+					pItemsPlayer2[1] = extraShips[ship+2];
+					pItemsPlayer2[10] = extraShips[ship+3];
+					pItemsPlayer2[3] = extraShips[ship+4];
+					pItemsPlayer2[4] = extraShips[ship+5];
+					pItemsPlayer2[5] = extraShips[ship+6];
+					// Armor
+					pItemsPlayer2[9] = extraShips[ship+8];
+					std::fill(shotMultiPos, shotMultiPos+COUNTOF(shotMultiPos), 0);
+					JE_portConfigs();
+					if (portConfig[1] > tempW) portConfig[1] = 1;
+					tempW = armorLevel2;
+					JE_getShipInfo();
+					if (armorLevel2 > tempW && editShip2) armorLevel2 = tempW;
+					editShip2 = true;
+
+					SDL_Surface* temp_surface = VGAScreen;
+					VGAScreen = VGAScreenSeg;
+					JE_wipeShieldArmorBars();
+					JE_drawArmor();
+					JE_drawShield();
+					VGAScreen = temp_surface;
+					tempScreenSeg = VGAScreenSeg;
+					JE_drawOptions();
+					tempScreenSeg = VGAScreenSeg;
+
+					keysactive[i] = false;
 				}
 			}
 		}

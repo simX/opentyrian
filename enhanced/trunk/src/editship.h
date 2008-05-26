@@ -23,29 +23,20 @@
 #include "opentyr.h"
 
 
-typedef int JE_ShipsType; /* TODO: FIX THIS! just a placeholder! */
+typedef Uint8 JE_ShipsType[154];
 
 extern bool extraAvail;
-extern JE_word extraShapeOfs;
-/* TODO: conflicts extern JE_ShipsType ships; */
-extern void *extraShapes;
-extern JE_word extraShapeSeg;
-extern JE_word extraShapeSize;
+extern JE_ShipsType extraShips;
+extern Uint8* extraShapes;
+extern unsigned long extraShapeSize;
 
-void JE_startNewShape( void );
-
-void JE_buildRec( void );
-
-void JE_encryptShips( void );
-
-void JE_add( char nextbyte );
-
-void JE_loadExtraShapes( void );
-
-void JE_compressShapeFile( void );
-
-void JE_decryptShips( void );
-
-void JE_endShape( void );
+void JE_decryptShips();
+void JE_encryptShips();
+void JE_compressShapeFile();
+void JE_buildRec();
+void JE_startNewShape();
+void JE_add( Uint8 nextbyte );
+void JE_endShape();
+void JE_loadExtraShapes();
 
 #endif /* EDITSHIP_H */

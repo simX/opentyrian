@@ -110,3 +110,30 @@ std::string IBinaryStream::getStr( )
 
 	return str;
 }
+
+std::vector<Uint8> IBinaryStream::getArray( unsigned int len )
+{
+	std::vector<Uint8> vec;
+	vec.reserve(len);
+
+	for (; len > 0; --len) {
+		vec.push_back(get8());
+	}
+
+	return vec;
+}
+
+unsigned long IBinaryStream::getSize( )
+{
+	// Save current position
+	std::streampos old_pos = mStream.tellg();
+
+	// Seek to end of file to get size
+	mStream.seekg(0, std::ios_base::end);
+	std::streampos size = mStream.tellg();
+
+	// Restored original position
+	mStream.seekg(old_pos);
+
+	return size;
+}

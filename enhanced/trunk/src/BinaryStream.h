@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "SDL_endian.h"
 
@@ -45,6 +46,13 @@ public:
 	void put16( Uint16 data );
 	void put32( Uint32 data );
 	void put( const std::string& data );
+
+	template<class iter> void put( iter begin, iter end )
+	{
+		for (; begin != end; ++begin) {
+			put8(*begin);
+		}
+	}
 };
 
 class IBinaryStream
@@ -67,6 +75,10 @@ public:
 	Uint16 get16( );
 	Uint32 get32( );
 	std::string getStr( );
+
+	std::vector<Uint8> getArray( unsigned int len );
+
+	unsigned long getSize( );
 };
 
 #endif // BINARYSTREAM_H
