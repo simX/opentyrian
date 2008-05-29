@@ -5016,6 +5016,7 @@ bool JE_searchFor/*enemy*/( int PLType )
 			if (galagaMode)
 			{
 				enemy[temp].evalue += enemy[temp].evalue;
+				if (enemy[temp].evalue > 32767) enemy[temp].evalue = enemy[temp].evalue - 65536;
 			}
 			tempb = true;
 		}
