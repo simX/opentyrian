@@ -87,7 +87,7 @@ namespace CCmds
 static int isMouse( const std::string& name )
 {
 	static const std::string str = "mouse";
-	if (name.compare(0, str.size(), str) >= 0) {
+	if (name.compare(0, str.size(), str) == 0) {
 		std::istringstream stream(name.substr(str.size()));
 		unsigned int val;
 
