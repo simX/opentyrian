@@ -5626,7 +5626,7 @@ void JE_eventSystem( void )
 			tempDat3 = eventRec[eventLoc-1].eventdat6;
 			eventRec[eventLoc-1].eventdat6 = 0;
 			tempI2 = tempDat;
-			enemyDat[0].armor = tempDat3;
+			enemyDat[0].armor = (Uint8)tempDat3;
 			enemyDat[0].egraphic[1-1] = tempDat2;
 			switch (eventRec[eventLoc-1].eventtype - 48)
 			{
