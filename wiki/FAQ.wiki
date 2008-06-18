@@ -24,7 +24,7 @@ Right now we plan to create two versions of the port:
 
 === Q: Why isn't the mouse working as a controller? ===
 
-*A:* OpenTyrian must be built without debug enabled to use the mouse as a controller.  If you didn't build Tyrian yourself, you will have to find a build that does not have debug enabled in order to use the mouse.
+*A:* Try clicking the game window so the game grabs your mouse. To be able to use it outside the game again, press CTRL-F10.
 
 === Q: Why do I get an error about SDL being missing? ===
 
