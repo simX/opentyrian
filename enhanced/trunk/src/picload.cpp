@@ -45,7 +45,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	Uint8 *p;
 	Uint8 *s; /* screen pointer, 8-bit specific */
 
-	s = (Uint8 *)VGAScreen->pixels;
+	s = (Uint8 *)VGAScreen;
 
 	PCXnumber--;
 
@@ -83,7 +83,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 		}
 		if (i && (i % 320 == 0))
 		{
-			s += VGAScreen->pitch - 320;
+			s += scr_width - 320;
 		}
 	}
 

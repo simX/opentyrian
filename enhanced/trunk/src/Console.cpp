@@ -58,7 +58,7 @@ int Console::ConsoleStreamBuffer::overflow( int c )
 	return c;
 }
 
-void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, const std::string& text )
+void Console::drawText( Uint8* const surf, unsigned int x, unsigned int y, const std::string& text )
 {
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
@@ -90,7 +90,7 @@ void Console::drawText( SDL_Surface* const surf, unsigned int x, unsigned int y,
 	}
 }
 
-void Console::drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col )
+void Console::drawArrow( Uint8* const surf, unsigned int x, unsigned int y, Uint8 col )
 {
 	JE_pix(x, y, col);
 	for (int i = 1; i < 3; i++)
@@ -125,7 +125,7 @@ void Console::disable( const bool anim )
 	}
 }
 
-void Console::draw( SDL_Surface* const surf )
+void Console::draw( Uint8* const surf )
 {
 	if (mHeight == 0) return;
 
@@ -417,14 +417,14 @@ void Console::runCommand( std::vector<std::string> tokens )
 
 void Console::consoleMain()
 {
-	SDL_Surface* const prev_VGAScreen = VGAScreen;
-	SDL_Surface* const prev_tempScreenSeg = tempScreenSeg;
+	Uint8* const prev_VGAScreen = VGAScreen;
+	Uint8* const prev_tempScreenSeg = tempScreenSeg;
 	VGAScreen = VGAScreenSeg;
 	tempScreenSeg = VGAScreenSeg;
 
 	Uint8 screen_copy[320*200];
-	Uint8 *screen = static_cast<Uint8*>(VGAScreen->pixels);
-	std::copy(screen, screen+VGAScreen->h*VGAScreen->pitch, screen_copy);
+	Uint8 *screen = VGAScreen;
+	std::copy(screen, screen+scr_height*scr_width, screen_copy);
 
 	service_SDL_events(true);
 	while (!(lastkey_keysym.sym == SDLK_DELETE && lastkey_keysym.mod & KMOD_CTRL))

@@ -32,7 +32,7 @@
 #include "newshape.h"
 
 
-SDL_Surface *tempScreenSeg = VGAScreen;
+Uint8 *tempScreenSeg = VGAScreen;
 
 JE_ShapeArrayType shapeArray;
 
@@ -128,8 +128,8 @@ void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize )
 	Uint8 *p; /* shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 
-	s = (Uint8 *)tempScreenSeg->pixels;
-	s += y * tempScreenSeg->pitch + x;
+	s = tempScreenSeg;
+	s += y * scr_width + x;
 
 	for (p = shape; yloop < ysize; p++)
 	{
@@ -141,7 +141,7 @@ void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize )
 				break;
 			case 254: /* next y */
 				s -= xloop; xloop = 0;
-				s += tempScreenSeg->pitch; yloop++;
+				s += scr_width; yloop++;
 				break;
 			case 253: /* 1 transparent pixel */
 				s++; xloop++;
@@ -154,7 +154,7 @@ void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize )
 		if (xloop == xsize)
 		{
 			s -= xloop; xloop = 0;
-			s += tempScreenSeg->pitch; yloop++;
+			s += scr_width; yloop++;
 		}
 	}
 
@@ -176,11 +176,11 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 
 	xsize = shapeX[table][shape]; ysize = shapeY[table][shape];
 
-	s = (Uint8 *)tempScreenSeg->pixels;
-	s += y * tempScreenSeg->pitch + x;
+	s = tempScreenSeg;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)tempScreenSeg->pixels;
-	s_limit += tempScreenSeg->h * tempScreenSeg->pitch;
+	s_limit = tempScreenSeg;
+	s_limit += scr_height * scr_width;
 
 	for (p = shapeArray[table][shape]; yloop < ysize; p++)
 	{
@@ -192,7 +192,7 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 				break;
 			case 254: /* next y */
 				s -= xloop; xloop = 0;
-				s += tempScreenSeg->pitch; yloop++;
+				s += scr_width; yloop++;
 				break;
 			case 253: /* 1 transparent pixel */
 				s++; xloop++;
@@ -200,7 +200,7 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 			default:  /* set a pixel */
 				if (s >= s_limit)
 					{ tempScreenSeg = VGAScreen; return; }
-				if ((void *)s >= tempScreenSeg->pixels)
+				if ((void *)s >= tempScreenSeg)
 					*s = *p;
 				s++; xloop++;
 				break;
@@ -208,7 +208,7 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 		if (xloop == xsize)
 		{
 			s -= xloop; xloop = 0;
-			s += tempScreenSeg->pitch; yloop++;
+			s += scr_width; yloop++;
 		}
 	}
 
@@ -236,11 +236,11 @@ void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
-	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->pitch + x;
+	s = (Uint8 *)VGAScreen;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)tempScreenSeg->pixels;
-	s_limit += tempScreenSeg->h * tempScreenSeg->pitch;
+	s_limit = tempScreenSeg;
+	s_limit += scr_height * scr_width;
 
 	for (int yloop = 0; yloop < 28; yloop++)
 	{
@@ -251,7 +251,7 @@ void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 			s++; p++;
 		}
 		s -= 24;
-		s += VGAScreen->pitch;
+		s += scr_width;
 	}
 }
 
@@ -261,11 +261,11 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 	Uint8 *s;   /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
 
-	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->pitch + x;
+	s = (Uint8 *)VGAScreen;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)tempScreenSeg->pixels;
-	s_limit += tempScreenSeg->h * tempScreenSeg->pitch;
+	s_limit = tempScreenSeg;
+	s_limit += scr_height * scr_width;
 
 	for (int yloop = 0; yloop < 28; yloop++)
 	{
@@ -276,7 +276,7 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
 			s++; p++;
 		}
 		s -= 24;
-		s += VGAScreen->pitch;
+		s += scr_width;
 	}
 }
 

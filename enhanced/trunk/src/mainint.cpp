@@ -217,13 +217,13 @@ void JE_helpSystem( int startTopic )
 	JE_showVGA();
 	JE_fadeColor(10);
 
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 	joystickWaitMax = 120; joystickWait = 0;
 
 	do
 	{
-		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 
 		temp2 = 0;
 
@@ -451,7 +451,7 @@ bool JE_playerSelect( void )
 	bool quit;
 
 	JE_loadPic(2, false);
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	JE_showVGA();
 	JE_fadeColor(20);
 	quit = false;
@@ -545,7 +545,7 @@ bool JE_episodeSelect( void )
 
 //startepisodeselect:
 	JE_loadPic(2, false);
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	JE_showVGA();
 	JE_fadeColor(10);
 	quit = false;
@@ -623,7 +623,7 @@ bool JE_difficultySelect( void )
 	bool quit;
 
 	JE_loadPic(2, false);
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	JE_showVGA();
 	JE_fadeColor(20);
 	quit = false;
@@ -852,7 +852,7 @@ void JE_loadScreen( void )
 	sel = 1;
 	quit = false;
 
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 	do
 	{
@@ -863,7 +863,7 @@ void JE_loadScreen( void )
 			tempY = mouse_y;
 		}
 
-		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 
 		JE_dString(JE_fontCenter(miscText[38 + screen - 1], FONT_SHAPES), 5, miscText[38 + screen - 1], FONT_SHAPES);
 
@@ -1217,12 +1217,12 @@ void JE_highScoreScreen( void )
 
 	int cur_ep = 0;
 
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 	bool quit = false;
 	while (!quit)
 	{
-		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 
 		JE_dString( JE_fontCenter( miscText[50], FONT_SHAPES), 03, miscText[50], FONT_SHAPES);
 		JE_dString( JE_fontCenter( episodeName[cur_ep+1], SMALL_FONT_SHAPES), 30, episodeName[cur_ep+1], SMALL_FONT_SHAPES);
@@ -1399,7 +1399,7 @@ void JE_doInGameSetup( void )
 
 bool JE_inGameSetup( void )
 {
-	SDL_Surface *temp_surface = VGAScreen;
+	Uint8 *temp_surface = VGAScreen;
 	VGAScreen = VGAScreenSeg; /* side-effect of game_screen */
 	
 	bool returnvalue = false;
@@ -1420,11 +1420,11 @@ bool JE_inGameSetup( void )
 	
 	JE_barShade(3, 143, 257, 157); /*Help Box*/
 	JE_barShade(5, 145, 255, 155);
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	
 	do
 	{
-		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 		
 		for (int x = 0; x < 6; x++)
 		{
@@ -1613,7 +1613,7 @@ bool JE_inGameSetup( void )
 
 void JE_inGameHelp( void )
 {
-	SDL_Surface *temp_surface = VGAScreen;
+	Uint8 *temp_surface = VGAScreen;
 	VGAScreen = VGAScreenSeg; /* side-effect of game_screen */
 	
 	tempScreenSeg = VGAScreenSeg;
@@ -2841,7 +2841,7 @@ void JE_mainKeyboardInput( void )
 					if (armorLevel > tempW && editShip1) armorLevel = tempW;
 					editShip1 = true;
 
-					SDL_Surface* temp_surface = VGAScreen;
+					Uint8* temp_surface = VGAScreen;
 					VGAScreen = VGAScreenSeg;
 					JE_wipeShieldArmorBars();
 					JE_drawArmor();
@@ -2882,7 +2882,7 @@ void JE_mainKeyboardInput( void )
 					if (armorLevel2 > tempW && editShip2) armorLevel2 = tempW;
 					editShip2 = true;
 
-					SDL_Surface* temp_surface = VGAScreen;
+					Uint8* temp_surface = VGAScreen;
 					VGAScreen = VGAScreenSeg;
 					JE_wipeShieldArmorBars();
 					JE_drawArmor();
@@ -3092,7 +3092,7 @@ void JE_pauseGame( void )
 	bool done;
 	JE_word mouseX, mouseY;
 	
-	SDL_Surface *temp_surface;
+	Uint8 *temp_surface;
 
 	tempScreenSeg = VGAScreenSeg; // sega000
 	if (!superPause)

@@ -61,8 +61,8 @@ private:
 
 	ConsoleStreamBuffer mStreambuf;
 
-	void drawText( SDL_Surface* const surf, unsigned int x, unsigned int y, const std::string& text );
-	void drawArrow( SDL_Surface* const surf, unsigned int x, unsigned int y, Uint8 col );
+	void drawText( Uint8* const surf, unsigned int x, unsigned int y, const std::string& text );
+	void drawArrow( Uint8* const surf, unsigned int x, unsigned int y, Uint8 col );
 
 	Console( const Console& );
 	Console& operator=( const Console& );
@@ -71,7 +71,7 @@ public:
 	Console();
 	void enable( const bool anim = true );
 	void disable( const bool anim = true );
-	void draw( SDL_Surface* const surf );
+	void draw( Uint8* const surf );
 	void think( const SDL_keysym& keysym );
 	void println( const std::string& text );
 	static std::vector<std::string> parseLine( std::string text );

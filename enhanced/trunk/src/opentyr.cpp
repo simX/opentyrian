@@ -175,7 +175,7 @@ void opentyrian_menu( void )
 
 	JE_outTextAdjust(JE_fontCenter(opentyrian_str, FONT_SHAPES), 5, opentyrian_str, 15, -3, FONT_SHAPES, false);
 
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 	JE_showVGA();
 
@@ -184,7 +184,7 @@ void opentyrian_menu( void )
 
 	do
 	{
-		memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 
 		for (int i = 0; i <= maxSel; i++)
 		{
@@ -232,7 +232,7 @@ void opentyrian_menu( void )
 						case 0: /* About */
 							JE_playSampleNum(SELECT);
 							scroller_sine(about_text);
-							memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+							memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 							JE_showVGA();
 							fade_in = true;
 							break;
@@ -244,7 +244,7 @@ void opentyrian_menu( void )
 						case 2: /* Jukebox */
 							JE_playSampleNum(SELECT);
 							JE_jukeboxGo();
-							memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+							memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 							JE_showVGA();
 							fade_in = true;
 							break;
@@ -377,9 +377,7 @@ int main( int argc, char *argv[] )
 
 	JE_loadPals();
 
-	SDL_LockSurface(VGAScreen);
 	JE_main();
-	SDL_UnlockSurface(VGAScreen);
 
 	Console::deinitialize();
 

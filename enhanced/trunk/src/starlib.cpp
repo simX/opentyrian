@@ -79,7 +79,7 @@ next_star:
 	off = (stars->lastX)+(stars->lastY)*320;
 
 	/* ***CLEAR PIXEL*** */
-	surf = (Uint8 *)VGAScreen->pixels;
+	surf = (Uint8 *)VGAScreen;
 
 	if (off >= 640 && off < (320*200)-640)
 	{

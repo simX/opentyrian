@@ -187,9 +187,9 @@ void scroller_sine( const about_text_type text[] )
 						if (line_y + j >= 10 && line_y + j <= surface_height - 10)
 						{
 							int foo = (int)(sin((((line_y + j) / 2) % 10) / 5.0f * M_PI) * 3);
-							memmove(&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j) + foo],
-									&((Uint8 *)VGAScreenSeg->pixels)[VGAScreenSeg->pitch * (line_y + j)],
-									VGAScreenSeg->pitch);
+							memmove(&VGAScreenSeg[scr_width * (line_y + j) + foo],
+									&VGAScreenSeg[scr_width * (line_y + j)],
+									scr_width);
 						}
 					}
 				}

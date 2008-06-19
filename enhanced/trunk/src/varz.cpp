@@ -512,7 +512,7 @@ void JE_calcPurpleBall( int playernum )
 
 void JE_drawOptions( void )
 {
-	SDL_Surface *temp_surface = 0;
+	Uint8 *temp_surface = 0;
 
 	if (tempScreenSeg == VGAScreenSeg)
 	{
@@ -1404,10 +1404,10 @@ void JE_setupExplosion( int x, int y, int explodeType )
 		{
 			if (explodeAvail[i] == 0)
 			{
-				explosions[i].explodeLoc = y * VGAScreen->pitch + x;
+				explosions[i].explodeLoc = y * scr_width + x;
 				if (explodeType == 6)
 				{
-					explosions[i].explodeLoc += 12 * VGAScreen->pitch + 2;
+					explosions[i].explodeLoc += 12 * scr_width + 2;
 				} else if (explodeType == 98)
 				{
 					explodeType = 6;
@@ -1642,8 +1642,8 @@ void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ) /
 		tempr = ((float)rand() / RAND_MAX) * (M_PI * 2);
 		tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
 		tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		SPL[lastSP].location = (tempy + y) * VGAScreen->pitch + (tempx + x);
-		SPL[lastSP].movement = tempy * VGAScreen->pitch + tempx + VGAScreen->pitch;
+		SPL[lastSP].location = (tempy + y) * scr_width + (tempx + x);
+		SPL[lastSP].movement = tempy * scr_width + tempx + scr_width;
 		SPL[lastSP].color = color;
 		SPZ[lastSP] = 15;
 	}
@@ -1661,20 +1661,20 @@ void JE_drawSP( void )
 		{
 			SPL[i].location += SPL[i].movement;
 			
-			if (SPL[i].location < VGAScreen->h * VGAScreen->pitch)
+			if (SPL[i].location < scr_height * scr_width)
 			{
-				s = (Uint8 *)VGAScreen->pixels;
+				s = (Uint8 *)VGAScreen;
 				s += SPL[i].location;
 				
 				*s = (((*s & 0x0f) + SPZ[i]) >> 1) + SPL[i].color;
 				if (SPL[i].location > 1)
 					*(s - 1) = (((*(s - 1) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location < VGAScreen->h * VGAScreen->pitch - 1)
+				if (SPL[i].location < scr_height * scr_width - 1)
 					*(s + 1) = (((*(s + 1) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location > VGAScreen->pitch)
-					*(s - VGAScreen->pitch) = (((*(s - VGAScreen->pitch) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location < (VGAScreen->h - 1) * VGAScreen->pitch)
-					*(s + VGAScreen->pitch) = (((*(s + VGAScreen->pitch) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
+				if (SPL[i].location > scr_width)
+					*(s - scr_width) = (((*(s - scr_width) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
+				if (SPL[i].location < (scr_height - 1) * scr_width)
+					*(s + scr_width) = (((*(s + scr_width) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
 			}
 			
 			SPZ[i]--;

@@ -41,7 +41,7 @@ int mapXbpPos, mapX2bpPos, mapX3bpPos;
 int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
 
 
-SDL_Surface *smoothiesScreen;
+Uint8 *smoothiesScreen;
 bool anySmoothies;
 int SDAT[9]; /* [1..9] */
 
@@ -58,7 +58,7 @@ namespace CVars
 
 void JE_darkenBackground( JE_word neat )
 {
-	Uint8 *s = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = VGAScreen; /* screen pointer, 8-bit specific */
 	
 	s += 24;
 	
@@ -66,10 +66,10 @@ void JE_darkenBackground( JE_word neat )
 	{
 		for (int x = 264; x > 0; x--)
 		{
-			*s = ((((*s & 0x0f) << 4) - (*s & 0x0f) + ((((x - neat - y) >> 2) + *(s-2) + (y == 184 ? 0 : *(s-(VGAScreen->pitch-1)))) & 0x0f)) >> 4) | (*s & 0xf0);
+			*s = ((((*s & 0x0f) << 4) - (*s & 0x0f) + ((((x - neat - y) >> 2) + *(s-2) + (y == 184 ? 0 : *(s-(scr_width-1)))) & 0x0f)) >> 4) | (*s & 0xf0);
 			s++;
 		}
-		s += VGAScreen->pitch - 264;
+		s += scr_width - 264;
 	}
 }
 
@@ -100,7 +100,7 @@ void JE_drawBackground2( void )
 	/* BP is used by all backgrounds */
 
 	/*Offset for top*/
-	s = (Uint8 *)VGAScreen->pixels;
+	s = VGAScreen;
 	s += 11 * 24;
 
 	if (useBackground1ofs != 0)
@@ -137,17 +137,17 @@ void JE_drawBackground2( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
-				s -= backPos2 * VGAScreen->pitch;
+				s -= backPos2 * scr_width;
 			}
 
 			s -= 24;
 		}
 
-		s += backPos2 * VGAScreen->pitch;
+		s += backPos2 * scr_width;
 		s += 24 * 12;
 
 		/* Increment Map Location for next line */
@@ -179,12 +179,12 @@ void JE_drawBackground2( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
 				/* AX=320*13+12 for subtracting from DI when done drawing a shape */
-				s -= VGAScreen->pitch * 28;
+				s -= scr_width * 28;
 			}
 
 			s -= 24;
@@ -192,7 +192,7 @@ void JE_drawBackground2( void )
 
 		/* Increment Map Location for next line */
 		bp += 14 + 14 - 2;  /* 44+44 +6 (Map Width) */
-		s += VGAScreen->pitch * 28 + 24 * 12;
+		s += scr_width * 28 + 24 * 12;
 	}
 
 	if (backPos2 <= 15)
@@ -217,11 +217,11 @@ void JE_drawBackground2( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
-				s -= (15 - backPos2 + 1) * VGAScreen->pitch;
+				s -= (15 - backPos2 + 1) * scr_width;
 			}
 
 			s -= 24;
@@ -269,7 +269,7 @@ void JE_superBackground2( void )
 	/* BP is used by all backgrounds */
 
 	/*Offset for top*/
-	s = (Uint8 *)VGAScreen->pixels;
+	s = VGAScreen;
 	s += 11 * 24;
 
 	s += mapX2Pos;
@@ -305,16 +305,16 @@ void JE_superBackground2( void )
 						src++;
 					}
 
-					s += VGAScreen->pitch - 24;
+					s += scr_width - 24;
 				}
 
-				s -= backPos2 * VGAScreen->pitch;
+				s -= backPos2 * scr_width;
 			}
 
 			s -= 24;
 		}
 
-		s += backPos2 * VGAScreen->pitch;
+		s += backPos2 * scr_width;
 		s += 24 * 12;
 
 		/* Increment Map Location for next line */
@@ -349,11 +349,11 @@ void JE_superBackground2( void )
 						src++;
 					}
 
-					s += VGAScreen->pitch - 24;
+					s += scr_width - 24;
 				}
 
 				/* AX=320*13+12 for subtracting from DI when done drawing a shape */
-				s -= VGAScreen->pitch * 28;
+				s -= scr_width * 28;
 			}
 
 			s -= 24;
@@ -361,7 +361,7 @@ void JE_superBackground2( void )
 
 		/* Increment Map Location for next line */
 		bp += 14 + 14 - 2;  /* 44+44 +6 (Map Width) */
-		s += VGAScreen->pitch * 28 + 24 * 12;
+		s += scr_width * 28 + 24 * 12;
 	}
 
 	if (backPos2 <= 15)
@@ -389,10 +389,10 @@ void JE_superBackground2( void )
 						src++;
 					}
 
-					s += VGAScreen->pitch - 24;
+					s += scr_width - 24;
 				}
 
-				s -= (15 - backPos2 + 1) * VGAScreen->pitch;
+				s -= (15 - backPos2 + 1) * scr_width;
 			}
 
 			s -= 24;
@@ -431,7 +431,7 @@ void JE_drawBackground3( void )
 	}
 
 	/* Offset for top*/
-	s = (Uint8 *)VGAScreen->pixels;
+	s = VGAScreen;
 	s += 11 * 24;
 
 	s += mapX3Pos;
@@ -465,17 +465,17 @@ void JE_drawBackground3( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
-				s -= backPos3 * VGAScreen->pitch;
+				s -= backPos3 * scr_width;
 			}
 
 			s -= 24;
 		}
 
-		s += backPos3 * VGAScreen->pitch;
+		s += backPos3 * scr_width;
 		s += 24 * 12;
 
 		/* Increment Map Location for next line */
@@ -507,12 +507,12 @@ void JE_drawBackground3( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
 				/* AX=320*13+12 for subtracting from DI when done drawing a shape */
-				s -= VGAScreen->pitch * 28;
+				s -= scr_width * 28;
 			}
 
 			s -= 24;
@@ -520,7 +520,7 @@ void JE_drawBackground3( void )
 
 		/* Increment Map Location for next line */
 		bp += 15 + 15 - 3;  /* 44+44 +6 (Map Width) */
-		s += VGAScreen->pitch * 28 + 24 * 12;
+		s += scr_width * 28 + 24 * 12;
 	}
 
 	if (backPos3 <= 15)
@@ -545,11 +545,11 @@ void JE_drawBackground3( void )
 						}
 					}
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					src += 24;
 				}
 
-				s -= (15 - backPos3 + 1) * VGAScreen->pitch;
+				s -= (15 - backPos3 + 1) * scr_width;
 			}
 
 			s -= 24;
@@ -580,7 +580,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 	
 	if (color != -99 && CVars::r_enable_filters)
 	{
-		s = (Uint8 *)VGAScreen->pixels;
+		s = VGAScreen;
 		s += 24;
 		
 		color <<= 4;
@@ -592,13 +592,13 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 				*s = color | (*s & 0x0f);
 				s++;
 			}
-			s += VGAScreen->pitch - 264;
+			s += scr_width - 264;
 		}
 	}
 	
 	if (brightness != -99 && CVars::r_explosion_blend)
 	{
-		s = (Uint8 *)VGAScreen->pixels;
+		s = VGAScreen;
 		s += 24;
 		
 		for (int y = 184; y > 0; y--)
@@ -609,7 +609,7 @@ void JE_filterScreen( Sint8 color, Sint8 brightness )
 				*s = (*s & 0xf0) | (temp >= 0x1f ? 0 : (temp >= 0x0f ? 0x0f : temp));
 				s++;
 			}
-			s += VGAScreen->pitch - 264;
+			s += scr_width - 264;
 		}
 	}
 }
@@ -631,21 +631,21 @@ void JE_initSmoothies( void )
 
 void JE_smoothies1( void ) /*Lava Effect*/
 {
-	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = game_screen; /* screen pointer, 8-bit specific */
+	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 	int temp;
 	
-	s += game_screen->pitch * 185;
-	src += game_screen->pitch * 185;
+	s += scr_width * 185;
+	src += scr_width * 185;
 	
-	for (int i = 185 * game_screen->pitch; i > 0; i -= 8)
+	for (int i = 185 * scr_width; i > 0; i -= 8)
 	{
 		temp = (((i - 1) >> 9) & 15) - 8;
 		temp = (temp < 0 ? -temp : temp) - 1;
 		
 		for (int j = 8; j > 0; j--)
 		{
-			*s = (((*(src + temp) & 0x0f) + (*(src + temp + game_screen->pitch) & 0x0f) + (i + temp < game_screen->pitch ? 0 : *(src + temp - game_screen->pitch) & 0x0f)) >> 2) | 0x70;
+			*s = (((*(src + temp) & 0x0f) + (*(src + temp + scr_width) & 0x0f) + (i + temp < scr_width ? 0 : *(src + temp - scr_width) & 0x0f)) >> 2) | 0x70;
 			s--;
 			src--;
 		}
@@ -655,14 +655,14 @@ void JE_smoothies1( void ) /*Lava Effect*/
 
 void JE_smoothies2( void ) /*Water effect*/
 {
-	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = game_screen; /* screen pointer, 8-bit specific */
+	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 	int temp;
 
-	s += game_screen->pitch * 185;
-	src += game_screen->pitch * 185;
+	s += scr_width * 185;
+	src += scr_width * 185;
 
-	for (int i = 185 * game_screen->pitch; i > 0; i -= 8)
+	for (int i = 185 * scr_width; i > 0; i -= 8)
 	{
 		temp = (((i - 1) >> 10) & 7) - 4;
 		temp = (temp < 0 ? -temp : temp) - 1;
@@ -670,7 +670,7 @@ void JE_smoothies2( void ) /*Water effect*/
 		for (int j = 8; j > 0; j--)
 		{
 			if (*src & 0x30)
-				*s = (((*src & 0x0f) + (*(s + temp + game_screen->pitch) & 0x0f)) >> 1) | (SDAT[2-1] << 4);
+				*s = (((*src & 0x0f) + (*(s + temp + scr_width) & 0x0f)) >> 1) | (SDAT[2-1] << 4);
 			else
 				*s = *src;
 			s--;
@@ -682,10 +682,10 @@ void JE_smoothies2( void ) /*Water effect*/
 
 void JE_smoothies3( void ) /* iced motion blur */
 {
-	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = game_screen; /* screen pointer, 8-bit specific */
+	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 
-	for (int i = 184 * game_screen->pitch; i > 0; i--)
+	for (int i = 184 * scr_width; i > 0; i--)
 	{
 			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | 0x80;
 			s++;
@@ -696,10 +696,10 @@ void JE_smoothies3( void ) /* iced motion blur */
 
 void JE_smoothies4( void ) /* motion blur */
 {
-	Uint8 *s = (Uint8 *)game_screen->pixels; /* screen pointer, 8-bit specific */
-	Uint8 *src = (Uint8 *)VGAScreen->pixels; /* screen pointer, 8-bit specific */
+	Uint8 *s = game_screen; /* screen pointer, 8-bit specific */
+	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 
-	for (int i = 184 * game_screen->pitch; i > 0; i--)
+	for (int i = 184 * scr_width; i > 0; i--)
 	{
 			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | (*src & 0xf0);
 			s++;

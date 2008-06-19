@@ -26,6 +26,9 @@
 
 #include "SDL.h"
 
+static const int scr_width = 320;
+static const int scr_height = 200;
+
 static const int surface_width = 320;
 #ifdef TARGET_GP2X
 #      define surface_height 240
@@ -41,9 +44,9 @@ typedef JE_screentype *JE_screenptr;
 
 extern const SDL_Color vga_palette[];
 extern SDL_Surface *display_surface;
-extern SDL_Surface *VGAScreen, *VGAScreenSeg;
-extern SDL_Surface *game_screen;
-extern SDL_Surface *VGAScreen2;
+extern Uint8 *VGAScreen, *VGAScreenSeg;
+extern Uint8 *game_screen;
+extern Uint8 *VGAScreen2;
 extern JE_word speed; /* JE: holds timer speed for 70Hz */
 
 void JE_initVGA256( void );

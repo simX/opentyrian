@@ -168,11 +168,11 @@ void JE_drawShape2( int x, int y, int s_, Uint8 *shape )
 
 	int i;
 
-	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->pitch + x;
+	s = (Uint8 *)VGAScreen;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->pitch;
+	s_limit = (Uint8 *)VGAScreen;
+	s_limit += scr_height * scr_width;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -188,13 +188,13 @@ void JE_drawShape2( int x, int y, int s_, Uint8 *shape )
 				p++;
 				if (s >= s_limit)
 					return;
-				if ((void *)s >= VGAScreen->pixels)
+				if ((void *)s >= VGAScreen)
 					*s = *p;
 				s++;
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->pitch;
+			s += scr_width;
 		}
 		p++;
 	}
@@ -208,11 +208,11 @@ void JE_superDrawShape2( int x, int y, int s_, Uint8 *shape )
 
 	int i;
 
-	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->pitch + x;
+	s = (Uint8 *)VGAScreen;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->pitch;
+	s_limit = (Uint8 *)VGAScreen;
+	s_limit += scr_height * scr_width;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -228,13 +228,13 @@ void JE_superDrawShape2( int x, int y, int s_, Uint8 *shape )
 				p++;
 				if (s >= s_limit)
 					return;
-				if ((void *)s >= VGAScreen->pixels)
+				if ((void *)s >= VGAScreen)
 					*s = (((*p & 0x0f) + (*s & 0x0f)) >> 1) | (*p & 0xf0);
 				s++;
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->pitch;
+			s += scr_width;
 		}
 		p++;
 	}
@@ -248,11 +248,11 @@ void JE_drawShape2Shadow( int x, int y, int s_, Uint8 *shape )
 
 	int i;
 
-	s = (Uint8 *)VGAScreen->pixels;
-	s += y * VGAScreen->pitch + x;
+	s = (Uint8 *)VGAScreen;
+	s += y * scr_width + x;
 
-	s_limit = (Uint8 *)VGAScreen->pixels;
-	s_limit += VGAScreen->h * VGAScreen->pitch;
+	s_limit = (Uint8 *)VGAScreen;
+	s_limit += scr_height * scr_width;
 
 	p = shape;
 	p += SDL_SwapLE16(((JE_word *)p)[s_ - 1]);
@@ -268,13 +268,13 @@ void JE_drawShape2Shadow( int x, int y, int s_, Uint8 *shape )
 				p++;
 				if (s >= s_limit)
 					return;
-				if ((void *)s >= VGAScreen->pixels)
+				if ((void *)s >= VGAScreen)
 					*s = ((*s & 0x0f) >> 1) + (*s & 0xf0);
 				s++;
 			}
 		} else {
 			s -= 12;
-			s += VGAScreen->pitch;
+			s += scr_width;
 		}
 		p++;
 	}

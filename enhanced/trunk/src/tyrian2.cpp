@@ -144,9 +144,9 @@ void JE_starShowVGA( void )
 	if (!playerEndLevel && !skipStarShowVGA)
 	{
 
-		s = (Uint8 *)VGAScreenSeg->pixels;
+		s = VGAScreenSeg;
 
-		src = (Uint8 *)game_screen->pixels;
+		src = game_screen;
 		src += 24;
 
 		if (fastPlay != 2 && thisPlayerNum != 2)
@@ -159,12 +159,12 @@ void JE_starShowVGA( void )
 
 		if (starShowVGASpecialCode == 1)
 		{
-			src += game_screen->pitch * 183;
+			src += scr_width * 183;
 			for (y = 0; y < 184; y++)
 			{
 				memmove(s, src, 264);
-				s += VGAScreenSeg->pitch;
-				src -= game_screen->pitch;
+				s += scr_width;
+				src -= scr_width;
 			}
 		} else if (starShowVGASpecialCode == 2 && CVars::r_headlight) {
 			lighty = 172 - PY;
@@ -196,15 +196,15 @@ void JE_starShowVGA( void )
 						src++;
 					}
 				}
-				s += 56 + VGAScreenSeg->pitch - 320;
-				src += 56 + VGAScreenSeg->pitch - 320;
+				s += 56 + scr_width - 320;
+				src += 56 + scr_width - 320;
 			}
 		} else {
 			for (y = 0; y < 184; y++)
 			{
 				memmove(s, src, 264);
-				s += VGAScreenSeg->pitch;
-				src += game_screen->pitch;
+				s += scr_width;
+				src += scr_width;
 			}
 		}
 		JE_showVGA();
@@ -314,11 +314,11 @@ void JE_drawEnemy( int enemyOffset )
 
 					if (enemy[i].ey > -13)
 					{
-						s = (Uint8 *)VGAScreen->pixels;
-						s += (enemy[i].ey - 7) * VGAScreen->pitch + (enemy[i].ex - 6) + tempMapXOfs;
+						s = (Uint8 *)VGAScreen;
+						s += (enemy[i].ey - 7) * scr_width + (enemy[i].ex - 6) + tempMapXOfs;
 
-						s_limit = (Uint8 *)VGAScreen->pixels;
-						s_limit += VGAScreen->h * VGAScreen->pitch;
+						s_limit = (Uint8 *)VGAScreen;
+						s_limit += scr_height * scr_width;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1] - 1]);
@@ -334,19 +334,19 @@ void JE_drawEnemy( int enemyOffset )
 									p++;
 									if (s >= s_limit)
 										goto enemy_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = (enemy[i].filter == 0) ? *p : (*p & 0x0f) | enemy[i].filter;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
 
-						s = (Uint8 *)VGAScreen->pixels;
-						s += (enemy[i].ey - 7) * VGAScreen->pitch + (enemy[i].ex + 6) + tempMapXOfs;
+						s = (Uint8 *)VGAScreen;
+						s += (enemy[i].ey - 7) * scr_width + (enemy[i].ex + 6) + tempMapXOfs;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1]]);
@@ -362,13 +362,13 @@ void JE_drawEnemy( int enemyOffset )
 									p++;
 									if (s >= s_limit)
 										goto enemy_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = (enemy[i].filter == 0) ? *p : (*p & 0x0f) | enemy[i].filter;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
@@ -376,11 +376,11 @@ void JE_drawEnemy( int enemyOffset )
 
 					if (enemy[i].ey > -26 && enemy[i].ey < 182)
 					{
-						s = (Uint8 *)VGAScreen->pixels;
-						s += (enemy[i].ey + 7) * VGAScreen->pitch + (enemy[i].ex - 6) + tempMapXOfs;
+						s = (Uint8 *)VGAScreen;
+						s += (enemy[i].ey + 7) * scr_width + (enemy[i].ex - 6) + tempMapXOfs;
 
-						s_limit = (Uint8 *)VGAScreen->pixels;
-						s_limit += VGAScreen->h * VGAScreen->pitch;
+						s_limit = (Uint8 *)VGAScreen;
+						s_limit += scr_height * scr_width;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1] + 18]);
@@ -396,19 +396,19 @@ void JE_drawEnemy( int enemyOffset )
 									p++;
 									if (s >= s_limit)
 										goto enemy_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = (enemy[i].filter == 0) ? *p : (*p & 0x0f) | enemy[i].filter;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
 
-						s = (Uint8 *)VGAScreen->pixels;
-						s += (enemy[i].ey + 7) * VGAScreen->pitch + (enemy[i].ex + 6) + tempMapXOfs;
+						s = (Uint8 *)VGAScreen;
+						s += (enemy[i].ey + 7) * scr_width + (enemy[i].ex + 6) + tempMapXOfs;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1] + 19]);
@@ -424,13 +424,13 @@ void JE_drawEnemy( int enemyOffset )
 									p++;
 									if (s >= s_limit)
 										goto enemy_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = (enemy[i].filter == 0) ? *p : (*p & 0x0f) | enemy[i].filter;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
@@ -439,11 +439,11 @@ void JE_drawEnemy( int enemyOffset )
 				} else {
 					if (enemy[i].ey > -13)
 					{
-						s = (Uint8 *)VGAScreen->pixels;
-						s += enemy[i].ey * VGAScreen->pitch + enemy[i].ex + tempMapXOfs;
+						s = (Uint8 *)VGAScreen;
+						s += enemy[i].ey * scr_width + enemy[i].ex + tempMapXOfs;
 
-						s_limit = (Uint8 *)VGAScreen->pixels;
-						s_limit += VGAScreen->h * VGAScreen->pitch;
+						s_limit = (Uint8 *)VGAScreen;
+						s_limit += scr_height * scr_width;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1] - 1]);
@@ -459,13 +459,13 @@ void JE_drawEnemy( int enemyOffset )
 									p++;
 									if (s >= s_limit)
 										goto enemy_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = (enemy[i].filter == 0) ? *p : (*p & 0x0f) | enemy[i].filter;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
@@ -619,7 +619,7 @@ enemy_still_exists:
 						{
 							if (enemy[i].ey > 20)
 							{
-								explosionMoveUp = -VGAScreen->pitch * 2;
+								explosionMoveUp = -scr_width * 2;
 								JE_setupExplosion(tempX - 8 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
 								JE_setupExplosion(tempX + 4 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
 								explosionMoveUp = 0;
@@ -1158,7 +1158,7 @@ start_level_first:
 	backPos2 = 0;
 	backPos3 = 0;
 	power = 0;
-	starY = VGAScreen->pitch;
+	starY = scr_width;
 
 	/* Setup maximum player speed */
 	/* ==== Mouse Input ==== */
@@ -1210,7 +1210,7 @@ start_level_first:
 	backMove = 1;
 	backMove2 = 2;
 	backMove3 = 3;
-	explodeMove = VGAScreen->pitch * 2;
+	explodeMove = scr_width * 2;
 	enemiesActive = true;
 	for(temp = 0; temp < 3; temp++)
 	{
@@ -1719,7 +1719,7 @@ level_loop:
 	{
 		/* BP is used by all backgrounds */
 
-		s = (Uint8 *)VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen;
 
 		/* Offset for top */
 		s += 11 * 24;
@@ -1745,15 +1745,15 @@ level_loop:
 				{
 					memcpy(s, p, 24);
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					p += 24;
 				}
 
-				s -= backPos * VGAScreen->pitch + 24;
+				s -= backPos * scr_width + 24;
 			}
 
 			s += 24 * 11;
-			s += backPos * VGAScreen->pitch + 24;
+			s += backPos * scr_width + 24;
 
 			/* Increment Map Location for next line */
 			bp += 14 - 2;   /* (Map Width) */
@@ -1776,17 +1776,17 @@ level_loop:
 				{
 					memcpy(s, p, 24);
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					p += 24;
 				}
 
-				s -= VGAScreen->pitch * 28 + 24;
+				s -= scr_width * 28 + 24;
 			}
 
 			/* Increment Map Location for next line */
 			bp += 14 + 14 - 2;  /* (Map Width) */
 
-			s += VGAScreen->pitch * 28 + 24 * 12;
+			s += scr_width * 28 + 24 * 12;
 		}
 
 		if (backPos <= 15)
@@ -1802,11 +1802,11 @@ level_loop:
 				{
 					memcpy(s, p, 24);
 
-					s += VGAScreen->pitch;
+					s += scr_width;
 					p += 24;
 				}
 
-				s -= (15 - backPos + 1) * VGAScreen->pitch + 24;
+				s -= (15 - backPos + 1) * scr_width + 24;
 			}
 		}
 	} else {
@@ -1834,12 +1834,12 @@ level_loop:
 	/* DRAWSTARS */
 	if (starActive || astralDuration > 0)
 	{
-		s = (Uint8 *)VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen;
 		
 		for (i = MAX_STARS; i--; )
 		{
 			starDat[i].sLoc += starDat[i].sMov + starY;
-			if (starDat[i].sLoc < 177 * VGAScreen->pitch)
+			if (starDat[i].sLoc < 177 * scr_width)
 			{
 				if (*(s + starDat[i].sLoc) == 0)
 				{
@@ -1855,13 +1855,13 @@ level_loop:
 					{
 						*(s + starDat[i].sLoc - 1) = starDat[i].sC - 4;
 					}
-					if (*(s + starDat[i].sLoc + VGAScreen->pitch) == 0)
+					if (*(s + starDat[i].sLoc + scr_width) == 0)
 					{
-						*(s + starDat[i].sLoc + VGAScreen->pitch) = starDat[i].sC - 4;
+						*(s + starDat[i].sLoc + scr_width) = starDat[i].sC - 4;
 					}
-					if (starDat[i].sLoc >= VGAScreen->pitch && *(s + starDat[i].sLoc - VGAScreen->pitch) == 0)
+					if (starDat[i].sLoc >= scr_width && *(s + starDat[i].sLoc - scr_width) == 0)
 					{
-						*(s + starDat[i].sLoc - VGAScreen->pitch) = starDat[i].sC - 4;
+						*(s + starDat[i].sLoc - scr_width) = starDat[i].sC - 4;
 					}
 				}
 			}
@@ -2561,11 +2561,11 @@ draw_player_shot_loop_end:
 								break;
 						}
 					} else {
-						s = (Uint8 *)VGAScreen->pixels;
-						s += enemyShot[z].sy * VGAScreen->pitch + enemyShot[z].sx;
+						s = (Uint8 *)VGAScreen;
+						s += enemyShot[z].sy * scr_width + enemyShot[z].sx;
 
-						s_limit = (Uint8 *)VGAScreen->pixels;
-						s_limit += VGAScreen->h * VGAScreen->pitch;
+						s_limit = (Uint8 *)VGAScreen;
+						s_limit += scr_height * scr_width;
 
 						if (enemyShot[z].animax != 0)
 						{
@@ -2595,13 +2595,13 @@ draw_player_shot_loop_end:
 									p++;
 									if (s >= s_limit)
 										goto enemy_shot_draw_overflow;
-									if ((void *)s >= VGAScreen->pixels)
+									if ((void *)s >= VGAScreen)
 										*s = *p;
 									s++;
 								}
 							} else {
 								s -= 12;
-								s += VGAScreen->pitch;
+								s += scr_width;
 							}
 							p++;
 						}
@@ -2697,13 +2697,13 @@ enemy_shot_draw_overflow:
 			}
 			explosions[j].explodeLoc += l + explosions[j].fixedMovement;
 			
-			s = (Uint8 *)VGAScreen->pixels;
+			s = (Uint8 *)VGAScreen;
 			s += explosions[j].explodeLoc;
 			
-			s_limit = (Uint8 *)VGAScreen->pixels;
-			s_limit += VGAScreen->h * VGAScreen->pitch;
+			s_limit = (Uint8 *)VGAScreen;
+			s_limit += scr_height * scr_width;
 			
-			if (s + VGAScreen->pitch * 14 > s_limit)
+			if (s + scr_width * 14 > s_limit)
 			{
 				explodeAvail[j] = 0;
 			} else {
@@ -2723,13 +2723,13 @@ enemy_shot_draw_overflow:
 								p++;
 								if (s >= s_limit)
 									goto explosion_draw_overflow;
-								if ((void *)s >= VGAScreen->pixels)
+								if ((void *)s >= VGAScreen)
 									*s = (((*p & 0x0f) + (*s & 0x0f)) >> 1) | (*p & 0xf0);
 								s++;
 							}
 						} else {
 							s -= 12;
-							s += VGAScreen->pitch;
+							s += scr_width;
 						}
 						p++;
 					}
@@ -2745,13 +2745,13 @@ enemy_shot_draw_overflow:
 								p++;
 								if (s >= s_limit)
 									goto explosion_draw_overflow;
-								if ((void *)s >= VGAScreen->pixels)
+								if ((void *)s >= VGAScreen)
 									*s = *p;
 								s++;
 							}
 						} else {
 							s -= 12;
-							s += VGAScreen->pitch;
+							s += scr_width;
 						}
 						p++;
 					}
@@ -3090,7 +3090,7 @@ explosion_draw_overflow:
 		backMove = 1;
 		backMove2 = 2;
 		backMove3 = 3;
-		explodeMove = VGAScreen->pitch * 2;
+		explodeMove = scr_width * 2;
 		stopBackgroundNum = 0;
 		stopBackgrounds = false;
 		if (waitToEndLevel)
@@ -3126,7 +3126,7 @@ explosion_draw_overflow:
 			backMove = 1;
 			backMove2 = 2;
 			backMove3 = 3;
-			explodeMove = VGAScreen->pitch * 2;
+			explodeMove = scr_width * 2;
 		}
 	}
 
@@ -3558,11 +3558,11 @@ new_game:
 								if (!constantPlay)
 								{
 									JE_setNetByte(0);
-									memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 									tempX = atoi(strnztcpy(buffer, s + 3, 3));
 									JE_loadPic(tempX, false);
-									memcpy(pic_buffer, VGAScreen->pixels, sizeof(pic_buffer));
+									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
 									service_SDL_events(true);
 									for (z = 0; z <= 199; z++)
@@ -3570,8 +3570,8 @@ new_game:
 										service_SDL_events(false);
 										if (!newkey && !ESCPressed)
 										{
-											vga = (Uint8 *)VGAScreen->pixels;
-											vga2 = (Uint8 *)VGAScreen2->pixels;
+											vga = (Uint8 *)VGAScreen;
+											vga2 = (Uint8 *)VGAScreen2;
 											pic = pic_buffer + (199 - z) * 320;
 
 											setjasondelay(1); /* attempting to emulate JE_waitRetrace();*/
@@ -3582,10 +3582,10 @@ new_game:
 													memcpy(vga, pic, 320);
 													pic += 320;
 												} else {
-													memcpy(vga, vga2, VGAScreen->pitch);
-													vga2 += VGAScreen->pitch;
+													memcpy(vga, vga2, scr_width);
+													vga2 += scr_width;
 												}
-												vga += VGAScreen->pitch;
+												vga += scr_width;
 											}
 											JE_showVGA();
 											wait_delay();
@@ -3600,7 +3600,7 @@ new_game:
 											}
 										}
 									}
-									memcpy(VGAScreen->pixels, pic_buffer, sizeof(pic_buffer));
+									memcpy(VGAScreen, pic_buffer, sizeof(pic_buffer));
 								}
 								break;
 
@@ -3608,11 +3608,11 @@ new_game:
 								if (!constantPlay)
 								{
 									JE_setNetByte(0);
-									memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 									tempX = atoi(strnztcpy(buffer, s + 3, 3));
 									JE_loadPic(tempX, false);
-									memcpy(pic_buffer, VGAScreen->pixels, sizeof(pic_buffer));
+									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
 									service_SDL_events(true);
 									for (z = 0; z <= 199; z++)
@@ -3620,8 +3620,8 @@ new_game:
 										service_SDL_events(false);
 										if (!newkey && !ESCPressed)
 										{
-											vga = (Uint8 *)VGAScreen->pixels;
-											vga2 = (Uint8 *)VGAScreen2->pixels;
+											vga = (Uint8 *)VGAScreen;
+											vga2 = (Uint8 *)VGAScreen2;
 											pic = pic_buffer;
 
 											setjasondelay(1); /* attempting to emulate JE_waitRetrace();*/
@@ -3629,13 +3629,13 @@ new_game:
 											{
 												if (y <= 199 - z)
 												{
-													memcpy(vga, vga2, VGAScreen->pitch);
-													vga2 += VGAScreen->pitch;
+													memcpy(vga, vga2, scr_width);
+													vga2 += scr_width;
 												} else {
 													memcpy(vga, pic, 320);
 													pic += 320;
 												}
-												vga += VGAScreen->pitch;
+												vga += scr_width;
 											}
 											JE_showVGA();
 											wait_delay();
@@ -3650,7 +3650,7 @@ new_game:
 											}
 										}
 									}
-									memcpy(VGAScreen->pixels, pic_buffer, sizeof(pic_buffer));
+									memcpy(VGAScreen, pic_buffer, sizeof(pic_buffer));
 								}
 								break;
 
@@ -3658,11 +3658,11 @@ new_game:
 								if (!constantPlay)
 								{
 									JE_setNetByte(0);
-									memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 									tempX = atoi(strnztcpy(buffer, s + 3, 3));
 									JE_loadPic(tempX, false);
-									memcpy(pic_buffer, VGAScreen->pixels, sizeof(pic_buffer));
+									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
 									service_SDL_events(true);
 									for (z = 0; z <= 318; z++)
@@ -3670,8 +3670,8 @@ new_game:
 										service_SDL_events(false);
 										if (!newkey && !ESCPressed)
 										{
-											vga = (Uint8 *)VGAScreen->pixels;
-											vga2 = (Uint8 *)VGAScreen2->pixels;
+											vga = (Uint8 *)VGAScreen;
+											vga2 = (Uint8 *)VGAScreen2;
 											pic = pic_buffer;
 
 											setjasondelay(1); /* attempting to emulate JE_waitRetrace();*/
@@ -3679,7 +3679,7 @@ new_game:
 											{
 												memcpy(vga, vga2 + z, 319 - z);
 												vga += 320 - z;
-												vga2 += VGAScreen2->pitch;
+												vga2 += scr_width;
 												memcpy(vga, pic, z + 1);
 												vga += z;
 												pic += 320;
@@ -3697,7 +3697,7 @@ new_game:
 											}
 										}
 									}
-									memcpy(VGAScreen->pixels, pic_buffer, sizeof(pic_buffer));
+									memcpy(VGAScreen, pic_buffer, sizeof(pic_buffer));
 								}
 								break;
 
@@ -4077,7 +4077,7 @@ void JE_titleScreen( bool animate )
 
 					JE_textShade(2, 192, opentyrian_version, 15, 0, PART_SHADE);
 	
-					memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+					memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	
 					if (moveTyrianLogoUp)
 					{
@@ -4108,7 +4108,7 @@ void JE_titleScreen( bool animate )
 						for (temp = 61; temp >= 4; temp -= 2)
 						{
 							setjasondelay(2);
-							memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+							memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 	
 							JE_newDrawCShapeNum(PLANET_SHAPES, 147, 11, temp);
 	
@@ -4145,11 +4145,11 @@ void JE_titleScreen( bool animate )
 	
 					JE_fadeColors(&colors, &colors2, 0, 255, 20);
 	
-					memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+					memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 				}
 			}
 	
-			memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+			memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 	
 			for (temp = 0; temp < menunum; temp++)
 			{
@@ -5029,7 +5029,7 @@ void JE_eventSystem( void )
 	switch (eventRec[eventLoc-1].eventtype)
 	{
 		case 1:
-			starY = eventRec[eventLoc-1].eventdat * VGAScreen->pitch;
+			starY = eventRec[eventLoc-1].eventdat * scr_width;
 			break;
 		case 2:
 			map1YDelay = 1;
@@ -5041,9 +5041,9 @@ void JE_eventSystem( void )
 			backMove2 = eventRec[eventLoc-1].eventdat2;
 			if (backMove2 > 0)
 			{
-				explodeMove = backMove2 * VGAScreen->pitch;
+				explodeMove = backMove2 * scr_width;
 			} else {
-				explodeMove = backMove * VGAScreen->pitch;
+				explodeMove = backMove * scr_width;
 			}
 			backMove3 = eventRec[eventLoc-1].eventdat3;
 
@@ -5430,7 +5430,7 @@ void JE_eventSystem( void )
 
 			backMove = eventRec[eventLoc-1].eventdat;
 			backMove2 = eventRec[eventLoc-1].eventdat2;
-			explodeMove = backMove2 * VGAScreen->pitch;
+			explodeMove = backMove2 * scr_width;
 			backMove3 = eventRec[eventLoc-1].eventdat3;
 			break;
 		case 31: /* Enemy Fire Override */
@@ -6048,7 +6048,7 @@ void JE_itemScreen( void )
 		}
 	}
 
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 	keyboardUsed = false;
 	firstMenu9 = false;
@@ -6106,7 +6106,7 @@ void JE_itemScreen( void )
 		/* SYN: note reindexing... "firstMenu9" refers to Menu 8 here :( */
 		if (curMenu != 8 || firstMenu9)
 		{
-			memcpy(VGAScreen->pixels, VGAScreen2->pixels, VGAScreen->pitch * VGAScreen->h);
+			memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
 		}
 
 		defaultBrightness = -3;
@@ -7259,7 +7259,7 @@ void JE_itemScreen( void )
 							break;
 						}
 
-						memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+						memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 						curPal = newPal;
 						memcpy(colors, palettes[newPal - 1], sizeof(colors));
@@ -8019,7 +8019,7 @@ void JE_drawPlanet( int planetNum )
 	}
 }
 
-void JE_scaleBitmap( SDL_Surface *bitmap, JE_word x, JE_word y, JE_word x1, JE_word y1, JE_word x2, JE_word y2 )
+void JE_scaleBitmap( Uint8 *bitmap, JE_word x, JE_word y, JE_word x1, JE_word y1, JE_word x2, JE_word y2 )
 {
 	JE_word w = x2 - x1 + 1,
 	        h = y2 - y1 + 1;
@@ -8027,10 +8027,10 @@ void JE_scaleBitmap( SDL_Surface *bitmap, JE_word x, JE_word y, JE_word x1, JE_w
 	       sy = y * 0x10000 / h,
 	       cx, cy = 0;
 	
-	Uint8 *s = (Uint8 *)VGAScreen->pixels;  /* 8-bit specific */
-	Uint8 *src = (Uint8 *)bitmap->pixels;  /* 8-bit specific */
+	Uint8 *s = (Uint8 *)VGAScreen;  /* 8-bit specific */
+	Uint8 *src = bitmap;  /* 8-bit specific */
 	
-	s += y1 * VGAScreen->pitch + x1;
+	s += y1 * scr_width + x1;
 	
 	for (; h; h--)
 	{
@@ -8045,11 +8045,11 @@ void JE_scaleBitmap( SDL_Surface *bitmap, JE_word x, JE_word y, JE_word x1, JE_w
 			cx &= 0xffff;
 		}
 		
-		s += VGAScreen->pitch - w;
+		s += scr_width - w;
 		
 		cy += sy;
 		src -= ((sx * w) >> 16);
-		src += (cy >> 16) * bitmap->pitch;
+		src += (cy >> 16) * scr_width;
 		cy &= 0xffff;
 	}
 }
@@ -8161,7 +8161,7 @@ void JE_doFunkyScreen( void )
 	tempScreenSeg = VGAScreenSeg;
 	
 	JE_loadPic(1, false);
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen2->pitch * VGAScreen2->h);
+	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 }
 
 void JE_drawMainMenuHelpText( void )
@@ -8196,8 +8196,8 @@ void JE_drawMainMenuHelpText( void )
 
 void JE_whoa( void )
 {
-	memcpy(VGAScreen2->pixels, VGAScreen->pixels, VGAScreen->h * VGAScreen->pitch);
-	memset(VGAScreen->pixels, 0, VGAScreen->h * VGAScreen->pitch);
+	memcpy(VGAScreen2, VGAScreen, scr_height * scr_width);
+	memset(VGAScreen, 0, scr_height * scr_width);
 
 	JE_wipeKey();
 
@@ -8209,7 +8209,7 @@ void JE_whoa( void )
 
 		Uint16 di = 640; // pixel pointer
 
-		Uint8 *vga2pixels = (Uint8 *)VGAScreen2->pixels;
+		Uint8 *vga2pixels = (Uint8 *)VGAScreen2;
 		for (Uint16 dx = 64000 - 1280; dx != 0; dx--)
 		{
 			Uint16 si = di + (Uint8)((Uint8)(dx >> 8) >> 5) - 4;
@@ -8229,7 +8229,7 @@ void JE_whoa( void )
 		di = 320 * 4;
 		for (Uint16 cx = 64000 - 320*7; cx != 0; cx--)
 		{
-			((Uint8 *)VGAScreen->pixels)[di] = vga2pixels[di];
+			((Uint8 *)VGAScreen)[di] = vga2pixels[di];
 			di++;
 		}
 
@@ -8883,8 +8883,8 @@ void JE_funkyScreen( void )
 {
 	wait_noinput(true,true,true);
 
-	Uint8 *s = (Uint8 *)game_screen->pixels; /* 8-bit specific */
-	Uint8 *src = (Uint8 *)VGAScreen2->pixels; /* 8-bit specific */
+	Uint8 *s = game_screen; /* 8-bit specific */
+	Uint8 *src = (Uint8 *)VGAScreen2; /* 8-bit specific */
 	
 	for (int y = 0; y < 200; y++)
 	{
@@ -8892,12 +8892,12 @@ void JE_funkyScreen( void )
 		{
 			int avg = 0;
 			if (y > 0)
-				avg += *(src - VGAScreen2->pitch) & 0x0f;
-			if (y < VGAScreen2->h - 1)
-				avg += *(src + VGAScreen2->pitch) & 0x0f;
+				avg += *(src - scr_width) & 0x0f;
+			if (y < scr_height - 1)
+				avg += *(src + scr_width) & 0x0f;
 			if (x > 0)
 				avg += *(src - 1) & 0x0f;
-			if (x < VGAScreen2->pitch - 1)
+			if (x < scr_width - 1)
 				avg += *(src + 1) & 0x0f;
 			avg /= 4;
 			
@@ -8919,8 +8919,8 @@ void JE_funkyScreen( void )
 	JE_rectangle(0, 0, 319, 199, 37);
 	JE_rectangle(1, 1, 318, 198, 35);
 
-	s = (Uint8 *)VGAScreen2->pixels; /* 8-bit specific */
-	src = (Uint8 *)game_screen->pixels; /* 8-bit specific */
+	s = (Uint8 *)VGAScreen2; /* 8-bit specific */
+	src = game_screen; /* 8-bit specific */
 	
 	for (int y = 0; y < 200; y++)
 	{
@@ -9023,11 +9023,11 @@ void JE_weaponViewFrame( int testshotnum )
 
 	for (i = MAX_STARS; i--;)
 	{
-		s = (Uint8 *)VGAScreen->pixels;
+		s = (Uint8 *)VGAScreen;
 		
-		starDat[i].sLoc += starDat[i].sMov + VGAScreen->pitch;
+		starDat[i].sLoc += starDat[i].sMov + scr_width;
 		
-		if (starDat[i].sLoc < 177 * VGAScreen->pitch)
+		if (starDat[i].sLoc < 177 * scr_width)
 		{
 			if (*(s + starDat[i].sLoc) == 0)
 			{
@@ -9043,13 +9043,13 @@ void JE_weaponViewFrame( int testshotnum )
 				{
 					*(s + starDat[i].sLoc - 1) = starDat[i].sC - 4;
 				}
-				if (*(s + starDat[i].sLoc + VGAScreen->pitch) == 0)
+				if (*(s + starDat[i].sLoc + scr_width) == 0)
 				{
-					*(s + starDat[i].sLoc + VGAScreen->pitch) = starDat[i].sC - 4;
+					*(s + starDat[i].sLoc + scr_width) = starDat[i].sC - 4;
 				}
-				if (starDat[i].sLoc >= VGAScreen->pitch && *(s + starDat[i].sLoc - VGAScreen->pitch) == 0)
+				if (starDat[i].sLoc >= scr_width && *(s + starDat[i].sLoc - scr_width) == 0)
 				{
-					*(s + starDat[i].sLoc - VGAScreen->pitch) = starDat[i].sC - 4;
+					*(s + starDat[i].sLoc - scr_width) = starDat[i].sC - 4;
 				}
 			}
 		}

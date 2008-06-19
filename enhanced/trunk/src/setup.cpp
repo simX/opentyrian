@@ -124,7 +124,7 @@ void JE_jukeboxGo( void )
 	lastSong = currentJukeboxSong;
 
 	JE_fadeBlack(10);
-	SDL_FillRect(VGAScreenSeg, NULL, 0x0);
+	std::fill_n(VGAScreenSeg, scr_width*scr_height, 0x0);
 	JE_showVGA();
 	SDL_SetColors(display_surface, const_cast<SDL_Color*>(vga_palette), 0, 256); //JE_fadeColor(10); // TODO: remove the const_cast if SDL ever gets fixed
 

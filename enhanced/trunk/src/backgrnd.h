@@ -34,7 +34,7 @@ extern unsigned char **mapYPos, **mapY2Pos, **mapY3Pos;
 extern JE_word mapXPos, oldMapXOfs, mapXOfs, mapX2Ofs, mapX2Pos, mapX3Pos, oldMapX3Ofs, mapX3Ofs, tempMapXOfs;
 extern int mapXbpPos, mapX2bpPos, mapX3bpPos;
 extern int map1YDelay, map1YDelayMax, map2YDelay, map2YDelayMax;
-extern SDL_Surface *smoothiesScreen;
+extern Uint8 *smoothiesScreen;
 extern bool anySmoothies;
 extern int SDAT[9];
 

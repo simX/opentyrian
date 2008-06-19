@@ -43,7 +43,7 @@ static const int MAX_TABLE = 8;
 
 typedef Uint8 *JE_ShapeArrayType[MAX_TABLE][MAXIMUM_SHAPE]; /* [1..maxtable, 1..maximumshape] */
 
-extern SDL_Surface *tempScreenSeg;
+extern Uint8 *tempScreenSeg;
 extern JE_ShapeArrayType shapeArray;
 extern JE_word shapeX[MAX_TABLE][MAXIMUM_SHAPE],
                shapeY[MAX_TABLE][MAXIMUM_SHAPE];
