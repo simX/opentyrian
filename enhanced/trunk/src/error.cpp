@@ -62,6 +62,7 @@ FILE *fopen_check( const char *file, const char *mode )
 	char buf[64];
 	FILE *f;
 
+	errno = 0;	
 	f = fopen(file, mode);
 	if (!f)
 	{

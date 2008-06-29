@@ -29,6 +29,7 @@
 #include "vga256d.h"
 #include "fonthand.h"
 #include "loudness.h"
+#include "params.h"
 
 #include "varz.h"
 
@@ -667,33 +668,28 @@ void JE_drawOptionLevel( void )
 
 void JE_tyrianHalt( int code )
 {
-	if (code != 9)
+	JE_closeVGA256();
+
+	if (scanForJoystick)
 	{
-		JE_closeVGA256();
+		SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 	}
 
 	/* TODO: NETWORK */
 
-	JE_newPurgeShapes(PLANET_SHAPES);
-	JE_newPurgeShapes(FONT_SHAPES);
-	JE_newPurgeShapes(SMALL_FONT_SHAPES);
-	JE_newPurgeShapes(WEAPON_SHAPES);
-	JE_newPurgeShapes(FACE_SHAPES);
-
-	/* YKS: Here the original free'd everythig in the memory.
+	/* YKS: Here the original and classic free'd everythig in the memory.
 	 * Since the OS does this for us I can save some typing. =] */
 
-	/* JE_endMusic(soundeffects); TODO */
+	JE_deinitialize();
 
+	/* JE_endMusic(soundeffects); TODO */
 
 	if (code != 9)
 	{
 		JE_saveConfiguration();
-	}
+	}	
 
-	/* endkeyboard; */
-
-	if (code != 9)
+	if (code == 9)
 	{
 		/* OutputString('call=file0002.EXE' + #0'); TODO? */
 	}
@@ -710,9 +706,10 @@ void JE_tyrianHalt( int code )
 			<< "You now have permission to borrow my ship on your next mission." << std::endl
 			<< std::endl
 			<< "Also, you might want to try out the YESXMAS parameter." << std::endl
-			<< "\tType: File0001 YESXMAS" << std::endl;
+			<< "\tType: tyrian YESXMAS" << std::endl;
 	}
 
+	SDL_Quit();
 	exit(code);
 }
 

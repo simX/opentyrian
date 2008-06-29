@@ -37,14 +37,12 @@ bool playing;
 
 float music_vol_multiplier = 1.f;
 
-SDL_mutex *soundmutex = NULL;
-
 /* SYN: These shouldn't be used outside this file. Hands off! */
 SAMPLE_TYPE *channel_buffer[SFX_CHANNELS];
 SAMPLE_TYPE *channel_pos[SFX_CHANNELS];
 Uint32 channel_len[SFX_CHANNELS];
 float channel_vol[SFX_CHANNELS];
-int sound_init_state = false;
+
 int freq = 11025 * OUTPUT_QUALITY;
 
 bool music_playing = false;
@@ -66,16 +64,7 @@ namespace CVars
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 {
-	SDL_mutex *mut = (SDL_mutex *) userdata;
-
-	/* Making sure that we don't mess with sound buffers when someone else is using them! */
-	if (SDL_mutexP(mut) == -1)
-	{
-		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
-		exit(1);
-	}
-
-	SAMPLE_TYPE *feedme = (SAMPLE_TYPE *) sdl_buffer;
+	SAMPLE_TYPE *feedme = (SAMPLE_TYPE *)sdl_buffer;
 
 	float s_music_vol = CVars::s_mute ? 0.f : CVars::s_music_vol.get();
 
@@ -106,12 +95,12 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 			/* set i to smaller of data requested by SDL and a value calculated from the refresh rate */
 			long i = (long)((ct / REFRESH) + 4) & ~3;
 			i = (i > remaining) ? remaining : i; /* i should now equal the number of samples we get */
-			opl_update((short*) music_pos, i);
+			opl_update(music_pos, i);
 			music_pos += i;
 			remaining -= i;
 			ct -= (long)(REFRESH * i);
 		}
-	
+
 		/* Reduce the music volume. */
 		int qu = howmuch / BYTES_PER_SAMPLE;
 		for (int smp = 0; smp < qu; smp++)
@@ -131,8 +120,13 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 		int qu = ((unsigned int)howmuch > channel_len[ch] ? channel_len[ch] : howmuch) / BYTES_PER_SAMPLE;
 		for (int smp = 0; smp < qu; smp++)
 		{
-			long clip = (long)feedme[smp] + (long)(channel_pos[ch][smp] * volume);
-			feedme[smp] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (short)clip;
+#if (BYTES_PER_SAMPLE == 2)
+			Sint32 clip = (Sint32)feedme[smp] + (Sint32)(channel_pos[ch][smp] * volume);
+			feedme[smp] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (Sint16)clip;
+#elif (BYTES_PER_SAMPLE == 1)
+			Sint16 clip = (Sint16)feedme[smp] + (Sint16)(channel_pos[ch][smp] * volume);
+			feedme[smp] = (clip > 0x7f) ? 0x7f : (clip <= -0x80) ? -0x80 : (Sint8)clip;
+#endif
 		}
 
 		channel_pos[ch] += qu;
@@ -145,50 +139,34 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 			channel_buffer[ch] = channel_pos[ch] = NULL;
 		}
 	}
-
-	SDL_mutexV(mut); /* release mutex */
 }
 
-void JE_initialize( void )
+void JE_initialize( )
 {
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
 	{
-		Console::get() << "Failed to initialize audio: " << SDL_GetError() << std::endl;
+		Console::get() << "\a7Warning:\ax Failed to initialize audio system: " << SDL_GetError() << std::endl;
 		noSound = true;
 		return;
 	}
 
-	sound_init_state = true;
-
-	soundmutex = SDL_CreateMutex();
-
-	if (soundmutex == NULL)
-	{
-		Console::get() << "Couldn't create mutex! Oh noes!" << std::endl;
-		exit(-1);
-	}
-
-	for (int i = 0; i < SFX_CHANNELS; i++)
-	{
-		channel_buffer[i] = channel_pos[i] = NULL;
-		channel_len[i] = 0;
-	}
-
 	SDL_AudioSpec plz, got;
 	plz.freq = freq;
+#if (BYTES_PER_SAMPLE == 2)
 	plz.format = AUDIO_S16SYS;
+#elif (BYTES_PER_SAMPLE == 1)
+	plz.format = AUDIO_S8;
+#endif
 	plz.channels = 1;
 	plz.samples = 512;
 	plz.callback = audio_cb;
-	plz.userdata = soundmutex;
 
 	Console::get() << "Requested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
 
-	if ( SDL_OpenAudio(&plz, &got) < 0 )
+	if ( SDL_OpenAudio(&plz, &got) == -1 )
 	{
-		Console::get() << "WARNING: Failed to initialize SDL audio." << std::endl;
+		Console::get() << "\a7Warning:\ax Failed to initialize SDL audio." << std::endl;
 		noSound = true;
-		SDL_DestroyMutex(soundmutex);
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 	}
 
@@ -199,12 +177,19 @@ void JE_initialize( void )
 	SDL_PauseAudio(0);
 }
 
-void JE_deinitialize( void )
+void JE_deinitialize( )
 {
 	/* SYN: TODO: Clean up any other audio stuff, if necessary. This should only be called when we're quitting. */
-	SDL_CloseAudio();
+	for (int i = 0; i < SFX_CHANNELS; ++i)
+	{
+		delete[] channel_buffer[i];
+		channel_buffer[i] = channel_pos[i] = 0;
+		channel_len[i] = 0;
+	}
+
 	opl_deinit();
-	SDL_DestroyMutex(soundmutex);
+
+	SDL_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
@@ -215,11 +200,7 @@ void JE_selectSong( JE_word value )
 		return;
 
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
-	if (SDL_mutexP(soundmutex) == -1)
-	{
-		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
-		exit(1);
-	}
+	SDL_LockAudio();
 
 	switch (value)
 	{
@@ -237,7 +218,7 @@ void JE_selectSong( JE_word value )
 			break;
 	}
 
-	SDL_mutexV(soundmutex); /* release mutex */
+	SDL_UnlockAudio();
 }
 
 void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol)
@@ -246,11 +227,7 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol
 		return;
 	
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
-	if (SDL_mutexP(soundmutex) == -1)
-	{
-		Console::get() << "Couldn't lock mutex! Argh! Line " << __LINE__ << std::endl;
-		exit(1);
-	}
+	SDL_LockAudio();
 
 	delete[] channel_buffer[chan];
 
@@ -263,10 +240,14 @@ void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol
 	{
 		for (int ex = 0; ex < SAMPLE_SCALING; ex++)
 		{
-			channel_buffer[chan][(i * SAMPLE_SCALING) + ex] = ((SAMPLE_TYPE) ((Sint8) buffer[i]) << 8);
+#if (BYTES_PER_SAMPLE == 2)
+			channel_buffer[chan][(i * SAMPLE_SCALING) + ex] = (Sint8)buffer[i] << 8;
+#elif (BYTES_PER_SAMPLE == 1)
+			channel_buffer[chan][(i * SAMPLE_SCALING) + ex] = (Sint8)buffer[i];
+#endif
 		}
 	}
 
-	SDL_mutexV(soundmutex); /* release mutex */
+	SDL_UnlockAudio();
 }
 

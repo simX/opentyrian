@@ -1972,7 +1972,7 @@ void YM3812SetUpdateHandler(int which,OPL_UPDATEHANDLER UpdateHandler,int param)
 ** '*buffer' is the output buffer pointer
 ** 'length' is the number of samples that should be generated
 */
-void YM3812UpdateOne(int which, Sint16 *buffer, int length)
+void YM3812UpdateOne(int which, OPLSAMPLE *buffer, int length)
 {
 	FM_OPL		*OPL = OPL_YM3812[which];
 	Uint8		rhythm = OPL->rhythm&0x20;

@@ -733,9 +733,7 @@ void JE_loadMainShapeTables( void )
 
 	FILE *f;
 
-	typedef unsigned long JE_ShpPosType[SHP_NUM + 1]; /* [1..shpnum + 1] */
-
-	JE_ShpPosType shpPos;
+	unsigned long shpPos[SHP_NUM + 1];
 	JE_word shpNumb;
 
 	if (tyrianXmas)
@@ -753,32 +751,33 @@ void JE_loadMainShapeTables( void )
 	fseek(f, 0, SEEK_END);
 	shpPos[shpNumb] = ftell(f);
 
-	/*fclose(f);*/
+	int i;
 
-	/*Load EST shapes*/
-	for (temp = 0; temp < 7; temp++)
+	// Load interface and option sprites
+	for (i = 0; i < 7; i++)
 	{
-		fseek(f, shpPos[temp], SEEK_SET);
-		JE_newLoadShapesB(shapeReorderList[temp], f);
+		fseek(f, shpPos[i], SEEK_SET);
+		JE_newLoadShapesB(shapeReorderList[i], f);
 	}
 
-	shapesC1Size = shpPos[temp + 1] - shpPos[temp];
+	// Player shot sprites
+	shapesC1Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&shapesC1, f, shapesC1Size);
-	temp++;
+	++i;
 
-	shapes9Size = shpPos[temp + 1] - shpPos[temp];
+	shapes9Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&shapes9 , f, shapes9Size);
-	temp++;
+	++i;
 
-	eShapes6Size = shpPos[temp + 1] - shpPos[temp];
+	eShapes6Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&eShapes6, f, eShapes6Size);
-	temp++;
+	++i;
 
-	eShapes5Size = shpPos[temp + 1] - shpPos[temp];
+	eShapes5Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&eShapes5, f, eShapes5Size);
-	temp++;
+	++i;
 
-	shapesW2Size = shpPos[temp + 1] - shpPos[temp];
+	shapesW2Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&shapesW2, f, shapesW2Size);
 
 	fclose(f);

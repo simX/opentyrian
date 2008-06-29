@@ -21,6 +21,7 @@
 #define LOUDNESS_H
 
 #include "opentyr.h"
+#include "fmopl.h"
 
 #include "CVar.h"
 
@@ -36,10 +37,10 @@ static const int OUTPUT_QUALITY = 2;
 #endif /* TARGET_GP2X */
 
 static const int SAMPLE_SCALING = OUTPUT_QUALITY;
-typedef Sint16 SAMPLE_TYPE;
-static const int BYTES_PER_SAMPLE = sizeof(SAMPLE_TYPE);
+typedef OPLSAMPLE SAMPLE_TYPE;
+#define BYTES_PER_SAMPLE (OPL_SAMPLE_BITS / 8)
 
-typedef unsigned char JE_MusicType [20000];
+typedef unsigned char JE_MusicType[20000];
 
 extern JE_MusicType musicData;
 extern bool repeated;
@@ -55,8 +56,8 @@ namespace CVars
 	extern CVarFloat s_fx_vol;
 }
 
-void JE_initialize( void );
-void JE_deinitialize( void );
+void JE_initialize( );
+void JE_deinitialize( );
 
 /* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing,
    or restart it if it is. */

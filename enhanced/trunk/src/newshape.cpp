@@ -45,65 +45,36 @@ int maxShape[MAX_TABLE];                    /* [1..maxtable] */
 
 Uint8 mouseGrabShape[24*28];                 /* [1..24*28] */
 
-bool loadOverride = false;
-
 /*
-  Colors:
-  253 : Black
-  254 : Jump to next line
+Colors:
+253: Black
+254: Jump to next line
 
-   Skip X Pixels
-   Draw X pixels of color Y
+Skip X Pixels
+Draw X pixels of color Y
 */
 
 
 void JE_newLoadShapesB( int table, FILE *f )
 {
-	JE_word min = 0,
-	        max = 0;
+	JE_word temp;
+	efread(&temp, sizeof(JE_word), 1, f);
+	maxShape[table] = temp;
 
-	JE_word tempW;
-
-	vfread(tempW, JE_word, f);
-	maxShape[table] = tempW;
-
-	if (!loadOverride)
+	for (int i = 0; i < maxShape[table]; ++i)
 	{
-		min = 1;
-		max = maxShape[table];
-	}
+		shapeExist[table][i] = (getc(f) != 0);
 
-	if (min > 1)
-	{
-		for (int z = 0; z < min-1; z++)
+		if (shapeExist[table][i])
 		{
-			shapeExist[table][z] = (getc(f) != 0);
+			efread(&shapeX   [table][i], sizeof(JE_word), 1, f);
+			efread(&shapeY   [table][i], sizeof(JE_word), 1, f);
+			efread(&shapeSize[table][i], sizeof(JE_word), 1, f);
 
-			if (shapeExist[table][z])
-			{
-				efread(&shapeX   [table][z], sizeof(JE_word), 1, f);
-				efread(&shapeY   [table][z], sizeof(JE_word), 1, f);
-				efread(&shapeSize[table][z], sizeof(JE_word), 1, f);
+			shapeArray[table][i] = new Uint8[shapeX[table][i] * shapeY[table][i]];
 
-				fseek(f, shapeSize[table][z], SEEK_CUR);
-			}
-		}
-	}
-
-	for (int z = min-1; z < max; z++)
-	{
-		tempW = z-min+1;
-		shapeExist[table][tempW] = (getc(f) != 0);
-
-		if (shapeExist[table][tempW])
-		{
-			efread(&shapeX   [table][tempW], sizeof(JE_word), 1, f);
-			efread(&shapeY   [table][tempW], sizeof(JE_word), 1, f);
-			efread(&shapeSize[table][tempW], sizeof(JE_word), 1, f);
-
-			shapeArray[table][tempW] = (Uint8 *)malloc(shapeX[table][tempW]*shapeY[table][tempW]);
-
-			efread(shapeArray[table][tempW], sizeof(Uint8), shapeSize[table][tempW], f);
+			// TODO convert to stream
+			efread(shapeArray[table][i], sizeof(JE_byte), shapeSize[table][i], f);
 		}
 	}
 }
@@ -217,17 +188,16 @@ void JE_newDrawCShapeNum( int table, int shape, JE_word x, JE_word y )
 
 void JE_newPurgeShapes( int table )
 {
-	if (maxShape[table] > 0)
+	for (int i = 0; i < maxShape[table]; ++i)
 	{
-		for (int x = 0; x < maxShape[table]; x++)
+		if (shapeExist[table][i])
 		{
-			if (shapeExist[table][x])
-			{
-				free(shapeArray[table][x]);
-				shapeExist[table][x] = false;
-			}
+			delete shapeArray[table][i];
+			shapeExist[table][i] = false;
 		}
 	}
+
+	maxShape[table] = 0;
 }
 
 void JE_drawShapeTypeOne( JE_word x, JE_word y, Uint8 *shape )
@@ -343,14 +313,4 @@ void JE_mouseStart( void )
 void JE_mouseReplace( void )
 {
 	JE_drawShapeTypeOne(lastMouseX, lastMouseY, mouseGrabShape);
-}
-
-void JE_drawNext( Uint8 draw )
-{
-	STUB();
-}
-
-void JE_drawNShape( void *shape, JE_word xsize, JE_word ysize )
-{
-	STUB();
 }

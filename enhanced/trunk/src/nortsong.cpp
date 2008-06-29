@@ -46,7 +46,6 @@ int currentSong = 0;
 
 Uint8 *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
-int allocd_digifx = false;
 
 float tempVolume;
 
@@ -154,11 +153,10 @@ void JE_loadSndFile( void )
 	{
 		fseek(fi, sndPos[0][z], SEEK_SET);
 		fxSize[z] = (JE_word)(sndPos[0][z+1] - sndPos[0][z]); /* Store sample sizes */
-		if (allocd_digifx) free(digiFx[z]);
+		free(digiFx[z]);
 		digiFx[z] = (Uint8 *)malloc(fxSize[z]);
 		efread(digiFx[z], 1, fxSize[z], fi); /* JE: Load sample to buffer */
 	}
-	allocd_digifx = true;
 
 	fclose(fi);
 

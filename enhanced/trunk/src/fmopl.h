@@ -18,9 +18,10 @@
 
 #if (OPL_SAMPLE_BITS == 16)
 typedef Sint16 OPLSAMPLE;
-#endif
-#if (OPL_SAMPLE_BITS == 8)
+#elif (OPL_SAMPLE_BITS == 8)
 typedef Sint8 OPLSAMPLE;
+#else
+#error "Only 8-bit and 16-bit audio supported."
 #endif
 
 
@@ -161,7 +162,7 @@ void YM3812ResetChip(int which);
 int  YM3812Write(int which, int a, int v);
 unsigned char YM3812Read(int which, int a);
 int  YM3812TimerOver(int which, int c);
-void YM3812UpdateOne(int which, Sint16 *buffer, int length);
+void YM3812UpdateOne(int which, OPLSAMPLE *buffer, int length);
 
 void YM3812SetTimerHandler(int which, OPL_TIMERHANDLER TimerHandler, int channelOffset);
 void YM3812SetIRQHandler(int which, OPL_IRQHANDLER IRQHandler, int param);
@@ -193,7 +194,7 @@ int  YM3526TimerOver(int which, int c);
 ** '*buffer' is the output buffer pointer
 ** 'length' is the number of samples that should be generated
 */
-void YM3526UpdateOne(int which, Sint16 *buffer, int length);
+void YM3526UpdateOne(int which, OPLSAMPLE *buffer, int length);
 
 void YM3526SetTimerHandler(int which, OPL_TIMERHANDLER TimerHandler, int channelOffset);
 void YM3526SetIRQHandler(int which, OPL_IRQHANDLER IRQHandler, int param);

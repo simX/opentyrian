@@ -51,7 +51,6 @@ extern JE_word shapeSize[MAX_TABLE][MAXIMUM_SHAPE];
 extern bool shapeExist[MAX_TABLE][MAXIMUM_SHAPE];
 extern int maxShape[MAX_TABLE];
 extern Uint8 mouseGrabShape[24*28];
-extern bool loadOverride;
 /*extern JE_word min, max;*/
 
 void JE_newLoadShapes( int table, const char *shapefile );
@@ -69,8 +68,5 @@ void JE_grabShapeTypeOne( JE_word x, JE_word y, Uint8 *shape );
 bool JE_waitAction( int time, bool checkjoystick );
 void JE_mouseStart( void );
 void JE_mouseReplace( void );
-
-void JE_drawNext( Uint8 draw );
-void JE_drawNShape( void *shape, JE_word xsize, JE_word ysize );
 
 #endif /* NEWSHAPE_H */

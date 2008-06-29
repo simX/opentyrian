@@ -66,12 +66,12 @@ void JE_initVGA256( void )
 
 	if (was_init)
 	{
-		assert(display_surface->format->BitsPerPixel == 8);
-		assert(display_surface->format->palette != NULL);
-
 #ifdef TARGET_GP2X
 		return;
 #endif
+
+		assert(display_surface->format->BitsPerPixel == 8);
+		assert(display_surface->format->palette != NULL);
 
 		memcpy(palette_buffer, display_surface->format->palette->colors, sizeof(palette_buffer));
 	} else {
@@ -135,6 +135,11 @@ video_error:
 
 void JE_closeVGA256( void )
 {
+	SDL_FreeSurface(display_surface); display_surface = 0;
+	delete VGAScreenSeg; VGAScreenSeg = 0;
+	delete game_screen; game_screen = 0;
+	delete VGAScreen2; VGAScreen2 = 0;
+
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 

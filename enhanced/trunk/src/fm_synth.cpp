@@ -31,39 +31,13 @@ const unsigned char op_table[9] = {0x00, 0x01, 0x02, 0x08, 0x09, 0x0a, 0x10, 0x1
 int use16bit, stereo;
 #define opl 0
 
-void opl_update( Sint16 *buf, int samples )
+void opl_update( OPLSAMPLE *buf, int samples )
 {
-	if (use16bit) {
-		YM3812UpdateOne(opl, buf, samples);
-
-		if (stereo)
-			for(int i = samples - 1; i >= 0; i--) {
-				buf[i*2] = buf[i];
-				buf[i*2+1] = buf[i];
-			}
-	} else {
-		Sint16 *tempbuf = new Sint16[stereo ? samples * 2 : samples];
-
-		YM3812UpdateOne(opl, tempbuf, samples);
-
-		if (stereo)
-			for (int i = samples - 1; i >= 0; i--) {
-				tempbuf[i*2] = tempbuf[i];
-				tempbuf[i*2+1] = tempbuf[i];
-			}
-
-		for (int i = 0; i < (stereo ? samples * 2 : samples); i++)
-			((char *)buf)[i] = (tempbuf[i] >> 8) ^ 0x80;
-
-		delete[] tempbuf;
-	}
+	YM3812UpdateOne(opl, buf, samples);
 }
 
 void opl_init( void )
 {
-	use16bit = (BYTES_PER_SAMPLE == 2);
-	stereo = 0;
-
 	YM3812Init(1, 3579545, 11025 * OUTPUT_QUALITY);
 }
 

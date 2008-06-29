@@ -6744,7 +6744,6 @@ void JE_itemScreen( void )
 
 					for (JE_word x = temp + 1; x <= temp + 10; x++)
 					{
-						/* if (x <= temp3 && x >= 0) */
 						if (x <= temp3)
 						{
 							JE_outTextAndDarken(161, tempW, cubeText[curSel[7]-2][x-1].c_str(), 14, 3, TINY_FONT);
