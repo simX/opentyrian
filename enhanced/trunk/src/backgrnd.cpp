@@ -635,8 +635,8 @@ void JE_smoothies1( void ) /*Lava Effect*/
 	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 	int temp;
 	
-	s += scr_width * 185;
-	src += scr_width * 185;
+	s += scr_width * 185 - 1;
+	src += scr_width * 185 - 1;
 	
 	for (int i = 185 * scr_width; i > 0; i -= 8)
 	{
@@ -645,7 +645,10 @@ void JE_smoothies1( void ) /*Lava Effect*/
 		
 		for (int j = 8; j > 0; j--)
 		{
-			*s = (((*(src + temp) & 0x0f) + (*(src + temp + scr_width) & 0x0f) + (i + temp < scr_width ? 0 : *(src + temp - scr_width) & 0x0f)) >> 2) | 0x70;
+			Uint8 temp_s = (*(src + temp) & 0x0f) * 2;
+			temp_s += *(s + temp + scr_width) & 0x0f;
+			temp_s += (i + temp < scr_width) ? 0 : *(s + temp - scr_width) & 0x0f;
+			*s = (temp_s >> 2) | 0x70;
 			s--;
 			src--;
 		}
@@ -659,8 +662,8 @@ void JE_smoothies2( void ) /*Water effect*/
 	Uint8 *src = VGAScreen; /* screen pointer, 8-bit specific */
 	int temp;
 
-	s += scr_width * 185;
-	src += scr_width * 185;
+	s += scr_width * 185 - 1;
+	src += scr_width * 185 - 1;
 
 	for (int i = 185 * scr_width; i > 0; i -= 8)
 	{
@@ -670,8 +673,11 @@ void JE_smoothies2( void ) /*Water effect*/
 		for (int j = 8; j > 0; j--)
 		{
 			if (*src & 0x30)
-				*s = (((*src & 0x0f) + (*(s + temp + scr_width) & 0x0f)) >> 1) | (SDAT[2-1] << 4);
-			else
+			{
+				Uint8 temp_s = *src & 0x0f;
+				temp_s += *(s + temp + scr_width) & 0x0f;
+				*s = (temp_s >> 1) | (SDAT[2-1] << 4);
+			} else
 				*s = *src;
 			s--;
 			src--;
@@ -687,9 +693,9 @@ void JE_smoothies3( void ) /* iced motion blur */
 
 	for (int i = 184 * scr_width; i > 0; i--)
 	{
-			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | 0x80;
-			s++;
-			src++;
+		*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | 0x80;
+		s++;
+		src++;
 	}
 	VGAScreen = game_screen;
 }
@@ -701,9 +707,9 @@ void JE_smoothies4( void ) /* motion blur */
 
 	for (int i = 184 * scr_width; i > 0; i--)
 	{
-			*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | (*src & 0xf0);
-			s++;
-			src++;
+		*s = ((((*src & 0x0f) + (*s & 0x0f)) >> 1) & 0x0f) | (*src & 0xf0);
+		s++;
+		src++;
 	}
 	VGAScreen = game_screen;
 }
