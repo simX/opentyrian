@@ -35,7 +35,6 @@
 #include "nortsong.h"
 #include "nortvars.h"
 #include "params.h"
-#include "pcxmast.h"
 #include "picload.h"
 #include "setup.h"
 #include "shpmast.h"
@@ -211,7 +210,7 @@ void JE_helpSystem( int startTopic )
 
 	JE_fadeBlack(10);
 	JE_loadPic(2, false);
-	JE_playSong(SONG_MAPVIEW);
+	JE_playSong(20);
 	JE_showVGA();
 	JE_fadeColor(10);
 
@@ -1104,11 +1103,6 @@ bool JE_nextEpisode( void )
 		mainLevel = FIRST_LEVEL;
 		saveLevel = FIRST_LEVEL;
 		
-		if (jumpBackToEpisode1 && !isNetworkGame && x == 1)
-		{
-			JE_loadOrderingInfo();
-		}
-		
 		if (jumpBackToEpisode1 && x > 2 && !constantPlay)
 		{
 			JE_playCredits();
@@ -1128,7 +1122,7 @@ bool JE_nextEpisode( void )
 		JE_playSong(27);
 		
 		JE_clr256();
-		memcpy(colors, palettes[6-1], sizeof(colors));
+		load_palette(5, false);
 		
 		tempScreenSeg = VGAScreen;
 		
@@ -1338,27 +1332,15 @@ void JE_gammaCorrect( Palette colorBuffer, int gamma )
 	}
 }
 
-bool JE_gammaCheck( void )
+void JE_gammaCheck( )
 {
-	Uint8 temp = keysactive[SDLK_F11];
-	if (temp)
-	{
-		keysactive[SDLK_F11] = false;
-		newkey = false;
-		gammaCorrection = (gammaCorrection + 1) % 4;
-		memcpy(colors, palettes[pcxpal[3-1]], sizeof(colors));
-		JE_gammaCorrect(colors, gammaCorrection);
-		JE_updateColorsFast(colors);
-	}
-	return (temp == 1);
+	gammaCorrection = (gammaCorrection + 1) % 4;
+	load_palette(5, false);
+	JE_gammaCorrect(colors, gammaCorrection);
+	JE_updateColorsFast(colors);
 }
 
 /* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
-void JE_loadOrderingInfo( void )
-{
-	/* YKS: Unused on the port */
-	STUB();
-}
 
 void JE_doInGameSetup( void )
 {
@@ -1710,7 +1692,7 @@ void JE_highScoreCheck( void )
 {
 	int cur_ep = pItems[8];
 
-	signed char real_player = -1;
+	int real_player = -1;
 	for (int player = 0; player < (twoPlayerMode ? 2 : 1); player++)
 	{
 		highScores.sort();
@@ -1746,7 +1728,7 @@ void JE_highScoreCheck( void )
 		{
 			JE_clr256();
 			JE_showVGA();
-			memcpy(colors, palettes[0], sizeof(colors));
+			load_palette(0, false);
 
 			JE_playSong(34);
 
@@ -1848,17 +1830,16 @@ void JE_highScoreCheck( void )
 			} while (!quit);
 
 			int place = -1;
-			bool don_ask_second_player = false;
+			bool dont_ask_second_player = false;
 			if (!cancel)
 			{
 				place = highScores.insertScore(cur_ep-1, twoPlayerMode, HighScore(real_score, name, difficultyLevel));
 				if (place == 2) // 3rd place
 				{
 					// Second player didn't get a score then, don't ask him
-					don_ask_second_player = true;
+					dont_ask_second_player = true;
 				}
 			}
-			assert(place != -1);
 
 			JE_fadeBlack(15);
 			JE_loadPic(2, false);
@@ -1886,32 +1867,36 @@ void JE_highScoreCheck( void )
 
 			JE_fadeColor(15);
 
-			const HighScore& score = highScores.getScore(cur_ep-1, twoPlayerMode, place);
-			std::ostringstream strs;
-			strs << "~#" << place+1 << ":~ " << score.getScore();
-
-			textGlowFont = TINY_FONT;
-			frameCountMax = 10;
-			textGlowBrightness = 10;
-			JE_outTextGlow( 20, (place+1) * 12 + 65, strs.str().c_str());
-			textGlowBrightness = 10;
-			JE_outTextGlow(150, (place+1) * 12 + 65, score.getName().c_str());
-
-			if (frameCountMax != 0)
+			if (place != -1)
 			{
-				frameCountMax = 6;
-				temp = 1;
-			} else {
-				temp = 0;
+				const HighScore& score = highScores.getScore(cur_ep-1, twoPlayerMode, place);
+				std::ostringstream strs;
+				strs << "~#" << place+1 << ":~ " << score.getScore();
+
+				textGlowFont = TINY_FONT;
+				frameCountMax = 10;
+				textGlowBrightness = 10;
+				JE_outTextGlow( 20, (place+1) * 12 + 65, strs.str().c_str());
+				textGlowBrightness = 10;
+				JE_outTextGlow(150, (place+1) * 12 + 65, score.getName().c_str());
+
+				if (frameCountMax != 0)
+				{
+					frameCountMax = 6;
+					temp = 1;
+				} else {
+					temp = 0;
+				}
+				textGlowBrightness = 10;
+				JE_outTextGlow(JE_fontCenter(miscText[4], TINY_FONT), 180, miscText[4]);
+				JE_showVGA();
 			}
-			textGlowBrightness = 10;
-			JE_outTextGlow(JE_fontCenter(miscText[4], TINY_FONT), 180, miscText[4]);
-			JE_showVGA();
+
 			while (!(JE_anyButton() || (frameCountMax == 0 && temp == 1)));
 
 			JE_fadeBlack(15);
 
-			if (don_ask_second_player)
+			if (dont_ask_second_player)
 			{
 				break;
 			}
@@ -2181,7 +2166,7 @@ void JE_playCredits( void )
 		max++;
 	}
 	
-	memcpy(colors, palettes[6-1], sizeof(colors));
+	load_palette(5, false);
 	JE_clr256();
 	JE_showVGA();
 	JE_fadeColor(2);
@@ -2806,7 +2791,12 @@ void JE_inGameDisplays( void )
 
 void JE_mainKeyboardInput( void )
 {
-	tempB = JE_gammaCheck();
+	if (keysactive[SDLK_F11])
+	{
+		JE_gammaCheck();
+		keysactive[SDLK_F11] = false;
+		newkey = false;
+	}
 
 	/* { Network Request Commands } */
 

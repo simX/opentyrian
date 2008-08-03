@@ -163,6 +163,9 @@ extern unsigned long episode1DataLoc;
 extern bool bonusLevel;
 extern bool jumpBackToEpisode1;
 
+extern unsigned long lvlPos[43];
+extern char levelFile[13];
+
 void JE_loadItemDat( void );
 void JE_initEpisode( int newEpisode );
 bool JE_findNextEpisode( void );

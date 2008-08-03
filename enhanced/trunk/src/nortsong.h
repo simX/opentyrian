@@ -22,11 +22,13 @@
 
 #include "opentyr.h"
 
-#include "musmast.h"
 #include "sndmast.h"
 
 #include "SDL.h"
 
+static const int MUSIC_NUM = 41;
+
+extern const char musicTitle[MUSIC_NUM][48];
 
 typedef unsigned long JE_SongPosType [MUSIC_NUM + 1]; /* [1..Musicnum + 1] */
 

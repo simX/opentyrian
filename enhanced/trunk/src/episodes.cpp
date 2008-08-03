@@ -20,7 +20,6 @@
 #include "opentyr.h"
 
 #include "error.h"
-#include "lvllib.h"
 #include "lvlmast.h"
 
 #include "episodes.h"
@@ -52,6 +51,10 @@ bool bonusLevel;
 
 /* Tells if the game jumped back to Episode 1 */
 bool jumpBackToEpisode1;
+
+static JE_word lvlNum;
+unsigned long lvlPos[43];
+char levelFile[13]; /* string [12] */
 
 void JE_loadItemDat( void )
 {
@@ -221,6 +224,21 @@ void JE_loadItemDat( void )
 	fclose(lvlFile);
 }
 
+static void JE_analyzeLevel( void )
+{
+	FILE *f;
+
+	JE_resetFile(&f, levelFile);
+	efread(&lvlNum, sizeof(JE_word), 1, f);
+	for (int x = 0; x < lvlNum; x++)
+	{
+		vfread(lvlPos[x], Sint32, f);
+	}
+	fseek(f, 0, SEEK_END);
+	lvlPos[lvlNum] = ftell(f);
+	fclose(f);
+}
+
 void JE_initEpisode( int newEpisode )
 {
 	if (newEpisode != episodeNum)
@@ -242,7 +260,7 @@ void JE_scanForEpisodes( void )
 
 	for (int temp = 0; temp < EPISODE_MAX; temp++)
 	{
-		episodeAvail[temp] = JE_find(dir+"tyrian"+static_cast<char>('1'+temp)+".lvl");
+		episodeAvail[temp] = JE_find(dir+"tyrian"+char('1'+temp)+".lvl");
 	}
 }
 

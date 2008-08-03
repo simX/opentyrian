@@ -23,5 +23,6 @@
 #include "opentyr.h"
 
 void JE_loadPic( int PCXnumber, bool storepal );
+void load_pcx_palette( unsigned int pcx_num, bool set_colors );
 
 #endif /* PICLOAD_H */

@@ -29,14 +29,12 @@
 #include "joystick.h"
 #include "keyboard.h"
 #include "loudness.h"
-#include "lvllib.h"
 #include "lvlmast.h"
 #include "mainint.h"
 #include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
 #include "params.h"
-#include "pcxmast.h"
 #include "picload.h"
 #include "setup.h"
 #include "sndmast.h"
@@ -79,6 +77,7 @@ int newPal, curPal, oldPal; /* SYN: Originally bytes, I hope this doesn't break 
 JE_word yLoc;
 int yChg;
 
+static const int EVENT_MAXIMUM = 2500;
 JE_EventRecType eventRec[EVENT_MAXIMUM]; /* [1..eventMaximum] */
 JE_word levelEnemyMax;
 JE_word levelEnemyFrequency;
@@ -89,6 +88,9 @@ char tempStr[31];
 /* Data used for ItemScreen procedure to indicate items available */
 int itemAvail[9][10]; /* [1..9, 1..10] */
 int itemAvailMax[9]; /* [1..9] */
+
+static bool musicFade;
+static int songBuy;
 
 const JE_word generatorX[5] = { 61, 63, 66, 65, 62 };
 const JE_word generatorY[5] = { 83, 84, 85, 83, 96 };
@@ -132,6 +134,12 @@ const int itemAvailMap[7] = { 1, 2, 3, 9, 4, 6, 7 };
 const int weaponReset[7] = { 0, 1, 2, 0, 0, 3, 4 };
 
 const int mouseSelectionY[MAX_MENU] = { 16, 16, 16, 16, 26, 12, 11, 28, 0, 16, 16, 16, 24, 16 };
+
+static const char shapeFile[34] = /* [1..34] */
+{
+	'2', '4', '7', '8', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	'O', 'P', 'Q', 'R', 'S', 'T', 'U', '5', '#', 'V', '0', '@', '3', '^', '5', '9'
+};
 
 void JE_starShowVGA( void )
 {
@@ -2999,7 +3007,7 @@ explosion_draw_overflow:
 				{
 					if (!playDemo)
 					{
-						JE_playSong(SONG_GAMEOVER);
+						JE_playSong(11);
 					}
 					firstGameOver = false;
 				}
@@ -3174,7 +3182,7 @@ void JE_loadMap( void )
 	lastCubeMax = cubeMax;
 
 	/*Defaults*/
-	songBuy = DEFAULT_SONG_BUY;  /*Item Screen default song*/
+	songBuy = 3;  /*Item Screen default song*/
 
 	if (loadTitleScreen || playDemo)
 	{
@@ -3538,7 +3546,7 @@ new_game:
 									tempX = atoi(strnztcpy(buffer, s + 3, 3));
 									if (tempX > 900)
 									{
-										memcpy(colors, palettes[pcxpal[tempX-1 - 900]], sizeof(colors));
+										load_pcx_palette(tempX-900-1, false);
 										JE_clr256();
 										JE_showVGA();
 										JE_fadeColor(1);
@@ -3709,8 +3717,7 @@ new_game:
 								}
 								JE_clr256();
 								JE_showVGA();
-								memcpy(colors, palettes[7], sizeof(colors));
-								JE_updateColorsFast(colors);
+								load_palette(7, true);
 								break;
 
 							case 'B':
@@ -3840,7 +3847,7 @@ new_game:
 
 			/*debuginfo('Demo loaded.');*/
 		} else {
-			JE_fadeColors(colors, black, 0, 255, 50);
+			JE_fadeBlack(50);
 		}
 
 
@@ -4064,7 +4071,7 @@ void JE_titleScreen( bool animate )
 			/* Animate instead of quickly fading in */
 			if (redraw)
 			{
-				if (currentSong != SONG_TITLE) JE_playSong(SONG_TITLE);
+				if (currentSong != 30) JE_playSong(30);
 	
 				menu = 0;
 				redraw = false;
@@ -4457,7 +4464,6 @@ void JE_openingAnim( void )
 		static const SDL_Color white_col = {255,255,255};
 		static const SDL_Color black_col = {0,0,0};
 		std::fill_n(black, 256, white_col);
-		std::fill_n(colors, 256, black_col);
 		JE_fadeColors(colors, black, 0, 255, 50);
 
 		JE_loadPic(10, false);
@@ -4475,7 +4481,6 @@ void JE_openingAnim( void )
 		JE_loadPic(12, false);
 		JE_showVGA();
 
-		std::copy(colors, colors+256, palettes[pcxpal[11]]);
 		JE_fadeColor(10);
 
 		setjasondelay(200);
@@ -6625,6 +6630,8 @@ void JE_itemScreen( void )
 
 				if (lastSelect != curSel[7] && currentFaceNum > 0)
 				{
+					static const int facepal[12] = { 1, 2, 3, 4, 6, 9, 11, 12, 16, 13, 14, 15};
+
 					faceX = 77 - (shapeX[FACE_SHAPES][currentFaceNum - 1] >> 1);
 					faceY = 92 - (shapeY[FACE_SHAPES][currentFaceNum - 1] >> 1);
 
@@ -6675,8 +6682,7 @@ void JE_itemScreen( void )
 		if (newPal > 0) /* can't reindex this :( */
 		{
 			curPal = newPal;
-			memcpy(colors, palettes[newPal - 1], sizeof(colors));
-			JE_zPal(newPal);
+			load_palette(newPal-1, true);
 			newPal = 0;
 		}
 
@@ -7264,7 +7270,7 @@ void JE_itemScreen( void )
 						memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
 						curPal = newPal;
-						memcpy(colors, palettes[newPal - 1], sizeof(colors));
+						load_palette(newPal-1, false);
 						JE_showVGA();
 						newPal = 0;
 						backFromHelp = true;

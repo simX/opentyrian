@@ -57,6 +57,13 @@ void JE_loadPals( )
 	}
 }
 
+void load_palette( unsigned int pal_num, bool set_colors )
+{
+	Palette& pal = palettes[pal_num];
+	std::copy(pal, pal+256, colors);
+	if (set_colors) JE_updateColorsFast(colors);
+}
+
 void JE_zPal( unsigned int pal )
 {
 	JE_updateColorsFast(palettes[pal-1]);

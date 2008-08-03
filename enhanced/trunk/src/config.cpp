@@ -28,7 +28,6 @@
 #include "varz.h"
 #include "video.h"
 #include "vga256d.h"
-#include "iniparser.h"
 #include "BinaryStream.h"
 #include "Console.h"
 #include "HighScores.h"

@@ -30,7 +30,6 @@
 #include "keyboard.h"
 #include "loudness.h"
 #include "mainint.h"
-#include "musmast.h"
 #include "network.h"
 #include "newshape.h"
 #include "nortsong.h"

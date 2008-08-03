@@ -22,9 +22,6 @@
 
 #include "opentyr.h"
 
-
-static const int EVENT_MAXIMUM = 2500;
-
 static const int WEAP_NUM = 780;
 static const int PORT_NUM = 42;
 static const int ARMOR_NUM = 4;
@@ -42,15 +39,5 @@ static const int LVL_NUM_2 = 12*2;
 static const int LVL_NUM_3 = 12*2;
 static const int LVL_NUM_4 = 20*2;
 static const int LVL_NUM_5 = 1*2;
-
-/*! typedef unsigned long JE_LvlPosType[LVLNum + 2];*/ /* [1..LVLnum + 2] */
-
-extern const char shapeFile[34]; /* [1..34] */
-extern const char lvlFile[LVL_NUM][9]; /* [1..LVLnum] of string [8] */
-extern const char lvlFile2[LVL_NUM_2][9]; /* [1..LVLnum2] of string [8] */
-extern const char lvlFile3[LVL_NUM_3][9]; /* [1..LVLnum3] of string [8] */
-extern const char lvlFile4[LVL_NUM_4][9]; /* [1..LVLnum4] of string [8] */
-extern const char lvlFile5[LVL_NUM_5][9]; /* [1..lvlnum5] of string [8] */
-/*! extern JE_LvlPosType lvlPos;*/
 
 #endif /* LVLMAST_H */

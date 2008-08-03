@@ -39,6 +39,7 @@ extern Uint32 yuv_palette[256];
 extern Palette black, colors, colors2;
 
 void JE_loadPals( );
+void load_palette( unsigned int pal_num, bool set_colors );
 void JE_zPal( unsigned int pal );
 
 void JE_updateColorsFast( const Palette colorBuffer );

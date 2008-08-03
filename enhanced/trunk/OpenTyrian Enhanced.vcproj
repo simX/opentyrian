@@ -263,10 +263,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\iniparser.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\joystick.h"
 				>
 			</File>
@@ -291,19 +287,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\lvllib.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\lvlmast.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\mainint.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\musmast.h"
 				>
 			</File>
 			<File
@@ -339,10 +327,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pcxmast.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\picload.h"
 				>
 			</File>
@@ -352,10 +336,6 @@
 			</File>
 			<File
 				RelativePath=".\src\setup.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\shplib.h"
 				>
 			</File>
 			<File
@@ -483,10 +463,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\iniparser.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\joystick.cpp"
 				>
 			</File>
@@ -511,23 +487,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\lvllib.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\lvlmast.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\mainint.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\MiscCVars.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\musmast.cpp"
 				>
 			</File>
 			<File
@@ -563,10 +527,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pcxmast.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\picload.cpp"
 				>
 			</File>
@@ -576,10 +536,6 @@
 			</File>
 			<File
 				RelativePath=".\src\setup.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\shplib.cpp"
 				>
 			</File>
 			<File

@@ -51,7 +51,7 @@ void scale2x_16( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 void scale3x_32( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 void scale3x_16( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 
-int scale, scaler = 2;
+int scale, scaler = 3;
 
 const ScalerStruct scalers[] =
 {

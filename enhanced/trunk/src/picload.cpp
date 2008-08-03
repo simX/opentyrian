@@ -22,15 +22,26 @@
 #include "error.h"
 #include "nortvars.h"
 #include "palette.h"
-#include "pcxmast.h"
 #include "video.h"
 
 #include "picload.h"
 
 #include <string.h>
 
+static const int PCX_NUM = 13;
+
+static long pcxpos[PCX_NUM+1];
+
+static const int pcxpal[PCX_NUM] = {0, 7, 5, 8, 10, 5, 18, 19, 19, 20, 21, 22, 5};
+
 void JE_loadPic( int PCXnumber, bool storepal )
 {
+	if (PCXnumber > PCX_NUM)
+	{
+		Console::get() << "\a7Error:\ax Tried to load non-existent PCX background " << PCXnumber << std::endl;
+		return;
+	}
+
 	typedef Uint8 JE_buftype[63000]; /* [1..63000] */
 	static bool notYetLoadedPCX = true;
 
@@ -82,10 +93,16 @@ void JE_loadPic( int PCXnumber, bool storepal )
 			s += scr_width - 320;
 		}
 	}
+	
+	load_pcx_palette(PCXnumber, storepal);
+}
 
-	memcpy(colors, palettes[pcxpal[PCXnumber]], sizeof(colors));
-	if (storepal)
+void load_pcx_palette( unsigned int pcx_num, bool set_colors )
+{
+	if (pcx_num > PCX_NUM)
 	{
-		JE_updateColorsFast(colors);
+		Console::get() << "\a7Error:\ax Tried to load non-existent PCX palette " << pcx_num << std::endl;
+		return;
 	}
+	load_palette(pcxpal[pcx_num], set_colors);
 }

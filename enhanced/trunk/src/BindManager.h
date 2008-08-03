@@ -58,6 +58,8 @@ public:
 
 struct Bind
 {
+	virtual ~Bind( ) { }
+
 	void addCommand( const std::string& cmd, bool toggle )
 	{
 		commands.insert(BindCommand(cmd, toggle));

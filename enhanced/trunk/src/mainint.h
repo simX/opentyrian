@@ -42,9 +42,8 @@ void JE_initPlayerData( void );
 void JE_highScoreScreen( void );
 void JE_gammaCorrect_func( Uint8 *col, float r );
 void JE_gammaCorrect( Palette colorBuffer, int gamma );
-bool JE_gammaCheck( void );
+void JE_gammaCheck( );
 /* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
-void JE_loadOrderingInfo( void );
 bool JE_nextEpisode( void );
 bool JE_episodeSelect( void );
 bool JE_difficultySelect( void );
