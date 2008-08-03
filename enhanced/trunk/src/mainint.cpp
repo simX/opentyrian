@@ -1715,7 +1715,7 @@ void JE_highScoreCheck( void )
 	{
 		highScores.sort();
 		
-		unsigned long real_score;
+		unsigned long real_score = 0;
 		if (twoPlayerMode)
 		{
 			// Decides who gets to input it's score first

@@ -24,7 +24,7 @@
 
 #include "SDL.h"
 
-static const int MAX_PAL = 23;
+static const unsigned int MAX_PAL = 23;
 
 typedef SDL_Color Palette[256];
 typedef Palette JE_PalType[MAX_PAL];
