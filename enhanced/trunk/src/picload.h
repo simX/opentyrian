@@ -22,9 +22,6 @@
 
 #include "opentyr.h"
 
-
-extern bool notyetloadedpcx;
-
 void JE_loadPic( int PCXnumber, bool storepal );
 
 #endif /* PICLOAD_H */

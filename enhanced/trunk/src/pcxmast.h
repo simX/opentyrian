@@ -25,11 +25,8 @@
 
 static const int PCX_NUM = 13;
 
-typedef unsigned long JE_pcxpostype[PCX_NUM + 1]; /* [1..PCXnum + 1] */
-
-extern const char *pcxfile[PCX_NUM]; /* [1..PCXnum] */
 extern const int pcxpal[PCX_NUM];    /* [1..PCXnum] */
 extern const int facepal[12];       /* [1..12] */
-extern JE_pcxpostype pcxpos;
+extern long pcxpos[PCX_NUM+1];
 
 #endif /* PCXMAST_H */

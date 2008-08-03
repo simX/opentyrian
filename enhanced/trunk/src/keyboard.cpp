@@ -21,7 +21,7 @@
 
 #include "joystick.h"
 #include "config.h"
-#include "vga256d.h"
+#include "video.h"
 #include "BindManager.h"
 
 #include "keyboard.h"
@@ -170,7 +170,7 @@ void service_SDL_events( bool clear_new )
 					if (ev.key.keysym.sym == SDLK_RETURN)
 					{
 						fullscreen_enabled = !fullscreen_enabled;
-						JE_initVGA256();
+						reinit_video();
 						break;
 					}
 				}

@@ -17,26 +17,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef STARFADE_H
-#define STARFADE_H
+#ifndef VIDEO_SCALE_H
+#define VIDEO_SCALE_H
 
 #include "opentyr.h"
 
-#include "nortvars.h"
+#include "SDL.h"
 
+struct ScalerStruct
+{
+	int scale;
+	void (*scaler16)(Uint8 *, SDL_Surface *, int);
+	void (*scaler32)(Uint8 *, SDL_Surface *, int);
+	std::string name;
+};
 
-extern JE_word nocolorsx3;
+extern int scale, scaler;
+extern const ScalerStruct scalers[9];
 
-extern JE_ColorType dummysub;
-
-extern JE_ColorType dummypalette;
-extern JE_ColorType black, colors, colors2;
-
-/*void UpdateColorsSlow( JE_colortype *ColorBuffer );*/
-void JE_updateColorsFast( JE_ColorType *ColorBuffer );
-void JE_fadeColors( JE_ColorType *fromColors, JE_ColorType *toColors, int startCol, int noColors, int noSteps );
-void JE_fadeBlack( int steps );
-void JE_fadeColor( int steps );
-void JE_fadeWhite( int steps );
-
-#endif /* STARFADE_H */
+#endif // VIDEO_SCALE_H

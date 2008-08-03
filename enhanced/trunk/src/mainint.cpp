@@ -34,14 +34,12 @@
 #include "newshape.h"
 #include "nortsong.h"
 #include "nortvars.h"
-#include "pallib.h"
 #include "params.h"
 #include "pcxmast.h"
 #include "picload.h"
 #include "setup.h"
 #include "shpmast.h"
 #include "sndmast.h"
-#include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
 #include "GameActions.h"
@@ -1320,22 +1318,23 @@ void JE_highScoreScreen( void )
 
 void JE_gammaCorrect_func( Uint8 *col, float r )
 {
-	*col = (Uint8)ot_round(*col * r);
-	if (*col > 63)
+	int temp = ot_round(*col * r);
+	if (temp > 255)
 	{
-		*col = 63;
+		temp = 255;
 	}
+	*col = temp;
 }
 
-void JE_gammaCorrect( JE_ColorType *colorBuffer, int gamma )
+void JE_gammaCorrect( Palette colorBuffer, int gamma )
 {
 	float r = 1 + (float)gamma / 10;
 	
 	for (int x = 0; x < 256; x++)
 	{
-		JE_gammaCorrect_func(&(*colorBuffer)[x].r, r);
-		JE_gammaCorrect_func(&(*colorBuffer)[x].g, r);
-		JE_gammaCorrect_func(&(*colorBuffer)[x].b, r);
+		JE_gammaCorrect_func(&colorBuffer[x].r, r);
+		JE_gammaCorrect_func(&colorBuffer[x].g, r);
+		JE_gammaCorrect_func(&colorBuffer[x].b, r);
 	}
 }
 
@@ -1348,8 +1347,8 @@ bool JE_gammaCheck( void )
 		newkey = false;
 		gammaCorrection = (gammaCorrection + 1) % 4;
 		memcpy(colors, palettes[pcxpal[3-1]], sizeof(colors));
-		JE_gammaCorrect(&colors, gammaCorrection);
-		JE_updateColorsFast(&colors);
+		JE_gammaCorrect(colors, gammaCorrection);
+		JE_updateColorsFast(colors);
 	}
 	return (temp == 1);
 }
@@ -2363,7 +2362,7 @@ void JE_endLevelAni( void )
 	frameCountMax = 4;
 	textGlowFont = SMALL_FONT_SHAPES;
 	
-	JE_setPalette(254, 63, 63, 63);
+	JE_setPalette(254, 255, 255, 255);
 	
 	if (!levelTimer || levelTimerCountdown > 0 || !(episodeNum == 4))
 	{

@@ -24,6 +24,7 @@
 #include "keyboard.h"
 #include "newshape.h" // For tempScreenSeg
 #include "config.h" // For fullscreen stuff
+#include "video.h"
 
 #include "SDL.h"
 #include <cassert>
@@ -32,150 +33,8 @@
 #include <stdio.h>
 #include <string.h>
 
-SDL_Surface *display_surface;
-Uint8 *VGAScreen, *VGAScreenSeg;
-Uint8 *game_screen;
-Uint8 *VGAScreen2;
-
 /* JE: From Nortsong */
 JE_word speed; /* JE: holds timer speed for 70Hz */
-
-const SDL_Color vga_palette[] = {
-	{0, 0, 0}, {0, 0, 168}, {0, 168, 0}, {0, 168, 168}, {168, 0, 0}, {168, 0, 168}, {168, 84, 0}, {168, 168, 168}, {84, 84, 84}, {84, 84, 252}, {84, 252, 84}, {84, 252, 252}, {252, 84, 84}, {252, 84, 252}, {252, 252, 84}, {252, 252, 252},
-	{0, 0, 0}, {20, 20, 20}, {32, 32, 32}, {44, 44, 44}, {56, 56, 56}, {68, 68, 68}, {80, 80, 80}, {96, 96, 96}, {112, 112, 112}, {128, 128, 128}, {144, 144, 144}, {160, 160, 160}, {180, 180, 180}, {200, 200, 200}, {224, 224, 224}, {252, 252, 252},
-	{0, 0, 252}, {64, 0, 252}, {124, 0, 252}, {188, 0, 252}, {252, 0, 252}, {252, 0, 188}, {252, 0, 124}, {252, 0, 64}, {252, 0, 0}, {252, 64, 0}, {252, 124, 0}, {252, 188, 0}, {252, 252, 0}, {188, 252, 0}, {124, 252, 0}, {64, 252, 0},
-	{0, 252, 0}, {0, 252, 64}, {0, 252, 124}, {0, 252, 188}, {0, 252, 252}, {0, 188, 252}, {0, 124, 252}, {0, 64, 252}, {124, 124, 252}, {156, 124, 252}, {188, 124, 252}, {220, 124, 252}, {252, 124, 252}, {252, 124, 220}, {252, 124, 188}, {252, 124, 156},
-	{252, 124, 124}, {252, 156, 124}, {252, 188, 124}, {252, 220, 124}, {252, 252, 124}, {220, 252, 124}, {188, 252, 124}, {156, 252, 124}, {124, 252, 124}, {124, 252, 156}, {124, 252, 188}, {124, 252, 220}, {124, 252, 252}, {124, 220, 252}, {124, 188, 252}, {124, 156, 252},
-	{180, 180, 252}, {196, 180, 252}, {216, 180, 252}, {232, 180, 252}, {252, 180, 252}, {252, 180, 232}, {252, 180, 216}, {252, 180, 196}, {252, 180, 180}, {252, 196, 180}, {252, 216, 180}, {252, 232, 180}, {252, 252, 180}, {232, 252, 180}, {216, 252, 180}, {196, 252, 180},
-	{180, 252, 180}, {180, 252, 196}, {180, 252, 216}, {180, 252, 232}, {180, 252, 252}, {180, 232, 252}, {180, 216, 252}, {180, 196, 252}, {0, 0, 112}, {28, 0, 112}, {56, 0, 112}, {84, 0, 112}, {112, 0, 112}, {112, 0, 84}, {112, 0, 56}, {112, 0, 28},
-	{112, 0, 0}, {112, 28, 0}, {112, 56, 0}, {112, 84, 0}, {112, 112, 0}, {84, 112, 0}, {56, 112, 0}, {28, 112, 0}, {0, 112, 0}, {0, 112, 28}, {0, 112, 56}, {0, 112, 84}, {0, 112, 112}, {0, 84, 112}, {0, 56, 112}, {0, 28, 112},
-	{56, 56, 112}, {68, 56, 112}, {84, 56, 112}, {96, 56, 112}, {112, 56, 112}, {112, 56, 96}, {112, 56, 84}, {112, 56, 68}, {112, 56, 56}, {112, 68, 56}, {112, 84, 56}, {112, 96, 56}, {112, 112, 56}, {96, 112, 56}, {84, 112, 56}, {68, 112, 56},
-	{56, 112, 56}, {56, 112, 68}, {56, 112, 84}, {56, 112, 96}, {56, 112, 112}, {56, 96, 112}, {56, 84, 112}, {56, 68, 112}, {80, 80, 112}, {88, 80, 112}, {96, 80, 112}, {104, 80, 112}, {112, 80, 112}, {112, 80, 104}, {112, 80, 96}, {112, 80, 88},
-	{112, 80, 80}, {112, 88, 80}, {112, 96, 80}, {112, 104, 80}, {112, 112, 80}, {104, 112, 80}, {96, 112, 80}, {88, 112, 80}, {80, 112, 80}, {80, 112, 88}, {80, 112, 96}, {80, 112, 104}, {80, 112, 112}, {80, 104, 112}, {80, 96, 112}, {80, 88, 112},
-	{0, 0, 64}, {16, 0, 64}, {32, 0, 64}, {48, 0, 64}, {64, 0, 64}, {64, 0, 48}, {64, 0, 32}, {64, 0, 16}, {64, 0, 0}, {64, 16, 0}, {64, 32, 0}, {64, 48, 0}, {64, 64, 0}, {48, 64, 0}, {32, 64, 0}, {16, 64, 0},
-	{0, 64, 0}, {0, 64, 16}, {0, 64, 32}, {0, 64, 48}, {0, 64, 64}, {0, 48, 64}, {0, 32, 64}, {0, 16, 64}, {32, 32, 64}, {40, 32, 64}, {48, 32, 64}, {56, 32, 64}, {64, 32, 64}, {64, 32, 56}, {64, 32, 48}, {64, 32, 40},
-	{64, 32, 32}, {64, 40, 32}, {64, 48, 32}, {64, 56, 32}, {64, 64, 32}, {56, 64, 32}, {48, 64, 32}, {40, 64, 32}, {32, 64, 32}, {32, 64, 40}, {32, 64, 48}, {32, 64, 56}, {32, 64, 64}, {32, 56, 64}, {32, 48, 64}, {32, 40, 64},
-	{44, 44, 64}, {48, 44, 64}, {52, 44, 64}, {60, 44, 64}, {64, 44, 64}, {64, 44, 60}, {64, 44, 52}, {64, 44, 48}, {64, 44, 44}, {64, 48, 44}, {64, 52, 44}, {64, 60, 44}, {64, 64, 44}, {60, 64, 44}, {52, 64, 44}, {48, 64, 44},
-	{44, 64, 44}, {44, 64, 48}, {44, 64, 52}, {44, 64, 60}, {44, 64, 64}, {44, 60, 64}, {44, 52, 64}, {44, 48, 64}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
-};
-
-void JE_initVGA256( void )
-{
-	SDL_Color palette_buffer[256];
-	const bool was_init = (SDL_WasInit(SDL_INIT_VIDEO) != 0);
-
-	if (was_init)
-	{
-#ifdef TARGET_GP2X
-		return;
-#endif
-
-		assert(display_surface->format->BitsPerPixel == 8);
-		assert(display_surface->format->palette != NULL);
-
-		memcpy(palette_buffer, display_surface->format->palette->colors, sizeof(palette_buffer));
-	} else {
-#if 0 //_WIN32
-		if (!SDL_getenv("SDL_VIDEODRIVER"))
-		{
-			SDL_putenv("SDL_VIDEODRIVER=directx");
-		}
-#endif
-
-		if (SDL_InitSubSystem(SDL_INIT_VIDEO) == -1)
-		{
-video_error:
-			Console::get() << "Display initialization failed: " << SDL_GetError() << std::endl;
-			exit(1);
-		}
-
-		SDL_WM_SetCaption("OpenTyrian (ctrl-backspace to kill)", NULL);
-
-		memcpy(palette_buffer, vga_palette, sizeof(palette_buffer)); // TODO std::copy
-	}
-
-#ifdef SCALE_2X
-	const int w = surface_width*2, h = surface_height*2;
-#else
-	const int w = surface_width, h = surface_height;
-#endif
-
-	display_surface = SDL_SetVideoMode(w, h, 8, SDL_SWSURFACE | SDL_HWPALETTE | (fullscreen_enabled ? SDL_FULLSCREEN : 0));
-
-	if (!display_surface)
-	{
-		goto video_error;
-	}
-
-	SDL_SetColors(display_surface, palette_buffer, 0, 256);
-
-	if (!was_init)
-	{
-#ifdef TARGET_GP2X
-		VGAScreen = VGAScreenSeg = display_surface;
-#else
-		VGAScreen = VGAScreenSeg = new Uint8[scr_width*scr_height];
-#endif
-
-		VGAScreen2 = new Uint8[scr_width*scr_height];
-		game_screen = new Uint8[scr_width*scr_height];
-
-		SDL_FillRect(display_surface, NULL, 0);
-#ifdef TARGET_GP2X
-		std::fill_n(VGAScreenSeg, scr_width*scr_height, 0x0);
-#endif
-		std::fill_n(game_screen, scr_width*scr_height, 0x0);
-
-	}
-
-	input_grab();
-
-	JE_showVGA();
-}
-
-void JE_closeVGA256( void )
-{
-	SDL_FreeSurface(display_surface); display_surface = 0;
-	delete VGAScreenSeg; VGAScreenSeg = 0;
-	delete game_screen; game_screen = 0;
-	delete VGAScreen2; VGAScreen2 = 0;
-
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-}
-
-void JE_clr256( void )
-{
-	memset(VGAScreen, 0, scr_width * scr_height);
-}
-
-void JE_showVGA( void )
-{
-	SDL_LockSurface(display_surface);
-#ifndef TARGET_GP2X
-#ifdef SCALE_2X
-	Uint8* const s = static_cast<Uint8*>(display_surface->pixels);
-	for (int y = 0; y < surface_height; y++)
-	{
-		for (int x = 0; x < surface_width; x++)
-		{
-			const Uint8 c = ((Uint8 *)VGAScreen)[y * scr_width + x];
-
-			s[y*2 * display_surface->pitch + x*2] = c;
-			s[y*2 * display_surface->pitch + x*2+1] = c;
-			s[(y*2+1) * display_surface->pitch + x*2] = c;
-			s[(y*2+1) * display_surface->pitch + x*2+1] = c;
-		}
-	}
-#else
-	for (int y = 0; y < surface_height; y++)
-	{
-		memcpy(&((Uint8 *)display_surface->pixels)[y * display_surface->pitch], &((Uint8 *)VGAScreen)[y * scr_width], display_surface->w);
-	}
-#endif
-#endif
-	SDL_UnlockSurface(display_surface);
-	SDL_Flip(display_surface);
-}
 
 void JE_pix( JE_word x, JE_word y, Uint8 c )
 {
@@ -388,28 +247,6 @@ void JE_line( JE_word a, int b, int c, int d, Uint8 e )
 		vga[(int)(ot_round(x) + ot_round(y)) * scr_width] = e;
 		x += g; y += h;
 	}
-}
-
-void JE_getPalette( Uint8 col, Uint8 *red, Uint8 *green, Uint8 *blue )
-{
-	SDL_Color color;
-
-	color = display_surface->format->palette->colors[col];
-
-	*red = color.r >> 2;
-	*green = color.g >> 2;
-	*blue = color.b >> 2;
-}
-
-void JE_setPalette( Uint8 col, Uint8 red, Uint8 green, Uint8 blue )
-{
-	SDL_Color color;
-
-	color.r = red << 2;
-	color.g = green << 2;
-	color.b = blue << 2;
-
-	SDL_SetColors(display_surface, &color, col, 1);
 }
 
 void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s )

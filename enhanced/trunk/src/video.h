@@ -17,15 +17,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#ifndef VIDEO_H
+#define VIDEO_H
+
 #include "opentyr.h"
 
-#include "pcxmast.h"
+#include "palette.h"
+#include "video_scale.h"
 
-const int pcxpal[PCX_NUM] = /* [1..PCXnum] */
-{ 0, 7, 5, 8, 10, 5, 18, 19, 19, 20, 21, 22, 5};
+#include "SDL.h"
 
-/*FACEMAX*/
-const int facepal[12] = /* [1..12] */
-{ 1, 2, 3, 4, 6, 9, 11, 12, 16, 13, 14, 15};
+static const int scr_width = 320;
+static const int scr_height = 200;
 
-long pcxpos[PCX_NUM+1];
+static const int surface_width = 320;
+#ifdef TARGET_GP2X
+static const int surace_height = 240;
+#else
+static const int surace_height = 200;
+#endif // TARGET_GP2X
+
+extern bool fullscreen_enabled;
+
+extern const Palette vga_palette;
+
+extern SDL_Surface *display_surface;
+extern Uint8 *VGAScreen, *VGAScreenSeg;
+extern Uint8 *game_screen;
+extern Uint8 *VGAScreen2;
+
+void init_video( );
+void reinit_video( );
+void deinit_video( );
+void JE_clr256( );
+void JE_showVGA( );
+
+#endif // VIDEO_H

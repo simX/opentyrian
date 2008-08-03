@@ -20,7 +20,7 @@
 #include "opentyr.h"
 
 #include "keyboard.h"
-#include "vga256d.h"
+#include "video.h"
 
 #include "starlib.h"
 
@@ -79,7 +79,7 @@ next_star:
 	off = (stars->lastX)+(stars->lastY)*320;
 
 	/* ***CLEAR PIXEL*** */
-	surf = (Uint8 *)VGAScreen;
+	surf = VGAScreen;
 
 	if (off >= 640 && off < (320*200)-640)
 	{

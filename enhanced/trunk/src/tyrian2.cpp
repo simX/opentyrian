@@ -35,13 +35,11 @@
 #include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
-#include "pallib.h"
 #include "params.h"
 #include "pcxmast.h"
 #include "picload.h"
 #include "setup.h"
 #include "sndmast.h"
-#include "starfade.h"
 #include "varz.h"
 #include "vga256d.h"
 #include "HighScores.h"
@@ -49,6 +47,7 @@
 #include "GameActions.h"
 #include "BindManager.h"
 #include "KeyNames.h"
+#include "pcxload.h"
 
 #include "tyrian2.h"
 
@@ -927,7 +926,7 @@ void JE_main( void )
 	shieldSet = 5;
 
 	/* Setup Graphics */
-	JE_updateColorsFast(&black);
+	JE_updateColorsFast(black);
 
 	/*debuginfo('Initiating Configuration');*/
 
@@ -1126,7 +1125,7 @@ start_level_first:
 	JE_outText(268, temp, levelName, 12, 4);
 
 	JE_showVGA();
-	JE_gammaCorrect(&colors, gammaCorrection);
+	JE_gammaCorrect(colors, gammaCorrection);
 	JE_fadeColor(50);
 
 	JE_loadCompShapes(&shapes6, &shapes6Size, '6'); /* Explosions */
@@ -3544,8 +3543,10 @@ new_game:
 										JE_showVGA();
 										JE_fadeColor(1);
 									} else {
-										if (tempX != 0)
+										if (tempX == 0)
 										{
+											JE_loadPCX("tshp2.pcx");
+										} else {
 											JE_loadPic(tempX, false);
 										}
 										JE_showVGA();
@@ -3709,7 +3710,7 @@ new_game:
 								JE_clr256();
 								JE_showVGA();
 								memcpy(colors, palettes[7], sizeof(colors));
-								JE_updateColorsFast(&colors);
+								JE_updateColorsFast(colors);
 								break;
 
 							case 'B':
@@ -3839,7 +3840,7 @@ new_game:
 
 			/*debuginfo('Demo loaded.');*/
 		} else {
-			JE_fadeColors(&colors, &black, 0, 255, 50);
+			JE_fadeColors(colors, black, 0, 255, 50);
 		}
 
 
@@ -4143,7 +4144,7 @@ void JE_titleScreen( bool animate )
 					}
 					JE_showVGA();
 	
-					JE_fadeColors(&colors, &colors2, 0, 255, 20);
+					JE_fadeColors(colors, colors2, 0, 255, 20);
 	
 					memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 				}
@@ -4447,21 +4448,23 @@ void JE_titleScreen( bool animate )
 
 void JE_openingAnim( void )
 {
-	/*JE_clr256();*/
+	JE_clr256();
 
 	moveTyrianLogoUp = true;
 
 	if (!isNetworkGame && !stoppedDemo)
 	{
-		memcpy(colors, black, sizeof(colors));
-		memset(black, 63, sizeof(black));
-		JE_fadeColors(&colors, &black, 0, 255, 50);
+		static const SDL_Color white_col = {255,255,255};
+		static const SDL_Color black_col = {0,0,0};
+		std::fill_n(black, 256, white_col);
+		std::fill_n(colors, 256, black_col);
+		JE_fadeColors(colors, black, 0, 255, 50);
 
 		JE_loadPic(10, false);
 		JE_showVGA();
 
-		JE_fadeColors(&black, &colors, 0, 255, 50);
-		memset(black, 0, sizeof(black));
+		JE_fadeColors(black, colors, 0, 255, 50);
+		std::fill_n(black, 256, black_col);
 
 		setjasondelay(200);
 		while (!JE_anyButton() && (signed int)(target - SDL_GetTicks()) > 0)
@@ -4472,7 +4475,7 @@ void JE_openingAnim( void )
 		JE_loadPic(12, false);
 		JE_showVGA();
 
-		memcpy(colors, palettes[pcxpal[11]], sizeof(colors));
+		std::copy(colors, colors+256, palettes[pcxpal[11]]);
 		JE_fadeColor(10);
 
 		setjasondelay(200);
@@ -6008,7 +6011,7 @@ void JE_itemScreen( void )
 	newPal = 0;
 	JE_showVGA();
 
-	JE_updateColorsFast(&colors);
+	JE_updateColorsFast(colors);
 
 	col = 1;
 	gameLoaded = false;
@@ -6824,7 +6827,7 @@ void JE_itemScreen( void )
 
 						if (paletteChanged)
 						{
-							JE_updateColorsFast(&colors);
+							JE_updateColorsFast(colors);
 							paletteChanged = false;
 						}
 
@@ -6863,7 +6866,7 @@ void JE_itemScreen( void )
 
 						if (paletteChanged)
 						{
-							JE_updateColorsFast(&colors);
+							JE_updateColorsFast(colors);
 							paletteChanged = false;
 						}
 
@@ -7571,7 +7574,7 @@ void JE_loadCubes( void )
 
 	int current_cube = 0; // In which cube we are in the file
 	std::ifstream f;
-	open_datafile(f, cubeFile);
+	open_datafile_fail(f, cubeFile);
 
 	std::string file_line;
 	for (unsigned int cube = 0; cube < cubeMax; ++cube)

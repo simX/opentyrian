@@ -218,8 +218,7 @@ void JE_playSong ( JE_word songnum )
 		JE_loadSong (songnum);
 		repeated = false;
 		playing = true;
-		JE_selectSong (1);
-		/* JE_waitRetrace(); */
+		JE_selectSong(1);
 	}
 }
 

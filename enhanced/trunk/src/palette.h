@@ -17,22 +17,38 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef PALLIB_H
-#define PALLIB_H
+#ifndef PALETTE_H
+#define PALETTE_H
 
 #include "opentyr.h"
 
-#include "nortvars.h"
-
+#include "SDL.h"
 
 static const int MAX_PAL = 23;
 
-typedef JE_ColorType JE_PalType[MAX_PAL]; /* [1..maxpal] */
+typedef SDL_Color Palette[256];
+typedef Palette JE_PalType[MAX_PAL];
 
 extern JE_PalType palettes;
-extern JE_word palNum;
+extern unsigned int palNum;
 
-void JE_loadPals( void );
-void JE_zPal( int palette );
+extern Palette palette;
+extern Uint32 rgb_palette[256];
+extern Uint32 yuv_palette[256];
 
-#endif /* PALLIB_H */
+extern Palette black, colors, colors2;
+
+void JE_loadPals( );
+void JE_zPal( unsigned int pal );
+
+void JE_updateColorsFast( const Palette colorBuffer );
+void JE_fadeColors( Palette fromColors, Palette toColors, unsigned int startColor, unsigned int numColors, int numSteps );
+void JE_fadeBlack( unsigned int numSteps );
+void JE_fadeColor( unsigned int numSteps );
+void JE_fadeWhite( unsigned int numSteps );
+
+void JE_setPalette( Uint8 col, Uint8 r, Uint8 g, Uint8 b );
+
+Uint32 rgb_to_yuv( SDL_Color col );
+
+#endif // PALETTE_H

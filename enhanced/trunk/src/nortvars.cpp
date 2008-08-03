@@ -22,6 +22,7 @@
 #include "error.h"
 #include "joystick.h"
 #include "keyboard.h"
+#include "video.h"
 #include "vga256d.h"
 
 #include "nortvars.h"

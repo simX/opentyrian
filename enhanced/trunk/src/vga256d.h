@@ -26,34 +26,12 @@
 
 #include "SDL.h"
 
-static const int scr_width = 320;
-static const int scr_height = 200;
-
-static const int surface_width = 320;
-#ifdef TARGET_GP2X
-#      define surface_height 240
-#else
-#      define surface_height 200
-#endif // TARGET_GP2X
-
 typedef JE_word JE_shape16B[1]; /* [0.. 0] */
 typedef JE_shape16B *JE_shape16;
-/*typedef JE_byte JE_shapetypeone[168];*/ /* [0..168-1] originally: JE_word JE_shapetypeone[84]; [1..84] */
-typedef Uint8 JE_screentype[65535]; /* [0..65534] */
-typedef JE_screentype *JE_screenptr;
+//typedef JE_byte JE_shapetypeone[168]; // [0..168-1] originally: JE_word JE_shapetypeone[84]; [1..84]
 
-extern const SDL_Color vga_palette[];
-extern SDL_Surface *display_surface;
-extern Uint8 *VGAScreen, *VGAScreenSeg;
-extern Uint8 *game_screen;
-extern Uint8 *VGAScreen2;
 extern JE_word speed; /* JE: holds timer speed for 70Hz */
 
-void JE_initVGA256( void );
-void set_fullscreen( bool full );
-void JE_closeVGA256( void );
-void JE_clr256( void );
-void JE_showVGA( void );
 void JE_pix( JE_word x, JE_word y, Uint8 col );
 void JE_pixCool( JE_word x, JE_word y, Uint8 col );
 void JE_pixAbs( JE_word offset, Uint8 col );
@@ -68,7 +46,5 @@ void JE_barBright( JE_word x1, JE_word y1, JE_word x2, JE_word y2 );
 void JE_circle( JE_word x, int y, JE_word radius, Uint8 col );
 void JE_line( JE_word x1, int y1, int x2, int y2, Uint8 col );
 void JE_drawGraphic( JE_word x, JE_word y, JE_ShapeTypeOne s );
-void JE_getPalette( Uint8 col, Uint8 *red, Uint8 *green, Uint8 *blue );
-void JE_setPalette( Uint8 col, Uint8 red, Uint8 green, Uint8 blue );
 
 #endif /* VGA256D_H */

@@ -27,7 +27,7 @@
 #include "nortvars.h"
 #include "params.h"
 #include "varz.h"
-#include "vga256d.h"
+#include "video.h"
 
 #include "newshape.h"
 

@@ -21,7 +21,7 @@
 
 #include "config.h"
 #include "joystick.h"
-#include "vga256d.h"
+#include "video.h"
 #include "Console.h"
 
 #include "error.h"
@@ -109,14 +109,19 @@ void JE_errorHand( const std::string& s )
 {
 	if (errorActive)
 	{
-		JE_closeVGA256();
-		Console::get() << "WARNING: Unable to find Tyrian data files." << std::endl
-			<< "Stopped on file " << s << std::endl
-			<< "OpenTyrian needs the Tyrian data files to run. Please read the README file." << std::endl;
-		exit(1);
+		show_datafile_error(s);
 	} else {
 		errorOccurred = 1;
 	}
+}
+
+void show_datafile_error( const std::string& filename )
+{
+	deinit_video();
+	Console::get() << "WARNING: Unable to find Tyrian data files." << std::endl
+		<< "Stopped on file " << filename << std::endl
+		<< "OpenTyrian needs the Tyrian data files to run. Please read the README file." << std::endl;
+	exit(1);
 }
 
 bool JE_find( const std::string& s )
@@ -192,6 +197,16 @@ void JE_resetFile( FILE **f, const char *filename )
 	*f = tmp.empty() ? NULL : fopen_check(tmp.c_str(), "rb");
 }
 
+void open_datafile_fail( std::ifstream& stream, const std::string& filename )
+{
+	try
+	{
+		open_datafile(stream, filename);
+	} catch (FileOpenErrorException&) {
+		show_datafile_error(filename);
+	}
+}
+
 void open_datafile( std::ifstream& stream, const std::string& filename ) throw (FileOpenErrorException)
 {
 	std::string path = JE_locateFile(filename, false);
@@ -199,8 +214,6 @@ void open_datafile( std::ifstream& stream, const std::string& filename ) throw (
 	stream.open(path.c_str(), std::ios_base::in | std::ios_base::binary);
 	if (stream.fail()) throw FileOpenErrorException(filename);
 }
-
-
 
 void JE_resetText( FILE **f, const char *filename )
 {

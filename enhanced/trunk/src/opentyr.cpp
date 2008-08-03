@@ -35,18 +35,18 @@
 #include "newshape.h"
 #include "nortsong.h"
 #include "nortvars.h"
-#include "pallib.h"
 #include "params.h"
 #include "picload.h"
 #include "scroller.h"
 #include "setup.h"
 #include "shpmast.h"
-#include "starfade.h"
 #include "tyrian2.h"
 #include "varz.h"
 #include "vga256d.h"
 #include "Console.h"
 #include "KeyNames.h"
+#include "video.h"
+#include "video_scale.h"
 
 #include "SDL.h"
 
@@ -63,7 +63,8 @@ const char *opentyrian_str = "OpenTyrian",
 const char *opentyrian_menu_items[] =
 {
 	"About OpenTyrian",
-	"Fullscreen",
+	"Toggle Fullscreen",
+	"Scaler: None",
 	/* "Play Destruct", */
 	"Jukebox",
 	"Return to Main Menu"
@@ -170,6 +171,8 @@ void opentyrian_menu( void )
 	const int maxSel = COUNTOF(opentyrian_menu_items) - 1;
 	bool quit = false, fade_in = true;
 
+	int temp_scaler = scaler;
+
 	JE_fadeBlack(10);
 	JE_loadPic(13, false);
 
@@ -189,6 +192,11 @@ void opentyrian_menu( void )
 		for (int i = 0; i <= maxSel; i++)
 		{
 			std::string text(opentyrian_menu_items[i]);
+
+			if (i == 2) // Scaler
+			{
+				text = std::string("Scaler: ") + scalers[temp_scaler].name;
+			}
 
 			JE_outTextAdjust(JE_fontCenter(text.c_str(), SMALL_FONT_SHAPES),
 			                 (i != maxSel) ? (i * 16 + 32) : 118, text.c_str(),
@@ -226,6 +234,36 @@ void opentyrian_menu( void )
 					}
 					JE_playSampleNum(CURSOR_MOVE);
 					break;
+				case SDLK_LEFT:
+					if (sel == 2)
+					{
+						const bool surf_32bit = display_surface->format->BitsPerPixel == 32;
+						do {
+							if (temp_scaler == 0)
+							{
+								temp_scaler = COUNTOF(scalers);
+							}
+							--temp_scaler;
+						} while ((surf_32bit && scalers[temp_scaler].scaler32 == NULL) ||
+						         (!surf_32bit && scalers[temp_scaler].scaler16 == NULL));
+						JE_playSampleNum(CURSOR_MOVE);
+					}
+					break;
+				case SDLK_RIGHT:
+					if (sel == 2)
+					{
+						const bool surf_32bit = display_surface->format->BitsPerPixel == 32;
+						do {
+							++temp_scaler;
+							if (temp_scaler == COUNTOF(scalers))
+							{
+								temp_scaler = 0;
+							}
+						} while ((surf_32bit && scalers[temp_scaler].scaler32 == NULL) ||
+						         (!surf_32bit && scalers[temp_scaler].scaler16 == NULL));
+						JE_playSampleNum(CURSOR_MOVE);
+					}
+					break;
 				case SDLK_RETURN:
 					switch (sel)
 					{
@@ -238,10 +276,14 @@ void opentyrian_menu( void )
 							break;
 						case 1: /* Fullscreen */
 							fullscreen_enabled = !fullscreen_enabled;
+							reinit_video();
 							JE_playSampleNum(SELECT);
-							JE_initVGA256();
 							break;
-						case 2: /* Jukebox */
+						case 2: // Scaler
+							scaler = temp_scaler;
+							reinit_video();
+							break;
+						case 3: /* Jukebox */
 							JE_playSampleNum(SELECT);
 							JE_jukeboxGo();
 							memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
@@ -294,12 +336,10 @@ int main( int argc, char *argv[] )
 
 	JE_loadConfiguration();
 
-	JE_initVGA256();
-	init_keyboard();
-
-	/* TODO: Tyrian originally checked availible memory here. */
-
 	JE_paramCheck(argc, argv);
+
+	init_video();
+	init_keyboard();
 
 	if (scanForJoystick)
 	{
@@ -381,7 +421,7 @@ int main( int argc, char *argv[] )
 
 	Console::deinitialize();
 
-	JE_closeVGA256();
+	deinit_video();
 
 	return 0;
 }

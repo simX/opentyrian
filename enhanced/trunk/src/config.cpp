@@ -26,6 +26,7 @@
 #include "nortsong.h"
 #include "nortvars.h"
 #include "varz.h"
+#include "video.h"
 #include "vga256d.h"
 #include "iniparser.h"
 #include "BinaryStream.h"

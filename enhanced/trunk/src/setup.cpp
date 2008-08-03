@@ -29,9 +29,9 @@
 #include "newshape.h"
 #include "nortsong.h"
 #include "nortvars.h"
-#include "starfade.h"
 #include "starlib.h"
 #include "varz.h"
+#include "video.h"
 #include "vga256d.h"
 #include "loudness.h"
 
@@ -126,7 +126,7 @@ void JE_jukeboxGo( void )
 	JE_fadeBlack(10);
 	std::fill_n(VGAScreenSeg, scr_width*scr_height, 0x0);
 	JE_showVGA();
-	SDL_SetColors(display_surface, const_cast<SDL_Color*>(vga_palette), 0, 256); //JE_fadeColor(10); // TODO: remove the const_cast if SDL ever gets fixed
+	JE_updateColorsFast(vga_palette);
 
 	JE_starlib_init();
 
@@ -262,8 +262,6 @@ void JE_jukeboxGo( void )
 			}
 		}
 
-		JE_showVGA();
-
 		if (newkey) {
 			JE_newSpeed();
 			switch (lastkey_sym)
@@ -354,7 +352,8 @@ void JE_jukeboxGo( void )
 		}
 	} while (!quit);
 	
-	JE_fadeBlack(10);
+	//JE_fadeBlack(10);
+	JE_updateColorsFast(black);
 }
 
 void JE_newSpeed( void )

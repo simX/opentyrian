@@ -23,6 +23,7 @@
 #include "fonthand.h"
 #include "newshape.h"
 #include "keyboard.h"
+#include "video.h"
 #include "vga256d.h"
 #include <cassert>
 #include <algorithm>

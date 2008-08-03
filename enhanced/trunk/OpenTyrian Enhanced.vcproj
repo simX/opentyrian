@@ -121,7 +121,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
+				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;PASCAL_TYPES"
@@ -323,11 +327,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pallib.h"
+				RelativePath=".\src\palette.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\params.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\pcxload.h"
 				>
 			</File>
 			<File
@@ -363,10 +371,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\starfade.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\starlib.h"
 				>
 			</File>
@@ -380,6 +384,14 @@
 			</File>
 			<File
 				RelativePath=".\src\vga256d.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\video.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\video_scale.h"
 				>
 			</File>
 		</Filter>
@@ -539,11 +551,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\pallib.cpp"
+				RelativePath=".\src\palette.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\params.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\pcxload.cpp"
 				>
 			</File>
 			<File
@@ -575,10 +591,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\starfade.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\starlib.cpp"
 				>
 			</File>
@@ -592,6 +604,14 @@
 			</File>
 			<File
 				RelativePath=".\src\vga256d.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\video.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\video_scale.cpp"
 				>
 			</File>
 		</Filter>

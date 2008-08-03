@@ -17,39 +17,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#ifndef PCXLOAD_H
+#define PCXLOAD_H
+
 #include "opentyr.h"
 
-#include "error.h"
-#include "nortvars.h"
-#include "starfade.h"
+void JE_loadPCX( const std::string& file );
 
-#include "pallib.h"
-
-
-JE_PalType palettes;
-JE_word palNum;
-
-void JE_loadPals( void )
-{
-	FILE *f;
-
-	palNum = 0;
-
-	JE_resetFile(&f, "palette.dat");
-	while (palNum < MAX_PAL && !feof(f))
-	{
-		for (int i = 0; i < 256; i++)
-		{
-			palettes[palNum][i].r = getc(f);
-			palettes[palNum][i].g = getc(f);
-			palettes[palNum][i].b = getc(f);
-		}
-		palNum++;
-	}
-	fclose(f);
-}
-
-void JE_zPal( int palette )
-{
-	JE_updateColorsFast(&palettes[palette - 1]);
-}
+#endif // PCXLOAD_H

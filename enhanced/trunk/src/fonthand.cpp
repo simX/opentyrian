@@ -22,6 +22,7 @@
 #include "newshape.h"
 #include "network.h"
 #include "nortsong.h"
+#include "video.h"
 #include "vga256d.h"
 
 #include "fonthand.h"

@@ -26,6 +26,7 @@
 #include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
+#include "video.h"
 #include "vga256d.h"
 #include "fonthand.h"
 #include "loudness.h"
@@ -668,7 +669,7 @@ void JE_drawOptionLevel( void )
 
 void JE_tyrianHalt( int code )
 {
-	JE_closeVGA256();
+	deinit_video();
 
 	if (scanForJoystick)
 	{

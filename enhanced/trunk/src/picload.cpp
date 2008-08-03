@@ -21,22 +21,18 @@
 
 #include "error.h"
 #include "nortvars.h"
-#include "pallib.h"
+#include "palette.h"
 #include "pcxmast.h"
-#include "starfade.h"
-#include "vga256d.h"
+#include "video.h"
 
 #include "picload.h"
 
 #include <string.h>
 
-
-bool notyetloadedpcx;
-bool notYetLoadedPCX = true;
-
 void JE_loadPic( int PCXnumber, bool storepal )
 {
 	typedef Uint8 JE_buftype[63000]; /* [1..63000] */
+	static bool notYetLoadedPCX = true;
 
 	JE_word x;
 	JE_buftype buf;
@@ -90,6 +86,6 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	memcpy(colors, palettes[pcxpal[PCXnumber]], sizeof(colors));
 	if (storepal)
 	{
-		JE_updateColorsFast(&colors);
+		JE_updateColorsFast(colors);
 	}
 }

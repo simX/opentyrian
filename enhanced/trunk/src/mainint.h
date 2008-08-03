@@ -24,6 +24,7 @@
 
 #include "config.h"
 #include "nortvars.h"
+#include "video.h"
 
 
 extern int constantLastX;
@@ -40,7 +41,7 @@ void JE_drawTextWindow( char *text );
 void JE_initPlayerData( void );
 void JE_highScoreScreen( void );
 void JE_gammaCorrect_func( Uint8 *col, float r );
-void JE_gammaCorrect( JE_ColorType *colorBuffer, int gamma );
+void JE_gammaCorrect( Palette colorBuffer, int gamma );
 bool JE_gammaCheck( void );
 /* void JE_textMenuWait( JE_word *waitTime, bool doGamma ); /!\ In setup.h */
 void JE_loadOrderingInfo( void );
