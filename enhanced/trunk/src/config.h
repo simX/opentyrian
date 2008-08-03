@@ -103,7 +103,7 @@ extern JE_PortPowerType portPower, lastPortPower;
 extern char lastLevelName[11], levelName[11];
 extern int mainLevel, nextLevel, saveLevel;
 //extern JE_KeySettingType keySettings;
-extern signed int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
+extern int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
 extern bool filterActive, filterFade, filterFadeStart;
 extern bool gameJustLoaded;
 extern bool galagaMode;

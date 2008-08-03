@@ -38,7 +38,6 @@
 #include "picload.h"
 #include "scroller.h"
 #include "setup.h"
-#include "shpmast.h"
 #include "tyrian2.h"
 #include "varz.h"
 #include "vga256d.h"

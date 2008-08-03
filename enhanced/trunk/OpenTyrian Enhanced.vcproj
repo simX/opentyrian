@@ -339,10 +339,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\shpmast.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Singleton.h"
 				>
 			</File>
@@ -536,10 +532,6 @@
 			</File>
 			<File
 				RelativePath=".\src\setup.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\shpmast.cpp"
 				>
 			</File>
 			<File

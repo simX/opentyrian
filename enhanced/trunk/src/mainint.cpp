@@ -37,7 +37,6 @@
 #include "params.h"
 #include "picload.h"
 #include "setup.h"
-#include "shpmast.h"
 #include "sndmast.h"
 #include "varz.h"
 #include "vga256d.h"
@@ -726,7 +725,8 @@ void JE_loadCompShapesB( Uint8 **shapes, FILE *f, unsigned long shapeSize )
 
 void JE_loadMainShapeTables( void )
 {
-	const int shapeReorderList[7] /* [1..7] */ = {1, 2, 5, 0, 3, 4, 6};
+	static const int shapeReorderList[7] /* [1..7] */ = {1, 2, 5, 0, 3, 4, 6};
+	static const int SHP_NUM = 12;
 
 	FILE *f;
 
