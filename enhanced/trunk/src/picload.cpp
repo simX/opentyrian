@@ -28,13 +28,13 @@
 
 #include <string.h>
 
-static const int PCX_NUM = 13;
+static const unsigned int PCX_NUM = 13;
 
 static long pcxpos[PCX_NUM+1];
 
 static const int pcxpal[PCX_NUM] = {0, 7, 5, 8, 10, 5, 18, 19, 19, 20, 21, 22, 5};
 
-void JE_loadPic( int PCXnumber, bool storepal )
+void JE_loadPic( unsigned int PCXnumber, bool storepal )
 {
 	if (PCXnumber > PCX_NUM)
 	{
@@ -63,7 +63,7 @@ void JE_loadPic( int PCXnumber, bool storepal )
 	{
 		notYetLoadedPCX = false;
 		efread(&x, sizeof(JE_word), 1, PCXfile);
-		for (int x = 0; x < PCX_NUM; x++)
+		for (unsigned int x = 0; x < PCX_NUM; x++)
 		{
 			vfread(pcxpos[x], Sint32, PCXfile);
 		}
