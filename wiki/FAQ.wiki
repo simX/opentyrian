@@ -3,12 +3,7 @@
 
 === Q: What is OpenTyrian? ===
 
-*A:* [OpenTyrian] is rewrite of the Tyrian's Pascal and Assembly source-code in C, adapting it to use modern technologies instead of arcane DOS techniques.
-
-Right now we plan to create two versions of the port:
-
-  * *[OpenTyrianClassic OpenTyrian Classic]:* Currently being worked on, will try to faithfully recreate Tyrian, both in game and source code behavior, won't receive any new features apart from those considered very important.
-  * *[OpenTyrian]:* Starting out of the Classic port, will feature cleaned up code, and brand new features, bug fixes and customization.
+*A:* [OpenTyrian] is rewrite of [http://en.wikipedia.org/wiki/Tyrian_(video_game) Tyrian]'s Pascal and Assembly source code in C, replacing the arcane DOS code with SDL.
 
 === Q: Is Tyrian open source? ===
 
@@ -30,6 +25,6 @@ Right now we plan to create two versions of the port:
 
 *A:* You need the [http://www.libsdl.org/download.php SDL runtime].  On Windows, just put SDL.dll in OpenTyrian's directory.
 
-=== Q: Do you have an IRC channel? ===
+=== Q: How can I contact the developers? ===
 
 *A:* Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
