@@ -209,7 +209,7 @@ extern unsigned long debugTime, lastDebugTime;
 extern unsigned long debugHistCount;
 extern float debugHist;
 extern JE_word curLoc;
-extern bool firstGameOver, gameLoaded, enemyStillExploding;
+extern bool firstGameOver, gameLoaded;
 extern JE_word tempSS;
 extern JE_word totalEnemy;
 extern JE_word enemyKilled;
@@ -335,37 +335,6 @@ extern int baseArmor, baseArmor2;
 extern JE_word shipGr, shipGr2;
 extern Uint8 *shipGrPtr, *shipGr2ptr;
 
-//--------------------------------------------------------------------------
-
-// Explosions
-struct Explosion
-{
-	unsigned int life;
-	unsigned int x, y;
-	int delta_x, delta_y;
-	bool follow_player;
-	bool fixed_explode;
-	JE_word explode_gr;
-};
-
-struct RepeatingExplosion
-{
-	unsigned int delay;
-	unsigned int life;
-	unsigned int x, y;
-	bool big;
-};
-
-static const int MAX_EXPLOSIONS = 200;
-static const int MAX_REPEATING_EXPLOSIONS = 20;
-
-extern Explosion explosions[MAX_EXPLOSIONS];
-extern int explosion_follow_amount_x, explosion_follow_amount_y;
-extern RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
-extern bool playerFollow, fixedExplosions;
-extern int explosionMoveUp;
-
-//--------------------------------------------------------------------------
 
 void JE_getShipInfo( void );
 JE_word JE_SGr( JE_word ship, Uint8 **ptr );
@@ -388,10 +357,8 @@ int JE_playerDamage( JE_word tempX, JE_word tempY, int temp,
                          bool *playerAlive,
                          int *playerStillExploding,
                          int *armorLevel,
-                         int *shield );
-
-void JE_setupExplosion( int x, int y, int explodetype );
-void JE_setupExplosionLarge( bool enemyground, int explonum, int x, int y );
+                         int *shield,
+						 unsigned int player );
 
 void JE_drawShield( void );
 void JE_drawArmor( void );

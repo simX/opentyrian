@@ -35,6 +35,8 @@ extern bool performSave;
 extern bool jumpSection;
 extern bool useLastBank;
 
+extern int player_delta_x[2], player_delta_y[2];
+
 /*void JE_textMenuWait ( JE_word waittime, bool dogamma );*/
 
 void JE_drawTextWindow( char *text );

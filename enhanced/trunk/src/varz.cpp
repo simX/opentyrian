@@ -31,6 +31,7 @@
 #include "fonthand.h"
 #include "loudness.h"
 #include "params.h"
+#include "explosion.h"
 
 #include "varz.h"
 
@@ -211,7 +212,7 @@ unsigned long debugHistCount;
 float debugHist;
 JE_word curLoc; /*Current Pixel location of background 1*/
 
-bool firstGameOver, gameLoaded, enemyStillExploding;
+bool firstGameOver, gameLoaded;
 
 /* Error Checking */
 JE_word tempSS;
@@ -417,17 +418,6 @@ int baseArmor, baseArmor2;
 JE_word shipGr, shipGr2;
 Uint8 *shipGrPtr, *shipGr2ptr;
 
-//--------------------------------------------------------------------------
-
-// Explosions
-Explosion explosions[MAX_EXPLOSIONS];
-int explosion_follow_amount_x, explosion_follow_amount_y;
-bool playerFollow, fixedExplosions;
-int explosionMoveUp;
-
-RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
-
-//--------------------------------------------------------------------------
 
 void JE_getShipInfo( void )
 {
@@ -1330,141 +1320,6 @@ void draw_special_shot_info()
 	}
 }
 
-void JE_setupExplosion( int x, int y, int explodeType )
-{
-	const struct {
-		JE_word egr;
-		int etime;
-	} explodeData[53] /* [1..53] */ = {
-		{ 144,  7 },
-		{ 120, 12 },
-		{ 190, 12 },
-		{ 209, 12 },
-		{ 152, 12 },
-		{ 171, 12 },
-		{ 133,  7 },   /*White Smoke*/
-		{   1, 12 },
-		{  20, 12 },
-		{  39, 12 },
-		{  58, 12 },
-		{ 110,  3 },
-		{  76,  7 },
-		{  91,  3 },
-/*15*/	{ 227,  3 },
-		{ 230,  3 },
-		{ 233,  3 },
-		{ 252,  3 },
-		{ 246,  3 },
-/*20*/	{ 249,  3 },
-		{ 265,  3 },
-		{ 268,  3 },
-		{ 271,  3 },
-		{ 236,  3 },
-/*25*/	{ 239,  3 },
-		{ 242,  3 },
-		{ 261,  3 },
-		{ 274,  3 },
-		{ 277,  3 },
-/*30*/	{ 280,  3 },
-		{ 299,  3 },
-		{ 284,  3 },
-		{ 287,  3 },
-		{ 290,  3 },
-/*35*/	{ 293,  3 },
-		{ 165,  8 },   /*Coin Values*/
-		{ 184,  8 },
-		{ 203,  8 },
-		{ 222,  8 },
-		{ 168,  8 },
-		{ 187,  8 },
-		{ 206,  8 },
-		{ 225, 10 },
-		{ 169, 10 },
-		{ 188, 10 },
-		{ 207, 20 },
-		{ 226, 14 },
-		{ 170, 14 },
-		{ 189, 14 },
-		{ 208, 14 },
-		{ 246, 14 },
-		{ 227, 14 },
-		{ 265, 14 }
-	};
-	
-	if (y > -16 && y < 190)
-	{
-		for (int i = 0; i < MAX_EXPLOSIONS; i++)
-		{
-			if (explosions[i].life == 0)
-			{
-				explosions[i].x = x;
-				explosions[i].y = y;
-
-				if (explodeType == 6)
-				{
-					explosions[i].x += 2;
-					explosions[i].y += 12;
-				} else if (explodeType == 98) {
-					explodeType = 6;
-				}
-
-				explosions[i].explode_gr = explodeData[explodeType].egr + 1;
-				explosions[i].life = explodeData[explodeType].etime;
-				explosions[i].follow_player = playerFollow;
-				explosions[i].fixed_explode = fixedExplosions;
-				explosions[i].delta_x = 0;
-				explosions[i].delta_y = explosionMoveUp;
-				break;
-			}
-		}
-	}
-}
-
-void JE_setupExplosionLarge( bool enemyGround, int exploNum, int x, int y )
-{
-	if (y >= 0)
-	{
-		if (enemyGround)
-		{
-			JE_setupExplosion(x - 6, y - 14, 2);
-			JE_setupExplosion(x + 6, y - 14, 4);
-			JE_setupExplosion(x - 6, y,      3);
-			JE_setupExplosion(x + 6, y,      5);
-		} else {
-			JE_setupExplosion(x - 6, y - 14, 7);
-			JE_setupExplosion(x + 6, y - 14, 9);
-			JE_setupExplosion(x - 6, y,      8);
-			JE_setupExplosion(x + 6, y,     10);
-		}
-		
-		tempX = x;
-		tempY = y;
-		if (exploNum > 10)
-		{
-			exploNum -= 10;
-			tempB = true;
-		} else {
-			tempB = false;
-		}
-		
-		if (exploNum > 0)
-		{
-			for (int i = 0; i < MAX_REPEATING_EXPLOSIONS; i++)
-			{
-				if (rep_explosions[i].life == 0)
-				{
-					rep_explosions[i].life = exploNum;
-					rep_explosions[i].delay = 2;
-					rep_explosions[i].x = tempX;
-					rep_explosions[i].y = tempY;
-					rep_explosions[i].big = tempB;
-					break;
-				}
-			}
-		}
-	}
-}
-
 void JE_wipeShieldArmorBars( void )
 {
 	if (!twoPlayerMode || galagaMode)
@@ -1489,7 +1344,8 @@ int JE_playerDamage( JE_word tempX, JE_word tempY,
                          bool *playerAlive,
                          int *playerStillExploding,
                          int *armorLevel,
-                         int *shield )
+                         int *shield,
+						 unsigned int player )
 {
 	int playerDamage = 0;
 	soundQueue[7] = 27;
@@ -1531,20 +1387,17 @@ int JE_playerDamage( JE_word tempX, JE_word tempY,
 	} else {
 		*shield -= temp;
 		
-		if (!twoPlayerMode)
-			playerFollow = true;
-		JE_setupExplosion(*PX - 17, *PY - 12, 14);
-		JE_setupExplosion(*PX - 5 , *PY - 12, 15);
-		JE_setupExplosion(*PX + 7 , *PY - 12, 16);
-		JE_setupExplosion(*PX + 19, *PY - 12, 17);
+		JE_setupExplosion(*PX-17, *PY-12, 14, 0, false, player);
+		JE_setupExplosion(*PX-5 , *PY-12, 15, 0, false, player);
+		JE_setupExplosion(*PX+7 , *PY-12, 16, 0, false, player);
+		JE_setupExplosion(*PX+19, *PY-12, 17, 0, false, player);
 		
-		JE_setupExplosion(*PX - 17, *PY + 2,  18);
-		JE_setupExplosion(*PX + 19, *PY + 2,  19);
+		JE_setupExplosion(*PX-17, *PY+2,  18, 0, false, player);
+		JE_setupExplosion(*PX+19, *PY+2,  19, 0, false, player);
 		
-		JE_setupExplosion(*PX - 17, *PY + 16, 20);
-		JE_setupExplosion(*PX - 5 , *PY + 16, 21);
-		JE_setupExplosion(*PX + 7 , *PY + 16, 22);
-		playerFollow = false;
+		JE_setupExplosion(*PX-17, *PY+16, 20, 0, false, player);
+		JE_setupExplosion(*PX-5 , *PY+16, 21, 0, false, player);
+		JE_setupExplosion(*PX+7 , *PY+16, 22, 0, false, player);
 	}
 	
 	JE_wipeShieldArmorBars();

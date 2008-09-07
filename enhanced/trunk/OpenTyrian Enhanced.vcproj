@@ -250,6 +250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\explosion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\fm_synth.h"
 				>
 			</File>
@@ -447,6 +451,10 @@
 			</File>
 			<File
 				RelativePath=".\src\error.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\explosion.cpp"
 				>
 			</File>
 			<File

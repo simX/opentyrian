@@ -47,6 +47,7 @@
 #include "KeyNames.h"
 #include "pcxload.h"
 #include "superpixel.h"
+#include "explosion.h"
 
 #include "tyrian2.h"
 
@@ -627,10 +628,8 @@ enemy_still_exists:
 						case 252: // Savara Boss DualMissile
 							if (enemy[i].ey > 20)
 							{
-								explosionMoveUp = -2;
-								JE_setupExplosion(tempX - 8 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
-								JE_setupExplosion(tempX + 4 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
-								explosionMoveUp = 0;
+								JE_setupExplosion(tempX-8+tempMapXOfs, tempY-20 - backMove*8, 6, -2);
+								JE_setupExplosion(tempX+4+tempMapXOfs, tempY-20 - backMove*8, 6, -2);
 							}
 							break;
 						case 251: // Suck-O-Magnet
@@ -921,8 +920,6 @@ void JE_main( void )
 	loadTitleScreen = true;
 
 	/* Setup Player Items/General Data */
-	fixedExplosions = false;
-	explosionMoveUp = 0;
 	for (int z = 0; z < 12; z++)
 	{
 		pItems[z] = 0;
@@ -1285,8 +1282,6 @@ start_level_first:
 
 	JE_playSong(levelSong);
 
-	playerFollow = false;
-
 	/*if not JConfigure and (InputDevice=1) then CalibrateJoy;*/
 
 	JE_drawPortConfigButtons();
@@ -1410,8 +1405,7 @@ start_level_first:
 
 	memset(globalFlags,      0, sizeof(globalFlags));
 
-	std::fill_n(explosions, MAX_EXPLOSIONS, Explosion());
-	std::fill_n(rep_explosions, MAX_REPEATING_EXPLOSIONS, RepeatingExplosion());
+	init_explosions();
 
 	/* --- Clear Sound Queue --- */
 	memset(soundQueue,       0, sizeof(soundQueue));
@@ -2547,7 +2541,7 @@ draw_player_shot_loop_end:
 							case 1:
 								if (playerInvulnerable1 == 0)
 								{
-									if ((temp = JE_playerDamage(tempX, tempY, temp, &PX, &PY, &playerAlive, &playerStillExploding, &armorLevel, &shield)) > 0)
+									if ((temp = JE_playerDamage(tempX, tempY, temp, &PX, &PY, &playerAlive, &playerStillExploding, &armorLevel, &shield, 1)) > 0)
 									{
 										lastTurn2 += (enemyShot[z].sxm * temp) / 2;
 										lastTurn  += (enemyShot[z].sym * temp) / 2;
@@ -2557,7 +2551,7 @@ draw_player_shot_loop_end:
 							case 2:
 								if (playerInvulnerable2 == 0)
 								{
-									if ((temp = JE_playerDamage(tempX, tempY, temp, &PXB, &PYB, &playerAliveB, &playerStillExploding2, &armorLevel2, &shield2)) > 0)
+									if ((temp = JE_playerDamage(tempX, tempY, temp, &PXB, &PYB, &playerAliveB, &playerStillExploding2, &armorLevel2, &shield2, 2)) > 0)
 									{
 										lastTurn2B += (enemyShot[z].sxm * temp) / 2;
 										lastTurnB  += (enemyShot[z].sym * temp) / 2;
@@ -2651,122 +2645,7 @@ enemy_shot_draw_overflow:
 		}
 	}
 
-	/*-------------------------- Sequenced Explosions -------------------------*/
-	enemyStillExploding = false;
-	for (int i = 0; i < MAX_REPEATING_EXPLOSIONS; i++)
-	{
-		if (rep_explosions[i].life > 0)
-		{
-			enemyStillExploding = true;
-			if (rep_explosions[i].delay > 0)
-			{
-				rep_explosions[i].delay--;
-				continue;
-			}
-			
-			rep_explosions[i].y += backMove2 + 1;
-			unsigned int explosion_x = rep_explosions[i].x + (rand() % 24) - 12;
-			unsigned   int explosion_y = rep_explosions[i].y + (rand() % 27) - 24;
-
-			if (rep_explosions[i].big)
-			{
-				JE_setupExplosionLarge(false, 2, explosion_x, explosion_y);
-				if (rep_explosions[i].life == 1 || rand() % 5 == 1)
-				{
-					soundQueue[7] = 11;
-				} else {
-					soundQueue[6] = 9;
-				}
-				rep_explosions[i].delay = 4 + (rand() % 3);
-			} else {
-				JE_setupExplosion(explosion_x, explosion_y, 1);
-				soundQueue[5] = 4;
-				rep_explosions[i].delay = 3;
-			}
-			rep_explosions[i].life--;
-		}
-	}
-
-	/*---------------------------- Draw Explosions ----------------------------*/
-	for (int j = 0; j < MAX_EXPLOSIONS; j++)
-	{
-		if (explosions[j].life > 0)
-		{
-			if (!explosions[j].fixed_explode)
-			{
-				explosions[j].explode_gr++;
-				explosions[j].y += explodeMove;
-			} else if (explosions[j].follow_player) {
-				explosions[j].x += explosion_follow_amount_x;
-				explosions[j].y += explosion_follow_amount_y;
-			}
-
-			explosions[j].x += explosions[j].delta_x;
-			explosions[j].y += explosions[j].delta_y;
-			
-			s = VGAScreen;
-			s += explosions[j].y * scr_width + explosions[j].x;
-			
-			s_limit = VGAScreen + scr_width*scr_height;
-			
-			if (s + scr_width * 14 > s_limit)
-			{
-				explosions[j].life = 0;
-			} else {
-				p = shapes6;
-				p += SDL_SwapLE16(((JE_word *)p)[explosions[j].explode_gr - 1]);
-				
-				if (CVars::r_explosion_blend)
-				{
-					while (*p != 0x0f)
-					{
-						s += *p & 0x0f;
-						i = (*p & 0xf0) >> 4;
-						if (i)
-						{
-							while (i--)
-							{
-								p++;
-								if (s >= s_limit)
-									goto explosion_draw_overflow;
-								if ((void *)s >= VGAScreen)
-									*s = (((*p & 0x0f) + (*s & 0x0f)) >> 1) | (*p & 0xf0);
-								s++;
-							}
-						} else {
-							s -= 12;
-							s += scr_width;
-						}
-						p++;
-					}
-				} else {
-					while (*p != 0x0f)
-					{
-						s += *p & 0x0f;
-						i = (*p & 0xf0) >> 4;
-						if (i)
-						{
-							while (i--)
-							{
-								p++;
-								if (s >= s_limit)
-									goto explosion_draw_overflow;
-								if ((void *)s >= VGAScreen)
-									*s = *p;
-								s++;
-							}
-						} else {
-							s -= 12;
-							s += scr_width;
-						}
-						p++;
-					}
-				}
-explosion_draw_overflow:
-				explosions[j].life--;
-			}
-		}
-	}
+	draw_explosions();
 
 	if (!portConfigChange)
 	{
@@ -5939,6 +5818,8 @@ bool keyboardUsed;
 JE_word faceX, faceY;
 
 int currentFaceNum;
+
+
 
 unsigned long JE_cashLeft( void )
 {

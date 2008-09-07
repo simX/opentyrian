@@ -43,6 +43,7 @@
 #include "GameActions.h"
 #include "HighScores.h"
 #include "CVar.h"
+#include "explosion.h"
 
 #include "mainint.h"
 
@@ -63,6 +64,8 @@ JE_word downgradeCost;
 bool performSave;
 bool jumpSection;
 bool useLastBank; /* See if I want to use the last 16 colors for DisplayText */
+
+int player_delta_x[2], player_delta_y[2];
 
 /* Draws a message at the bottom text window on the playing screen */
 void JE_drawTextWindow( char *text )
@@ -3818,8 +3821,8 @@ redo:
 			tempI4 = *PY_ - *lastPY2_;
 			if (tempI4 < 1)
 				tempI4 = 0;
-			explosion_follow_amount_x = *PX_ - *lastPX2_;
-			explosion_follow_amount_y = tempI4;
+			player_delta_x[playerNum_-1] = *PX_ - *lastPX2_;
+			player_delta_y[playerNum_-1] = tempI4;
 			*lastPX2_ = *PX_;
 			*lastPY2_ = *PY_;
 
@@ -4383,8 +4386,8 @@ redo:
 			}
 		}
 	} else {
-		explosion_follow_amount_x = 0;
-		explosion_follow_amount_y = 0;
+		player_delta_x[playerNum_] = 0;
+		player_delta_y[playerNum_] = 0;
 	}
 }
 
@@ -4743,9 +4746,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 						score2 += tempI4 / 2;
 					} else
 						*score_ += tempI4;
-					fixedExplosions = true;
-					JE_setupExplosion(tempI3, enemy[z].ey, enemyDat[enemy[z].enemytype].explosiontype);
-					fixedExplosions = false;
+					JE_setupExplosion(tempI3, enemy[z].ey, enemyDat[enemy[z].enemytype].explosiontype, 0, true);
 				} else
 					if (playerInvulnerable_ == 0 && enemyAvail[z] == 0 &&
 					    enemyDat[enemy[z].enemytype].explosiontype % 2 == 0)
@@ -4755,7 +4756,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 						if (tempI3 > damageRate)
 							tempI3 = damageRate;
 						
-						JE_playerDamage(tempW, tempW, tempI3, PX_, PY_, playerAlive_, playerStillExploding_, armorLevel_, shield_);
+						JE_playerDamage(tempW, tempW, tempI3, PX_, PY_, playerAlive_, playerStillExploding_, armorLevel_, shield_, playerNum_);
 						
 						if (enemy[z].armorleft > 0)
 						{
