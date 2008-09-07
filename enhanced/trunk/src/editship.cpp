@@ -47,9 +47,9 @@ void JE_decryptShips()
 
 	bool correct = true;
 
-	JE_byte sum = 0;
+	Uint8 sum = 0;
 	for (int i = 0; i < SAS; ++i) {
-		sum += s2[i];
+		sum += s2[i]; // <overflow>
 	}
 	if (sum != extraShips[SAS+0]) correct = false;
 
@@ -61,7 +61,7 @@ void JE_decryptShips()
 
 	sum = 1;
 	for (int i = 0; i < SAS; ++i) {
-		sum = (sum*s2[i])+1;
+		sum = (sum*s2[i])+1; // <overflow>
 	}
 	if (sum != extraShips[SAS+2]) correct = false;
 

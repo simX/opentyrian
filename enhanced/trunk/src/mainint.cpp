@@ -2418,7 +2418,7 @@ void JE_endLevelAni( void )
 			{
 				frameCountMax = 1;
 			}
-			for (int temp = 1; temp <= cubeMax; temp++)
+			for (unsigned int temp = 1; temp <= cubeMax; temp++)
 			{
 				JE_playSampleNum(18);
 				x = 20 + 30 * temp;
@@ -3818,7 +3818,8 @@ redo:
 			tempI4 = *PY_ - *lastPY2_;
 			if (tempI4 < 1)
 				tempI4 = 0;
-			explosionFollowAmount = *PX_ - *lastPX2_ + tempI4 * 320;
+			explosion_follow_amount_x = *PX_ - *lastPX2_;
+			explosion_follow_amount_y = tempI4;
 			*lastPX2_ = *PX_;
 			*lastPY2_ = *PY_;
 
@@ -4381,10 +4382,10 @@ redo:
 				optionCharge2Wait = 20;
 			}
 		}
-
-	} else
-		explosionFollowAmount = 0; /*if (*playerAlive_)...*/
-
+	} else {
+		explosion_follow_amount_x = 0;
+		explosion_follow_amount_y = 0;
+	}
 }
 
 void JE_mainGamePlayerFunctions( void )

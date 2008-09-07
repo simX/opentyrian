@@ -555,7 +555,6 @@ void JE_drawBackground3( void )
 			s -= 24;
 		}
 	}
-
 }
 
 void JE_filterScreen( Sint8 color, Sint8 brightness )

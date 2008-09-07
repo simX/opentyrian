@@ -95,11 +95,11 @@ struct KeyBind : public Bind
 struct MouseBind : public Bind
 {
 	MouseBind() {}
-	MouseBind( Uint8 button )
+	MouseBind( unsigned int button )
 		: button(button)
 	{}
 
-	MouseBind( Uint8 button, const std::string& command, bool toggle )
+	MouseBind( unsigned int button, const std::string& command, bool toggle )
 		: button(button)
 	{
 		addCommand(command, toggle);
@@ -112,7 +112,7 @@ struct MouseBind : public Bind
 		return str.str();
 	}
 
-	Uint8 button;
+	unsigned int button;
 };
 
 class BindManager : public Singleton<BindManager>
@@ -128,7 +128,7 @@ private:
 	};
 
 	std::map<SDLKey, KeyBind*> bindMap;
-	std::map<Uint8, MouseBind*> mouseBindMap;
+	std::map<unsigned int, MouseBind*> mouseBindMap;
 
 public:
 	typedef std::set<Bind*, BindPtrSort> SetType;
@@ -142,7 +142,7 @@ public:
 	};
 
 	KeyBind& getBind( SDLKey key ) const;
-	MouseBind& getBindMouse( Uint8 button ) const;
+	MouseBind& getBindMouse( unsigned int button ) const;
 	Bind* getBind( const std::string& name ) const;
 	Bind* findBind( const std::string& cmd ) const;
 	std::set<Bind*> findBinds( const std::string& cmd ) const;
@@ -153,13 +153,13 @@ public:
 	void addBind( SDLKey key, const std::string& cmd, bool toggle );
 	void addBind( SDLKey key, std::string cmd );
 	void addBind( const std::string& key_name, const std::string& cmd );
-	void addBindMouse( Uint8 button, const std::string& cmd, bool toggle );
-	void addBindMouse( Uint8 button, std::string cmd );
+	void addBindMouse( unsigned int button, const std::string& cmd, bool toggle );
+	void addBindMouse( unsigned int button, std::string cmd );
 
 	void removeBind( Bind* bind );
 	void removeBind( Bind* bind, std::string cmd, bool toggle );
 	void removeBind( SDLKey key );
-	void removeBindMouse( Uint8 button );
+	void removeBindMouse( unsigned int button );
 	void removeBind( const std::string& key_name );
 
 	friend void bind( const std::vector<std::string>& params );

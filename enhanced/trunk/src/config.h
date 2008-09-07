@@ -46,7 +46,7 @@ typedef char JE_EditorItemAvailType[100]; /* [1..100] */
 struct JE_SaveFileType
 {
 	JE_word encode;
-	JE_word level;
+	unsigned int level;
 	JE_PItemsType items;
 	unsigned long score;
 	unsigned long score2;
@@ -84,7 +84,7 @@ extern bool smoothies[9];
 extern int starShowVGASpecialCode;
 extern StarDatType starDat[MAX_STARS];
 extern JE_word starY;
-extern JE_word lastCubeMax, cubeMax;
+extern unsigned int lastCubeMax, cubeMax;
 extern JE_word cubeList[4];
 extern bool gameHasRepeated;
 extern int difficultyLevel, oldDifficultyLevel, initialDifficulty;
@@ -101,7 +101,7 @@ extern int portConfig[10];
 extern bool portConfigDone;
 extern JE_PortPowerType portPower, lastPortPower;
 extern char lastLevelName[11], levelName[11];
-extern int mainLevel, nextLevel, saveLevel;
+extern unsigned int mainLevel, nextLevel, saveLevel;
 //extern JE_KeySettingType keySettings;
 extern int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
 extern bool filterActive, filterFade, filterFadeStart;

@@ -294,13 +294,6 @@ int enemyShapeTables[6]; /* [1..6] */
 bool uniqueEnemy;
 JE_word superEnemy254Jump;
 
-/*ExplosionData*/
-ExplosionsType explosions[EXPLOSION_MAX]; /* [1..ExplosionMax] */
-int explodeAvail[EXPLOSION_MAX]; /* [1..ExplosionMax] */
-int explosionFollowAmount;
-bool playerFollow, fixedExplosions;
-int explosionMoveUp;
-
 /*EnemyShotData*/
 bool fireButtonHeld;
 bool enemyShotAvail[ENEMY_SHOT_MAX]; /* [1..Enemyshotmax] */
@@ -389,16 +382,6 @@ JE_word playerHX[20], playerHY[20]; /* [1..20] */
 
 JE_word neat;
 
-
-/*Repeating Explosions*/
-JE_REXtype REXavail;
-REXDatType REXdat[20]; /* [1..20] */
-
-/*SuperPixels*/
-int SPZ[MAX_SP + 1]; /* [0..MaxSP] */
-SPLType SPL[MAX_SP + 1]; /* [0..MaxSP] */
-JE_word lastSP;
-
 /*MegaData*/
 JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 
@@ -410,7 +393,7 @@ long tempL;
 float tempR, tempR2;
 
 bool tempB;
-int temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
+int temp, temp2, temp3, temp4, temp5, tempPos;
 JE_word tempX, tempY, tempX2, tempY2;
 JE_word tempW, tempW2, tempW3, tempW4, tempW5, tempOfs;
 
@@ -433,6 +416,71 @@ bool linkToPlayer;
 int baseArmor, baseArmor2;
 JE_word shipGr, shipGr2;
 Uint8 *shipGrPtr, *shipGr2ptr;
+
+//--------------------------------------------------------------------------
+
+// Explosions
+Explosion explosions[MAX_EXPLOSIONS];
+int explosion_follow_amount_x, explosion_follow_amount_y;
+bool playerFollow, fixedExplosions;
+int explosionMoveUp;
+
+RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
+
+// Superpixels
+SuperPixel superpixels[MAX_SUPERPIXELS];
+unsigned int last_superpixel;
+
+void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth, Uint8 color ) /* superpixels */
+{
+	for (unsigned int i = 0; i < num; i++)
+	{
+		float tempr = ((float)rand() / RAND_MAX) * M_PI*2;
+		int tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
+		int tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
+
+		if (++last_superpixel > MAX_SUPERPIXELS) last_superpixel = 0;
+
+		superpixels[last_superpixel].x = tempx + x;
+		superpixels[last_superpixel].y = tempy + y;
+		superpixels[last_superpixel].delta_x = tempx;
+		superpixels[last_superpixel].delta_y = tempy;
+		superpixels[last_superpixel].color = color;
+		superpixels[last_superpixel].life = 15;
+	}
+}
+
+void draw_superpixels( void )
+{
+	for (unsigned int i = MAX_SUPERPIXELS; i--;)
+	{
+		if (superpixels[i].life > 0)
+		{
+			superpixels[i].x += superpixels[i].delta_x;
+			superpixels[i].y += superpixels[i].delta_y;
+
+			if (superpixels[i].x < scr_width && superpixels[i].y < scr_height)
+			{
+				Uint8* s = (Uint8 *)VGAScreen; /* screen pointer, 8-bit specific */
+				s += superpixels[i].y * scr_width + superpixels[i].x;
+				
+				*s = (((*s & 0x0f) + superpixels[i].life) >> 1) + superpixels[i].color;
+				if (superpixels[i].x > 0)
+					*(s-1) = (((*(s-1) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
+				if (superpixels[i].x < scr_width-1)
+					*(s+1) = (((*(s+1) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
+				if (superpixels[i].y > 0)
+					*(s-scr_width) = (((*(s-scr_width) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
+				if (superpixels[i].y < scr_height - 1)
+					*(s+scr_width) = (((*(s+scr_width) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
+			}
+			
+			superpixels[i].life--;
+		}
+	}
+}
+
+//--------------------------------------------------------------------------
 
 void JE_getShipInfo( void )
 {
@@ -1398,24 +1446,28 @@ void JE_setupExplosion( int x, int y, int explodeType )
 	
 	if (y > -16 && y < 190)
 	{
-		for(int i = 0; i < EXPLOSION_MAX; i++)
+		for (int i = 0; i < MAX_EXPLOSIONS; i++)
 		{
-			if (explodeAvail[i] == 0)
+			if (explosions[i].life == 0)
 			{
-				explosions[i].explodeLoc = y * scr_width + x;
+				explosions[i].x = x;
+				explosions[i].y = y;
+
 				if (explodeType == 6)
 				{
-					explosions[i].explodeLoc += 12 * scr_width + 2;
-				} else if (explodeType == 98)
-				{
+					explosions[i].x += 2;
+					explosions[i].y += 12;
+				} else if (explodeType == 98) {
 					explodeType = 6;
 				}
-				explosions[i].explodeGr = explodeData[explodeType].egr + 1;
-				explodeAvail[i] = explodeData[explodeType].etime;
-				explosions[i].followPlayer = playerFollow;
-				explosions[i].fixedExplode = fixedExplosions;
-				explosions[i].fixedMovement = explosionMoveUp;
-				return;
+
+				explosions[i].explode_gr = explodeData[explodeType].egr + 1;
+				explosions[i].life = explodeData[explodeType].etime;
+				explosions[i].follow_player = playerFollow;
+				explosions[i].fixed_explode = fixedExplosions;
+				explosions[i].delta_x = 0;
+				explosions[i].delta_y = explosionMoveUp;
+				break;
 			}
 		}
 	}
@@ -1423,7 +1475,6 @@ void JE_setupExplosion( int x, int y, int explodeType )
 
 void JE_setupExplosionLarge( bool enemyGround, int exploNum, int x, int y )
 {
-
 	if (y >= 0)
 	{
 		if (enemyGround)
@@ -1449,18 +1500,18 @@ void JE_setupExplosionLarge( bool enemyGround, int exploNum, int x, int y )
 			tempB = false;
 		}
 		
-		if (exploNum)
+		if (exploNum > 0)
 		{
-			for (int z = 0; z < 20 /*REX maximum*/; z++)
+			for (int i = 0; i < MAX_REPEATING_EXPLOSIONS; i++)
 			{
-				if (REXavail[z] == 0)
+				if (rep_explosions[i].life == 0)
 				{
-					REXavail[z] = exploNum;
-					REXdat[z].delay = 2;
-					REXdat[z].ex = tempX;
-					REXdat[z].ey = tempY;
-					REXdat[z].big = tempB;
-					return;
+					rep_explosions[i].life = exploNum;
+					rep_explosions[i].delay = 2;
+					rep_explosions[i].x = tempX;
+					rep_explosions[i].y = tempY;
+					rep_explosions[i].big = tempB;
+					break;
 				}
 			}
 		}
@@ -1626,56 +1677,4 @@ void JE_resetPlayerH( void )
 		}
 	}
 	playerHNotReady = false;
-}
-
-void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ) /* superpixels */
-{
-	float tempr;
-	int tempx, tempy;
-	
-	for (int temp = 0; temp < num; temp++)
-	{
-		if (++lastSP > MAX_SP)
-			lastSP = 0;
-		tempr = ((float)rand() / RAND_MAX) * (M_PI * 2);
-		tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		SPL[lastSP].location = (tempy + y) * scr_width + (tempx + x);
-		SPL[lastSP].movement = tempy * scr_width + tempx + scr_width;
-		SPL[lastSP].color = color;
-		SPZ[lastSP] = 15;
-	}
-}
-
-void JE_drawSP( void )
-{
-	Uint8 *s; /* screen pointer, 8-bit specific */
-	
-	int i = MAX_SP + 1;
-	
-	while (i--)
-	{
-		if (SPZ[i])
-		{
-			SPL[i].location += SPL[i].movement;
-			
-			if (SPL[i].location < scr_height * scr_width)
-			{
-				s = (Uint8 *)VGAScreen;
-				s += SPL[i].location;
-				
-				*s = (((*s & 0x0f) + SPZ[i]) >> 1) + SPL[i].color;
-				if (SPL[i].location > 1)
-					*(s - 1) = (((*(s - 1) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location < scr_height * scr_width - 1)
-					*(s + 1) = (((*(s + 1) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location > scr_width)
-					*(s - scr_width) = (((*(s - scr_width) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-				if (SPL[i].location < (scr_height - 1) * scr_width)
-					*(s + scr_width) = (((*(s + scr_width) & 0x0f) + (SPZ[i] >> 1)) >> 1) + SPL[i].color;
-			}
-			
-			SPZ[i]--;
-		}
-	}
 }

@@ -28,12 +28,9 @@
 static const int SA = 7;
 
 static const int MAX_PWEAPON = 81;
-static const int EXPLOSION_MAX = 200;
 static const int ENEMY_SHOT_MAX = 60;
 
 static const int CURRENT_KEY_SPEED = 1; // Keyboard/Joystick movement rate
-
-static const int MAX_SP = 100;
 
 struct JE_SingleEnemyType
 {
@@ -144,17 +141,6 @@ struct JE_MegaDataType3
 typedef JE_MultiEnemyType JE_EnemyType;
 typedef int JE_EnemyAvailType[100]; /* [1..100] */
 
-typedef int JE_REXtype[20]; /* [1..20] */
-
-struct ExplosionsType
-{
-	Sint32 explodeLoc;
-	JE_word explodeGr;
-	int followPlayer;
-	int fixedExplode;
-	Sint16 fixedMovement;
-};
-
 struct EnemyShotType
 {
 	int sx, sy;
@@ -177,20 +163,6 @@ struct PlayerShotDataType
 	JE_word shotGr, shotAni, shotAniMax;
 	Uint8 shotDmg;
 	int shotBlastFilter, chainReaction, playerNumber, aimAtEnemy, aimDelay, aimDelayMax;
-};
-
-struct REXDatType
-{
-	int delay;
-	JE_word ex, ey;
-	bool big;
-};
-
-struct SPLType
-{
-	JE_word location;
-	JE_word movement;
-	Uint8 color;
 };
 
 extern int fromTime;
@@ -288,11 +260,6 @@ extern JE_word enemyOnScreen;
 extern int enemyShapeTables[6];
 extern bool uniqueEnemy;
 extern JE_word superEnemy254Jump;
-extern ExplosionsType explosions[EXPLOSION_MAX];
-extern int explodeAvail[EXPLOSION_MAX];
-extern int explosionFollowAmount;
-extern bool playerFollow, fixedExplosions;
-extern int explosionMoveUp;
 extern bool fireButtonHeld;
 extern bool enemyShotAvail[ENEMY_SHOT_MAX];
 extern EnemyShotType enemyShot[ENEMY_SHOT_MAX];
@@ -345,11 +312,6 @@ extern int chargeWait, chargeLevel, chargeMax, chargeGr, chargeGrWait;
 extern bool playerHNotReady;
 extern JE_word playerHX[20], playerHY[20];
 extern JE_word neat;
-extern JE_REXtype REXavail;
-extern REXDatType REXdat[20];
-extern int SPZ[MAX_SP + 1];
-extern SPLType SPL[MAX_SP + 1];
-extern JE_word lastSP;
 extern JE_word megaDataOfs, megaData2Ofs, megaData3Ofs;
 extern JE_word avail;
 extern JE_word tempCount;
@@ -357,7 +319,7 @@ extern int tempI, tempI2, tempI3, tempI4, tempI5;
 extern long tempL;
 extern float tempR, tempR2;
 extern bool tempB;
-extern int temp, temp2, temp3, temp4, temp5, tempREX, tempPos;
+extern int temp, temp2, temp3, temp4, temp5, tempPos;
 extern JE_word tempX, tempY, tempX2, tempY2;
 extern JE_word tempW, tempW2, tempW3, tempW4, tempW5, tempOfs;
 extern bool doNotSaveBackup;
@@ -372,6 +334,55 @@ extern bool linkToPlayer;
 extern int baseArmor, baseArmor2;
 extern JE_word shipGr, shipGr2;
 extern Uint8 *shipGrPtr, *shipGr2ptr;
+
+//--------------------------------------------------------------------------
+
+// Explosions
+struct Explosion
+{
+	unsigned int life;
+	unsigned int x, y;
+	int delta_x, delta_y;
+	bool follow_player;
+	bool fixed_explode;
+	JE_word explode_gr;
+};
+
+struct RepeatingExplosion
+{
+	unsigned int delay;
+	unsigned int life;
+	unsigned int x, y;
+	bool big;
+};
+
+static const int MAX_EXPLOSIONS = 200;
+static const int MAX_REPEATING_EXPLOSIONS = 20;
+
+extern Explosion explosions[MAX_EXPLOSIONS];
+extern int explosion_follow_amount_x, explosion_follow_amount_y;
+extern RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
+extern bool playerFollow, fixedExplosions;
+extern int explosionMoveUp;
+
+// Superpixels
+struct SuperPixel
+{
+	unsigned int x, y;
+	unsigned int life;
+	int delta_x, delta_y;
+	Uint8 color;
+};
+
+static const int MAX_SUPERPIXELS = 101;
+
+extern SuperPixel superpixels[MAX_SUPERPIXELS];
+extern unsigned int last_superpixel;
+
+void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth, Uint8 color );
+void draw_superpixels( void );
+
+//--------------------------------------------------------------------------
 
 void JE_getShipInfo( void );
 JE_word JE_SGr( JE_word ship, Uint8 **ptr );
@@ -405,9 +416,6 @@ void JE_drawArmor( void );
 void JE_portConfigs( void );
 
 void JE_resetPlayerH( void );
-
-void JE_doSP( JE_word x, JE_word y, JE_word num, int explowidth, Uint8 color ); /*SuperPixels*/
-void JE_drawSP( void );
 
 void JE_drawOptionLevel( void );
 

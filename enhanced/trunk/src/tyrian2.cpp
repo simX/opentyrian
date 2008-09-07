@@ -621,72 +621,69 @@ enemy_still_exists:
 						if (galagaMode && (enemy[i].eyc == 0 || (rand() % 400) >= galagaShotFreq))
 							goto draw_enemy_end;
 
-						/* <MXD> replace with a switch */
-						if (temp3 == 252) /* Savara Boss DualMissile */
+						switch (temp3)
 						{
+						case 252: // Savara Boss DualMissile
 							if (enemy[i].ey > 20)
 							{
-								explosionMoveUp = -scr_width * 2;
+								explosionMoveUp = -2;
 								JE_setupExplosion(tempX - 8 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
 								JE_setupExplosion(tempX + 4 + tempMapXOfs, tempY - 20 - backMove * 8, 6);
 								explosionMoveUp = 0;
 							}
-						} else if (temp3 > 250) {
-							if (temp3 == 251) /* Suck-O-Magnet */
+							break;
+						case 251: // Suck-O-Magnet
+							tempI4 = 4 - (abs(PX - tempX) + abs(PY - tempY)) / 100;
+							if (PX > tempX)
 							{
-								tempI4 = 4 - (abs(PX - tempX) + abs(PY - tempY)) / 100;
-								if (PX > tempX)
+								lastTurn2 -= tempI4;
+							} else {
+								lastTurn2 += tempI4;
+							}
+							break;
+						case 253: // Left ShortRange Magnet
+							if (abs(PX + 25 - 14 - tempX) < 24 && abs(PY - tempY) < 28)
+							{
+								lastTurn2 += 2;
+							}
+							if (twoPlayerMode &&
+							   (abs(PXB - 14 - tempX) < 24 && abs(PYB - tempY) < 28))
+							{
+								lastTurn2B += 2;
+							}
+							break;
+						case 254: // Left ShortRange Magnet
+							if (abs(PX + 25 - 14 - tempX) < 24 && abs(PY - tempY) < 28)
+							{
+								lastTurn2 -= 2;
+							}
+							if (twoPlayerMode &&
+							   (abs(PXB - 14 - tempX) < 24 && abs(PYB - tempY) < 28))
+							{
+								lastTurn2B -= 2;
+							}
+							break;
+						case 255: // Magneto RePulse!!
+							if (difficultyLevel != 1) /*DIF*/
+							{
+								if (j == 3)
 								{
-									lastTurn2 -= tempI4;
+									enemy[i].filter = 112;
 								} else {
-									lastTurn2 += tempI4;
-								}
-							} else if (temp3 == 253) /* Left ShortRange Magnet */
-							{
-								if (abs(PX + 25 - 14 - tempX) < 24 && abs(PY - tempY) < 28)
-								{
-									lastTurn2 += 2;
-								}
-								if (twoPlayerMode &&
-								   (abs(PXB - 14 - tempX) < 24 && abs(PYB - tempY) < 28))
-								{
-									lastTurn2B += 2;
-								}
-							} else if (temp3 == 254) /* Left ShortRange Magnet */
-							{
-								if (abs(PX + 25 - 14 - tempX) < 24 && abs(PY - tempY) < 28)
-								{
-									lastTurn2 -= 2;
-								}
-								if (twoPlayerMode &&
-								   (abs(PXB - 14 - tempX) < 24 && abs(PYB - tempY) < 28))
-								{
-									lastTurn2B -= 2;
-								}
-							} else if (temp3 == 255) /* Magneto RePulse!! */
-							{
-								if (difficultyLevel != 1) /*DIF*/
-								{
-									if (j == 3)
+									tempI4 = 4 - (abs(PX - tempX) + abs(PY - tempY)) / 20;
+									if (tempI4 > 0)
 									{
-										enemy[i].filter = 112;
-									} else {
-										tempI4 = 4 - (abs(PX - tempX) + abs(PY - tempY)) / 20;
-										if (tempI4 > 0)
+										if (PX > tempX)
 										{
-											if (PX > tempX)
-											{
-												lastTurn2 += tempI4;
-											} else {
-												lastTurn2 -= tempI4;
-											}
+											lastTurn2 += tempI4;
+										} else {
+											lastTurn2 -= tempI4;
 										}
 									}
 								}
 							}
-						} else {
-
-							/*Rot*/
+							break;
+						default: // Rot
 							for (tempCount = weapons[temp3].multi; tempCount > 0; tempCount--)
 							{
 								for (b = 0; b < ENEMY_SHOT_MAX; b++)
@@ -747,18 +744,18 @@ enemy_still_exists:
 										enemyShot[b].sxm = weapons[temp3].sx[tempPos-1];
 										enemyShot[b].sym = weapons[temp3].sy[tempPos-1];
 										break;
-									case 3:
-										enemyShot[b].sxc = -weapons[temp3].acceleration;
-										enemyShot[b].syc = weapons[temp3].accelerationx;
-
-										enemyShot[b].sxm = -weapons[temp3].sy[tempPos-1];
-										enemyShot[b].sym = -weapons[temp3].sx[tempPos-1];
-										break;
 									case 2:
 										enemyShot[b].sxc = weapons[temp3].acceleration;
 										enemyShot[b].syc = -weapons[temp3].acceleration;
 
 										enemyShot[b].sxm = weapons[temp3].sy[tempPos-1];
+										enemyShot[b].sym = -weapons[temp3].sx[tempPos-1];
+										break;
+									case 3:
+										enemyShot[b].sxc = -weapons[temp3].acceleration;
+										enemyShot[b].syc = weapons[temp3].accelerationx;
+
+										enemyShot[b].sxm = -weapons[temp3].sy[tempPos-1];
 										enemyShot[b].sym = -weapons[temp3].sx[tempPos-1];
 										break;
 								}
@@ -778,12 +775,10 @@ enemy_still_exists:
 
 									if (twoPlayerMode)
 									{
-
 										if (playerAliveB && !playerAlive)
 										{
 											temp = 1;
-										} else if (playerAlive && !playerAliveB)
-										{
+										} else if (playerAlive && !playerAliveB) {
 											temp = 0;
 										} else {
 											temp = rand() % 2;
@@ -816,7 +811,7 @@ enemy_still_exists:
 									enemyShot[b].sym = ot_round(((float)tempI2 / tempI3) * temp4);
 								}
 							}
-
+							break;
 						}
 					}
 				}
@@ -1217,7 +1212,7 @@ start_level_first:
 	backMove = 1;
 	backMove2 = 2;
 	backMove3 = 3;
-	explodeMove = scr_width * 2;
+	explodeMove = 2;
 	enemiesActive = true;
 	for(temp = 0; temp < 3; temp++)
 	{
@@ -1401,15 +1396,8 @@ start_level_first:
 		JE_loadItemDat();
 	}
 
-	for (int i = 0; i < 100; i++) {
-		enemyAvail[i] = 1;
-	}
-	for (int i = 0; i < EXPLOSION_MAX; i++) {
-		explodeAvail[i] = 0;
-	}
-	for (int i = 0; i < ENEMY_SHOT_MAX; i++) {
-		enemyShotAvail[i] = true;
-	}
+	std::fill_n(enemyAvail, 100, 1);
+	std::fill_n(enemyShotAvail, ENEMY_SHOT_MAX, true);
 
 	/*Initialize Shots*/
 	memset(playerShotData,   0, sizeof(playerShotData));
@@ -1419,9 +1407,10 @@ start_level_first:
 
 	memset(button,           0, sizeof(button));
 
-	memset(REXavail,         0, sizeof(REXavail));
-	memset(REXdat,           0, sizeof(REXdat));
 	memset(globalFlags,      0, sizeof(globalFlags));
+
+	std::fill_n(explosions, MAX_EXPLOSIONS, Explosion());
+	std::fill_n(rep_explosions, MAX_REPEATING_EXPLOSIONS, RepeatingExplosion());
 
 	/* --- Clear Sound Queue --- */
 	memset(soundQueue,       0, sizeof(soundQueue));
@@ -1447,8 +1436,8 @@ start_level_first:
 	levelTimer = false;
 	randomExplosions = false;
 
-	lastSP = 0;
-	memset(SPZ, 0, sizeof(SPZ));
+	last_superpixel = 0;
+	std::fill_n(superpixels, MAX_SUPERPIXELS, SuperPixel());
 
 	returnActive = false;
 
@@ -2138,7 +2127,7 @@ level_loop:
 				} else {
 					if (tempW > 1000)
 					{
-						JE_doSP(tempShotX+1 + 6, tempShotY + 6, 5, 3, (tempW / 1000) << 4);
+						create_superpixels(tempShotX+1 + 6, tempShotY + 6, 5, 3, (tempW / 1000) << 4);
 						tempW = tempW % 1000;
 					}
 					if (tempW > 500)
@@ -2255,7 +2244,7 @@ level_loop:
 										enemy[b].armorleft -= tempI2;
 										JE_setupExplosion(tempShotX, tempShotY, 0);
 									} else {
-									JE_doSP(tempShotX + 6, tempShotY + 6, tempI2 / 2 + 3, tempI2 / 4 + 2, temp2);
+									create_superpixels(tempShotX + 6, tempShotY + 6, tempI2 / 2 + 3, tempI2 / 4 + 2, temp2);
 								}
 							}
 							
@@ -2525,16 +2514,25 @@ draw_player_shot_loop_end:
 				{
 					enemyShotAvail[z] = 1;
 				} else {
-					
-					if (((temp3 = 1)
-					     && playerAlive != 0
-					     && enemyShot[z].sx - PX > sAniXNeg && enemyShot[z].sx - PX < sAniX
-					     && enemyShot[z].sy - PY > sAniYNeg && enemyShot[z].sy - PY < sAniY)
-					 || ((temp3 = 2)
-					     && twoPlayerMode != 0
-					     && playerAliveB != 0
-					     && enemyShot[z].sx - PXB > sAniXNeg && enemyShot[z].sx - PXB < sAniX
-					     && enemyShot[z].sy - PYB > sAniYNeg && enemyShot[z].sy - PYB < sAniY))
+					bool yes = false;
+
+					if (playerAlive != 0
+					    && enemyShot[z].sx - PX > sAniXNeg && enemyShot[z].sx - PX < sAniX
+					    && enemyShot[z].sy - PY > sAniYNeg && enemyShot[z].sy - PY < sAniY)
+					{
+						temp3 = 1;
+						yes = true;
+					}
+					if (twoPlayerMode != 0
+					    && playerAliveB != 0
+					    && enemyShot[z].sx - PXB > sAniXNeg && enemyShot[z].sx - PXB < sAniX
+					    && enemyShot[z].sy - PYB > sAniYNeg && enemyShot[z].sy - PYB < sAniY)
+					{
+						temp3 = 2;
+						yes = true;
+					}
+
+					if (yes)
 					{
 						tempX = enemyShot[z].sx;
 						tempY = enemyShot[z].sy;
@@ -2655,67 +2653,68 @@ enemy_shot_draw_overflow:
 
 	/*-------------------------- Sequenced Explosions -------------------------*/
 	enemyStillExploding = false;
-	for (tempREX = 0; tempREX < 20; tempREX++)
+	for (int i = 0; i < MAX_REPEATING_EXPLOSIONS; i++)
 	{
-		if (REXavail[tempREX] != 0)
+		if (rep_explosions[i].life > 0)
 		{
 			enemyStillExploding = true;
-			if (REXdat[tempREX].delay > 0)
+			if (rep_explosions[i].delay > 0)
 			{
-				REXdat[tempREX].delay--;
-			} else {
-				REXdat[tempREX].ey += backMove2 + 1;
-				tempX = REXdat[tempREX].ex + (rand() % 24) - 12;
-				tempY = REXdat[tempREX].ey + (rand() % 27) - 24;
-				if (REXdat[tempREX].big)
-				{
-					JE_setupExplosionLarge(false, 2, tempX, tempY);
-					if (REXavail[tempREX] == 1 || rand() % 5 == 1)
-					{
-						soundQueue[7] = 11;
-					} else {
-						soundQueue[6] = 9;
-					}
-					REXdat[tempREX].delay = 4 + (rand() % 3);
-				} else {
-					JE_setupExplosion(tempX, tempY, 1);
-					soundQueue[5] = 4;
-					REXdat[tempREX].delay = 3;
-				}
-				REXavail[tempREX]--;
+				rep_explosions[i].delay--;
+				continue;
 			}
+			
+			rep_explosions[i].y += backMove2 + 1;
+			unsigned int explosion_x = rep_explosions[i].x + (rand() % 24) - 12;
+			unsigned   int explosion_y = rep_explosions[i].y + (rand() % 27) - 24;
+
+			if (rep_explosions[i].big)
+			{
+				JE_setupExplosionLarge(false, 2, explosion_x, explosion_y);
+				if (rep_explosions[i].life == 1 || rand() % 5 == 1)
+				{
+					soundQueue[7] = 11;
+				} else {
+					soundQueue[6] = 9;
+				}
+				rep_explosions[i].delay = 4 + (rand() % 3);
+			} else {
+				JE_setupExplosion(explosion_x, explosion_y, 1);
+				soundQueue[5] = 4;
+				rep_explosions[i].delay = 3;
+			}
+			rep_explosions[i].life--;
 		}
 	}
 
 	/*---------------------------- Draw Explosions ----------------------------*/
-	for (j = 0; j < EXPLOSION_MAX; j++)
+	for (int j = 0; j < MAX_EXPLOSIONS; j++)
 	{
-		if (explodeAvail[j] != 0)
+		if (explosions[j].life > 0)
 		{
-			l = 0;
-			if (explosions[j].followPlayer == 1)
+			if (!explosions[j].fixed_explode)
 			{
-				l = explosionFollowAmount;
+				explosions[j].explode_gr++;
+				explosions[j].y += explodeMove;
+			} else if (explosions[j].follow_player) {
+				explosions[j].x += explosion_follow_amount_x;
+				explosions[j].y += explosion_follow_amount_y;
 			}
-			if (explosions[j].fixedExplode != 1)
-			{
-				explosions[j].explodeGr++;
-				l = explodeMove;
-			}
-			explosions[j].explodeLoc += l + explosions[j].fixedMovement;
+
+			explosions[j].x += explosions[j].delta_x;
+			explosions[j].y += explosions[j].delta_y;
 			
-			s = (Uint8 *)VGAScreen;
-			s += explosions[j].explodeLoc;
+			s = VGAScreen;
+			s += explosions[j].y * scr_width + explosions[j].x;
 			
-			s_limit = (Uint8 *)VGAScreen;
-			s_limit += scr_height * scr_width;
+			s_limit = VGAScreen + scr_width*scr_height;
 			
 			if (s + scr_width * 14 > s_limit)
 			{
-				explodeAvail[j] = 0;
+				explosions[j].life = 0;
 			} else {
 				p = shapes6;
-				p += SDL_SwapLE16(((JE_word *)p)[explosions[j].explodeGr - 1]);
+				p += SDL_SwapLE16(((JE_word *)p)[explosions[j].explode_gr - 1]);
 				
 				if (CVars::r_explosion_blend)
 				{
@@ -2764,8 +2763,7 @@ enemy_shot_draw_overflow:
 					}
 				}
 explosion_draw_overflow:
-				
-				explodeAvail[j]--;
+				explosions[j].life--;
 			}
 		}
 	}
@@ -3061,8 +3059,7 @@ explosion_draw_overflow:
 		/* TODO: NETWORK */
 	}
 
-	/** Test **/
-	JE_drawSP();
+	draw_superpixels();
 
 	/*Filtration*/
 	if (filterActive)
@@ -3097,7 +3094,7 @@ explosion_draw_overflow:
 		backMove = 1;
 		backMove2 = 2;
 		backMove3 = 3;
-		explodeMove = scr_width * 2;
+		explodeMove = 2;
 		stopBackgroundNum = 0;
 		stopBackgrounds = false;
 		if (waitToEndLevel)
@@ -3133,7 +3130,7 @@ explosion_draw_overflow:
 			backMove = 1;
 			backMove2 = 2;
 			backMove3 = 3;
-			explodeMove = scr_width * 2;
+			explodeMove = 2;
 		}
 	}
 
@@ -3270,9 +3267,9 @@ new_game:
 								}
 								break;
 
-							case '?':
-								temp = atoi(strnztcpy(buffer, s + 4, 2));
-								for (i = 0; i < temp; i++)
+							case '?': {
+								unsigned int temp = atoi(strnztcpy(buffer, s + 4, 2));
+								for (unsigned int i = 0; i < temp; i++)
 								{
 									cubeList[i] = atoi(strnztcpy(buffer, s + 3 + (i + 1) * 4, 3));
 								}
@@ -3280,8 +3277,7 @@ new_game:
 								{
 									cubeMax = temp;
 								}
-								break;
-
+								break; }
 							case '!':
 								cubeMax = atoi(strnztcpy(buffer, s + 4, 2));    /*Auto set CubeMax*/
 								break;
@@ -5049,9 +5045,9 @@ void JE_eventSystem( void )
 			backMove2 = eventRec[eventLoc-1].eventdat2;
 			if (backMove2 > 0)
 			{
-				explodeMove = backMove2 * scr_width;
+				explodeMove = backMove2;
 			} else {
-				explodeMove = backMove * scr_width;
+				explodeMove = backMove;
 			}
 			backMove3 = eventRec[eventLoc-1].eventdat3;
 
@@ -5438,7 +5434,7 @@ void JE_eventSystem( void )
 
 			backMove = eventRec[eventLoc-1].eventdat;
 			backMove2 = eventRec[eventLoc-1].eventdat2;
-			explodeMove = backMove2 * scr_width;
+			explodeMove = backMove2;
 			backMove3 = eventRec[eventLoc-1].eventdat3;
 			break;
 		case 31: /* Enemy Fire Override */
@@ -9033,7 +9029,7 @@ void JE_weaponViewFrame( int testshotnum )
 	{
 		s = (Uint8 *)VGAScreen;
 		
-		starDat[i].sLoc += starDat[i].sMov + scr_width;
+		starDat[i].sLoc += starDat[i].sMov + scr_width; // <overflow>
 		
 		if (starDat[i].sLoc < 177 * scr_width)
 		{

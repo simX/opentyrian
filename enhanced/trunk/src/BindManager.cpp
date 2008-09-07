@@ -86,7 +86,7 @@ namespace CCmds
 
 static int isMouse( const std::string& name )
 {
-	static const std::string str = "mouse";
+	const std::string str = "mouse";
 	if (name.compare(0, str.size(), str) == 0) {
 		std::istringstream stream(name.substr(str.size()));
 		unsigned int val;
@@ -122,9 +122,9 @@ KeyBind& BindManager::getBind( SDLKey key ) const
 	return *p->second;
 }
 
-MouseBind& BindManager::getBindMouse( Uint8 button ) const
+MouseBind& BindManager::getBindMouse( unsigned int button ) const
 {
-	std::map<Uint8, MouseBind*>::const_iterator p = mouseBindMap.find(button);
+	std::map<unsigned int, MouseBind*>::const_iterator p = mouseBindMap.find(button);
 	if (p == mouseBindMap.end()) {
 		std::ostringstream s;
 		s << "mouse" << button;
@@ -223,11 +223,11 @@ void BindManager::addBind( SDLKey key, std::string cmd )
 	addBind(key, cmd, toggle);
 }
 
-void BindManager::addBindMouse( Uint8 button, const std::string& cmd, bool toggle )
+void BindManager::addBindMouse( unsigned int button, const std::string& cmd, bool toggle )
 {
 	if (cmd.empty()) return;
 
-	std::map<Uint8, MouseBind*>::iterator i = mouseBindMap.find(button);
+	std::map<unsigned int, MouseBind*>::iterator i = mouseBindMap.find(button);
 	if (i == mouseBindMap.end()) {
 		MouseBind* bind = new MouseBind(button, cmd, toggle);
 		mouseBindMap[button] = bind;
@@ -237,7 +237,7 @@ void BindManager::addBindMouse( Uint8 button, const std::string& cmd, bool toggl
 	}
 }
 
-void BindManager::addBindMouse( Uint8 button, std::string cmd )
+void BindManager::addBindMouse( unsigned int button, std::string cmd )
 {
 	if (cmd.empty()) return;
 
@@ -275,7 +275,7 @@ void BindManager::removeBind( Bind* bind )
 				}
 			}
 		} else if (dynamic_cast<MouseBind*>(bind)) {
-			for (std::map<Uint8, MouseBind*>::iterator i = mouseBindMap.begin(); i != mouseBindMap.end(); ++i) {
+			for (std::map<unsigned int, MouseBind*>::iterator i = mouseBindMap.begin(); i != mouseBindMap.end(); ++i) {
 				if (i->second == bind) {
 					mouseBindMap.erase(i);
 					break;
@@ -308,9 +308,9 @@ void BindManager::removeBind( SDLKey key )
 	}
 }
 
-void BindManager::removeBindMouse( Uint8 button )
+void BindManager::removeBindMouse( unsigned int button )
 {
-	std::map<Uint8, MouseBind*>::iterator p = mouseBindMap.find(button);
+	std::map<unsigned int, MouseBind*>::iterator p = mouseBindMap.find(button);
 	if (p != mouseBindMap.end()) {
 		binds.erase(binds.find(p->second));
 		delete p->second;

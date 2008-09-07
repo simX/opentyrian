@@ -128,7 +128,7 @@ JE_word starY;
 
 
 /* CubeData */
-JE_word lastCubeMax, cubeMax;
+unsigned int lastCubeMax, cubeMax;
 JE_word cubeList[4]; /* [1..4] */
 
 /* High-Score Stuff */
@@ -156,7 +156,7 @@ JE_PortPowerType portPower, lastPortPower;
 
 /* Level Data */
 char lastLevelName[11], levelName[11]; /* string [10] */
-int mainLevel, nextLevel, saveLevel;   /*Current Level #*/
+unsigned int mainLevel, nextLevel, saveLevel;   /*Current Level #*/
 
 /* Keyboard Junk */
 //JE_KeySettingType keySettings;

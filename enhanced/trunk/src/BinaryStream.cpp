@@ -68,7 +68,7 @@ void OBinaryStream::put( const std::string& data )
 
 Uint8 IBinaryStream::get8( )
 {
-	return mStream.get();
+	return Uint8(mStream.get());
 }
 
 Uint16 IBinaryStream::get16( )
@@ -105,7 +105,7 @@ std::string IBinaryStream::getStr( )
 
 	for (unsigned int i = 0; i < size; i++)
 	{
-		str[i] = mStream.get();
+		str[i] = char(mStream.get());
 	}
 
 	return str;

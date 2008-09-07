@@ -126,9 +126,9 @@ void show_datafile_error( const std::string& filename )
 
 bool JE_find( const std::string& s )
 {
-	FILE *f;
+	FILE *f = fopen(s.c_str(), "r");
 
-	if ((f = fopen(s.c_str(), "r")))
+	if (f)
 	{
 		fclose(f);
 		return true;
