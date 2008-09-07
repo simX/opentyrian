@@ -362,6 +362,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\superpixel.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tyrian2.h"
 				>
 			</File>
@@ -551,6 +555,10 @@
 			</File>
 			<File
 				RelativePath=".\src\starlib.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\superpixel.cpp"
 				>
 			</File>
 			<File

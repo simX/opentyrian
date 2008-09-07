@@ -46,6 +46,7 @@
 #include "BindManager.h"
 #include "KeyNames.h"
 #include "pcxload.h"
+#include "superpixel.h"
 
 #include "tyrian2.h"
 
@@ -1436,8 +1437,7 @@ start_level_first:
 	levelTimer = false;
 	randomExplosions = false;
 
-	last_superpixel = 0;
-	std::fill_n(superpixels, MAX_SUPERPIXELS, SuperPixel());
+	init_superpixels();
 
 	returnActive = false;
 

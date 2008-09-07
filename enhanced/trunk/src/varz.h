@@ -365,23 +365,6 @@ extern RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
 extern bool playerFollow, fixedExplosions;
 extern int explosionMoveUp;
 
-// Superpixels
-struct SuperPixel
-{
-	unsigned int x, y;
-	unsigned int life;
-	int delta_x, delta_y;
-	Uint8 color;
-};
-
-static const int MAX_SUPERPIXELS = 101;
-
-extern SuperPixel superpixels[MAX_SUPERPIXELS];
-extern unsigned int last_superpixel;
-
-void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth, Uint8 color );
-void draw_superpixels( void );
-
 //--------------------------------------------------------------------------
 
 void JE_getShipInfo( void );

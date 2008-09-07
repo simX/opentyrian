@@ -427,59 +427,6 @@ int explosionMoveUp;
 
 RepeatingExplosion rep_explosions[MAX_REPEATING_EXPLOSIONS];
 
-// Superpixels
-SuperPixel superpixels[MAX_SUPERPIXELS];
-unsigned int last_superpixel;
-
-void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth, Uint8 color ) /* superpixels */
-{
-	for (unsigned int i = 0; i < num; i++)
-	{
-		float tempr = ((float)rand() / RAND_MAX) * M_PI*2;
-		int tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		int tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-
-		if (++last_superpixel > MAX_SUPERPIXELS) last_superpixel = 0;
-
-		superpixels[last_superpixel].x = tempx + x;
-		superpixels[last_superpixel].y = tempy + y;
-		superpixels[last_superpixel].delta_x = tempx;
-		superpixels[last_superpixel].delta_y = tempy;
-		superpixels[last_superpixel].color = color;
-		superpixels[last_superpixel].life = 15;
-	}
-}
-
-void draw_superpixels( void )
-{
-	for (unsigned int i = MAX_SUPERPIXELS; i--;)
-	{
-		if (superpixels[i].life > 0)
-		{
-			superpixels[i].x += superpixels[i].delta_x;
-			superpixels[i].y += superpixels[i].delta_y;
-
-			if (superpixels[i].x < scr_width && superpixels[i].y < scr_height)
-			{
-				Uint8* s = (Uint8 *)VGAScreen; /* screen pointer, 8-bit specific */
-				s += superpixels[i].y * scr_width + superpixels[i].x;
-				
-				*s = (((*s & 0x0f) + superpixels[i].life) >> 1) + superpixels[i].color;
-				if (superpixels[i].x > 0)
-					*(s-1) = (((*(s-1) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
-				if (superpixels[i].x < scr_width-1)
-					*(s+1) = (((*(s+1) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
-				if (superpixels[i].y > 0)
-					*(s-scr_width) = (((*(s-scr_width) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
-				if (superpixels[i].y < scr_height - 1)
-					*(s+scr_width) = (((*(s+scr_width) & 0x0f) + (superpixels[i].life >> 1)) >> 1) + superpixels[i].color;
-			}
-			
-			superpixels[i].life--;
-		}
-	}
-}
-
 //--------------------------------------------------------------------------
 
 void JE_getShipInfo( void )
