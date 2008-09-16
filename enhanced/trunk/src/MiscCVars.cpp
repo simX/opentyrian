@@ -116,12 +116,18 @@ namespace CCmds
 				}
 			}
 		}
+
+		static void comment( const std::vector<std::string>& params )
+		{
+			// No-op
+		}
 	}
  
 	CCmd set("set", CCmd::NONE, "Sets the value of a CVar. Usage: set [cvar] [value]", Func::set);
 	CCmd echo("echo", CCmd::NONE, "Prints a message to console. Usage: echo [message]", Func::echo);
 	CCmd help("help", CCmd::NONE, "Prints help text for a CCmd or CVar. Usage: help [cvar|ccmd]", Func::help);
 	CCmd list("list", CCmd::NONE, "Searches cvar help text or lists all cvars or ccmds. Usage: list [cvar|ccmd|string to search]", Func::list);
+	CCmd comment("#", CCmd::NONE, "Does nothing. Useful for placing comments in scripts.", Func::comment);
 }
 
 namespace CVars

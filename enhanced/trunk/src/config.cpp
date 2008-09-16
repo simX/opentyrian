@@ -36,12 +36,15 @@
 #include "config.h"
 
 #include <fstream>
+#include "boost/filesystem.hpp"
+#include "boost/filesystem/fstream.hpp"
 #include <stdio.h>
 #include <string.h>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
 
+namespace fs = boost::filesystem;
 
 /* Configuration Load/Save handler */
 
@@ -410,7 +413,7 @@ void JE_loadGame( int slot )
 
 namespace CVars
 {
-	CVarInt game_speed("game_speed", CVar::CONFIG, "Game speed. 0-4", 3, rangeCheck<0,4>);
+	CVarInt game_speed("game_speed", CVar::CONFIG, "Game speed. 0-4", 3, rangeBind(0, 4));
 }
 
 void JE_initProcessorType( void )
@@ -528,12 +531,12 @@ void JE_setNewGameSpeed( void )
 namespace CVars
 {
 	// Video
-	CVarInt gamma_correction("gamma_correction", CVar::CONFIG, "Gamma correction. 0-3", 0, rangeCheck<0,3>);
+	CVarInt gamma_correction("gamma_correction", CVar::CONFIG, "Gamma correction. 0-3", 0, rangeBind(0, 3));
 	CVarBool fullscreen_enabled("fullscreen_enabled", CVar::CONFIG, "Fullscreen.", false);
 
 	// Input devices // TODO will probably be removed
-	CVarInt input_dev1("input_dev1", CVar::CONFIG, "Input device for player 1. 1-3", 1, rangeCheck<1,3>);
-	CVarInt input_dev2("input_dev2", CVar::CONFIG, "Input device for player 2. 1-3", 2, rangeCheck<1,3>);
+	CVarInt input_dev1("input_dev1", CVar::CONFIG, "Input device for player 1. 1-3", 1, rangeBind(1, 3));
+	CVarInt input_dev2("input_dev2", CVar::CONFIG, "Input device for player 2. 1-3", 2, rangeBind(1, 3));
 }
 
 void JE_loadConfiguration( void )
@@ -634,6 +637,17 @@ void JE_loadConfiguration( void )
 
 void JE_saveConfiguration( void )
 {
+	try
+	{
+		fs::create_directory("save"); // Does nothing if dir already exists
+	}
+	catch (const fs::filesystem_error& ex)
+	{
+		Console::get() << "\a7Error:\ax Unable to create save directory: " << ex.what() << '\n'
+			<< "Saving disabled." << std::endl;
+		return;
+	}
+
 	{
 		std::ofstream file("save/tyrian.hi", std::ios_base::out | std::ios_base::binary);
 
@@ -715,5 +729,28 @@ void JE_saveConfiguration( void )
 #if (_BSD_SOURCE || _XOPEN_SOURCE >= 500)
 		sync();
 #endif
+	}
+}
+
+void scan_autorun( )
+{
+	try
+	{
+		fs::create_directory("autorun"); // Does nothing if dir already exists
+	}
+	catch (const fs::filesystem_error& ex)
+	{
+		Console::get() << "\a7Error:\ax Unable to create autorun directory: " << ex.what() << std::endl;
+		return;
+	}
+
+	fs::directory_iterator end_iter;
+	for (fs::directory_iterator dir_iter("autorun"); dir_iter != end_iter; ++dir_iter)
+	{
+		if (fs::is_regular(dir_iter->status()))
+		{
+			fs::ifstream stream(dir_iter->path().string(), std::ios_base::in);
+			Console::get().runScript(dir_iter->path().leaf(), stream);
+		}
 	}
 }

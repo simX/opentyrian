@@ -32,6 +32,8 @@
 #include <string>
 #include <cctype>
 #include <deque>
+#include <fstream>
+#include "boost/filesystem.hpp"
 
 #include "CCmd.h"
 #include "CVar.h"
@@ -39,7 +41,7 @@
 namespace CVars
 {
 	CVarInt con_buffer_size("con_buffer_size", CVar::CONFIG, "Size of the console scrollback in lines.", 64);
-	CVarInt con_height("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeCheck<4, 200/Console::LINE_HEIGHT>);
+	CVarInt con_height("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeBind(4u, 200/Console::LINE_HEIGHT));
 }
 
 
@@ -442,4 +444,40 @@ void Console::consoleMain()
 
 	tempScreenSeg = prev_tempScreenSeg;
 	VGAScreen = prev_VGAScreen;
+}
+
+namespace CCmds
+{
+	namespace Func
+	{
+		static void exec( const std::vector<std::string>& params )
+		{
+			namespace fs = boost::filesystem;
+
+			std::string param1 = CCmd::convertParam<std::string>(params, 0);
+
+			if (fs::exists(param1))
+			{
+				std::ifstream stream(param1.c_str(), std::ios_base::in);
+				Console::get().runScript(param1, stream);
+			} else {
+				throw CCmd::RuntimeCCmdError("Script file not found.");
+			}
+		}
+	}
+
+	CCmd exec("exec", CCmd::NONE, "Executes a script file. Usage: exec [filename]", Func::exec);
+}
+
+void Console::runScript( const std::string& fname, std::ifstream& fstream )
+{
+	*this << "\acExecuting script " << fname << "..." << std::endl;
+
+	while (!fstream.eof())
+	{
+		std::string line;
+		std::getline(fstream, line);
+
+		this->runCommand(line);
+	}
 }

@@ -333,6 +333,7 @@ int main( int argc, char *argv[] )
 	playDemo = false;
 
 	JE_loadConfiguration();
+	scan_autorun();
 
 	JE_paramCheck(argc, argv);
 

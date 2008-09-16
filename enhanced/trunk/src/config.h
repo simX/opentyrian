@@ -150,4 +150,6 @@ void JE_loadGame( int slot );
 void JE_decryptString( char *s, int len );
 std::string JE_decryptString( std::string s );
 
+void scan_autorun( );
+
 #endif /* CONFIG_H */

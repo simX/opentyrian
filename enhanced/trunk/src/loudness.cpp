@@ -47,19 +47,12 @@ int freq = 11025 * OUTPUT_QUALITY;
 
 bool music_playing = false;
 
-float volumeRangeCheck( const float& val )
-{
-	if (val < 0.f) return 0.f;
-	if (val > 1.5f) return 1.5f;
-	return val;
-}
-
 namespace CVars
 {
 	CVarBool s_enabled("s_enabled", CVar::CONFIG, "Enables sound subsystem. Requires a restart.", true);
 	CVarBool s_mute("s_mute", CVar::CONFIG, "Mutes all sound.", false);
-	CVarFloat s_music_vol("s_music_vol", CVar::CONFIG, "Music volume.", 1.f, volumeRangeCheck);
-	CVarFloat s_fx_vol("s_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, volumeRangeCheck);
+	CVarFloat s_music_vol("s_music_vol", CVar::CONFIG, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarFloat s_fx_vol("s_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
 }
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)

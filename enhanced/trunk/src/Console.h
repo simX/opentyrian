@@ -77,6 +77,7 @@ public:
 	static std::vector<std::string> parseLine( std::string text );
 	void runCommand( std::vector<std::string> tokens );
 	void runCommand( const std::string& str ) { runCommand(parseLine(str)); }
+	void runScript( const std::string& fname, std::ifstream& fstream );
 
 	bool isDown( );
 

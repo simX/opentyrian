@@ -29,6 +29,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include "boost/bind.hpp"
+#include "boost/function.hpp"
 
 class CVar
 {
@@ -79,11 +81,16 @@ public:
 };
 
 
-template<long low, long hi> long rangeCheck( const long& val )
+template<class T> T rangeCheck( const T& val, T low, T hi )
 {
 	if (val < low) return low;
 	if (val > hi) return hi;
 	return val;
+}
+
+template<class T> boost::function<T(const T&)> rangeBind(T low, T hi)
+{
+	return boost::bind<T, const T&, T, T>(rangeCheck, _1, low, hi);
 }
 
 template<class T, class NAME> class CVarTemplate : public CVar
@@ -91,15 +98,15 @@ template<class T, class NAME> class CVarTemplate : public CVar
 protected:
 	T mValue;
 private:
-	T (* const mValidationFunc) (const T& value);
+	boost::function<T(const T&)> mValidationFunc;
 public:
-	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, T (*validationFunc)(const T& value) = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
+	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, boost::function<T(const T&)> validationFunc = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
 	virtual ~CVarTemplate() {}
 	T get( ) const { return mValue; }
  	void set( const T& val ) {
 		if (mValidationFunc)
 		{
-			mValue = (*mValidationFunc)(val);
+			mValue = mValidationFunc(val);
 		} else {
 			mValue = val;
 		}
@@ -132,7 +139,7 @@ typedef CVarTemplate<float, FloatString> CVarFloat;
 class CVarBool : public CVarTemplate<bool, BoolString>
 {
 public:
-	CVarBool( const std::string& name, Flags flags, const std::string& help, bool def, bool (*validationFunc)(const bool& value) = 0 )
+	CVarBool( const std::string& name, Flags flags, const std::string& help, bool def, boost::function<bool(const bool&)> validationFunc = 0 )
 		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
 	{}
 
