@@ -27,36 +27,40 @@
 #include <ctype.h>
 #include <cmath>
 
+static const int MAX_STARS = 1000;
+static const int MAX_TYPES = 14;
 
-bool run;
-JE_StarType star[starlib_MAX_STARS];
+struct JE_StarType
+{
+	int spX, spY, spZ;
+	int lastX, lastY;
+};
 
-static int tempW;
-static int tempX, tempY;
+static JE_StarType star[MAX_STARS];
 
-int setup;
-JE_word stepCounter;
+static int setup;
+static JE_word stepCounter;
 
-JE_word nsp2;
-Sint8 nspVar2Inc;
+static JE_word nsp2;
+static Sint8 nspVar2Inc;
 
 /* JE: new sprite pointer */
-float nsp;
-float nspVarInc;
-float nspVarVarInc;
+static float nsp;
+static float nspVarInc;
+static float nspVarVarInc;
 
-JE_word changeTime;
-bool doChange;
+static JE_word changeTime;
+static bool doChange;
 
-bool grayB;
+static Sint16 starlib_speed;
 
-Sint16 starlib_speed;
-Sint8 speedChange;
+static Uint8 pColor;
 
-Uint8 pColor;
+void JE_resetValues( );
+void JE_changeSetup( int setupType );
+void JE_newStar( int* posX, int* posY );
 
-
-void JE_starlib_main( void )
+void JE_starlib_main( )
 {
 	int off;
 	JE_word i;
@@ -65,14 +69,10 @@ void JE_starlib_main( void )
 	JE_StarType *stars;
 	Uint8 *surf;
 
-	grayB = false;
-
-	starlib_speed += speedChange;
-
 	/* ASM starts */
 	/* ***START THE LOOP*** */
 	stars = star;
-	i = starlib_MAX_STARS;
+	i = MAX_STARS;
 
 	/* ***START OF EACH PIXEL*** */
 next_star:
@@ -107,8 +107,8 @@ next_star:
 	 * LastY 8
 	 */
 
-	tempX = (stars->spX / tempZ) + 160;
-	tempY = (stars->spY / tempZ) + 100;
+	int tempX = (stars->spX / tempZ) + 160;
+	int tempY = (stars->spY / tempZ) + 100;
 
 	tempZ -= starlib_speed;
 
@@ -136,12 +136,7 @@ next_star:
 	/* Let's find the location */
 	off = tempX+tempY*320;
 
-	if (grayB)
-	{
-		tempCol = tempZ >> 1;
-	} else {
-		tempCol = pColor+((tempZ >> 4) & 31);
-	}
+	tempCol = pColor+((tempZ >> 4) & 31);
 
 	/* Draw the pixel! */
 	if (off >= 640 && off < (320*200)-640)
@@ -166,7 +161,7 @@ next_star:
 new_star:
 	stars->spZ = 500;
 
-	JE_newStar();
+	JE_newStar(&tempX, &tempY);
 
 	stars->spX = tempX;
 	stars->spY = tempY;
@@ -187,11 +182,9 @@ star_end:
 		{
 			case '+':
 				starlib_speed++;
-				speedChange = 0;
 				break;
 			case '-':
 				starlib_speed--;
-				speedChange = 0;
 				break;
 			case '1':
 				JE_changeSetup(1);
@@ -242,10 +235,6 @@ star_end:
 			case 'S':
 				nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01f - 0.005f;
 				break;
-			case 'X':
-			case 27:
-				run = false;
-				break;
 			case '[':
 				pColor--;
 				break;
@@ -287,7 +276,7 @@ star_end:
 	nspVarInc += nspVarVarInc;
 }
 
-void JE_starlib_init( void )
+void JE_starlib_init( )
 {
 	static bool initialized = false;
 
@@ -300,7 +289,7 @@ void JE_starlib_init( void )
 		doChange = true;
 
 		/* RANDOMIZE; */
-		for (int x = 0; x < starlib_MAX_STARS; x++)
+		for (int x = 0; x < MAX_STARS; x++)
 		{
 			star[x].spX = (rand() % 64000) - 32000;
 			star[x].spY = (rand() % 40000) - 20000;
@@ -309,7 +298,7 @@ void JE_starlib_init( void )
 	}
 }
 
-void JE_resetValues( void )
+void JE_resetValues( )
 {
 	nsp2 = 1;
 	nspVar2Inc = 1;
@@ -318,7 +307,6 @@ void JE_resetValues( void )
 	nsp = 0;
 	pColor = 32;
 	starlib_speed = 2;
-	speedChange = 0;
 }
 
 void JE_changeSetup( int setupType )
@@ -343,8 +331,11 @@ void JE_changeSetup( int setupType )
 	}
 }
 
-void JE_newStar( void )
+void JE_newStar( int* posX, int* posY )
 {
+	int& tempX = *posX;
+	int& tempY = *posY;
+
 	if (setup == 0)
 	{
 		tempX = (rand() % 64000) - 32000;

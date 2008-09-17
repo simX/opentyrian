@@ -92,6 +92,7 @@ JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 
 float tempVolume;
 
+JE_word speed; /* JE: holds timer speed for 70Hz */
 float jasondelay = 1000.0f / (1193180.0f / 0x4300);
 
 void setdelay( int delay )

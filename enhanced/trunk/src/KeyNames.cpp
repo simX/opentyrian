@@ -28,19 +28,16 @@ KeyNames::KeyNames( )
 {
 	DEBUG_MSG("Initializing KeyNames...");
 
-	const KeyName* p = key_names;
-	while (p->name)
+	for (const KeyName* p = key_names; p->name; ++p)
 	{
-		nameSymMap[p->name] = p->key;
-		symNameMap[p->key] = p->name;
-		++p;
+		nameMap.insert(EntryType(p->name, p->key));
 	}
 }
 
 std::string KeyNames::getNameFromKey( const SDLKey sym )
 {
-	std::map<SDLKey, std::string>::const_iterator p = symNameMap.find(sym);
-	if (p == symNameMap.end())
+	BimapType::right_map::const_iterator p = nameMap.right.find(sym);
+	if (p == nameMap.right.end())
 	{
 		std::ostringstream s;
 		s << sym;
@@ -52,8 +49,8 @@ std::string KeyNames::getNameFromKey( const SDLKey sym )
 
 SDLKey KeyNames::getKeyFromName( const std::string& name )
 {
-	std::map<std::string, SDLKey>::const_iterator p = nameSymMap.find(name);
-	if (p == nameSymMap.end())
+	BimapType::left_map::const_iterator p = nameMap.left.find(name);
+	if (p == nameMap.left.end())
 	{
 		throw UnknownKeyError(name);
 	}

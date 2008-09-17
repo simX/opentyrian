@@ -33,9 +33,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* JE: From Nortsong */
-JE_word speed; /* JE: holds timer speed for 70Hz */
-
 void JE_pix( JE_word x, JE_word y, Uint8 c )
 {
 	/* Bad things happen if we don't clip */

@@ -51,12 +51,13 @@
 				EnableFunctionLevelLinking="true"
 				EnableEnhancedInstructionSet="0"
 				DisableLanguageExtensions="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				WarnAsError="true"
-				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				DisableSpecificWarnings="4290;4619;4548;4242;4342;4640;4180"
+				ForcedIncludeFiles="precompiled.h"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -142,9 +143,7 @@
 				EnableEnhancedInstructionSet="0"
 				DisableLanguageExtensions="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				WarnAsError="false"
-				Detect64BitPortabilityProblems="true"
+				WarningLevel="3"
 				DebugInformationFormat="3"
 				DisableSpecificWarnings="4290;4640;4180"
 			/>
@@ -343,6 +342,10 @@
 			</File>
 			<File
 				RelativePath=".\src\picload.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\precompiled.h"
 				>
 			</File>
 			<File
@@ -548,6 +551,19 @@
 			<File
 				RelativePath=".\src\picload.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\src\precompiled.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						ForcedIncludeFiles=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src\scroller.cpp"

@@ -22,20 +22,7 @@
 
 #include "opentyr.h"
 
-
-static const int starlib_MAX_STARS = 1000;
-static const int MAX_TYPES = 14;
-
-struct JE_StarType
-{
-	int spX, spY, spZ;
-	int lastX, lastY;
-};
-
-void JE_starlib_main( void );
-void JE_starlib_init( void );
-void JE_resetValues( void );
-void JE_changeSetup( int setupType );
-void JE_newStar( void );
+void JE_starlib_main( );
+void JE_starlib_init( );
 
 #endif /* STARLIB_H */

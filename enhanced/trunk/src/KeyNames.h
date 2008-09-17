@@ -24,6 +24,7 @@
 
 #include "Singleton.h"
 
+#include "boost/bimap.hpp"
 #include <map>
 #include <stdexcept>
 
@@ -44,8 +45,9 @@ private:
 	struct KeyName { const char* name; SDLKey key; };
 	static const KeyName key_names[];
 
-	std::map<std::string, SDLKey> nameSymMap;
-	std::map<SDLKey, std::string> symNameMap;
+	typedef boost::bimap<std::string, SDLKey> BimapType;
+	typedef BimapType::value_type EntryType;
+	BimapType nameMap;
 };
 
 #endif // KEYNAMES_H

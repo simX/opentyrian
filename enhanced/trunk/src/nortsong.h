@@ -48,6 +48,7 @@ extern JE_word fxSize[SOUND_NUM + 9];
 
 extern float tempVolume;
 
+extern JE_word speed; /* JE: holds timer speed for 70Hz */
 extern float jasondelay;
 
 void JE_timerInt( void );

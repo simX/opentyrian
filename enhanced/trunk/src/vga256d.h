@@ -30,8 +30,6 @@ typedef JE_word JE_shape16B[1]; /* [0.. 0] */
 typedef JE_shape16B *JE_shape16;
 //typedef JE_byte JE_shapetypeone[168]; // [0..168-1] originally: JE_word JE_shapetypeone[84]; [1..84]
 
-extern JE_word speed; /* JE: holds timer speed for 70Hz */
-
 void JE_pix( JE_word x, JE_word y, Uint8 col );
 void JE_pixCool( JE_word x, JE_word y, Uint8 col );
 void JE_pixAbs( JE_word offset, Uint8 col );
