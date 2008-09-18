@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "tyrian2.h"
 
 #include "animlib.h"
 #include "backgrnd.h"
@@ -48,8 +49,7 @@
 #include "pcxload.h"
 #include "superpixel.h"
 #include "explosion.h"
-
-#include "tyrian2.h"
+#include "menus.h"
 
 #include <ctype.h>
 #include <cmath>
@@ -4161,7 +4161,7 @@ void JE_titleScreen( bool animate )
 							pItems[2] = z+1;
 							pItems[11] = SAShip[z];
 							JE_fadeBlack(10);
-							if (JE_episodeSelect() && JE_difficultySelect())
+							if (select_episode() && select_difficulty())
 							{
 								/* Start special mode! */
 								JE_fadeBlack(10);
@@ -4220,14 +4220,14 @@ void JE_titleScreen( bool animate )
 						{
 							case 0: /* New game */
 								JE_fadeBlack(10);
-								if (JE_playerSelect())
+								if (select_gameplay())
 								{
 									if (netQuit)
 									{
 										JE_tyrianHalt(9);
 									}
 	
-									if (JE_episodeSelect() && JE_difficultySelect())
+									if (select_episode() && select_difficulty())
 									{
 										gameLoaded = true;
 									} else {
@@ -5615,7 +5615,7 @@ void JE_eventSystem( void )
 			background3x1 = (eventRec[eventLoc-1].eventdat == 0);
 			break;
 		case 66: /*If not on this difficulty level or higher then...*/
-			if (initialDifficulty <= eventRec[eventLoc-1].eventdat)
+			if (initialDifficulty <= static_cast<unsigned int>(eventRec[eventLoc-1].eventdat))
 				eventLoc += eventRec[eventLoc-1].eventdat2;
 			break;
 		case 67:

@@ -138,7 +138,7 @@ JE_word cubeList[4]; /* [1..4] */
 bool gameHasRepeated;
 
 /* Difficulty */
-int difficultyLevel, oldDifficultyLevel, initialDifficulty;
+unsigned int difficultyLevel, oldDifficultyLevel, initialDifficulty;
 
 /* Player Stuff */
 unsigned long score, score2;

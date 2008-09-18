@@ -309,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\menus.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\network.h"
 				>
 			</File>
@@ -510,6 +514,10 @@
 			</File>
 			<File
 				RelativePath=".\src\mainint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\menus.cpp"
 				>
 			</File>
 			<File

@@ -87,7 +87,7 @@ extern JE_word starY;
 extern unsigned int lastCubeMax, cubeMax;
 extern JE_word cubeList[4];
 extern bool gameHasRepeated;
-extern int difficultyLevel, oldDifficultyLevel, initialDifficulty;
+extern unsigned int difficultyLevel, oldDifficultyLevel, initialDifficulty;
 extern unsigned long score, score2;
 extern int power, lastPower, powerAdd;
 extern JE_PItemsType pItems, pItemsPlayer2, pItemsBack, pItemsBack2;

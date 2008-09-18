@@ -10,7 +10,7 @@ GP2X_CHAIN := $(GP2X_CHAINPREFIX)/bin/arm-open2x-linux-
 # END SETTINGS #####################################
 
 TARGET := tyrian
-OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o error.o fm_synth.o fmopl.o fonthand.o helptext.o joystick.o jukebox.o keyboard.o lds_play.o loudness.o mainint.o network.o newshape.o nortsong.o nortvars.o opentyr.o palette.o params.o pcxload.o picload.o scroller.o setup.o sndmast.o starlib.o tyrian2.o varz.o vga256d.o video.o video_scale.o BinaryStream.o BindManager.o Console.o CVar.o CCmd.o GameActions.o HighScores.o KeyNames.o MiscCVars.o superpixel.o explosion.o
+OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o error.o fm_synth.o fmopl.o fonthand.o helptext.o joystick.o jukebox.o keyboard.o lds_play.o loudness.o mainint.o network.o newshape.o nortsong.o nortvars.o opentyr.o palette.o params.o pcxload.o picload.o scroller.o setup.o sndmast.o starlib.o tyrian2.o varz.o vga256d.o video.o video_scale.o BinaryStream.o BindManager.o Console.o CVar.o CCmd.o GameActions.o HighScores.o KeyNames.o MiscCVars.o superpixel.o explosion.o menus.o
 
 ifeq ($(DEBUG), 1)
 	DEBUG_FLAGS := -g3 -O0 -Werror
