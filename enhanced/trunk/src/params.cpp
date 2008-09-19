@@ -18,15 +18,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
-
 #include "params.h"
 
-#include <ctype.h>
-#include <string.h>
-#include <time.h>
+#include <ctime>
+#include <string>
 
 
-bool timMode, richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, useBios, noSound, quikJuke, noRetrace, joyMax, forceAveraging, forceMaxVolume, soundInfoReport, stupidWindows;
+bool richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, noSound, joyMax, forceAveraging;
 
 /* JE: Special Note:
  * The two booleans to detect network play for Tim's stuff.
@@ -36,31 +34,23 @@ bool isNetworkGame, isNetworkActive;
 
 bool tyrianXmas;
 
-/* YKS: Note: LOOT cheat had non letters removed. */
-const char pars[18][9] = {
-	"LOOT", "BORDER", "RECORD", "NOJOY", "NOROBERT", "CONSTANT", "DEATH", "NOKEY", "NOSOUND", "JUKEBOX", "MAXVOL",
-	"SOUND?", "FLICKER", "JOYMAX", "WEAKJOY", "NOWINCHK", "NOXMAS", "YESXMAS"
+static const std::string pars[11] = {
+	"LOOT", "RECORD", "NOJOY", "NOROBERT", "CONSTANT", "DEATH", "NOSOUND", "JOYMAX", "WEAKJOY", "NOXMAS", "YESXMAS"
 };
 
 void JE_paramCheck( int argc, char *argv[] )
 {
 	robertWeird     = true;
 	richMode        = false;
-	timMode         = false;
 	recordDemo      = false;
 	scanForJoystick = true;
 	constantPlay    = false;
-	useBios         = false;
 	noSound         = false;
-	quikJuke        = false;
-	forceMaxVolume  = false;
-	soundInfoReport = false;
-	noRetrace       = false;
 	joyMax          = false;
 	forceAveraging  = false;
 
-	time_t now = time(NULL);
-	tyrianXmas = localtime(&now)->tm_mon == 11;
+	std::time_t now = std::time(NULL);
+	tyrianXmas = std::localtime(&now)->tm_mon == 11;
 
 /* JE: Note:
 Parameters are no longer case-sensitive.
@@ -125,7 +115,7 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 
 			for (unsigned int j = 0; j < COUNTOF(pars); j++)
 			{
-				if (tempStr.compare(pars[j]) == 0)
+				if (tempStr == pars[j])
 				{
 					switch (j)
 					{
@@ -133,67 +123,44 @@ JOYMAX   - Sets your joystick to maximum sensitivity.   [V1.2]
 							richMode = true;
 							break;
 						case 1:
-							timMode = true;
-							break;
-						case 2:
 							recordDemo = true;
 							Console::get() << "Use a keyboard to record a demo." << std::endl;
 							break;
-						case 3:
+						case 2:
 							scanForJoystick = false;
 							break;
-						case 4:
+						case 3:
 							robertWeird = false;
 							break;
-						case 5:
+						case 4:
 							constantPlay = true;
 							break;
-						case 6:
+						case 5:
 							constantDie = true;
 							break;
-						case 7:
-							useBios = true;
-							Console::get() << "Keyboard redirection enabled." << std::endl;
-							break;
-						case 8:
+						case 6:
 							noSound = true;
 							break;
-						case 9:
-							quikJuke = true;
-							break;
-						case 10:
-							forceMaxVolume = true;
-							break;
-						case 11:
-							soundInfoReport = true;
-							break;
-						case 12:
-							noRetrace = true;
-							break;
-						case 13:
+						case 7:
 							joyMax = true;
 							break;
-						case 14:
+						case 8:
 							forceAveraging = true;
 							break;
-						case 15:
-							stupidWindows = false;
-							break;
-						case 16:
+						case 9:
 							tyrianXmas = false;
 							break;
-						case 17:
+						case 10:
 							tyrianXmas = true;
 							break;
 						default:
 							/* YKS: This shouldn't ever be reached. */
-							Console::get() << "!!! WARNING: Something's very wrong on " << __FILE__ << ":" << __LINE__ << std::endl;
+							DEBUG_MSG("!!! WARNING: Something's very wrong on " << __FILE__ << ":" << __LINE__);
 							break;
 					}
-					goto outside_loop;
+					break;
 				}
 			}
-outside_loop:;
 		}
 	}
 }
