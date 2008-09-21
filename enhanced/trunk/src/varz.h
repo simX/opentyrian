@@ -188,7 +188,7 @@ extern const int randomEnemyLaunchSounds[3];
 extern const int keyboardCombos[26][8];
 extern const int shipCombosB[21];
 extern const int superTyrianSpecials[4];
-extern const int shipCombos[13][3];
+extern const int shipCombos[14][3];
 extern int SFCurrentCode[2][21];
 extern int SFExecuted[2];
 extern bool stoppedDemo;
