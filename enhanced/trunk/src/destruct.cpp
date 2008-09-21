@@ -32,7 +32,6 @@
 #include "video.h"
 #include "vga256d.h"
 #include "loudness.h"
-#include "params.h"
 
 #include <cmath>
 
@@ -1231,7 +1230,7 @@ void JE_destructMain( void )
 						}
 					}
 					
-					if (!noSound)
+					if (CVars::snd_enabled)
 					{						
 						temp = 0;
 						for (temp2 = 0; temp2 < 8; temp2++)

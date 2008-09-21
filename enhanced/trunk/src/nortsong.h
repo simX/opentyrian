@@ -36,7 +36,7 @@ extern Uint32 target, target2;
 
 extern bool mixEnable;
 
-extern bool notYetLoadedSound, notYetLoadedMusic;
+extern bool loadedSoundData, loadedMusicData;
 extern JE_SongPosType songPos;
 
 extern JE_word frameCount, frameCount2, frameCountMax;

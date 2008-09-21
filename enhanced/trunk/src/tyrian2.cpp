@@ -22,34 +22,34 @@
 
 #include "animlib.h"
 #include "backgrnd.h"
+#include "BindManager.h"
 #include "destruct.h"
 #include "episodes.h"
 #include "error.h"
+#include "explosion.h"
 #include "fonthand.h"
+#include "GameActions.h"
 #include "helptext.h"
+#include "HighScores.h"
 #include "joystick.h"
 #include "keyboard.h"
+#include "KeyNames.h"
+#include "loudness.h"
 #include "loudness.h"
 #include "lvlmast.h"
 #include "mainint.h"
+#include "menus.h"
 #include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
 #include "params.h"
+#include "pcxload.h"
 #include "picload.h"
 #include "setup.h"
 #include "sndmast.h"
+#include "superpixel.h"
 #include "varz.h"
 #include "vga256d.h"
-#include "HighScores.h"
-#include "loudness.h"
-#include "GameActions.h"
-#include "BindManager.h"
-#include "KeyNames.h"
-#include "pcxload.h"
-#include "superpixel.h"
-#include "explosion.h"
-#include "menus.h"
 
 #include <ctype.h>
 #include <cmath>
@@ -61,7 +61,6 @@
 #include <fstream>
 #include <utility>
 #include <algorithm>
-
 
 JE_word statDmg[2]; /* [1..2] */
 int planetAni, planetAniWait;
@@ -997,7 +996,7 @@ start_level:
 		JE_setTimerInt();
 	}
 
-	if (recordDemo || playDemo)
+	if (CVars::record_demo || playDemo)
 	{
 		fclose(recordFile);
 		if (playDemo)
@@ -1307,7 +1306,7 @@ start_level_first:
 	}
 
 	memset(lastKey, 0, sizeof(lastKey));
-	if (recordDemo && !playDemo)
+	if (CVars::record_demo && !playDemo)
 	{
 		dont_die = true;
 		do
@@ -1502,7 +1501,7 @@ level_loop:
 		JE_playSong(10);
 		musicFade = false;
 	} else {
-		if (!playing && !noSound && firstGameOver)
+		if (!playing && CVars::snd_enabled && firstGameOver)
 		{
 			JE_playSong(levelSong);
 			playing = true;
@@ -2742,7 +2741,7 @@ enemy_shot_draw_overflow:
 	/*=================================*/
 	/*=======The Sound Routine=========*/
 	/*=================================*/
-	if (!noSound && firstGameOver)
+	if (CVars::snd_enabled && firstGameOver)
 	{
 		temp = 0;
 		for (temp2 = 0; temp2 < SFX_CHANNELS; temp2++)
@@ -2861,7 +2860,7 @@ enemy_shot_draw_overflow:
 	}
 
 	/*GAME OVER*/
-	if (!constantPlay && !constantDie)
+	if (!CVars::ch_constant_play && !CVars::ch_constant_death)
 	{
 		if (allPlayersGone)
 		{
@@ -3183,7 +3182,6 @@ new_game:
 
 							case 'e': /*ENGAGE mode*/
 								doNotSaveBackup = true;
-								constantDie = false;
 								onePlayerAction = true;
 								superTyrian = true;
 								twoPlayerMode = false;
@@ -3337,7 +3335,7 @@ new_game:
 
 								JE_wipeKey();
 								frameCountMax = 4;
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									JE_displayText();
 								}
@@ -3397,7 +3395,7 @@ new_game:
 										JE_showVGA();
 
 										JE_fadeColor(50);
-										if (!constantPlay)
+										if (!CVars::ch_constant_play)
 										{
 											while (!JE_anyButton());
 										}
@@ -3416,7 +3414,7 @@ new_game:
 								break;
 
 							case 'P':
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									tempX = atoi(strnztcpy(buffer, s + 3, 3));
 									if (tempX > 900)
@@ -3439,7 +3437,7 @@ new_game:
 								break;
 
 							case 'U':
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
@@ -3489,7 +3487,7 @@ new_game:
 								break;
 
 							case 'V':
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
@@ -3539,7 +3537,7 @@ new_game:
 								break;
 
 							case 'R':
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
@@ -3612,7 +3610,7 @@ new_game:
 								break;
 
 							case 'W':
-								if (!constantPlay)
+								if (!CVars::ch_constant_play)
 								{
 									if (!ESCPressed)
 									{
@@ -4147,7 +4145,6 @@ void JE_titleScreen( bool animate )
 	
 							wait_input(true, true, true);
 	
-							constantDie = false;
 							JE_initEpisode(1);
 							superTyrian = true;
 							onePlayerAction = true;
@@ -4251,7 +4248,7 @@ void JE_titleScreen( bool animate )
 											inputDevice1 = 1;
 											inputDevice2 = 2;
 										} else {
-											if (richMode)
+											if (CVars::ch_loot)
 											{
 												score = 1000000;
 											} else {
@@ -5378,14 +5375,14 @@ void JE_eventSystem( void )
 			if (firstGameOver)
 			{
 				musicFade = true;
-				tempVolume = CVars::s_music_vol;
+				tempVolume = CVars::snd_music_vol;
 			}
 			break;
 		case 35: /* Play new song */
 			if (firstGameOver)
 			{
 				JE_playSong(eventRec[eventLoc-1].eventdat);
-				if (!noSound)
+				if (CVars::snd_enabled)
 				{
 					JE_selectSong(0);
 				}
@@ -6441,8 +6438,8 @@ void JE_itemScreen( void )
 		// Draw volume bars
 		if ((curMenu == 2) || (curMenu == 11))
 		{
-			JE_barDrawShadow(225, 70, 1, 16, int(CVars::s_music_vol*14.f), 3, 13); // TODO: Implement a barDraw that can draw partial bars
-			JE_barDrawShadow(225, 86, 1, 16, int(CVars::s_fx_vol*14.f), 3, 13);
+			JE_barDrawShadow(225, 70, 1, 16, int(CVars::snd_music_vol*14.f), 3, 13); // TODO: Implement a barDraw that can draw partial bars
+			JE_barDrawShadow(225, 86, 1, 16, int(CVars::snd_fx_vol*14.f), 3, 13);
 		}
 
 		/* 7 is data cubes menu, 8 is reading a data cube, "firstmenu9" refers to menu 8 because of reindexing */
@@ -6576,7 +6573,7 @@ void JE_itemScreen( void )
 		/* SYN: Let's start by getting fresh events from SDL */
 		service_SDL_events(true);
 
-		if (constantPlay)
+		if (CVars::ch_constant_play)
 		{
 			mainLevel = mapSection[mapPNum-1];
 			jumpSection = true;
@@ -6907,7 +6904,7 @@ void JE_itemScreen( void )
 			{
 				if ((mouseX >= 221) && (mouseX <= 303) && (mouseY >= 70) && (mouseY <= 82))
 				{
-					if (!noSound)
+					if (CVars::snd_enabled)
 					{
 						temp = currentSong;
 						currentSong = 0;
@@ -6916,14 +6913,14 @@ void JE_itemScreen( void )
 
 					curSel[2] = 4;
 
-					float tmp_vol = (mouseX - 221) / 14.f;
+					const float tmp_vol = (mouseX - 221) / 14.f;
 
 					if (tmp_vol < 0.f) {
-						CVars::s_music_vol = CVars::s_music_vol-.05f;
+						CVars::snd_music_vol = CVars::snd_music_vol-.05f;
 					} else if (tmp_vol > 1.5f) {
-						CVars::s_music_vol = CVars::s_music_vol+.05f;
+						CVars::snd_music_vol = CVars::snd_music_vol+.05f;
 					} else {
-						CVars::s_music_vol = tmp_vol;
+						CVars::snd_music_vol = tmp_vol;
 					}
 					tempB = false;
 				}
@@ -6931,14 +6928,14 @@ void JE_itemScreen( void )
 				if ((mouseX >= 221) && (mouseX <= 303) && (mouseY >= 86) && (mouseY <= 98))
 				{
 					curSel[2] = 5;
-					float tmp_vol = (mouseX - 221) / 14.f;
+					const float tmp_vol = (mouseX - 221) / 14.f;
 
 					if (tmp_vol < 0.f) {
-						CVars::s_fx_vol = CVars::s_fx_vol-.05f;
+						CVars::snd_fx_vol = CVars::snd_fx_vol-.05f;
 					} else if (tmp_vol > 1.5f) {
-						CVars::s_fx_vol = CVars::s_fx_vol+.05f;
+						CVars::snd_fx_vol = CVars::snd_fx_vol+.05f;
 					} else {
-						CVars::s_fx_vol = tmp_vol;
+						CVars::snd_fx_vol = tmp_vol;
 					}
 				}
 
@@ -7278,23 +7275,17 @@ void JE_itemScreen( void )
 						switch (curSel[curMenu])
 						{
 						case 4:
-							{
-							float vol = CVars::s_music_vol;
-							if (vol == 0) {
+							if (CVars::snd_music_vol == 0) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_music_vol = vol - .05f;
-							}
+								CVars::snd_music_vol = CVars::snd_music_vol - .05f;
 							}
 							break;
 						case 5:
-							{
-							float vol = CVars::s_fx_vol;
-							if (vol == 0) {
+							if (CVars::snd_fx_vol == 0) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_fx_vol = vol - .05f;
-							}
+								CVars::snd_fx_vol = CVars::snd_fx_vol - .05f;
 							}
 							break;
 						}
@@ -7371,23 +7362,17 @@ void JE_itemScreen( void )
 						switch (curSel[curMenu])
 						{
 						case 4:
-							{
-							float vol = CVars::s_music_vol;
-							if (vol == 1.5f) {
+							if (CVars::snd_music_vol == 1.5f) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_music_vol = vol + .05f;
-							}
+								CVars::snd_music_vol = CVars::snd_music_vol + .05f;
 							}
 							break;
 						case 5:
-							{
-							float vol = CVars::s_fx_vol;
-							if (vol == 1.5f) {
+							if (CVars::snd_fx_vol == 1.5f) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_fx_vol = vol + .05f;
-							}
+								CVars::snd_fx_vol = CVars::snd_fx_vol + .05f;
 							}
 							break;
 						}
@@ -8456,20 +8441,12 @@ void JE_menuFunction( int select )
 		break;
 
 	case 4:
-		if (curSel[4] < menuChoices[4] && robertWeird)
+		if (curSel[4] < menuChoices[4])
 		{
 			tempPowerLevel[curSel[4] - 1] = portPower[curSel[1] - 2];
 			curSel[4] = menuChoices[4];
 		} else {
-			if (curSel[4] == menuChoices[4] && !robertWeird)
-			{
-				memcpy(pItems, pItemsBack, sizeof(pItems));
-				memcpy(portPower, lastPortPower, sizeof(portPower));
-				curSel[4] = lastCurSel; /* JE: Cancel */
-			} else {
-				JE_playSampleNum(ITEM);
-			}
-
+			JE_playSampleNum(ITEM);
 			score = JE_cashLeft();
 			curMenu = 1;
 		}

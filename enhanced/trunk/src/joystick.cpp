@@ -20,9 +20,10 @@
 #include "opentyr.h"
 
 #include "keyboard.h"
-#include "params.h"
 #include "vga256d.h"
 #include "Console.h"
+#include "Cvar.h"
+#include "network.h"
 
 #include "joystick.h"
 
@@ -51,20 +52,36 @@ Sint16 lastJoyXd, lastJoyYd;
 
 int joystickError;
 bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
-bool joystick_installed;
+bool joystick_installed = false;
 JE_word joystickWait, joystickWaitMax;
 
 /*int SJoyCD;*/ /*NortVars anybutton check - problems with checking too fast*/
 
 SDL_Joystick *joystick = NULL;
 
+static bool joystick_initialized = false;
+
+static bool input_joy_enabled_callback( const bool& init )
+{
+	if (init)
+	{
+		return init_joystick();
+	}
+	else
+	{
+		return !deinit_joystick();
+	}
+}
+
+namespace CVars
+{
+	CVarFloat input_joy_sensitivity("input_joy_sensitivity", CVar::CONFIG, "Joystick sensitivity.", .5f, rangeBind(0.f, 1.f));
+	CVarBool input_joy_filter("input_joy_filter", CVar::CONFIG, "Enables averaging of joystick input.", false);
+	CVarBool input_joy_enabled("input_joy_enabled", CVar::CONFIG, "Enables joystick subsystem.", true);
+}
+
 void JE_joystick1( void ) /* procedure to get x and y */
 {
-	if (isNetworkGame)
-	{
-		forceAveraging = true;
-	}
-
 	for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 	{
 		joyButton[i] = (SDL_JoystickGetButton(joystick, i) == 1);
@@ -80,7 +97,7 @@ void JE_joystick1( void ) /* procedure to get x and y */
 	       + (joyButton[GP2X_VK_DOWN] || joyButton[GP2X_VK_DOWN_LEFT] || joyButton[GP2X_VK_DOWN_RIGHT]);
 #endif  /* TARGET_GP2X */
 
-	if (forceAveraging)
+	if (CVars::input_joy_filter || isNetworkGame)
 	{
 		lastJoyXd = lastJoyXc;
 		lastJoyXc = lastJoyXb;
@@ -147,20 +164,11 @@ void JE_joystick2( void )
 		/*JE_UpdateButtons;*/
 
 #ifndef TARGET_GP2X
-		if (!joyMax)
-		{
-			joystickUp    = joyY < -32768 / 2;
-			joystickDown  = joyY > 32767 / 2;
-			
-			joystickLeft  = joyX < -32768 / 2;
-			joystickRight = joyX > 32767 / 2;
-		} else {
-			joystickUp    = joyY < -32768 / 5;
-			joystickDown  = joyY > 32767 / 5;
-			
-			joystickLeft  = joyX < -32768 / 5;
-			joystickRight = joyX > 32767 / 5;
-		}
+		joystickUp    = joyY < (-32768 * (1.f - CVars::input_joy_sensitivity));
+		joystickDown  = joyY > ( 32768 * (1.f - CVars::input_joy_sensitivity));
+		
+		joystickLeft  = joyX < (-32768 * (1.f - CVars::input_joy_sensitivity));
+		joystickRight = joyX > ( 32768 * (1.f - CVars::input_joy_sensitivity));
 		
 		joystickInput = joystickUp || joystickDown || joystickLeft || joystickRight || button[0] || button[1] || button[2] || button[3];
 #else  /* TARGET_GP2X */
@@ -280,52 +288,65 @@ bool JE_joystickNotHeld( void )
 	return false;
 }
 
-
-void JE_joystickInit( void )
+bool init_joystick( void )
 {
-	joystick_installed = false;
+	if (joystick_initialized)
+		return true;
 
-	if (scanForJoystick)
+	Console::get() << "Initializing joysticks...";
+
+	if (SDL_InitSubSystem(SDL_INIT_JOYSTICK))
 	{
-		if (SDL_InitSubSystem(SDL_INIT_JOYSTICK))
-		{
-			Console::get() << "Failed to initialize joystick: " << SDL_GetError() << std::endl;
-		}
-		if (SDL_NumJoysticks())
-		{
-			joystick = SDL_JoystickOpen(0);
+		// New line to complete last line
+		Console::get() << "\n\a7Error:\ax Failed to initialize joystick: " << SDL_GetError() << std::endl;
+		CVars::input_joy_enabled = false;
+		return false;
+	}
+	if (SDL_NumJoysticks() > 0)
+	{
+		joystick = SDL_JoystickOpen(0);
 
-			if (joystick)
-			{
+		if (joystick)
+		{
 #ifndef TARGET_GP2X
-				if (SDL_JoystickNumButtons(joystick) >= 4 && SDL_JoystickNumAxes(joystick) >= 2)
-				{
-					joystick_installed = true;
-				}
-#else  /* TARGET_GP2X */
+			if (SDL_JoystickNumButtons(joystick) >= 4 && SDL_JoystickNumAxes(joystick) >= 2)
+			{
 				joystick_installed = true;
-#endif  /* TARGET_GP2X */
 			}
+#else  /* TARGET_GP2X */
+			joystick_installed = true;
+#endif  /* TARGET_GP2X */
+
+			const char* name = SDL_JoystickName(0);
+			Console::get() << " Found";
+			if (name)
+				Console::get() << ": " << name;
+			else
+				Console::get() << '.';
+			
+			Console::get() << std::endl;
 		}
 	}
-
-	if (joystick_installed)
+	else
 	{
-		JE_joystick1();
-		if (forceAveraging)
-		{
-			JE_joystick1();
-			JE_joystick1();
-			JE_joystick1();
-		}
-
-		button[0] = false;
-		button[1] = false;
-		button[2] = false;
-		button[3] = false;
-		joystickUp = false;
-		joystickDown = false;
-		joystickLeft = false;
-		joystickRight = false;
+		joystick_installed = false;
+		Console::get() << " None found." << std::endl;
 	}
+
+	joystick_initialized = true;
+
+	return true;
+}
+
+bool deinit_joystick( void )
+{
+	if (!joystick_initialized)
+		return true;
+
+	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+
+	joystick_installed = false;
+	joystick_initialized = false;
+
+	return true;
 }

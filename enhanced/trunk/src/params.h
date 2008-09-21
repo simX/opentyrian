@@ -22,10 +22,17 @@
 
 #include "opentyr.h"
 
-extern bool richMode, recordDemo, robertWeird, constantPlay, constantDie, scanForJoystick, noSound, joyMax, forceAveraging;
-extern bool isNetworkGame, isNetworkActive;
-extern bool tyrianXmas;
+#include "CVar.h"
 
-void JE_paramCheck( int argc, char *argv[] );
+namespace CVars
+{
+	extern CVarBool ch_loot;
+	extern CVarBool ch_constant_play;
+	extern CVarBool ch_constant_death;
+	extern CVarBool ch_xmas;
+	extern CVarBool record_demo;
+}
+
+void scan_parameters( int argc, char *argv[] );
 
 #endif // PARAMS_H

@@ -51,6 +51,8 @@ extern bool portConfigChange;
 extern int exchangeCount;
 extern bool netSuccess;
 
+extern bool isNetworkGame, isNetworkActive;
+
 void JE_initNetwork( void );
 
 void JE_exchangePacket( int size );

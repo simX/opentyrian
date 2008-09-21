@@ -747,7 +747,7 @@ void scan_autorun( )
 	fs::directory_iterator end_iter;
 	for (fs::directory_iterator dir_iter("autorun"); dir_iter != end_iter; ++dir_iter)
 	{
-		if (fs::is_regular(dir_iter->status()))
+		if (fs::is_regular(dir_iter->status()) && fs::extension(dir_iter->path()) == ".con")
 		{
 			fs::ifstream stream(dir_iter->path().string(), std::ios_base::in);
 			Console::get().runScript(dir_iter->path().leaf(), stream);

@@ -21,7 +21,6 @@
 
 #include "fm_synth.h"
 #include "lds_play.h"
-#include "params.h"
 #include "Console.h"
 #include "CVar.h"
 #include "sndmast.h"
@@ -47,19 +46,49 @@ int freq = 11025 * OUTPUT_QUALITY;
 
 bool music_playing = false;
 
+static bool sound_initialized = false;
+
+static bool snd_enabled_callback( const bool& init )
+{
+	if (init)
+	{
+		if (!loadedSoundData)
+		{
+			JE_loadSndFile();
+		}
+		if (init_sound())
+		{
+			if (music_playing)
+			{
+				JE_loadSong(currentSong);
+				JE_selectSong(1);
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return !deinit_sound();
+	}
+}
+
 namespace CVars
 {
-	CVarBool s_enabled("s_enabled", CVar::CONFIG, "Enables sound subsystem. Requires a restart.", true);
-	CVarBool s_mute("s_mute", CVar::CONFIG, "Mutes all sound.", false);
-	CVarFloat s_music_vol("s_music_vol", CVar::CONFIG, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
-	CVarFloat s_fx_vol("s_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarBool snd_enabled("snd_enabled", CVar::CONFIG, "Enables sound subsystem.", true, snd_enabled_callback);
+	CVarBool snd_mute("snd_mute", CVar::CONFIG, "Mutes all sound.", false);
+	CVarFloat snd_music_vol("snd_music_vol", CVar::CONFIG, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarFloat snd_fx_vol("snd_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
 }
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 {
 	SAMPLE_TYPE *feedme = (SAMPLE_TYPE *)sdl_buffer;
 
-	float s_music_vol = CVars::s_mute ? 0.f : CVars::s_music_vol.get();
+	float s_music_vol = CVars::snd_mute ? 0.f : CVars::snd_music_vol.get();
 
 	if (music_playing && s_music_vol > 0.f)
 	{
@@ -102,7 +131,7 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 		}
 	}
 
-	float sample_volume = CVars::s_mute ? 0.f : CVars::s_fx_vol.get();
+	float sample_volume = CVars::snd_mute ? 0.f : CVars::snd_fx_vol.get();
 
 	/* SYN: Mix sound channels and shove into audio buffer */
 	for (int ch = 0; ch < SFX_CHANNELS; ch++)
@@ -134,13 +163,18 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	}
 }
 
-void JE_initialize( )
+bool init_sound( )
 {
+	if (sound_initialized)
+		return true;
+
+	Console::get() << "Initializing SDL audio..." << std::endl;
+
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO))
 	{
-		Console::get() << "\a7Warning:\ax Failed to initialize audio system: " << SDL_GetError() << std::endl;
-		noSound = true;
-		return;
+		Console::get() << "\a7Error:\ax Failed to initialize audio system: " << SDL_GetError() << std::endl;
+		CVars::snd_enabled = false;
+		return false;
 	}
 
 	SDL_AudioSpec plz, got;
@@ -158,20 +192,28 @@ void JE_initialize( )
 
 	if ( SDL_OpenAudio(&plz, &got) == -1 )
 	{
-		Console::get() << "\a7Warning:\ax Failed to initialize SDL audio." << std::endl;
-		noSound = true;
+		Console::get() << "\a7Error:\ax Failed to initialize SDL audio." << std::endl;
+		CVars::snd_enabled = false;
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+		return false;
 	}
 
-	Console::get() << "Obtained  SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
+	Console::get() << "Obtained SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
 
 	opl_init();
 
 	SDL_PauseAudio(0);
+
+	sound_initialized = true;
+
+	return true;
 }
 
-void JE_deinitialize( )
+bool deinit_sound( )
 {
+	if (!sound_initialized)
+		return true;
+
 	/* SYN: TODO: Clean up any other audio stuff, if necessary. This should only be called when we're quitting. */
 	for (int i = 0; i < SFX_CHANNELS; ++i)
 	{
@@ -184,14 +226,15 @@ void JE_deinitialize( )
 
 	SDL_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+
+	sound_initialized = false;
+
+	return true;
 }
 
 /* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing, or restart it if it is. */
 void JE_selectSong( JE_word value )
 {
-	if (noSound)
-		return;
-
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */
 	SDL_LockAudio();
 
@@ -202,7 +245,10 @@ void JE_selectSong( JE_word value )
 			break;
 		case 1:
 		case 2:
-			lds_load(musicData); /* Load song */
+			if (CVars::snd_enabled)
+			{
+				lds_load(musicData); /* Load song */
+			}
 			music_playing = true;
 			break;
 		default:
@@ -216,7 +262,7 @@ void JE_selectSong( JE_word value )
 
 void JE_multiSamplePlay(unsigned char *buffer, JE_word size, int chan, float vol)
 {
-	if (noSound)
+	if (!CVars::snd_enabled)
 		return;
 	
 	/* Making sure that we don't mess with sound buffers when someone else is using them! */

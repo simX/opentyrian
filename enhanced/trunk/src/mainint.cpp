@@ -64,6 +64,7 @@ JE_word downgradeCost;
 bool performSave;
 bool jumpSection;
 bool useLastBank; /* See if I want to use the last 16 colors for DisplayText */
+bool loadedMainShapeTables = false;
 
 int player_delta_x[2], player_delta_y[2];
 
@@ -459,7 +460,7 @@ void JE_loadMainShapeTables( void )
 	unsigned long shpPos[SHP_NUM + 1];
 	JE_word shpNumb;
 
-	if (tyrianXmas)
+	if (CVars::ch_xmas)
 	{
 		JE_resetFile(&f, "tyrianc.shp");
 	} else {
@@ -504,6 +505,8 @@ void JE_loadMainShapeTables( void )
 	JE_loadCompShapesB(&shapesW2, f, shapesW2Size);
 
 	fclose(f);
+
+	loadedMainShapeTables = true;
 }
 
 JE_word JE_powerLevelCost( JE_word base, int level )
@@ -816,7 +819,7 @@ bool JE_nextEpisode( void )
 	if (!isNetworkGame && !gameHasRepeated
 	    && (jumpBackToEpisode1 || x == 3)
 	    && x != 4
-	    && !constantPlay
+		&& !CVars::ch_constant_play
 	    && !(pItems[9-1] == 4))
 	{
 		JE_highScoreCheck();
@@ -829,7 +832,7 @@ bool JE_nextEpisode( void )
 		mainLevel = FIRST_LEVEL;
 		saveLevel = FIRST_LEVEL;
 		
-		if (jumpBackToEpisode1 && x > 2 && !constantPlay)
+		if (jumpBackToEpisode1 && x > 2 && !CVars::ch_constant_play)
 		{
 			JE_playCredits();
 		}
@@ -862,7 +865,7 @@ bool JE_nextEpisode( void )
 		JE_fadeColor(15);
 		
 		JE_wipeKey();
-		if (!constantPlay)
+		if (!CVars::ch_constant_play)
 		{
 			do
 			{
@@ -1142,8 +1145,8 @@ bool JE_inGameSetup( void )
 		
 		JE_outTextAdjust(10, 147, mainMenuHelp[help[sel-1]-1], 14, 6, TINY_FONT, true);
 		
-		JE_barDrawShadow(120, 20, 1, 16, int(CVars::s_music_vol*14.f), 3, 13);
-		JE_barDrawShadow(120, 40, 1, 16, int(CVars::s_fx_vol*14.f), 3, 13);
+		JE_barDrawShadow(120, 20, 1, 16, int(CVars::snd_music_vol*14.f), 3, 13);
+		JE_barDrawShadow(120, 40, 1, 16, int(CVars::snd_fx_vol*14.f), 3, 13);
 		
 		JE_showVGA();
 		
@@ -1170,7 +1173,7 @@ bool JE_inGameSetup( void )
 						case 6:
 							returnvalue = true;
 							quit = true;
-							if (constantPlay)
+							if (CVars::ch_constant_play)
 							{
 								JE_tyrianHalt(0);
 							}
@@ -1206,25 +1209,18 @@ bool JE_inGameSetup( void )
 					switch (sel)
 					{
 						case 1:
-							{
-							float vol = CVars::s_music_vol;
-							if (vol == 0) {
+							if (CVars::snd_music_vol == 0) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_music_vol = vol - .05f;
-							}
+								CVars::snd_music_vol = CVars::snd_music_vol - .05f;
 							}
 							break;
 						case 2:
-							{
-							float vol = CVars::s_fx_vol;
-							if (vol == 0) {
+							if (CVars::snd_fx_vol == 0) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_fx_vol = vol - .05f;
+								CVars::snd_fx_vol = CVars::snd_fx_vol - .05f;
 							}
-							}
-							//soundActive = true;
 							break;
 						case 3:
 							/*if (CVars::detail_level == 0) {
@@ -1254,25 +1250,18 @@ bool JE_inGameSetup( void )
 					switch (sel)
 					{
 						case 1:
-							{
-							float vol = CVars::s_music_vol;
-							if (vol == 1.5f) {
+							if (CVars::snd_music_vol == 1.5f) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_music_vol = vol + .05f;
-							}
+								CVars::snd_music_vol = CVars::snd_music_vol + .05f;
 							}
 							break;
 						case 2:
-							{
-							float vol = CVars::s_fx_vol;
-							if (vol == 1.5f) {
+							if (CVars::snd_fx_vol == 1.5f) {
 								JE_playSampleNum(WRONG);
 							} else {
-								CVars::s_fx_vol = vol + .05f;
+								CVars::snd_fx_vol = CVars::snd_fx_vol + .05f;
 							}
-							}
-							//soundActive = true;
 							break;
 						case 3:
 							/*if (CVars::detail_level >= 3) {
@@ -2035,7 +2024,7 @@ void JE_endLevelAni( void )
 	int temp;
 	char tempStr[256];
 	
-	if (!constantPlay)
+	if (!CVars::ch_constant_play)
 	{
 		/*Grant Bonus Items*/
 		/*Front/Rear*/
@@ -2217,7 +2206,7 @@ void JE_endLevelAni( void )
 	if (netQuit)
 		exit(0);
 	
-	if (!constantPlay)
+	if (!CVars::ch_constant_play)
 	{
 		do
 		{
@@ -2657,7 +2646,7 @@ void JE_mainKeyboardInput( void )
 			JE_drawTextWindow(miscText[63-1]);
 		}
 
-		if (constantPlay && keysactive[SDLK_c] && !superTyrian && superArcadeMode == 0)
+		if (CVars::ch_constant_play && keysactive[SDLK_c] && !superTyrian && superArcadeMode == 0)
 		{
 			youAreCheating = !youAreCheating;
 			keysactive[SDLK_c] = false;
@@ -2727,13 +2716,13 @@ void JE_mainKeyboardInput( void )
 	if (keysactive[SDLK_m])
 	{
 		keysactive[SDLK_m] = false;
-		if (CVars::s_mute)
+		if (CVars::snd_mute)
 		{
-			CVars::s_mute = false;
+			CVars::snd_mute = false;
 			JE_drawTextWindow(miscText[18]);
 			//JE_selectSong(2);
 		} else {
-			CVars::s_mute = true;
+			CVars::snd_mute = true;
 			JE_drawTextWindow(miscText[17]);
 			//JE_stopSong();
 		}
@@ -3007,8 +2996,8 @@ redo:
 
 			}
 		}
-	} else
-	if (constantDie)
+	}
+	else if (CVars::ch_constant_death)
 	{
 		if (*playerStillExploding_ == 0)
 		{
@@ -3027,8 +3016,6 @@ redo:
 			VGAScreen = VGAScreenSeg; /* side-effect of game_screen */
 			JE_drawArmor();
 			VGAScreen = game_screen; /* side-effect of game_screen */
-			if (portPower[1-1] < 11)
-				portPower[1-1]++;
 		}
 	}
 
@@ -3077,7 +3064,7 @@ redo:
 
 					/* ==== Joystick Input ==== */
 					if ((inputDevice_ == 3 || inputDevice_ == 0)
-					    && joystick_installed && !playDemo && !recordDemo)
+						&& joystick_installed && !playDemo && !CVars::record_demo)
 					{  /* Start of Joystick Routine */
 						JE_joystick1();
 						JE_updateButtons();
@@ -3140,7 +3127,7 @@ redo:
 								button[2] = true;
 						}
 
-						if (constantPlay)
+						if (CVars::ch_constant_play)
 						{
 							button[1-1] = true;
 							button[2-1] = true;
@@ -3151,7 +3138,7 @@ redo:
 						}
 
 
-						if (recordDemo)
+						if (CVars::record_demo)
 						{
 							tempB = false;
 							for (int temp = 0; temp < 8; temp++)

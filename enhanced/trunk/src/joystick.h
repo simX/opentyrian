@@ -22,6 +22,8 @@
 
 #include "opentyr.h"
 
+#include "CVar.h"
+
 #ifndef TARGET_GP2X
 typedef bool JE_ButtonType[4]; /* [1..4] */
 typedef int JE_ButtonAssign[4]; /* [1..4] */
@@ -53,6 +55,11 @@ static const int GP2X_VK_VOL_DOWN   = 17
 
 #endif  /* TARGET_GP2X */
 
+namespace CVars
+{
+	extern CVarBool input_joy_enabled;
+}
+
 extern const JE_ButtonAssign defaultJoyButtonAssign;
 extern JE_ButtonType tempButton, button, joyButton;
 extern bool buttonHeld;
@@ -68,10 +75,10 @@ void JE_joystick1( void ); /*procedure to get JoyX, JoyY, Button1, Button2 of Jo
 void JE_joystick2( void );
 bool JE_nextJoystickCheck( void );
 bool JE_joystickTranslate( void );
-void JE_joystickInit( void );
 bool JE_joystickNotHeld( void );
 void JE_updateButtons( void ); /*Uses ButtonAssign to find out*/
 
-void joystick_init( void );
+bool init_joystick( void );
+bool deinit_joystick( void );
 
 #endif /* JOYSTICK_H */

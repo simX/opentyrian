@@ -134,7 +134,7 @@ void JE_jukeboxGo( void )
 	fade = false;
 	repeatedFade = false;
 
-	tempVolume = CVars::s_music_vol;
+	tempVolume = CVars::snd_music_vol;
 	youStopped = false;
 
 	JE_wipeKey();
@@ -367,5 +367,5 @@ void JE_playNewSong( void )
 	JE_playSong(currentJukeboxSong);
 	playing = true;
 	repeatedFade = false;
-	tempVolume = CVars::s_music_vol;
+	tempVolume = CVars::snd_music_vol;
 }

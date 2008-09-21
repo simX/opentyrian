@@ -54,6 +54,8 @@ int exchangeCount;
 /* Network Stuff */
 bool netSuccess;
 
+bool isNetworkGame, isNetworkActive;
+
 void JE_updateStream( void )
 {
 //	STUB();

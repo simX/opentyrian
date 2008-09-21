@@ -43,7 +43,8 @@ public:
 
 	enum Flags {
 		NONE = 0,
-		CONFIG = 1
+		CONFIG = 1,
+		CHEAT = 2
 	};
 
 	CVar( const std::string& name, Flags flags, const std::string& help );
@@ -100,22 +101,30 @@ protected:
 private:
 	boost::function<T(const T&)> mValidationFunc;
 public:
-	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, boost::function<T(const T&)> validationFunc = 0 ) : CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc) {}
+	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, boost::function<T(const T&)> validationFunc = 0 )
+		: CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc)
+	{}
+
 	virtual ~CVarTemplate() {}
+
 	T get( ) const { return mValue; }
+
  	void set( const T& val ) {
 		if (mValidationFunc)
 		{
+			mValue = val;
 			mValue = mValidationFunc(val);
 		} else {
 			mValue = val;
 		}
 	}
+
 	virtual std::string serialize( ) const {
 		std::ostringstream s;
 		s << get();
 		return s.str();
 	}
+
 	virtual void unserialize( const std::string& str ) {
 		T tmp;
 		std::istringstream s(str);
@@ -123,9 +132,11 @@ public:
 		s >> tmp;
 		set(tmp);
 	}
+
 	std::string getType() const { return NAME::get(); }
 
 	virtual operator T() const { return get(); }
+
 	virtual void operator=( const T& val ) { set(val); }
 };
 

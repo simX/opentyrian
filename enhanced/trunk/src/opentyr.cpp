@@ -57,7 +57,12 @@
 const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 
 const char *opentyrian_str = "OpenTyrian",
-           *opentyrian_version = "Enhanced revision " SVN_REV;
+#ifdef SVN_REV
+           *opentyrian_version = "Enhanced r" SVN_REV;
+#else
+           *opentyrian_version = "Enhanced";
+#endif
+
 const char *opentyrian_menu_items[] =
 {
 	"About OpenTyrian",
@@ -324,7 +329,7 @@ int main( int argc, char *argv[] )
 
 	Console::get() << "This program comes with ABSOLUTELY NO WARRANTY.\n"
 		<< "This is free software, and you are welcome to redistribute it\n"
-		<< "under certain conditions.  See the file GPL.txt for details.\n\n";
+		<< "under certain conditions.  See the file GPL.txt for details.\n" << std::endl;
 
 	JE_scanForEpisodes();
 
@@ -335,49 +340,31 @@ int main( int argc, char *argv[] )
 	JE_loadConfiguration();
 	scan_autorun();
 
-	JE_paramCheck(argc, argv);
+	scan_parameters(argc, argv);
 
 	init_video();
 	init_keyboard();
 
-	if (scanForJoystick)
+	if (CVars::input_joy_enabled)
 	{
-		JE_joystickInit();
-		if (joystick_installed)
-		{
-			Console::get() << "Joystick detected." << std::endl;
-		} else {
-			Console::get() << "No joystick found." << std::endl;
-		}
-	} else {
-		Console::get() << "Joystick override." << std::endl;
-		joystick_installed = false;
+		init_joystick();
 	}
 
-	if (tyrianXmas)
+	if (CVars::ch_xmas)
 	{
-		if (JE_getFileSize("tyrianc.shp") == 0)
-		{
-			tyrianXmas = false;
-		}
-		/*if (JE_getFileSize("voicesc.shp") == 0) tyrianXmas = false;*/
 #ifndef TARGET_GP2X
-		if (tyrianXmas)
+		Console::get()
+			<< "********************************" << std::endl
+			<< "* Christmas has been detected. *" << std::endl
+			<< "*  Activate Christmas?  (Y/N)  *" << std::endl
+			<< "********************************" << std::endl;
+		wait_input(true, true, true);
+		if (lastkey_sym != SDLK_y)
 		{
-			Console::get()
-				<< "********************************" << std::endl
-				<< "* Christmas has been detected. *" << std::endl
-				<< "*  Activate Christmas?  (Y/N)  *" << std::endl
-				<< "********************************" << std::endl;
-			wait_input(true, true, true);
-			if (lastkey_sym != SDLK_y)
-			{
-				tyrianXmas = false;
-			}
-		} else {
-			Console::get() << "Christmas is missing." << std::endl;
+			CVars::ch_xmas = false;
 		}
 #endif /*TARGET_GP2X*/
+		CVars::ch_xmas = true; // (Re)load data
 	}
 
 	/* Default Options */
@@ -387,19 +374,13 @@ int main( int argc, char *argv[] )
 
 	JE_loadSong(1);
 
-	
-	if (!noSound)
+	if (CVars::snd_enabled)
 	{
-		if (!CVars::s_enabled) {
-			noSound = true;
-		} else {
-			Console::get() << "Initializing SDL audio..." << std::endl;
-			JE_initialize();
-			JE_loadSndFile();
-		}
+		init_sound();
+		JE_loadSndFile();
 	}
 
-	if (recordDemo)
+	if (CVars::record_demo)
 	{
 		Console::get() << "Game will be recorded." << std::endl;
 	}
@@ -412,7 +393,6 @@ int main( int argc, char *argv[] )
 	JE_loadExtraShapes(); // Editship
 
 	JE_loadHelpText();
-	/*debuginfo("Help text complete");*/
 
 	JE_loadPals();
 

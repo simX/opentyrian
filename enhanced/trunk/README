@@ -1,5 +1,6 @@
-OpenTyrian Enhanced
-========================================
+================================================================================
+============================= OpenTyrian  Enhanced =============================
+================================================================================
 
 OpenTyrian is an open-source port of the DOS game Tyrian.
 
@@ -10,27 +11,104 @@ to fight MicroSol and save the galaxy.
 Tyrian features a story mode, one- and two-player arcade modes, and networked
 multiplayer.
 
-== Additional Necessary Files ==========
-Tyrian 2.1 data files which have been released for free
-http://camanis.net/tyrian/tyrian21.zip
+==== Additional Necessary Files ================================================
+To build from source:
+- A recent version of SDL
+- Boost v1.35+
 
-== Keyboard Controls ===================
+To play:
+- Tyrian 2.1 data files which have been released for free:
+	http://camanis.net/tyrian/tyrian21.zip
+- A SDL runtime
+	(SDL.dll on windows, other OSes should have this in the system already)
+
+==== Keyboard Controls =========================================================
 ctrl-backspace -- kill OpenTyrian
 alt-enter      -- fullscreen
 ctrl-f10       -- ungrab mouse
 
-arrow keys     -- ship movement
-space          -- fire weapons
-enter          -- toggle rear weapon mode
-ctrl/alt       -- fire left/right sidekick
+==== Default keybinding ========================================================
+mouse          -- ship movement
+LMB            -- fire weapons
+enter or MMB   -- toggle rear weapon mode
+RMB            -- fire left/right sidekick
 
-== Missing Features ====================
-Network has not yet been implemented in Enhanced
-ShipEdit is planned to be included in the future.  It has not yet been
-implemented because the developers keep procrastinating.
+==== Using the Console =========================================================
+At any time during the game or in the menus, press Ctrl-Insert, and then the
+tilde (~`) key to bring down the console.  To dismiss is, press tilde again and
+then Ctrl-Delete.  Ctrl-Insert and Ctrl-Delete are needed because of a code
+limitation and their need will be removed in a future version.
 
-== Links ===============================
+NOTE: If you use the console in certain game screens (like the main menu), you
+      will experience color glitches. This is a limitation of OpenTyrian's video
+      mode and can't be easily fixed. Since it works correctly in-game and in
+      most menus just switch to another menu temporarily if you want to work
+      with the console.
+
+With the console open, PageUp and PageDown will allow you to view the scrollback
+buffer, minus (-_) and plus (=+) key will resize the console.  Home, End,
+Delete, Backspace and the left and right arrow keys are available for line
+editing.
+
+Using the Console, you can invoke CCmds. To list all the available ccmds, use
+the "list" ccmd with a single "ccmd" parameter: `list ccmd`. The `set` ccmd
+deserver special attention: With it you can set CVars, which are settings used
+for game configuration, cheats, among other things.  Like with ccmds, you can
+list cvars using `list cvar`.  You can search ccmds and cvars containing a
+certain sub-string by giving "list" any other parameter.  Some examples of
+commands:
+
+ Command                 | Result
+-------------------------+-----------------------------------------------------
+ list snd_               | Lists all ccmds and cvar containing "snd_" in their
+						 | name.
+ echo "Hello World!"     | Prints "Hello World!" (without the quotes) to the
+                         | console. Useful for scripts.
+ help snd_sfx_volume     | Displays help text for cvar "snd_sfx_volume".
+ set snd_sfx_volume 0.75 | Sets the value of snd_sfx_volume to 0.75.
+ exec script.con         | Executes the contents of file "script.con" as if
+                         | they were typed into the console.
+
+Files in the "autorun" directory will automatically be executed at startup by
+the game, so you can put your configuration settings there.
+
+==== Commandline Parameters ====================================================
+Legacy Tyrian commandline options aren't supported anymore.  Most options have
+been moved to CVars:
+
+ Old Commandline | New CVar
+-----------------+-----------------------
+ CONSTANT        | ch_constant_play
+ DEATH           | ch_constant_death
+ JOYMAX          | input_joy_sensitivity
+ LOOT            | ch_loot
+ NOJOY           | input_joy_enabled
+ NOROBERT        | <Removed>
+ NOSOUND         | snd_enabled
+ NOXMAS          | ch_xmas
+ RECORD          | record_demo
+ WEAKJOY         | input_joy_filter
+ YESXMAS         | ch_xmas
+
+The ones not listed here didn't do anything and were removed.
+
+You can still use the commandline to set cvars, using the +"command" syntax.
+Some examples:
+
+ Old     | New
+---------+--------------------------
+ LOOT    | +"set ch_loot true"
+ NOSOUND | +"set snd_enabled false"
+ NOXMAS  | +"set ch_xmas false"
+ YESXMAS | +"set ch_xmas true"
+
+==== Missing Features ==========================================================
+- Network has not yet been implemented in Enhanced
+- ShipEdit is planned to be included in the future.  It has not yet been
+  implemented because the developers keep procrastinating.
+
+==== Links =====================================================================
 project: http://opentyrian.googlecode.com/
 forums:  http://tyrian2k.proboards23.com/index.cgi?board=opentyriangeneral
 
-README: AshTR
+Original README by AshTR

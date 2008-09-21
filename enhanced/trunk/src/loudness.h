@@ -50,14 +50,14 @@ extern float music_vol_multiplier;
 
 namespace CVars
 {
-	extern CVarBool s_enabled;
-	extern CVarBool s_mute;
-	extern CVarFloat s_music_vol;
-	extern CVarFloat s_fx_vol;
+	extern CVarBool snd_enabled;
+	extern CVarBool snd_mute;
+	extern CVarFloat snd_music_vol;
+	extern CVarFloat snd_fx_vol;
 }
 
-void JE_initialize( );
-void JE_deinitialize( );
+bool init_sound( );
+bool deinit_sound( );
 
 /* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing,
    or restart it if it is. */

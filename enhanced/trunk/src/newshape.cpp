@@ -25,7 +25,6 @@
 #include "network.h"
 #include "nortsong.h"
 #include "nortvars.h"
-#include "params.h"
 #include "varz.h"
 #include "video.h"
 

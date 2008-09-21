@@ -78,8 +78,8 @@ const char musicTitle[MUSIC_NUM][48] =
 
 Uint32 target, target2;
 bool mixEnable = false;
-bool notYetLoadedSound = true;
-bool notYetLoadedMusic = true;
+bool loadedSoundData = false;
+bool loadedMusicData = false;
 
 JE_SongPosType songPos;
 
@@ -146,15 +146,18 @@ void wait_delayorinput( bool keyboard, bool mouse, bool joystick )
 
 void JE_loadSong( JE_word songnum )
 {
+	if (!CVars::snd_enabled)
+		return;
+
 	JE_word x;
 	FILE *fi;
 
 	JE_resetFile(&fi, "music.mus");
 
-	if (notYetLoadedMusic)
+	if (!loadedMusicData)
 	{
 		/* SYN: We're loading offsets into MUSIC.MUS for each song here. */
-		notYetLoadedMusic = false;
+		loadedMusicData = true;
 		efread(&x, sizeof(x), 1, fi);
 		for (int i = 0; i <= MUSIC_NUM; i++)
 		{
@@ -205,7 +208,7 @@ void JE_loadSndFile( void )
 	fclose(fi);
 
 	/* SYN: Loading offsets into VOICES.SND */
-	if (tyrianXmas)
+	if (CVars::ch_xmas)
 	{
 		JE_resetFile(&fi, "voicesc.snd");
 	} else {
@@ -235,19 +238,13 @@ void JE_loadSndFile( void )
 
 	fclose(fi);
 
-	notYetLoadedSound = false;
+	loadedSoundData = true;
 
 }
 
-void JE_playSong ( JE_word songnum )
+void JE_playSong( JE_word songnum )
 {
-	/* If sound is disabled, bail out */
-	if (noSound)
-	{
-		return;
-	}
-
-	DEBUG_MSG("Loading song number " << songnum);
+	DEBUG_MSG("Playing song number " << songnum);
 
 	if (songnum == 0) /* SYN: Trying to play song 0 was doing strange things D: */
 	{
@@ -255,11 +252,11 @@ void JE_playSong ( JE_word songnum )
 		currentSong = 0;
 		return;
 	}
-	if (currentSong != songnum && !noSound)
+	else if (currentSong != songnum)
 	{
 		JE_stopSong();
 		currentSong = songnum;
-		JE_loadSong (songnum);
+		JE_loadSong(songnum);
 		repeated = false;
 		playing = true;
 		JE_selectSong(1);
@@ -278,7 +275,7 @@ void JE_restartSong( void )
 
 void JE_playSampleNum( int samplenum )
 {
-	if (!noSound)
+	if (CVars::snd_enabled)
 	{
 		/* SYN: Reindexing by -1 because of Jason's arrays starting at 1. Dammit. */
 		JE_multiSamplePlay( digiFx[samplenum-1], fxSize[samplenum-1], 0, 1.f );

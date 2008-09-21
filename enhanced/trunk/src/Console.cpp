@@ -44,7 +44,6 @@ namespace CVars
 	CVarInt con_height("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeBind(4u, 200/Console::LINE_HEIGHT));
 }
 
-
 int Console::ConsoleStreamBuffer::overflow( int c )
 {
 	if (c != mTraits::eof()) {

@@ -34,6 +34,7 @@ extern JE_word downgradeCost;
 extern bool performSave;
 extern bool jumpSection;
 extern bool useLastBank;
+extern bool loadedMainShapeTables;
 
 extern int player_delta_x[2], player_delta_y[2];
 

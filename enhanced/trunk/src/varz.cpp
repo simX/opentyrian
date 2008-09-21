@@ -30,7 +30,6 @@
 #include "vga256d.h"
 #include "fonthand.h"
 #include "loudness.h"
-#include "params.h"
 #include "explosion.h"
 
 #include "varz.h"
@@ -656,17 +655,14 @@ void JE_tyrianHalt( int code )
 {
 	deinit_video();
 
-	if (scanForJoystick)
-	{
-		SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
-	}
+	deinit_joystick();
 
 	/* TODO: NETWORK */
 
 	/* YKS: Here the original and classic free'd everythig in the memory.
 	 * Since the OS does this for us I can save some typing. =] */
 
-	JE_deinitialize();
+	deinit_sound();
 
 	/* JE_endMusic(soundeffects); TODO */
 
@@ -1372,7 +1368,7 @@ int JE_playerDamage( JE_word tempX, JE_word tempY,
 					*playerAlive = false;
 					*playerStillExploding = 60;
 					levelEnd = 40;
-					tempVolume = CVars::s_music_vol;
+					tempVolume = CVars::snd_music_vol;
 					soundQueue[1] = 22;
 				}
 				
