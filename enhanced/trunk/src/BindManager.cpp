@@ -143,6 +143,7 @@ Bind* BindManager::getBind( const std::string& name ) const
 		return &getBind(KeyNames::get().getKeyFromName(name));
 	}
 }
+
 Bind* BindManager::findBind( const std::string& cmd ) const
 {
 	for (BindManager::SetType::const_iterator i = binds.begin(); i != binds.end(); ++i) {

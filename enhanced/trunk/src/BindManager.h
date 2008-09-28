@@ -144,6 +144,7 @@ public:
 	KeyBind& getBind( SDLKey key ) const;
 	MouseBind& getBindMouse( unsigned int button ) const;
 	Bind* getBind( const std::string& name ) const;
+	SetType getBinds( ) const { return binds; }
 	Bind* findBind( const std::string& cmd ) const;
 	std::set<Bind*> findBinds( const std::string& cmd ) const;
 

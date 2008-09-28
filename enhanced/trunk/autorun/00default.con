@@ -1,0 +1,16 @@
+# Default configuration for OpenTyrian Enhanced
+# Do not edit!
+
+bind "up" "+up"
+bind "down" "+down"
+bind "left" "+left"
+bind "right" "+right"
+bind "c" "+right_sidekick"
+bind "x" "+fire"
+bind "z" "+left_sidekick"
+bind "return" "+change_fire"
+
+bind "mouse1" "+fire"
+bind "mouse2" "+change_fire"
+bind "mouse3" "+left_sidekick"
+bind "mouse3" "+right_sidekick"
