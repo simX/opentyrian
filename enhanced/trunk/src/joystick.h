@@ -24,36 +24,8 @@
 
 #include "CVar.h"
 
-#ifndef TARGET_GP2X
 typedef bool JE_ButtonType[4]; /* [1..4] */
 typedef int JE_ButtonAssign[4]; /* [1..4] */
-#else  /* TARGET_GP2X */
-typedef bool JE_ButtonType[19];
-typedef int JE_ButtonAssign[19];
-
-#ifndef GP2X_VK_UP
-static const int GP2X_VK_UP         = 0
-static const int GP2X_VK_DOWN       = 4
-static const int GP2X_VK_LEFT       = 2
-static const int GP2X_VK_RIGHT      = 6
-static const int GP2X_VK_UP_LEFT    = 1
-static const int GP2X_VK_UP_RIGHT   = 7
-static const int GP2X_VK_DOWN_LEFT  = 3
-static const int GP2X_VK_DOWN_RIGHT = 5
-static const int GP2X_VK_CLICK      = 18
-static const int GP2X_VK_FA         = 12
-static const int GP2X_VK_FB         = 13
-static const int GP2X_VK_FX         = 15
-static const int GP2X_VK_FY         = 14
-static const int GP2X_VK_FL         = 10
-static const int GP2X_VK_FR         = 11
-static const int GP2X_VK_START      = 8
-static const int GP2X_VK_SELECT     = 9
-static const int GP2X_VK_VOL_UP     = 16
-static const int GP2X_VK_VOL_DOWN   = 17
-#endif  /* GP2X_VK_UP */
-
-#endif  /* TARGET_GP2X */
 
 namespace CVars
 {

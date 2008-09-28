@@ -30,11 +30,7 @@
 
 static const int SFX_CHANNELS = 8;
 
-#ifndef TARGET_GP2X
 static const int OUTPUT_QUALITY = 4;
-#else  /* TARGET_GP2X */
-static const int OUTPUT_QUALITY = 2;
-#endif /* TARGET_GP2X */
 
 static const int SAMPLE_SCALING = OUTPUT_QUALITY;
 typedef OPLSAMPLE SAMPLE_TYPE;

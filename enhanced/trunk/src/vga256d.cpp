@@ -98,13 +98,13 @@ void JE_rectangle( JE_word a, JE_word b, JE_word c, JE_word d, JE_word e ) /* x1
 		memset(&vga[d * scr_width + a], e, c - a + 1);
 
 		/* Left line */
-		for (int i = (b + 1) * scr_width + a; i < (d * scr_width + a); i += scr_width)
+		for (unsigned int i = (b + 1) * scr_width + a; i < (d * scr_width + a); i += scr_width)
 		{
 			vga[i] = (Uint8)e;
 		}
 
 		/* Right line */
-		for (int i = (b + 1) * scr_width + c; i < (d * scr_width + c); i += scr_width)
+		for (unsigned int i = (b + 1) * scr_width + c; i < (d * scr_width + c); i += scr_width)
 		{
 			vga[i] = (Uint8)e;
 		}
@@ -121,7 +121,7 @@ void JE_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e ) /* x1, y1, x2
 		Uint8 *vga = (Uint8 *)VGAScreen;
 		int width = c - a + 1;
 
-		for (int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
+		for (unsigned int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
 		{
 			memset(&vga[i], e, width);
 		}
@@ -140,7 +140,7 @@ void JE_c_bar( JE_word a, JE_word b, JE_word c, JE_word d, Uint8 e )
 
 		width = c - a + 1;
 
-		for (int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
+		for (unsigned int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
 		{
 			memset(&vga[i], e, width);
 		}
@@ -155,13 +155,11 @@ void JE_barShade( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y2
 	    c < scr_width && d < scr_height)
 	{
 		Uint8 *vga = (Uint8 *)VGAScreen;
-		int width;
+		unsigned int width = c - a + 1;
 
-		width = c - a + 1;
-
-		for (int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
+		for (unsigned int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
 		{
-			for (int j = 0; j < width; j++)
+			for (unsigned int j = 0; j < width; j++)
 			{
 				vga[i + j] = ((vga[i + j] & 0x0F) >> 1) | (vga[i + j] & 0xF0);
 			}
@@ -182,13 +180,11 @@ void JE_barBright( JE_word a, JE_word b, JE_word c, JE_word d ) /* x1, y1, x2, y
 	    c < scr_width && d < scr_height)
 	{
 		Uint8 *vga = (Uint8 *)VGAScreen;
-		int width;
+		unsigned int width = c-a+1;
 
-		width = c-a+1;
-
-		for (int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
+		for (unsigned int i = b * scr_width + a; i <= d * scr_width + a; i += scr_width)
 		{
-			for (int j = 0; j < width; j++)
+			for (unsigned int j = 0; j < width; j++)
 			{
 				Uint8 al, ah;
 				al = ah = vga[i + j];

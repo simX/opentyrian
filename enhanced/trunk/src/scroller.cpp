@@ -91,18 +91,18 @@ const about_text_type about_text[] =
 	{0x00, NULL}
 };
 
-static const int LINE_HEIGHT = 15;
+static const unsigned int LINE_HEIGHT = 15;
 
-static const int MAX_BEER = 5;
-static const int BEER_SHAPE = 241;
+static const unsigned int MAX_BEER = 5;
+static const unsigned int BEER_SHAPE = 241;
 
 struct coin_def_type {
-	int shape_num;
-	int frame_count;
+	unsigned int shape_num;
+	unsigned int frame_count;
 	bool reverse_anim;
 };
 
-static const int MAX_COINS = 20;
+static const unsigned int MAX_COINS = 20;
 coin_def_type coin_defs[] =
 {
 	{1, 6}, {7, 6}, {20, 6}, {26, 6}, // Coins
@@ -114,19 +114,19 @@ void scroller_sine( const about_text_type text[] )
 {
 	bool ale = (rand() % 2) != 0;
 
-	int visible_lines = scr_height / LINE_HEIGHT + 1;
+	unsigned int visible_lines = scr_height / LINE_HEIGHT + 1;
 	int current_line = -visible_lines;
 	int y = 0;
 	bool fade_in = true;
 	
-	struct coin_type { int x, y, vel, type, cur_frame; bool backwards; } coins[MAX_COINS];
-	struct { int x, y, ay, vx, vy; } beer[MAX_BEER];
+	struct coin_type { unsigned int x, y, vel, type, cur_frame; bool backwards; } coins[MAX_COINS];
+	struct { unsigned int x, y, ay, vx, vy; } beer[MAX_BEER];
 
 	if (ale)
 	{
 		memset(beer, 0, sizeof(beer));
 	} else {
-		for (int i = 0; i < MAX_COINS; i++)
+		for (unsigned int i = 0; i < MAX_COINS; i++)
 		{
 			coins[i].x = rand() % (scr_width - 12);
 			coins[i].y = rand() % (scr_height - 20 - 14);
@@ -153,14 +153,14 @@ void scroller_sine( const about_text_type text[] )
 
 		if (!ale)
 		{
-			for (int i = 0; i < MAX_COINS/2; i++)
+			for (unsigned int i = 0; i < MAX_COINS/2; i++)
 			{
 				struct coin_type *coin = &coins[i];
 				JE_drawShape2(coin->x, coin->y, coin_defs[coin->type].shape_num + coin->cur_frame, eShapes5);
 			}
 		}
 
-		for (int i = 0; i < visible_lines; i++)
+		for (unsigned int i = 0; i < visible_lines; i++)
 		{
 			if (current_line + i >= 0)
 			{
@@ -182,7 +182,7 @@ void scroller_sine( const about_text_type text[] )
 				
 				if (text[i + current_line].effect & 0x10)
 				{
-					for (int j = 0; j < LINE_HEIGHT; j++)
+					for (unsigned int j = 0; j < LINE_HEIGHT; j++)
 					{
 						if (line_y + j >= 10 && line_y + j <= scr_height - 10)
 						{
@@ -210,7 +210,7 @@ void scroller_sine( const about_text_type text[] )
 
 		if (!ale)
 		{
-			for (int i = MAX_COINS/2; i < MAX_COINS; i++)
+			for (unsigned int i = MAX_COINS/2; i < MAX_COINS; i++)
 			{
 				struct coin_type *coin = &coins[i];
 				JE_drawShape2(coin->x, coin->y, coin_defs[coin->type].shape_num + coin->cur_frame, eShapes5);
@@ -221,7 +221,7 @@ void scroller_sine( const about_text_type text[] )
 		JE_bar(0, scr_height - 14, scr_width - 1, scr_height - 1, 0);
 		
 		if (!ale) {
-			for (int i = 0; i < MAX_COINS; i++)
+			for (unsigned int i = 0; i < MAX_COINS; i++)
 			{
 				struct coin_type *coin = &coins[i];
 				
@@ -241,7 +241,7 @@ void scroller_sine( const about_text_type text[] )
 						coin->cur_frame = 0;
 					}
 				}
-				if (coin->cur_frame == -1)
+				if (coin->cur_frame == unsigned(-1))
 				{
 					coin->cur_frame = 1;
 					coin->backwards = false;

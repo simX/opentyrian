@@ -51,7 +51,7 @@ void JE_tempScreenChecking( void );
 
 void JE_makeExplosion( JE_word destructTempX, JE_word destructTempY, JE_byte shottype );
 void JE_eSound( JE_byte sound );
-void JE_superPixel( JE_word loc );
+void JE_superPixel( int loc );
 
 void JE_helpScreen( void );
 void JE_pauseScreen( void );
@@ -1587,9 +1587,9 @@ void JE_aliasDirt( void )
 	Uint8 *s = VGAScreen;
 	s += 12 * scr_width;
 	
-	for (int y = 12; y < scr_height; y++)
+	for (unsigned int y = 12; y < scr_height; y++)
 	{
-		for (int x = 0; x < scr_width; x++)
+		for (unsigned int x = 0; x < scr_width; x++)
 		{
 			if (*s == 0)
 			{
@@ -1649,9 +1649,9 @@ void JE_tempScreenChecking( void ) /*and copy to vgascreen*/
 	Uint8 *temps = static_cast<Uint8 *>(destructTempScreen);
 	temps += 12 * scr_width;
 	
-	for (int y = 12; y < scr_height; y++)
+	for (unsigned int y = 12; y < scr_height; y++)
 	{
-		for (int x = 0; x < scr_width; x++)
+		for (unsigned int x = 0; x < scr_width; x++)
 		{
 			if (*temps & 0x80 && *temps >= 241)
 			{
@@ -1723,7 +1723,7 @@ void JE_eSound( JE_byte sound )
 	soundQueue[exploSoundChannel] = sound;
 }
 
-void JE_superPixel( JE_word loc )
+void JE_superPixel( int loc )
 {
 	Uint8 *s = static_cast<Uint8 *>(destructTempScreen);
 	int loc_max = scr_width * scr_height;
@@ -1783,7 +1783,7 @@ void JE_superPixel( JE_word loc )
 			s[loc + 2] = 255;
 	}
 	
-	if (loc - scr_width > 0 && loc - scr_width < loc_max)
+	if (loc - signed(scr_width) > 0 && loc - signed(scr_width) < loc_max)
 	{
 		/* up 1 */
 		if (s[loc - scr_width] < 249)
@@ -1794,7 +1794,7 @@ void JE_superPixel( JE_word loc )
 			s[loc - scr_width] = 255;
 	}
 	
-	if (loc - scr_width - 1 > 0 && loc - scr_width - 1 < loc_max)
+	if (loc - signed(scr_width) - 1 > 0 && loc - signed(scr_width) - 1 < loc_max)
 	{
 		/* up 1, left 1 */
 		if (s[loc - scr_width - 1] < 247)
@@ -1805,7 +1805,7 @@ void JE_superPixel( JE_word loc )
 			s[loc - scr_width - 1] = 255;
 	}
 	
-	if (loc - scr_width + 1 > 0 && loc - scr_width + 1 < loc_max)
+	if (loc - signed(scr_width) + 1 > 0 && loc - signed(scr_width) + 1 < loc_max)
 	{
 		/* up 1, right 1 */
 		if (s[loc - scr_width + 1] < 249)
@@ -1816,7 +1816,7 @@ void JE_superPixel( JE_word loc )
 			s[loc - scr_width + 1] = 255;
 	}
 	
-	if (loc - scr_width * 2 > 0 && loc - scr_width * 2 < loc_max)
+	if (loc - signed(scr_width*2) > 0 && loc - signed(scr_width*2) < loc_max)
 	{
 		/* up 2 */
 		if (s[loc - scr_width * 2] < 246)
@@ -1827,7 +1827,7 @@ void JE_superPixel( JE_word loc )
 			s[loc - scr_width * 2] = 255;
 	}
 	
-	if (loc + scr_width > 0 && loc + scr_width < loc_max)
+	if (loc + signed(scr_width) > 0 && loc + signed(scr_width) < loc_max)
 	{
 		/* down 1 */
 		if (s[loc + scr_width] < 249)
@@ -1838,7 +1838,7 @@ void JE_superPixel( JE_word loc )
 			s[loc + scr_width] = 255;
 	}
 	
-	if (loc + scr_width - 1 > 0 && loc + scr_width - 1 < loc_max)
+	if (loc + signed(scr_width) - 1 > 0 && loc + signed(scr_width) - 1 < loc_max)
 	{
 		/* down 1, left 1 */
 		if (s[loc + scr_width - 1] < 247)
@@ -1849,7 +1849,7 @@ void JE_superPixel( JE_word loc )
 			s[loc + scr_width - 1] = 255;
 	}
 	
-	if (loc + scr_width + 1 > 0 && loc + scr_width + 1 < loc_max)
+	if (loc + signed(scr_width) + 1 > 0 && loc + signed(scr_width) + 1 < loc_max)
 	{
 		/* down 1, right 1 */
 		if (s[loc + scr_width + 1] < 247)
@@ -1860,7 +1860,7 @@ void JE_superPixel( JE_word loc )
 			s[loc + scr_width + 1] = 255;
 	}
 	
-	if (loc + scr_width * 2 > 0 && loc + scr_width * 2 < loc_max)
+	if (loc + signed(scr_width*2) > 0 && loc + signed(scr_width*2) < loc_max)
 	{
 		/* down 2 */
 		if (s[loc + scr_width * 2] < 246)

@@ -108,7 +108,19 @@ Some examples:
   implemented because the developers keep procrastinating.
 
 ==== Links =====================================================================
-project: http://opentyrian.googlecode.com/
-forums:  http://tyrian2k.proboards23.com/index.cgi?board=opentyriangeneral
+Project: http://opentyrian.googlecode.com/
+Forums:  http://tyrian2k.proboards23.com/index.cgi?board=opentyriangeneral
+
+==== Credits ===================================================================
+The OpenTyrian Development Team:
+ - Carl W. Reinke <unknown email> (Mindless)
+ - Yuri K. Schlesner <yuriks.br@gmail.com> (yuriks)
+ - Casey A. McCann <syntaxglitch@gmail.com> (syntaxglitch)
+ - Michael W. Olson <emacs.hacker@gmail.com> (mwolson)
+
+Big Thanks and other special mentions to:
+ - Jason Emery -- Tyrian source code and releasing Tyrian as freeware
+ - MAME and DOSBox teams -- FM emulator code
+ - AdPlug -- Loudness sound system code
 
 Original README by AshTR

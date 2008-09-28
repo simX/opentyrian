@@ -104,11 +104,7 @@ void init_keyboard( void )
 
 void input_grab( void )
 {
-#ifdef TARGET_GP2X
-	input_grabbed = true;
-#else
 	input_grabbed = input_grab_enabled || fullscreen_enabled;
-#endif
 
 	if (input_grabbed)
 	{

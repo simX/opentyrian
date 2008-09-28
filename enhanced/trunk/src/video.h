@@ -27,15 +27,11 @@
 
 #include "SDL.h"
 
-static const int scr_width = 320;
-static const int scr_height = 200;
+static const unsigned int scr_width = 320;
+static const unsigned int scr_height = 200;
 
-static const int surface_width = 320;
-#ifdef TARGET_GP2X
-static const int surace_height = 240;
-#else
-static const int surace_height = 200;
-#endif // TARGET_GP2X
+static const unsigned int surface_width = 320;
+static const unsigned int surace_height = 200;
 
 extern bool fullscreen_enabled;
 

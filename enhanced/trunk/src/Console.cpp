@@ -34,6 +34,7 @@
 #include <deque>
 #include <fstream>
 #include "boost/filesystem.hpp"
+#include "boost/algorithm/string/trim.hpp"
 
 #include "CCmd.h"
 #include "CVar.h"
@@ -402,6 +403,9 @@ void Console::runCommand( std::vector<std::string> tokens )
 
 	const std::string command_name = tokens[0];
 	tokens.erase(tokens.begin());
+
+	if (boost::trim_copy(command_name).size() == 0)
+		return;
 
 	CCmd* const command = CCmdManager::get().getCCmd(command_name);
 	if (command)

@@ -352,7 +352,6 @@ int main( int argc, char *argv[] )
 
 	if (CVars::ch_xmas)
 	{
-#ifndef TARGET_GP2X
 		Console::get()
 			<< "********************************" << std::endl
 			<< "* Christmas has been detected. *" << std::endl
@@ -363,7 +362,6 @@ int main( int argc, char *argv[] )
 		{
 			CVars::ch_xmas = false;
 		}
-#endif /*TARGET_GP2X*/
 		CVars::ch_xmas = true; // (Re)load data
 	}
 

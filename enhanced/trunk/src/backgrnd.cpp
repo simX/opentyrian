@@ -640,12 +640,12 @@ void JE_smoothies1( void ) /*Lava Effect*/
 	s += scr_width * 185 - 1;
 	src += scr_width * 185 - 1;
 	
-	for (int i = 185 * scr_width; i > 0; i -= 8)
+	for (int unsigned i = 185 * scr_width; i > 0; i -= 8)
 	{
 		temp = (((i - 1) >> 9) & 15) - 8;
 		temp = (temp < 0 ? -temp : temp) - 1;
 		
-		for (int j = 8; j > 0; j--)
+		for (int unsigned j = 8; j > 0; j--)
 		{
 			Uint8 temp_s = (*(src + temp) & 0x0f) * 2;
 			temp_s += *(s + temp + scr_width) & 0x0f;

@@ -8748,9 +8748,9 @@ void JE_funkyScreen( void )
 	Uint8 *s = game_screen; /* 8-bit specific */
 	Uint8 *src = (Uint8 *)VGAScreen2; /* 8-bit specific */
 	
-	for (int y = 0; y < 200; y++)
+	for (unsigned int y = 0; y < 200; y++)
 	{
-		for (int x = 0; x < 320; x++)
+		for (unsigned int x = 0; x < 320; x++)
 		{
 			int avg = 0;
 			if (y > 0)

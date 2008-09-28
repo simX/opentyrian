@@ -22,7 +22,7 @@
 #include "keyboard.h"
 #include "vga256d.h"
 #include "Console.h"
-#include "Cvar.h"
+#include "CVar.h"
 #include "network.h"
 
 #include "joystick.h"
@@ -30,11 +30,7 @@
 #include "SDL.h"
 #include <algorithm>
 
-#ifndef TARGET_GP2X
 const JE_ButtonAssign defaultJoyButtonAssign = {1, 4, 5, 5};
-#else  /* TARGET_GP2X */
-const JE_ButtonAssign defaultJoyButtonAssign = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 1, 4, 5, 5, 0, 0, 0};
-#endif  /* TARGET_GP2X */
 
 JE_ButtonType tempButton, button, joyButton;
 bool buttonHeld;
@@ -87,15 +83,8 @@ void JE_joystick1( void ) /* procedure to get x and y */
 		joyButton[i] = (SDL_JoystickGetButton(joystick, i) == 1);
 	}
 
-#ifndef TARGET_GP2X
 	joyX = SDL_JoystickGetAxis(joystick, 0);
 	joyY = SDL_JoystickGetAxis(joystick, 1);
-#else  /* TARGET_GP2X */
-	joyX = - (joyButton[GP2X_VK_LEFT]  || joyButton[GP2X_VK_UP_LEFT]  || joyButton[GP2X_VK_DOWN_LEFT])
-	       + (joyButton[GP2X_VK_RIGHT] || joyButton[GP2X_VK_UP_RIGHT] || joyButton[GP2X_VK_DOWN_RIGHT]);
-	joyY = - (joyButton[GP2X_VK_UP]   || joyButton[GP2X_VK_UP_LEFT]   || joyButton[GP2X_VK_UP_LEFT])
-	       + (joyButton[GP2X_VK_DOWN] || joyButton[GP2X_VK_DOWN_LEFT] || joyButton[GP2X_VK_DOWN_RIGHT]);
-#endif  /* TARGET_GP2X */
 
 	if (CVars::input_joy_filter || isNetworkGame)
 	{
@@ -156,14 +145,9 @@ void JE_joystick2( void )
 	if (joystick_installed)
 	{
 		JE_joystick1();
-#ifndef TARGET_GP2X
 		memcpy(button, joyButton, sizeof(button));
-#else  /* TARGET_GP2X */
-		memcpy(button, joyButton + 12, 4);
-#endif  /* TARGET_GP2X */
 		/*JE_UpdateButtons;*/
 
-#ifndef TARGET_GP2X
 		joystickUp    = joyY < (-32768 * (1.f - CVars::input_joy_sensitivity));
 		joystickDown  = joyY > ( 32768 * (1.f - CVars::input_joy_sensitivity));
 		
@@ -171,17 +155,6 @@ void JE_joystick2( void )
 		joystickRight = joyX > ( 32768 * (1.f - CVars::input_joy_sensitivity));
 		
 		joystickInput = joystickUp || joystickDown || joystickLeft || joystickRight || button[0] || button[1] || button[2] || button[3];
-#else  /* TARGET_GP2X */
-		joystickLeft  = joyButton[GP2X_VK_LEFT]  || joyButton[GP2X_VK_UP_LEFT]  || joyButton[GP2X_VK_DOWN_LEFT];
-		joystickRight = joyButton[GP2X_VK_RIGHT] || joyButton[GP2X_VK_UP_RIGHT] || joyButton[GP2X_VK_DOWN_RIGHT];
-		joystickUp    = joyButton[GP2X_VK_UP]   || joyButton[GP2X_VK_UP_LEFT]   || joyButton[GP2X_VK_UP_LEFT];
-		joystickDown  = joyButton[GP2X_VK_DOWN] || joyButton[GP2X_VK_DOWN_LEFT] || joyButton[GP2X_VK_DOWN_RIGHT];
-		
-		for (unsigned int i = 0; i < COUNTOF(joyButton) && joystickInput == 0; i++)
-		{
-			joystickInput = joystickInput || joyButton[i];
-		}
-#endif  /* TARGET_GP2X */
 	} else {
 		std::fill(button, button+COUNTOF(button), false);
 	}
@@ -197,11 +170,7 @@ bool JE_nextJoystickCheck( void )
 		
 		for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 		{
-#ifndef TARGET_GP2X
 			if (joyButton[i])
-#else  /* TARGET_GP2X */
-			if (joyButton[i] && i != GP2X_VK_LEFT && i != GP2X_VK_RIGHT && i != GP2X_VK_UP && i != GP2X_VK_DOWN)
-#endif  /* TARGET_GP2X */
 				return true;
 		}
 		
@@ -308,14 +277,10 @@ bool init_joystick( void )
 
 		if (joystick)
 		{
-#ifndef TARGET_GP2X
 			if (SDL_JoystickNumButtons(joystick) >= 4 && SDL_JoystickNumAxes(joystick) >= 2)
 			{
 				joystick_installed = true;
 			}
-#else  /* TARGET_GP2X */
-			joystick_installed = true;
-#endif  /* TARGET_GP2X */
 
 			const char* name = SDL_JoystickName(0);
 			Console::get() << " Found";

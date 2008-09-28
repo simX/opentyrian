@@ -24,7 +24,7 @@
 #include "video.h"
 #include <cmath>
 
-static const int MAX_SUPERPIXELS = 101;
+static const unsigned int MAX_SUPERPIXELS = 101;
 
 struct SuperPixel
 {
