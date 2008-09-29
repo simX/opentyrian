@@ -1,5 +1,6 @@
 # BUILD SETTINGS ###################################
-DEBUG := 1
+DEBUG := 1 # Always run 'make clean' after changing this!
+USE_PRECOMPILED := 1
 
 BOOST_SUFFIX := -mt
 BOOST_ROOT := /usr/include # Directory that contains the boost/ include dir, NOT the dir itself
@@ -13,6 +14,14 @@ ifeq ($(DEBUG), 1)
 	DEBUG_FLAGS := -g3 -O0 -Werror
 else
 	DEBUG_FLAGS := -g0 -O2 -fomit-frame-pointer -DNDEBUG
+endif
+
+ifeq ($(USE_PRECOMPILED), 1)
+	PRECOMPILED_H_GCH := src/precompiled.h.gch
+	INCLUDE_PRECOMPILED := -include "precompiled.h"
+else
+	PRECOMPILED_H_GCH :=
+	INCLUDE_PRECOMPILED :=
 endif
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
@@ -45,12 +54,16 @@ ifneq ($(MAKECMDGOALS), clean)
 -include $(OBJS:.o=.d)
 endif
 
+$(PRECOMPILED_H_GCH) : src/precompiled.h
+	$(CXX) -o $@ -c $(CXXFLAGS) $<
+
 obj/%.d : obj/%.o
-obj/%.o : src/%.cpp
-	$(CXX) -o $@ -MMD -c $(CXXFLAGS) $<
+obj/%.o : src/%.cpp $(PRECOMPILED_H_GCH)
+	$(CXX) -o $@ -MMD -c $(CXXFLAGS) $(INCLUDE_PRECOMPILED) $< 
+#-H -Winvalid-pch
 
 .PHONY : clean
 
 clean :
-	rm -f obj/*.o obj/*.d
+	rm -f obj/*.o obj/*.d $(PRECOMPILED_H_GCH)
 	rm -f $(TARGET)

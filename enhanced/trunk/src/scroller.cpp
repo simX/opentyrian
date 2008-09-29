@@ -160,7 +160,7 @@ void scroller_sine( const about_text_type text[] )
 			}
 		}
 
-		for (int i = 0; i < visible_lines; i++)
+		for (int i = 0; unsigned(i) < visible_lines; i++)
 		{
 			if (current_line + i >= 0)
 			{

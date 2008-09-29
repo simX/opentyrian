@@ -18,8 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifdef _MSC_VER
 #pragma once
 #pragma warning( push, 0 )
+#endif // _MSC_VER
 
 // C++ Standard headers
 #include <algorithm>
@@ -57,8 +59,12 @@
 #include <time.h>
 
 // Boost headers
+// Works around bug on GCC < 4.2
+#if (!defined(__GNUC__) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 2))
 #include "boost/bimap.hpp"
 #include "boost/bind.hpp"
+#endif
+
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/function.hpp"
