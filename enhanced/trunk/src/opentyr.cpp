@@ -41,8 +41,8 @@
 #include "tyrian2.h"
 #include "varz.h"
 #include "vga256d.h"
-#include "Console.h"
-#include "KeyNames.h"
+#include "console/Console.h"
+#include "console/KeyNames.h"
 #include "video.h"
 #include "video_scale.h"
 

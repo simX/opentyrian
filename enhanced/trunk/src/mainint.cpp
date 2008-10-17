@@ -40,9 +40,9 @@
 #include "sndmast.h"
 #include "varz.h"
 #include "vga256d.h"
-#include "GameActions.h"
+#include "console/GameActions.h"
 #include "HighScores.h"
-#include "CVar.h"
+#include "console/CVar.h"
 #include "explosion.h"
 
 #include "mainint.h"

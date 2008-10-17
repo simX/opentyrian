@@ -20,7 +20,7 @@
 #include "opentyr.h"
 #include "params.h"
 
-#include "CVar.h"
+#include "console/CVar.h"
 #include "error.h"
 #include "loudness.h"
 #include "mainint.h"

@@ -22,14 +22,14 @@
 #include "joystick.h"
 #include "config.h"
 #include "video.h"
-#include "BindManager.h"
+#include "console/BindManager.h"
 
 #include "keyboard.h"
 
 #include "SDL.h"
 
 //TODO: Remove
-#include "Console.h"
+#include "console/Console.h"
 
 
 bool ESCPressed;

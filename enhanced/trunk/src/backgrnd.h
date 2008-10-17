@@ -22,9 +22,7 @@
 
 #include "opentyr.h"
 
-#include "CVar.h"
-
-//#include <inttypes.h>
+#include "console/CVar.h"
 
 extern JE_word backPos, backPos2, backPos3;
 extern JE_word backMove, backMove2, backMove3;

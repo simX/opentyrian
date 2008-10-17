@@ -21,8 +21,8 @@
 
 #include "keyboard.h"
 #include "vga256d.h"
-#include "Console.h"
-#include "CVar.h"
+#include "console/Console.h"
+#include "console/CVar.h"
 #include "network.h"
 
 #include "joystick.h"

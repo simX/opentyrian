@@ -65,7 +65,7 @@ Revision History:
 #include <sstream>
 #include <iomanip>
 
-#include "Console.h"
+#include "console/Console.h"
 #include "fmopl.h"
 
 #ifndef PI

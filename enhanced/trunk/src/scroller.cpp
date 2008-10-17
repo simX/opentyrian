@@ -115,12 +115,12 @@ void scroller_sine( const about_text_type text[] )
 	bool ale = (rand() % 2) != 0;
 
 	unsigned int visible_lines = scr_height / LINE_HEIGHT + 1;
-	int current_line = -visible_lines;
+	int current_line = -int(visible_lines);
 	int y = 0;
 	bool fade_in = true;
 	
 	struct coin_type { unsigned int x, y, vel, type, cur_frame; bool backwards; } coins[MAX_COINS];
-	struct { unsigned int x, y, ay, vx, vy; } beer[MAX_BEER];
+	struct { unsigned int x, y; int vx, vy; } beer[MAX_BEER];
 
 	if (ale)
 	{
@@ -204,7 +204,7 @@ void scroller_sine( const about_text_type text[] )
 			{
 				current_line++;
 			} else {
-				current_line = -visible_lines;
+				current_line = -int(visible_lines);
 			}
 		}
 

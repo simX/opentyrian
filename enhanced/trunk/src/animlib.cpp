@@ -25,7 +25,6 @@
 #include "nortsong.h"
 #include "nortvars.h"
 #include "vga256d.h"
-#include "Console.h"
 
 #include "animlib.h"
 

@@ -22,7 +22,7 @@
 
 #include "opentyr.h"
 
-#include "CVar.h"
+#include "console/CVar.h"
 
 typedef bool JE_ButtonType[4]; /* [1..4] */
 typedef int JE_ButtonAssign[4]; /* [1..4] */

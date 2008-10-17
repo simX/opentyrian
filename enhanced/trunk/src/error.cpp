@@ -22,7 +22,7 @@
 #include "config.h"
 #include "joystick.h"
 #include "video.h"
-#include "Console.h"
+#include "console/Console.h"
 
 #include "error.h"
 

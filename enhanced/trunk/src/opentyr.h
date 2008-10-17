@@ -23,7 +23,7 @@
 #include "SDL.h"
 #include "SDL_endian.h"
 
-#include "Console.h"
+#include "console/Console.h"
 
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__

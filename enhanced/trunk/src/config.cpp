@@ -29,10 +29,10 @@
 #include "video.h"
 #include "vga256d.h"
 #include "BinaryStream.h"
-#include "Console.h"
+#include "console/Console.h"
 #include "HighScores.h"
-#include "CVar.h"
-#include "BindManager.h"
+#include "console/CVar.h"
+#include "console/BindManager.h"
 
 #include "config.h"
 

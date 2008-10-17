@@ -21,8 +21,8 @@
 
 #include "fm_synth.h"
 #include "lds_play.h"
-#include "Console.h"
-#include "CVar.h"
+#include "console/Console.h"
+#include "console/CVar.h"
 #include "sndmast.h"
 #include "nortsong.h"
 

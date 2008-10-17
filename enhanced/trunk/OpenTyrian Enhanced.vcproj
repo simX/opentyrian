@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Wall /W3"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;PASCAL_TYPES"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -135,7 +135,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;PASCAL_TYPES"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -213,11 +213,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\BindManager.h"
+				RelativePath=".\src\console\BindManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CCmd.h"
+				RelativePath=".\src\console\CCmd.h"
 				>
 			</File>
 			<File
@@ -225,11 +225,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Console.h"
+				RelativePath=".\src\console\Console.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CVar.h"
+				RelativePath=".\src\console\CVar.h"
 				>
 			</File>
 			<File
@@ -265,7 +265,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\GameActions.h"
+				RelativePath=".\src\console\GameActions.h"
 				>
 			</File>
 			<File
@@ -289,7 +289,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyNames.h"
+				RelativePath=".\src\console\KeyNames.h"
 				>
 			</File>
 			<File
@@ -425,11 +425,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\BindManager.cpp"
+				RelativePath=".\src\console\BindManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CCmd.cpp"
+				RelativePath=".\src\console\CCmd.cpp"
 				>
 			</File>
 			<File
@@ -437,11 +437,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Console.cpp"
+				RelativePath=".\src\console\Console.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CVar.cpp"
+				RelativePath=".\src\console\CVar.cpp"
 				>
 			</File>
 			<File
@@ -477,7 +477,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\GameActions.cpp"
+				RelativePath=".\src\console\GameActions.cpp"
 				>
 			</File>
 			<File
@@ -501,7 +501,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyNames.cpp"
+				RelativePath=".\src\console\KeyNames.cpp"
 				>
 			</File>
 			<File
@@ -521,7 +521,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\MiscCVars.cpp"
+				RelativePath=".\src\console\MiscCVars.cpp"
 				>
 			</File>
 			<File
