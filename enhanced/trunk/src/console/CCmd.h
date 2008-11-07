@@ -66,7 +66,8 @@ public:
 	}
 
 	enum Flags {
-		NONE = 0
+		NONE = 0,
+		CHEAT = 1
 	};
 
 	CCmd( const std::string& name, Flags flags, const std::string& help, void (*func)(const std::vector<std::string>&));

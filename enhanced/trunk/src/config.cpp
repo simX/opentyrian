@@ -47,8 +47,6 @@
 
 namespace fs = boost::filesystem;
 
-/* Configuration Load/Save handler */
-
 const unsigned char cryptKey[10] = /* [1..10] */
 {
 	15, 50, 89, 240, 147, 34, 86, 9, 32, 208
@@ -60,46 +58,6 @@ const JE_KeySettingType defaultKeySettings =
 	SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_RETURN, SDLK_LCTRL, SDLK_LALT
 };
 */
-
-
-const char tyrian_ini_template[] = \
-	"[video]\n"
-	"game_speed = %d\n"
-	"processor_type = %d\n"
-	"gamma_correction = %d\n"
-	"fullscreen = %s\n"
-	"\n"
-	"[sound]\n"
-	"sound_effects = %s\n"
-	"s_music_vol = %d\n"
-	"s_fx_vol = %d\n"
-	"\n"
-	"[input]\n"
-	"device1 = %d\n"
-	"device2 = %d\n"
-	"\n"
-	"[keyboard]\n"
-	"; See SDL_keysym.h for values\n"
-	"up = %d\n"
-	"down = %d\n"
-	"left = %d\n"
-	"right = %d\n"
-	"fire = %d\n"
-	"change_fire = %d\n"
-	"left_sidekick = %d\n"
-	"right_sidekick = %d\n"
-	"\n"
-	"[joystick]\n"
-	"; 1 = fire main weapons\n"
-	"; 2 = fire left sidekick\n"
-	"; 3 = fire right sidekick\n"
-	"; 4 = fire both sidekicks\n"
-	"; 5 = change rear weapon\n"
-	"button1 = %d\n"
-	"button2 = %d\n"
-	"button3 = %d\n"
-	"button4 = %d\n";
-
 
 const JE_EditorItemAvailType initialItemAvail =
 {
@@ -151,7 +109,6 @@ int shield2, shieldMax2;
 int armorLevel, armorLevel2;
 int shieldWait, shieldT;
 
-int special_recharge_time;
 int shotRepeat[11], shotMultiPos[11]; /* [1..11] */  /* 7,8 = Superbomb */
 int portConfig[10]; /* [1..10] */
 bool portConfigDone;
@@ -276,21 +233,21 @@ void JE_saveGame( int slot, const char *name )
 	saveFiles[slot-1].gameHasRepeated = gameHasRepeated;
 	saveFiles[slot-1].level = saveLevel;
 
-	pItems[3-1] = superArcadeMode;
+	pItems[PITEM_SUPER_ARCADE_MODE] = superArcadeMode;
 	if (superArcadeMode == 0 && onePlayerAction)
 	{
-		pItems[3-1] = 255;
+		pItems[PITEM_SUPER_ARCADE_MODE] = 255;
 	}
 	if (superTyrian)
 	{
-		pItems[3-1] = 254;
+		pItems[PITEM_SUPER_ARCADE_MODE] = 254;
 	}
 
 	memcpy(&saveFiles[slot-1].items, &pItems, sizeof(pItems));
 
 	if (superArcadeMode > 253)
 	{
-		pItems[3-1] = 0;
+		pItems[PITEM_SUPER_ARCADE_MODE] = 0;
 	}
 	if (twoPlayerMode)
 	{
@@ -346,17 +303,17 @@ void JE_loadGame( int slot )
 	twoPlayerMode     = (slot-1) > 10;
 	difficultyLevel   = saveFiles[slot-1].difficulty;
 	memcpy(&pItems, &saveFiles[slot-1].items, sizeof(pItems));
-	superArcadeMode   = pItems[3-1];
+	superArcadeMode   = pItems[PITEM_SUPER_ARCADE_MODE];
 
 	if (superArcadeMode == 255)
 	{
 		onePlayerAction = true;
 		superArcadeMode = 0;
-		pItems[3-1] = 0;
+		pItems[PITEM_SUPER_ARCADE_MODE] = 0;
 	} else if (superArcadeMode == 254) {
 		onePlayerAction = true;
 		superArcadeMode = 0;
-		pItems[3-1] = 0;
+		pItems[PITEM_SUPER_ARCADE_MODE] = 0;
 		superTyrian = true;
 	} else if (superArcadeMode > 0) {
 		onePlayerAction = true;
@@ -368,13 +325,6 @@ void JE_loadGame( int slot )
 		onePlayerAction = false;
 	} else {
 		memcpy(&pItemsBack2, &saveFiles[slot-1].lastItems, sizeof(pItemsBack2));
-	}
-
-	/* Compatibility with old version */
-	if (pItemsPlayer2[7-1] < 101)
-	{
-		pItemsPlayer2[7-1] = 101;
-		pItemsPlayer2[8-1] = pItemsPlayer2[4-1];
 	}
 
 	score       = saveFiles[slot-1].score;
@@ -542,44 +492,6 @@ namespace CVars
 
 void JE_loadConfiguration( void )
 {
-	/*
-	dictionary *ini = iniparser_new("tyrian.ini");
-
-	gameSpeed = iniparser_getint(ini, "video:game_speed", 4);
-	processorType = iniparser_getint(ini, "video:processor_type", 3);
-	gammaCorrection = iniparser_getint(ini, "video:gamma_correction", 0);
-	fullscreen_enabled = iniparser_getboolean(ini, "video:fullscreen", false);
-
-	soundEffects = iniparser_getboolean(ini, "sound:sound_effects", true);
-	tyrMusicVolume = iniparser_getint(ini, "sound:s_music_vol", 255);
-	fxVolume = iniparser_getint(ini, "sound:s_fx_vol", 128);
-
-	inputDevice1 = iniparser_getint(ini, "input:device1", 0);
-	inputDevice2 = iniparser_getint(ini, "input:device2", 0);
-
-	keySettings[0] = (SDLKey)iniparser_getint(ini, "keyboard:up", 273);
-	keySettings[1] = (SDLKey)iniparser_getint(ini, "keyboard:down", 274);
-	keySettings[2] = (SDLKey)iniparser_getint(ini, "keyboard:left", 276);
-	keySettings[3] = (SDLKey)iniparser_getint(ini, "keyboard:right", 275);
-	keySettings[4] = (SDLKey)iniparser_getint(ini, "keyboard:fire", 32);
-	keySettings[5] = (SDLKey)iniparser_getint(ini, "keyboard:change_fire", 13);
-	keySettings[6] = (SDLKey)iniparser_getint(ini, "keyboard:left_sidekick", 306);
-	keySettings[7] = (SDLKey)iniparser_getint(ini, "keyboard:right_sidekick", 308);
-
-	joyButtonAssign[0] = iniparser_getint(ini, "joystick:button1", 1);
-	joyButtonAssign[1] = iniparser_getint(ini, "joystick:button2", 4);
-	joyButtonAssign[2] = iniparser_getint(ini, "joystick:button3", 5);
-	joyButtonAssign[3] = iniparser_getint(ini, "joystick:button4", 5);
-
-	iniparser_free(ini);
-
-	tyrMusicVolume = (tyrMusicVolume > 255) ? 255 : tyrMusicVolume;
-	fxVolume = (fxVolume > 254) ? 254 : ((fxVolume < 14) ? 14 : fxVolume);
-
-	soundActive = true;
-	musicActive = true;
-	*/
-
 	for (int i = 0; i < SAVE_FILES_NUM; i++)
 	{
 		JE_SaveFileType& save = saveFiles[i];

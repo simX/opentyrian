@@ -433,6 +433,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cheats.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\config.cpp"
 				>
 			</File>

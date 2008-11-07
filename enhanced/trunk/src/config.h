@@ -38,7 +38,21 @@ static const int SAVE_FILES_SIZE = 2398;
 static const int SIZEOF_SAVEGAMETEMP = SAVE_FILES_SIZE+4+100;
 static const int SAVE_FILE_SIZE = (SIZEOF_SAVEGAMETEMP - 4);
 
-//typedef SDLKey JE_KeySettingType[8]; /* [1..8] */
+enum PItemsEnum
+{
+	PITEM_FRONT_WEAPON = 0,
+	PITEM_REAR_WEAPON = 1,
+	PITEM_SUPER_ARCADE_MODE = 2,
+	PITEM_LEFT_SIDEKICK = 3,
+	PITEM_RIGHT_SIDEKICK = 4,
+	PITEM_GENERATOR = 5,
+	PITEM_P2_SIDEKICK_UPGRADE = 6,
+	PITEM_P2_SIDEKICK = 7,
+	PITEM_EPISODE = 8,
+	PITEM_SHIELD = 9,
+	PITEM_SPECIAL = 10,
+	PITEM_SHIP = 11
+};
 typedef int JE_PItemsType[12]; /* [1..12] */
 
 typedef char JE_EditorItemAvailType[100]; /* [1..100] */
@@ -95,7 +109,6 @@ extern int shield, shieldMax, shieldSet;
 extern int shield2, shieldMax2;
 extern int armorLevel, armorLevel2;
 extern int shieldWait, shieldT;
-extern int special_recharge_time;
 extern int shotRepeat[11], shotMultiPos[11];
 extern int portConfig[10];
 extern bool portConfigDone;

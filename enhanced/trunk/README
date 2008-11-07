@@ -18,9 +18,9 @@ To build from source:
 
 To play:
 - Tyrian 2.1 data files which have been released for free:
-	http://camanis.net/tyrian/tyrian21.zip
+    http://camanis.net/tyrian/tyrian21.zip
 - A SDL runtime
-	(SDL.dll on windows, other OSes should have this in the system already)
+    (SDL.dll on windows, other OSes should have this in the system already)
 
 ==== Keyboard Controls =========================================================
 ctrl-backspace -- kill OpenTyrian
@@ -61,7 +61,7 @@ commands:
  Command                 | Result
 -------------------------+-----------------------------------------------------
  list snd_               | Lists all ccmds and cvar containing "snd_" in their
-						 | name.
+                         | name.
  echo "Hello World!"     | Prints "Hello World!" (without the quotes) to the
                          | console. Useful for scripts.
  help snd_sfx_volume     | Displays help text for cvar "snd_sfx_volume".

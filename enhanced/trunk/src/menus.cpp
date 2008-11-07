@@ -172,7 +172,7 @@ bool select_episode( )
 					JE_fadeBlack(10);
 
 					JE_initEpisode(episode);
-					pItems[8] = episodeNum;
+					pItems[PITEM_EPISODE] = episodeNum;
 					return true;
 				}
 				break;

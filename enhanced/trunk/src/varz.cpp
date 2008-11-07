@@ -418,6 +418,8 @@ int baseArmor, baseArmor2;
 JE_word shipGr, shipGr2;
 Uint8 *shipGrPtr, *shipGr2ptr;
 
+static int special_recharge_time;
+
 
 void JE_getShipInfo( void )
 {
@@ -426,26 +428,26 @@ void JE_getShipInfo( void )
 	shipGrPtr = shapes9;
 	shipGr2ptr = shapes9;
 
-	powerAdd = powerSys[pItems[5]].power;
+	powerAdd = powerSys[pItems[PITEM_GENERATOR]].power;
 
-	extraShip = pItems[11] > 90;
+	extraShip = pItems[PITEM_SHIP] > 90;
 	if (extraShip)
 	{
-		shipGr = JE_SGr(pItems[11] - 90, &shipGrPtr);
+		shipGr = JE_SGr(pItems[PITEM_SHIP] - 90, &shipGrPtr);
 
-		int base = (pItems[11] - 91) * 15;
+		int base = (pItems[PITEM_SHIP] - 91) * 15;
 		armorLevel = extraShips[base+7];
 	} else {
-		shipGr = ships[pItems[11]].shipgraphic;
-		armorLevel = ships[pItems[11]].dmg;
+		shipGr = ships[pItems[PITEM_SHIP]].shipgraphic;
+		armorLevel = ships[pItems[PITEM_SHIP]].dmg;
 	}
 
-	extraShip2 = pItemsPlayer2[11] > 90;
+	extraShip2 = pItemsPlayer2[PITEM_SHIP] > 90;
 	if (extraShip2)
 	{
-		shipGr2 = JE_SGr(pItemsPlayer2[11] - 90, &shipGr2ptr);
+		shipGr2 = JE_SGr(pItemsPlayer2[PITEM_SHIP] - 90, &shipGr2ptr);
 
-		int base2 = (pItemsPlayer2[11] - 91) * 15;
+		int base2 = (pItemsPlayer2[PITEM_SHIP] - 91) * 15;
 		baseArmor2 = extraShips[base2+7];
 	} else {
 		shipGr2 = 0;
@@ -459,7 +461,7 @@ void JE_getShipInfo( void )
 	{
 		sAni = 2;
 	} else {
-		sAni = ships[pItems[11]].ani;
+		sAni = ships[pItems[PITEM_SHIP]].ani;
 	}
 
 	if (sAni == 0)
@@ -511,23 +513,23 @@ void JE_drawOptions( void )
 	{
 		option1Draw = 108;
 		option2Draw = 126;
-		if (pItemsPlayer2[3] == 0)
+		if (pItemsPlayer2[PITEM_LEFT_SIDEKICK] == 0)
 		{
 			option1Draw = 0;
 		}
-		if (pItemsPlayer2[4] == 0)
+		if (pItemsPlayer2[PITEM_RIGHT_SIDEKICK] == 0)
 		{
 			option2Draw = 0;
 		}
-		option1Item = pItemsPlayer2[3];
-		option2Item = pItemsPlayer2[4];
+		option1Item = pItemsPlayer2[PITEM_LEFT_SIDEKICK];
+		option2Item = pItemsPlayer2[PITEM_RIGHT_SIDEKICK];
 		tempX = PXB;
 		tempY = PYB;
 	} else {
 		option1Draw = 64;
 		option2Draw = 82;
-		option1Item = pItems[3];
-		option2Item = pItems[4];
+		option1Item = pItems[PITEM_LEFT_SIDEKICK];
+		option2Item = pItems[PITEM_RIGHT_SIDEKICK];
 		if (option1Item == 0)
 		{
 			option1Draw = 0;
@@ -647,7 +649,7 @@ void JE_drawOptionLevel( void )
 	{
 		for (int temp = 1; temp <= 3; temp++)
 		{
-			JE_c_bar(268, 127 + (temp - 1) * 6, 269, 127 + 3 + (temp - 1) * 6, 193 + ((pItemsPlayer2[7-1] - 100) == temp) * 11);
+			JE_c_bar(268, 127 + (temp - 1) * 6, 269, 127 + 3 + (temp - 1) * 6, 193 + ((pItemsPlayer2[PITEM_P2_SIDEKICK] - 100) == temp) * 11);
 		}
 	}
 }
@@ -1076,12 +1078,12 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			break;
 		case 17:
 			soundQueue[3] = 29;
-			if (pItems[3] == special[specialType].wpn)
+			if (pItems[PITEM_LEFT_SIDEKICK] == special[specialType].wpn)
 			{
-				pItems[4] = special[specialType].wpn;
+				pItems[PITEM_RIGHT_SIDEKICK] = special[specialType].wpn;
 				shotMultiPos[4] = 0;
 			} else {
-				pItems[3] = special[specialType].wpn;
+				pItems[PITEM_LEFT_SIDEKICK] = special[specialType].wpn;
 				shotMultiPos[3] = 0;
 			}
 			
@@ -1089,7 +1091,7 @@ void JE_specialComplete( int playerNum, int *armor, int *shield, int specialType
 			JE_drawOptions();
 			break;
 		case 18:
-			pItems[4] = special[specialType].wpn;
+			pItems[PITEM_RIGHT_SIDEKICK] = special[specialType].wpn;
 			
 			tempScreenSeg = VGAScreenSeg;
 			JE_drawOptions();
@@ -1164,7 +1166,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 		VGAScreen = game_screen; /* side-effect of game_screen */
 	}
 	
-	if (playerNum == 1 && pItems[10] > 0)
+	if (playerNum == 1 && pItems[PITEM_SPECIAL] > 0)
 	{  /*Main Begin*/
 		
 		if (superArcadeMode > 0 && (button[1] || button[2]))
@@ -1176,7 +1178,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 			fireButtonHeld = false;
 		} else if (shotRepeat[8] == 0 && !fireButtonHeld && !(flareDuration > 0) && specialWait == 0) {
 			fireButtonHeld = true;
-			JE_specialComplete(playerNum, armor, shield, pItems[10]);
+			JE_specialComplete(playerNum, armor, shield, pItems[PITEM_SPECIAL]);
 		}
 		
 	}  /*Main End*/
@@ -1290,8 +1292,11 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 
 void draw_special_shot_info()
 {
-	if (pItems[10] > 0)
+	if (pItems[PITEM_SPECIAL] > 0)
 	{
+		if (special_recharge_time == 0)
+			special_recharge_time = 1;
+
 		int special_progress;
 		bool done = false;
 		JE_drawShape2(47, 4, 93, shapes9);
@@ -1419,9 +1424,9 @@ void JE_portConfigs( void )
 {
 	if (twoPlayerMode)
 	{
-		tempW = weaponPort[pItemsPlayer2[2-1]].opnum;
+		tempW = weaponPort[pItemsPlayer2[PITEM_REAR_WEAPON]].opnum;
 	} else {
-		tempW = weaponPort[pItems[2-1]].opnum;
+		tempW = weaponPort[pItems[PITEM_REAR_WEAPON]].opnum;
 	}
 }
 
