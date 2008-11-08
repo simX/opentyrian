@@ -41,27 +41,38 @@ public:
 		ConversionErrorException() : std::runtime_error("CVar type conversion failed") {}
 	};
 
+	class NoArchiveException : public std::runtime_error
+	{
+	public:
+		NoArchiveException( const CVar& cvar )
+			: runtime_error(cvar.getName() + " doesn't have the CONFIG flag!") {}
+	};
+
 	enum Flags {
 		NONE = 0,
 		CONFIG = 1,
-		CHEAT = 2
+		CONFIG_AUTO = 2,
+		CHEAT = 4
 	};
 
-	CVar( const std::string& name, Flags flags, const std::string& help );
+	CVar( const std::string& name, int flags, const std::string& help );
 	virtual ~CVar() {}
 
 	const std::string& getName() const { return mName; }
-	Flags getFlags() const { return mFlags; }
+	int getFlags() const { return mFlags; }
 	const std::string& getHelp() const { return mHelp; }
 	virtual std::string serialize( ) const = 0;
 	virtual void unserialize( const std::string& str ) = 0;
+	virtual std::string serializeArchive( ) const = 0;
+	virtual void unserializeArchive( const std::string& str ) = 0;
+	virtual bool archiveDirty( ) const = 0;
 	virtual std::string getType() const = 0;
 private:
 	CVar( const CVar& );
 	CVar& operator=( const CVar& );
 
 	const std::string mName;
-	const Flags mFlags;
+	const int mFlags;
 	const std::string mHelp;
 };
 
@@ -98,11 +109,28 @@ template<class T, class NAME> class CVarTemplate : public CVar
 {
 protected:
 	T mValue;
+	T archiveValue;
+	const T defaultValue;
+
+	virtual std::string onSerialize( const T& val ) const
+	{
+		std::ostringstream s;
+		s << val;
+		return s.str();
+	}
+
+	virtual T onUnserialize( const std::string& str ) {
+		T tmp;
+		std::istringstream s(str);
+		if (!(s >> tmp)) throw CVar::ConversionErrorException();
+		s >> tmp;
+		return tmp;
+	}
 private:
 	boost::function<T(const T&)> mValidationFunc;
 public:
-	CVarTemplate( const std::string& name, Flags flags, const std::string& help, T def, boost::function<T(const T&)> validationFunc = 0 )
-		: CVar(name, flags, help), mValue(def), mValidationFunc(validationFunc)
+	CVarTemplate( const std::string& name, int flags, const std::string& help, T def, boost::function<T(const T&)> validationFunc = 0 )
+		: CVar(name, flags, help), mValue(def), archiveValue(def), defaultValue(def), mValidationFunc(validationFunc)
 	{}
 
 	virtual ~CVarTemplate() {}
@@ -117,20 +145,58 @@ public:
 		} else {
 			mValue = val;
 		}
+
+		if (getFlags() & CONFIG_AUTO)
+			archiveValue = mValue;
 	}
 
-	virtual std::string serialize( ) const {
-		std::ostringstream s;
-		s << get();
-		return s.str();
+	T getArchive( ) const
+	{
+		if (!getFlags() & CONFIG)
+			throw NoArchiveException(*this);
+
+		return archiveValue;
 	}
 
-	virtual void unserialize( const std::string& str ) {
-		T tmp;
-		std::istringstream s(str);
-		if (!(s >> tmp)) throw CVar::ConversionErrorException();
-		s >> tmp;
-		set(tmp);
+	void setArchive( const T& val )
+	{
+		if (!getFlags() & CONFIG)
+			throw NoArchiveException(*this);
+
+		set(val);
+		archiveValue = mValue;
+	}
+
+	std::string serialize( ) const
+	{
+		return onSerialize(get());
+	}
+	
+	void unserialize( const std::string& str )
+	{
+		set(onUnserialize(str));
+	}
+
+	std::string serializeArchive( ) const
+	{
+		if (!getFlags() & CONFIG)
+			throw NoArchiveException(*this);
+
+		return onSerialize(getArchive());
+	}
+
+	void unserializeArchive( const std::string& str )
+	{
+		if (!getFlags() & CONFIG)
+			throw NoArchiveException(*this);
+
+		setArchive(onUnserialize(str));
+	}
+
+	// Returns true if the archived value is different than the default value
+	bool archiveDirty( ) const
+	{
+		return archiveValue != defaultValue;
 	}
 
 	std::string getType() const { return NAME::get(); }
@@ -149,46 +215,49 @@ typedef CVarTemplate<float, FloatString> CVarFloat;
 
 class CVarBool : public CVarTemplate<bool, BoolString>
 {
-public:
-	CVarBool( const std::string& name, Flags flags, const std::string& help, bool def, boost::function<bool(const bool&)> validationFunc = 0 )
-		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
-	{}
-
-	std::string serialize( ) const
+protected:
+	std::string onSerialize( const bool& val ) const
 	{
-		return get() ? "true" : "false";
+		return val ? "true" : "false";
 	}
 
-	void unserialize( const std::string& str )
+	bool onUnserialize( const std::string& str )
 	{
 		if (str == "true") {
-			set(true);
+			return true;
 		} else if (str == "false") {
-			set(false);
+			return false;
 		} else {
 			std::istringstream s(str);
 			int tmp;
 			s >> tmp;
-			set(s > 0 ? true : false);
+			return s > 0 ? true : false;
 		}
 	}
 
-	void operator=( const bool& val ) { set(val); }
-};
-//typedef CVarTemplate<bool, BoolString> CVarBool;
-
-class ParseErrorException : public std::runtime_error {
 public:
-	ParseErrorException( const std::string& text ) : runtime_error(text) {};
+	CVarBool( const std::string& name, int flags, const std::string& help, bool def, boost::function<bool(const bool&)> validationFunc = 0 )
+		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
+	{}
+
+	void operator=( const bool& val ) { set(val); }
 };
 
 struct StringString { inline static const char* get() { return "string"; } };
 class CVarString : public CVarTemplate<std::string, StringString>
 {
+protected:
+	std::string onSerialize( const std::string& val ) const { return val; }
+	std::string onUnserialize( const std::string& str ) { return str; }
 public:
-	CVarString( const std::string& name, Flags flags, const std::string& help, const std::string& def ) : CVarTemplate<std::string, StringString>(name, flags, help, def) {}
-	std::string serialize( ) const { return get(); }
-	void unserialize( const std::string& str ) { set(str); }
+	CVarString( const std::string& name, int flags, const std::string& help, const std::string& def )
+		: CVarTemplate<std::string, StringString>(name, flags, help, def)
+	{}
+};
+
+class ParseErrorException : public std::runtime_error {
+public:
+	ParseErrorException( const std::string& text ) : runtime_error(text) {};
 };
 
 #endif // CVAR_H

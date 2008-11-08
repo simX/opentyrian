@@ -47,6 +47,35 @@ namespace CCmds
 			}
 		}
 
+		static void seta( const std::vector<std::string>& params )
+		{
+			std::string param1 = CCmd::convertParam<std::string>(params, 0);
+			CVar* const var = CVarManager::get().getCVar(param1);
+			if (!var) throw CCmd::RuntimeCCmdError("Unknow CVar/CCmd");
+
+			try
+			{
+				if (params.size() == 1)
+				{
+					Console::get() << var->serializeArchive() << std::endl;
+				} else {
+					std::string param2 = CCmd::convertParam<std::string>(params, 1);
+					try
+					{
+						var->unserializeArchive(param2);
+					}
+					catch (CVar::ConversionErrorException&)
+					{
+						throw CCmd::RuntimeCCmdError("Incorrect format");
+					}
+				}
+			}
+			catch (CVar::NoArchiveException&)
+			{
+				throw CCmd::RuntimeCCmdError(var->getName() + " isn't a configuration CVar.");
+			}
+		}
+
 		static void echo( const std::vector<std::string>& params )
 		{
 			std::string str = CCmd::convertParam<std::string>(params, 0);
@@ -126,6 +155,7 @@ namespace CCmds
 	}
  
 	CCmd set("set", CCmd::NONE, "Sets the value of a CVar. Usage: set [cvar] [value]", Func::set);
+	CCmd seta("seta", CCmd::NONE, "Sets the value of a CVar and archives it. Only valid for configuration CVars. Usage: seta [cvar] [value]", Func::seta);
 	CCmd echo("echo", CCmd::NONE, "Prints a message to console. Usage: echo [message]", Func::echo);
 	CCmd help("help", CCmd::NONE, "Prints help text for a CCmd or CVar. Usage: help [cvar|ccmd]", Func::help);
 	CCmd list("list", CCmd::NONE, "Searches cvar help text or lists all cvars or ccmds. Usage: list [cvar|ccmd|string to search]", Func::list);

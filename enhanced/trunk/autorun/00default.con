@@ -1,6 +1,8 @@
 # Default configuration for OpenTyrian Enhanced
 # Do not edit!
 
+unbind
+
 bind "up" "+up"
 bind "down" "+down"
 bind "left" "+left"

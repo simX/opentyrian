@@ -42,7 +42,7 @@
 namespace CVars
 {
 	CVarInt con_buffer_size("con_buffer_size", CVar::CONFIG, "Size of the console scrollback in lines.", 64);
-	CVarInt con_height("con_height", CVar::CONFIG, "Height of the console, in lines.", 10, rangeBind(4u, 200/Console::LINE_HEIGHT));
+	CVarInt con_height("con_height", CVar::CONFIG | CVar::CONFIG_AUTO, "Height of the console, in lines.", 10, rangeBind(4u, 200/Console::LINE_HEIGHT));
 }
 
 int Console::ConsoleStreamBuffer::overflow( int c )

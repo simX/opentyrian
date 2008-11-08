@@ -157,6 +157,7 @@ public:
 	void addBindMouse( unsigned int button, const std::string& cmd, bool toggle );
 	void addBindMouse( unsigned int button, std::string cmd );
 
+	void removeBind( );
 	void removeBind( Bind* bind );
 	void removeBind( Bind* bind, std::string cmd, bool toggle );
 	void removeBind( SDLKey key );

@@ -364,7 +364,7 @@ void JE_loadGame( int slot )
 
 namespace CVars
 {
-	CVarInt game_speed("game_speed", CVar::CONFIG, "Game speed. 0-4", 3, rangeBind(0, 4));
+	CVarInt game_speed("game_speed", CVar::CONFIG | CVar::CONFIG_AUTO, "Game speed. 0-4", 3, rangeBind(0, 4));
 }
 
 void JE_initProcessorType( void )
@@ -482,12 +482,12 @@ void JE_setNewGameSpeed( void )
 namespace CVars
 {
 	// Video
-	CVarInt gamma_correction("gamma_correction", CVar::CONFIG, "Gamma correction. 0-3", 0, rangeBind(0, 3));
+	CVarInt gamma_correction("gamma_correction", CVar::CONFIG | CVar::CONFIG_AUTO, "Gamma correction. 0-3", 0, rangeBind(0, 3));
 	CVarBool fullscreen_enabled("fullscreen_enabled", CVar::CONFIG, "Fullscreen.", false);
 
 	// Input devices // TODO will probably be removed
-	CVarInt input_dev1("input_dev1", CVar::CONFIG, "Input device for player 1. 1-3", 1, rangeBind(1, 3));
-	CVarInt input_dev2("input_dev2", CVar::CONFIG, "Input device for player 2. 1-3", 2, rangeBind(1, 3));
+	CVarInt input_dev1("input_dev1", CVar::CONFIG | CVar::CONFIG_AUTO, "Input device for player 1. 1-3", 1, rangeBind(1, 3));
+	CVarInt input_dev2("input_dev2", CVar::CONFIG | CVar::CONFIG_AUTO, "Input device for player 2. 1-3", 2, rangeBind(1, 3));
 }
 
 void JE_loadConfiguration( void )
@@ -555,12 +555,15 @@ static void save_cvars( std::ofstream& f )
 	for (std::list<CVar*>::const_iterator i = cvars.begin(); i != cvars.end(); ++i)
 	{
 		const CVar& cvar = **i;
-		f << "set \"" << cvar.getName() << "\" \"" << cvar.serialize() << "\"\n";
+		if (cvar.archiveDirty())
+			f << "seta \"" << cvar.getName() << "\" \"" << cvar.serializeArchive() << "\"\n";
 	}
 }
 
 static void save_binds( std::ofstream& f )
 {
+	f << "unbind\n";
+
 	BindManager::SetType binds = BindManager::get().getBinds();
 
 	for (BindManager::SetType::const_iterator i = binds.begin(); i != binds.end(); ++i)

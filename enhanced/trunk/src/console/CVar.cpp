@@ -24,7 +24,7 @@
 
 #include "Console.h"
 
-CVar::CVar( const std::string& name, Flags flags, const std::string& help )
+CVar::CVar( const std::string& name, int flags, const std::string& help )
 	: mName(name), mFlags(flags), mHelp(help)
 {
 	CVarManager::get().registerCVar(this);

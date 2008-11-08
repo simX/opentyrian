@@ -49,7 +49,7 @@ namespace CVars
 {
 	CVarBool r_background2_blend("r_background2_blend", CVar::CONFIG, "Determines wether the second background will be alpha blended.", true);
 	CVarInt  r_smoothies_detail("r_smoothies_detail", CVar::CONFIG, "Detail levels of smoothies. (Special effects) 0-2", 2, rangeBind(0, 2));
-	CVarBool r_headlight("r_headlight", CVar::CONFIG, "Determines wether to draw the headlight lamp effect.", true);
+	CVarBool r_headlight("r_headlight", CVar::CONFIG, "Determines whether to draw the headlight lamp effect.", true);
 	CVarBool r_wild("r_wild", CVar::CONFIG, "Enables the swaying grass effect.", false);
 	CVarBool r_background2("r_background2", CVar::CONFIG, "Enables second background layer.", true);
 	CVarBool r_explosion_blend("r_explosion_blend", CVar::CONFIG, "Determines wether explosion will be transparent.", true);

@@ -17,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#include "opentyr.h"
 #include "BindManager.h"
 
 #include "Console.h"
@@ -70,18 +71,25 @@ namespace CCmds
 	{
 		static void unbind( const std::vector<std::string>& params )
 		{
-			std::string param1 = CCmd::convertParam<std::string>(params, 0);
+			if (params.empty())
+			{
+				BindManager::get().removeBind();
+			}
+			else
+			{
+				std::string param1 = CCmd::convertParam<std::string>(params, 0);
 
-			try {
-				BindManager::get().removeBind(param1);
-			} catch (KeyNames::UnknownKeyError& e) {
-				throw CCmd::RuntimeCCmdError(std::string("Unknown key: ") + e.what());
+				try {
+					BindManager::get().removeBind(param1);
+				} catch (KeyNames::UnknownKeyError& e) {
+					throw CCmd::RuntimeCCmdError(std::string("Unknown key: ") + e.what());
+				}
 			}
 		}
 	}
 
 	CCmd bind("bind", CCmd::NONE, "Binds a key to a command. Prefix the command with + to make it act as a toggle. Usage: bind [key name] [command]", ::bind);
-	CCmd unbind("unbind", CCmd::NONE, "Unbinds all commands from a key. Usage: [key name]", Func::unbind);
+	CCmd unbind("unbind", CCmd::NONE, "Unbinds all commands from a key. Usage: unbind [key name]", Func::unbind);
 }
 
 static int isMouse( const std::string& name )
@@ -261,6 +269,17 @@ void BindManager::addBind( const std::string& key_name, const std::string& cmd )
 	}
 }
 
+void BindManager::removeBind( )
+{
+	for (SetType::iterator i = binds.begin(); i != binds.end(); ++i)
+	{
+		delete *i;
+	}
+
+	binds.clear();
+	bindMap.clear();
+	mouseBindMap.clear();
+}
 
 void BindManager::removeBind( Bind* bind )
 {

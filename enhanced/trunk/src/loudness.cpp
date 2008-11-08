@@ -79,9 +79,9 @@ static bool snd_enabled_callback( const bool& init )
 namespace CVars
 {
 	CVarBool snd_enabled("snd_enabled", CVar::CONFIG, "Enables sound subsystem.", true, snd_enabled_callback);
-	CVarBool snd_mute("snd_mute", CVar::CONFIG, "Mutes all sound.", false);
-	CVarFloat snd_music_vol("snd_music_vol", CVar::CONFIG, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
-	CVarFloat snd_fx_vol("snd_fx_vol", CVar::CONFIG, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarBool snd_mute("snd_mute", CVar::CONFIG | CVar::CONFIG_AUTO, "Mutes all sound.", false);
+	CVarFloat snd_music_vol("snd_music_vol", CVar::CONFIG | CVar::CONFIG_AUTO, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarFloat snd_fx_vol("snd_fx_vol", CVar::CONFIG | CVar::CONFIG_AUTO, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
 }
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
