@@ -27,3 +27,4 @@ CVar::CVar( const std::string& name, int flags, const std::string& help )
 {
 	CVarManager::get().registerCVar(this);
 }
+

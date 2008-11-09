@@ -1,5 +1,6 @@
 # BUILD SETTINGS ###################################
-DEBUG := 1 # Always run 'make clean' after changing this!
+# Always run 'make clean' after changing this!
+DEBUG := 1
 USE_PRECOMPILED := 1
 
 BOOST_SUFFIX := -mt

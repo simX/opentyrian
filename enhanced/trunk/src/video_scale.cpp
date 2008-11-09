@@ -59,7 +59,7 @@ static long r_scaler_callback( const long& arg )
 	long val = arg;
 	if (val < 0)
 		val = 0;
-	if (val > COUNTOF(scalers)-1)
+	if (val > static_cast<long>(COUNTOF(scalers)-1))
 		val = COUNTOF(scalers)-1;
 
 	CVars::r_scaler.set(val, true);

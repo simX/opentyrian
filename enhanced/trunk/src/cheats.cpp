@@ -93,3 +93,4 @@ namespace CCmds
 
 	CCmd ch_give_item("ch_give_item", CCmd::CHEAT, "Gives an item to a player. If no item id is given prints current item in slot. Usage: ch_give_item [player] [slot_id] [item_id]", Func::ch_give_item);
 }
+
