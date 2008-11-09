@@ -233,6 +233,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\console\CVarFlagsEnumerator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\destruct.h"
 				>
 			</File>
@@ -446,6 +450,10 @@
 			</File>
 			<File
 				RelativePath=".\src\console\CVar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\console\CVarFlagsEnumerator.cpp"
 				>
 			</File>
 			<File

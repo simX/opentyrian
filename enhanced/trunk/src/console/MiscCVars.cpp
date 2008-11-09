@@ -22,6 +22,7 @@
 #include "CVar.h"
 #include "CCmd.h"
 #include "Console.h"
+#include "CVarFlagsEnumerator.h"
 
 namespace CCmds
 {
@@ -112,7 +113,14 @@ namespace CCmds
 				for (CVarManager::MapType::const_iterator i = map.begin(); i != map.end(); ++i)
 				{
 					CVar& cvar = *i->second;
-					Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType() << "] " << cvar.getHelp() << std::endl;
+					
+					Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType();
+
+					std::string flags = enumerate_cvar_flags(cvar);
+					if (!flags.empty())
+						Console::get() << ": " << enumerate_cvar_flags(cvar);
+
+					Console::get() << "] " << cvar.getHelp() << std::endl;
 				}
 			} else if (param1 == "ccmd") { // Lists all CCmds
 				const CCmdManager::MapType& map = CCmdManager::get().getCCmds();
