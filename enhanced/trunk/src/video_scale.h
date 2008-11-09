@@ -19,8 +19,9 @@
  */
 #ifndef VIDEO_SCALE_H
 #define VIDEO_SCALE_H
-
 #include "opentyr.h"
+
+#include "console/CVar.h"
 
 #include "SDL.h"
 
@@ -32,7 +33,12 @@ struct ScalerStruct
 	std::string name;
 };
 
-extern int scale, scaler;
+extern int scale;
+namespace CVars
+{
+	extern CVarInt r_scaler;
+}
+
 extern const ScalerStruct scalers[9];
 
 #endif // VIDEO_SCALE_H

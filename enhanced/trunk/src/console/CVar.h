@@ -137,8 +137,8 @@ public:
 
 	T get( ) const { return mValue; }
 
- 	void set( const T& val ) {
-		if (mValidationFunc)
+ 	void set( const T& val, bool bypassCallback = false ) {
+		if (mValidationFunc && !bypassCallback)
 		{
 			mValue = val;
 			mValue = mValidationFunc(val);

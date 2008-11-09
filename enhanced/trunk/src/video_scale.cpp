@@ -19,11 +19,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
+#include "opentyr.h"
 #include "video_scale.h"
 
 #include "palette.h"
 #include "video.h"
+#include "console/CVar.h"
 
 #include <assert.h>
 
@@ -51,7 +52,25 @@ void scale2x_16( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 void scale3x_32( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 void scale3x_16( Uint8 *src_surface, SDL_Surface *dst_surface, int scale );
 
-int scale, scaler = 0;
+int scale;
+
+static long r_scaler_callback( const long& arg )
+{
+	long val = arg;
+	if (val < 0)
+		val = 0;
+	if (val > COUNTOF(scalers)-1)
+		val = COUNTOF(scalers)-1;
+
+	CVars::r_scaler.set(val, true);
+	reinit_video();
+	return val;
+}
+
+namespace CVars
+{
+	CVarInt r_scaler("r_scaler", CVar::CONFIG, "Scaler used to up-scale the game window.", 0, r_scaler_callback);
+}
 
 const ScalerStruct scalers[] =
 {

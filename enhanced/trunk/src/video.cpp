@@ -82,7 +82,10 @@ void init_video( )
 
 void reinit_video( )
 {
-	scale = scalers[scaler].scale;
+	if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
+		return;
+
+	scale = scalers[CVars::r_scaler].scale;
 
 	const int w = scr_width * scale;
 	const int h = scr_height * scale;
@@ -125,12 +128,12 @@ void JE_showVGA( )
 	switch (display_surface->format->BitsPerPixel)
 	{
 	case 32:
-		if (scalers[scaler].scaler32 == 0) scaler = 0;
-		scalers[scaler].scaler32(VGAScreen, display_surface, scale);
+		if (scalers[CVars::r_scaler].scaler32 == 0) CVars::r_scaler = 0;
+		scalers[CVars::r_scaler].scaler32(VGAScreen, display_surface, scale);
 		break;
 	case 16:
-		if (scalers[scaler].scaler16 == 0) scaler = 0;
-		scalers[scaler].scaler16(VGAScreen, display_surface, scale);
+		if (scalers[CVars::r_scaler].scaler16 == 0) CVars::r_scaler = 0;
+		scalers[CVars::r_scaler].scaler16(VGAScreen, display_surface, scale);
 		break;
 	default:
 		Console::get() << "\a7Error:\ax Unsupported bit-depth: " << display_surface->format->BitsPerPixel<< " (please report this to devs)" << std::endl;

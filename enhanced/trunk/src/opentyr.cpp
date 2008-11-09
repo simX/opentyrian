@@ -174,7 +174,7 @@ void opentyrian_menu( void )
 	const int maxSel = COUNTOF(opentyrian_menu_items) - 1;
 	bool quit = false, fade_in = true;
 
-	int temp_scaler = scaler;
+	int temp_scaler = CVars::r_scaler;
 
 	JE_fadeBlack(10);
 	JE_loadPic(13, false);
@@ -283,8 +283,7 @@ void opentyrian_menu( void )
 							JE_playSampleNum(SELECT);
 							break;
 						case 2: // Scaler
-							scaler = temp_scaler;
-							reinit_video();
+							CVars::r_scaler.setArchive(temp_scaler);
 							break;
 						case 3: /* Jukebox */
 							JE_playSampleNum(SELECT);
