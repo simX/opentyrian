@@ -37,7 +37,7 @@
 #include "boost/algorithm/string/trim.hpp"
 
 #include "CCmd.h"
-#include "CVar.h"
+#include "cvar/CVar.h"
 
 namespace CVars
 {

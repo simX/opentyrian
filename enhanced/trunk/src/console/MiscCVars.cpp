@@ -19,10 +19,11 @@
  */
 #include "opentyr.h"
 
-#include "CVar.h"
+#include "cvar/CVar.h"
+#include "cvar/CVarManager.h"
+#include "cvar/CVarFlagsEnumerator.h"
 #include "CCmd.h"
 #include "Console.h"
-#include "CVarFlagsEnumerator.h"
 
 namespace CCmds
 {

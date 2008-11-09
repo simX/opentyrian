@@ -17,36 +17,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#ifndef CONSOLE_CVAR_CVARMANAGER_H
+#define CONSOLE_CVAR_CVARMANAGER_H
 #include "opentyr.h"
-#include "CVarFlagsEnumerator.h"
 
+#include "Singleton.h"
 #include "CVar.h"
 
 #include <string>
-#include <utility>
-#include "boost/algorithm/string/join.hpp"
+#include <map>
+#include <list>
 
-typedef std::pair<CVar::Flags, std::string> FlagPair;
-
-// This must be kept in sync with the flags in CVars or else it won't show up in descriptions
-// But maybe it can be useful to hide flags from the user
-static const FlagPair flags[] =
+class CVarManager : public Singleton<CVarManager>
 {
-	FlagPair(CVar::CONFIG, "CONFIG"),
-	FlagPair(CVar::CONFIG_AUTO, "CONFIG_AUTO"),
-	FlagPair(CVar::CHEAT, "CHEAT"),
-	FlagPair(CVar::NONE, "") // Sentinel
+public:
+	typedef std::map<std::string, CVar*> MapType;
+	typedef std::pair<std::string, CVar*> PairType;
+
+private:
+	MapType mCVars;
+
+public:
+	void registerCVar( CVar* cvar );
+	CVar* getCVar( const std::string& name );
+	const MapType& getCVars( ) { return mCVars; }
+	const std::list<CVar*> getCVars( CVar::Flags flags, bool all );
 };
 
-std::string enumerate_cvar_flags( const CVar& cvar )
-{
-	std::list<std::string> stringList;
-
-	for (unsigned int i = 0; flags[i].first != CVar::NONE; ++i)
-	{
-		if (cvar.getFlags() & flags[i].first)
-			stringList.push_back(flags[i].second);
-	}
-
-	return boost::algorithm::join(stringList, ", ");
-}
+#endif // CONSOLE_CVAR_CVARMANAGER_H

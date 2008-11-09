@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "config.h"
 
 #include "episodes.h"
 #include "error.h"
@@ -31,10 +32,9 @@
 #include "BinaryStream.h"
 #include "console/Console.h"
 #include "HighScores.h"
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
+#include "console/cvar/CVarManager.h"
 #include "console/BindManager.h"
-
-#include "config.h"
 
 #include <fstream>
 #include "boost/filesystem.hpp"

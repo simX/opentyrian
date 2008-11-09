@@ -17,60 +17,62 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#include "CVar.h"
+#ifndef CONSOLE_CVAR_CVARTYPES_H
+#define CONSOLE_CVAR_CVARTYPES_H
+#include "opentyr.h"
 
-#include <map>
-#include <iostream>
+#include "CVarTemplate.h"
 
-#include "Console.h"
+#include <sstream>
 
-CVar::CVar( const std::string& name, int flags, const std::string& help )
-	: mName(name), mFlags(flags), mHelp(help)
+struct IntString { inline static const char* get() { return "int"; } };
+struct FloatString { inline static const char* get() { return "float"; } };
+struct BoolString { inline static const char* get() { return "bool"; } };
+
+typedef CVarTemplate<long, IntString> CVarInt;
+typedef CVarTemplate<float, FloatString> CVarFloat;
+
+class CVarBool : public CVarTemplate<bool, BoolString>
 {
-	CVarManager::get().registerCVar(this);
-}
-
-void CVarManager::registerCVar( CVar* const cvar )
-{
-	if (!mCVars.insert(CVarManager::PairType(cvar->getName(), cvar)).second)
+protected:
+	std::string onSerialize( const bool& val ) const
 	{
-		Console::get() << "\a7Warning:\ax Two CVars with name \"" << cvar->getName() << "\" registered!" << std::endl;
+		return val ? "true" : "false";
 	}
-}
 
-CVar* CVarManager::getCVar( const std::string& name )
-{
-	const MapType::iterator i = mCVars.find(name);
-	if (i != mCVars.end())
+	bool onUnserialize( const std::string& str )
 	{
-		return i->second;
-	} else {
-		return 0;
-	}
-}
-
-const std::list<CVar*> CVarManager::getCVars( CVar::Flags flags, bool all ) // all: True: must have all flags, False: must have any flags
-{
-	std::list<CVar*> list;
-
-	for (CVarManager::MapType::const_iterator i = mCVars.begin(); i != mCVars.end(); i++)
-	{
-		bool cond;
-		if (all)
-		{
-			cond = (i->second->getFlags() & flags) == flags;
+		if (str == "true") {
+			return true;
+		} else if (str == "false") {
+			return false;
 		} else {
-			cond = (i->second->getFlags() & flags) != 0;
-		}
-
-		if (cond)
-		{
-			list.push_back(i->second);
+			std::istringstream s(str);
+			int tmp;
+			s >> tmp;
+			return s > 0 ? true : false;
 		}
 	}
 
-	return list;
-}
+public:
+	CVarBool( const std::string& name, int flags, const std::string& help, bool def, boost::function<bool(const bool&)> validationFunc = 0 )
+		: CVarTemplate<bool, BoolString>(name, flags, help, def, validationFunc)
+	{}
+
+	void operator=( const bool& val ) { set(val); }
+};
+
+struct StringString { inline static const char* get() { return "string"; } };
+class CVarString : public CVarTemplate<std::string, StringString>
+{
+protected:
+	std::string onSerialize( const std::string& val ) const { return val; }
+	std::string onUnserialize( const std::string& str ) { return str; }
+public:
+	CVarString( const std::string& name, int flags, const std::string& help, const std::string& def )
+		: CVarTemplate<std::string, StringString>(name, flags, help, def)
+	{}
+};
 
 /*
 void CVarString::serialize(  ) const
@@ -130,3 +132,5 @@ void CVarString::unserialize( std::istream& s )
 	}
 }
 */
+
+#endif // CONSOLE_CVAR_CVARTYPES_H

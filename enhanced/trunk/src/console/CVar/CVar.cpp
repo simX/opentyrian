@@ -17,28 +17,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef VIDEO_SCALE_H
-#define VIDEO_SCALE_H
 #include "opentyr.h"
+#include "CVar.h"
 
-#include "console/cvar/CVar.h"
+#include "CVarManager.h"
 
-#include "SDL.h"
-
-struct ScalerStruct
+CVar::CVar( const std::string& name, int flags, const std::string& help )
+	: mName(name), mFlags(flags), mHelp(help)
 {
-	int scale;
-	void (*scaler16)(Uint8 *, SDL_Surface *, int);
-	void (*scaler32)(Uint8 *, SDL_Surface *, int);
-	std::string name;
-};
-
-extern int scale;
-namespace CVars
-{
-	extern CVarInt r_scaler;
+	CVarManager::get().registerCVar(this);
 }
-
-extern const ScalerStruct scalers[9];
-
-#endif // VIDEO_SCALE_H

@@ -42,7 +42,7 @@
 #include "vga256d.h"
 #include "console/GameActions.h"
 #include "HighScores.h"
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 #include "explosion.h"
 
 #include "mainint.h"

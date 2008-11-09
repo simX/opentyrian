@@ -24,7 +24,7 @@
 
 #include "palette.h"
 #include "video.h"
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 
 #include <assert.h>
 

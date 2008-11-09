@@ -229,11 +229,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\console\CVar.h"
+				RelativePath=".\src\console\CVar\CVar.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\console\CVarFlagsEnumerator.h"
+				RelativePath=".\src\console\CVar\CVarFlagsEnumerator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\console\CVar\CVarManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\console\CVar\CVarTemplate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\console\CVar\CVarTypes.h"
 				>
 			</File>
 			<File
@@ -449,11 +461,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\console\CVar.cpp"
+				RelativePath=".\src\console\CVar\CVar.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\console\CVarFlagsEnumerator.cpp"
+				RelativePath=".\src\console\CVar\CVarFlagsEnumerator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\console\CVar\CVarManager.cpp"
 				>
 			</File>
 			<File

@@ -23,7 +23,7 @@
 #include "opentyr.h"
 #include "fmopl.h"
 
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 
 #include "SDL.h"
 

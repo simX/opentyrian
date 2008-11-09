@@ -22,7 +22,7 @@
 
 #include "opentyr.h"
 
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 
 namespace CVars
 {

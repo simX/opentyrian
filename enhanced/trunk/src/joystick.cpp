@@ -22,7 +22,7 @@
 #include "keyboard.h"
 #include "vga256d.h"
 #include "console/Console.h"
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 #include "network.h"
 
 #include "joystick.h"

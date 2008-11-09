@@ -22,7 +22,7 @@
 #include "fm_synth.h"
 #include "lds_play.h"
 #include "console/Console.h"
-#include "console/CVar.h"
+#include "console/cvar/CVar.h"
 #include "sndmast.h"
 #include "nortsong.h"
 
