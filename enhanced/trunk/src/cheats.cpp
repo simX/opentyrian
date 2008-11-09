@@ -22,6 +22,7 @@
 #include "console/CCmd.h"
 #include "console/Console.h"
 #include "config.h"
+#include "episodes.h"
 
 namespace CCmds
 {
@@ -89,8 +90,18 @@ namespace CCmds
 				throw CCmd::RuntimeCCmdError("Player must be 1 or 2.");
 			}
 		}
+
+		static void debug_dump_weapons( const std::vector<std::string>& params )
+		{
+			for (unsigned int i = 0; i <= PORT_NUM; ++i)
+			{
+				Console::get() << i << ": " << weaponPort[i].name << '\n';
+			}
+			Console::get() << std::flush;
+		}
 	}
 
 	CCmd ch_give_item("ch_give_item", CCmd::CHEAT, "Gives an item to a player. If no item id is given prints current item in slot. Usage: ch_give_item [player] [slot_id] [item_id]", Func::ch_give_item);
+	CCmd debug_dump_weapons("debug_dump_weapons", CCmd::NONE, "Lists all weapons. Usage: debug_dump_weapons", Func::debug_dump_weapons);
 }
 
