@@ -23,7 +23,7 @@
 #include "opentyr.h"
 
 static const int WEAP_NUM = 780;
-static const int PORT_NUM = 42;
+static const unsigned int PORT_NUM = 42;
 static const int ARMOR_NUM = 4;
 static const int POWER_NUM = 6;
 static const int ENGINE_NUM = 6;

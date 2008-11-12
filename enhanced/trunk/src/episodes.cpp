@@ -105,7 +105,7 @@ void JE_loadItemDat( void )
 		vfread(weapons[i].shipblastfilter, Uint8, lvlFile);
 	}
 
-	for (int i = 0; i < PORT_NUM + 1; i++)
+	for (unsigned int i = 0; i < PORT_NUM + 1; i++)
 	{
 		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
 		efread(&weaponPort[i].name,        1, 30, lvlFile);
