@@ -239,7 +239,7 @@ int displayTime;
 
 /* Demo Stuff */
 bool firstEvent;
-FILE *recordFile;
+std::fstream recordFile;
 JE_word recordFileNum;
 int lastKey[8]; /* [1..8] */
 JE_word lastMoveWait, nextMoveWait;

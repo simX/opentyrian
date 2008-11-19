@@ -46,6 +46,8 @@ public:
 	void put16( Uint16 data );
 	void put32( Uint32 data );
 	void put( const std::string& data );
+	void putStrLong( const std::string& data );
+	void put( const std::string& data, std::string::size_type count );
 
 	template<class iter> void put( iter begin, iter end )
 	{
@@ -72,11 +74,32 @@ public:
 	}
 
 	Uint8 get8( );
+	Sint8 getS8( );
 	Uint16 get16( );
+	Sint16 getS16( );
 	Uint32 get32( );
+	Sint32 getS32( );
 	std::string getStr( );
+	std::string getStrLong( );
+	std::string getStr( std::string::size_type count );
 
 	std::vector<Uint8> getArray( unsigned int len );
+	
+	template<class iter> void getIter( iter begin, iter end )
+	{
+		for (; begin != end; ++begin)
+		{
+			*begin = get8();
+		}
+	}
+
+	template<class iter> void getIter16( iter begin, iter end )
+	{
+		for (; begin != end; ++begin)
+		{
+			*begin = get16();
+		}
+	}
 
 	unsigned long getSize( );
 };

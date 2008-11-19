@@ -21,9 +21,10 @@
 #include "pcxload.h"
 
 #include "picload.h"
-#include "error.h"
 #include "BinaryStream.h"
 #include "video.h"
+#include "Filesystem.h"
+
 #include <fstream>
 
 void JE_loadPCX( const std::string& file )
@@ -33,10 +34,10 @@ void JE_loadPCX( const std::string& file )
 		Console::get() << "\a7Warning:\ax JE_loadPCX used with file other than tshp2.pcx" << std::endl;
 	}
 
-	std::ifstream fstr;
+	std::fstream fstr;
 	using std::ios;
 	fstr.exceptions(ios::badbit | ios::failbit | ios::eofbit);
-	open_datafile_fail(fstr, file);
+	Filesystem::get().openDatafileFail(fstr, file);
 	IBinaryStream f(fstr);
 
 	try

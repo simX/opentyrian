@@ -20,10 +20,10 @@
 #include "opentyr.h"
 
 #include "config.h"
-#include "error.h"
 #include "nortvars.h"
 #include "BinaryStream.h"
 #include <fstream>
+#include "Filesystem.h"
 
 #include "editship.h"
 
@@ -108,10 +108,10 @@ void JE_endShape()
 
 void JE_loadExtraShapes()
 {
-	std::ifstream file;
+	std::fstream file;
 	try {
-		open_datafile(file, "newsh$.shp");
-	} catch (FileOpenErrorException&) {
+		Filesystem::get().openDatafileFail(file, "newsh$.shp");
+	} catch (Filesystem::FileOpenErrorException&) {
 		Console::get() << "Shipedit data not found." << std::endl;
 		return;
 	}

@@ -1,0 +1,12 @@
+# Change this to true to make OpenTyrian save it's
+# configuration files in the user's directory.
+
+set cfg_use_home false
+
+# Currently only supported on:
+# Windows - %APPDATA%\OpenTyrian Enhanced\
+# Posix - ~/.opentyrian/enhanced/
+
+
+# Here you can add the paths the game searches to find it's datafiles.
+add_search_path "data"

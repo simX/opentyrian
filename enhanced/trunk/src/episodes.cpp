@@ -21,6 +21,8 @@
 
 #include "error.h"
 #include "lvlmast.h"
+#include "Filesystem.h"
+#include "BinaryStream.h"
 
 #include "episodes.h"
 
@@ -58,185 +60,185 @@ char levelFile[13]; /* string [12] */
 
 void JE_loadItemDat( void )
 {
-	FILE *lvlFile;
+	std::fstream lvlFile;
 	JE_word itemNum[7]; /* [1..7] */
+
+	IBinaryStream bs(lvlFile);
 
 	if (episodeNum > 3)
 	{
-		JE_resetFile(&lvlFile, levelFile);
-		fseek(lvlFile, lvlPos[lvlNum-1], SEEK_SET);
+		Filesystem::get().openDatafileFail(lvlFile, levelFile);
+		lvlFile.seekg(lvlPos[lvlNum-1]);
 	} else {
-		JE_resetFile(&lvlFile, "tyrian.hdt");
-		vfread(episode1DataLoc, Sint32, lvlFile);
-		fseek(lvlFile, episode1DataLoc, SEEK_SET);
+		Filesystem::get().openDatafileFail(lvlFile, "tyrian.hdt");
+		episode1DataLoc = bs.getS32();
+		lvlFile.seekg(episode1DataLoc);
 	}
 
-	efread(&itemNum, sizeof(JE_word), 7, lvlFile);
+	for (int i = 0; i < 7; ++i)
+	{
+		itemNum[i] = bs.get16();
+	}
 
 	for (int i = 0; i < WEAP_NUM + 1; i++)
 	{
-		efread(&weapons[i].drain,           sizeof(JE_word), 1, lvlFile);
-		vfread(weapons[i].shotrepeat,      Uint8, lvlFile);
-		vfread(weapons[i].multi,           Uint8, lvlFile);
-		efread(&weapons[i].weapani,         sizeof(JE_word), 1, lvlFile);
-		vfread(weapons[i].max,             Uint8, lvlFile);
-		vfread(weapons[i].tx,              Uint8, lvlFile);
-		vfread(weapons[i].ty,              Uint8, lvlFile);
-		vfread(weapons[i].aim,             Uint8, lvlFile);
+		weapons[i].drain = bs.get16();
+		weapons[i].shotrepeat = bs.get8();
+		weapons[i].multi = bs.get8();
+		weapons[i].weapani = bs.get16();
+		weapons[i].max = bs.get8();
+		weapons[i].tx = bs.get8();
+		weapons[i].ty = bs.get8();
+		weapons[i].aim = bs.get8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].attack[j],   Uint8, lvlFile);
+			weapons[i].attack[j] = bs.get8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].del[j],      Uint8, lvlFile);
-		// YKS: I broke the style rules to save space on this huge wall of text. Stab me.
+			weapons[i].del[j] = bs.get8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].sx[j],       Sint8, lvlFile);
+			weapons[i].sx[j] = bs.getS8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].sy[j],       Sint8, lvlFile);
+			weapons[i].sy[j] = bs.getS8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].bx[j],       Sint8, lvlFile);
+			weapons[i].bx[j] = bs.getS8();
 		for (int j = 0; j < 8; j++)
-			vfread(weapons[i].by[j],       Sint8, lvlFile);
-		efread(&weapons[i].sg,              sizeof(JE_word), 8, lvlFile);
-		vfread(weapons[i].acceleration,    Sint8, lvlFile);
-		vfread(weapons[i].accelerationx,   Sint8, lvlFile);
-		vfread(weapons[i].circlesize,      Uint8, lvlFile);
-		vfread(weapons[i].sound,           Uint8, lvlFile);
-		vfread(weapons[i].trail,           Uint8, lvlFile);
-		vfread(weapons[i].shipblastfilter, Uint8, lvlFile);
+			weapons[i].by[j] = bs.getS8();
+		for (int j = 0; j < 8; j++)
+			weapons[i].sg[j] = bs.get16();
+		weapons[i].acceleration = bs.getS8();
+		weapons[i].accelerationx = bs.getS8();
+		weapons[i].circlesize = bs.get8();
+		weapons[i].sound = bs.get8();
+		weapons[i].trail = bs.get8();
+		weapons[i].shipblastfilter = bs.get8();
 	}
 
 	for (unsigned int i = 0; i < PORT_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&weaponPort[i].name,        1, 30, lvlFile);
-		weaponPort[i].name[30] = '\0';
-		vfread(weaponPort[i].opnum,       Uint8, lvlFile);
+		weaponPort[i].name = bs.getStr();
+		weaponPort[i].opnum = bs.get8();
 		for (int j = 0; j < 2; j++)
 		{
-			efread(&weaponPort[i].op[j],   sizeof(JE_word), 11, lvlFile);
+			for (int k = 0; k < 11; ++k)
+			{
+				weaponPort[i].op[j][k] = bs.get16();
+			}
 		}
-		efread(&weaponPort[i].cost,        sizeof(JE_word), 1, lvlFile);
-		efread(&weaponPort[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		efread(&weaponPort[i].poweruse,    sizeof(JE_word), 1, lvlFile);
+		weaponPort[i].cost = bs.get16();
+		weaponPort[i].itemgraphic = bs.get16();
+		weaponPort[i].poweruse = bs.get16();
 	}
 
 	for (int i = 0; i < SPECIAL_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&special[i].name,        1, 30, lvlFile);
-		special[i].name[30] = '\0';
-		efread(&special[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		vfread(special[i].pwr,         Uint8, lvlFile);
-		vfread(special[i].stype,       Uint8, lvlFile);
-		efread(&special[i].wpn,         sizeof(JE_word), 1, lvlFile);
+		special[i].name = bs.getStr();
+		special[i].itemgraphic = bs.get16();
+		special[i].pwr = bs.get8();
+		special[i].stype = bs.get8();
+		special[i].wpn = bs.get16();
 	}
 
 	for (int i = 0; i < POWER_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&powerSys[i].name,        1, 30, lvlFile);
-		powerSys[i].name[30] = '\0';
-		efread(&powerSys[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		vfread(powerSys[i].power,       Uint8, lvlFile);
-		vfread(powerSys[i].speed,       Uint8, lvlFile);
-		efread(&powerSys[i].cost,        sizeof(JE_word), 1, lvlFile);
+		powerSys[i].name = bs.getStr();
+		powerSys[i].itemgraphic = bs.get16();
+		powerSys[i].power = bs.get8();
+		powerSys[i].speed = bs.get8();
+		powerSys[i].cost = bs.get16();
 	}
 
 	for (int i = 0; i < SHIP_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&ships[i].name,           1, 30, lvlFile);
-		ships[i].name[30] = '\0';
-		efread(&ships[i].shipgraphic,    sizeof(JE_word), 1, lvlFile);
-		efread(&ships[i].itemgraphic,    sizeof(JE_word), 1, lvlFile);
-		vfread(ships[i].ani,            Uint8, lvlFile);
-		vfread(ships[i].spd,            Uint8, lvlFile);
-		vfread(ships[i].dmg,            Uint8, lvlFile);
-		efread(&ships[i].cost,           sizeof(JE_word), 1, lvlFile);
-		vfread(ships[i].bigshipgraphic, Uint8, lvlFile);
+		ships[i].name = bs.getStr();
+		ships[i].shipgraphic = bs.get16();
+		ships[i].itemgraphic = bs.get16();
+		ships[i].ani = bs.get8();
+		ships[i].spd = bs.get8();
+		ships[i].dmg = bs.get8();
+		ships[i].cost = bs.get16();
+		ships[i].bigshipgraphic = bs.get8();
 	}
 
 	for (int i = 0; i < OPTION_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&options[i].name,        1, 30, lvlFile);
-		options[i].name[30] = '\0';
-		vfread(options[i].pwr,         Uint8, lvlFile);
-		efread(&options[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		efread(&options[i].cost,        sizeof(JE_word), 1, lvlFile);
-		vfread(options[i].tr,          Uint8, lvlFile);
-		vfread(options[i].option,      Uint8, lvlFile);
-		vfread(options[i].opspd,       Sint8, lvlFile);
-		vfread(options[i].ani,         Uint8, lvlFile);
-		efread(&options[i].gr,          sizeof(JE_word), 20, lvlFile);
-		vfread(options[i].wport,       Uint8, lvlFile);
-		efread(&options[i].wpnum,       sizeof(JE_word), 1, lvlFile);
-		vfread(options[i].ammo,        Uint8, lvlFile);
-		vfread(options[i].stop,        Uint8, lvlFile);
-		vfread(options[i].icongr,      Uint8, lvlFile);
+		options[i].name = bs.getStr();
+		options[i].pwr = bs.get8();
+		options[i].itemgraphic = bs.get16();
+		options[i].cost = bs.get16();
+		options[i].tr = bs.get8();
+		options[i].option = bs.get8();
+		options[i].opspd = bs.getS8();
+		options[i].ani = bs.get8();
+		for (int j = 0; j < 20; ++j)
+			options[i].gr[j] = bs.get16();
+		options[i].wport = bs.get8();
+		options[i].wpnum = bs.get16();
+		options[i].ammo = bs.get8();
+		options[i].stop = bs.get8();
+		options[i].icongr = bs.get8();
 	}
 
 	for (int i = 0; i < SHIELD_NUM + 1; i++)
 	{
-		fseek(lvlFile, 1, SEEK_CUR); /* skip string length */
-		efread(&shields[i].name,        1, 30, lvlFile);
-		shields[i].name[30] = '\0';
-		vfread(shields[i].tpwr,        Uint8, lvlFile);
-		vfread(shields[i].mpwr,        Uint8, lvlFile);
-		efread(&shields[i].itemgraphic, sizeof(JE_word), 1, lvlFile);
-		efread(&shields[i].cost,        sizeof(JE_word), 1, lvlFile);
+		shields[i].name = bs.getStr();
+		shields[i].tpwr = bs.get8();
+		shields[i].mpwr = bs.get8();
+		shields[i].itemgraphic = bs.get16();
+		shields[i].cost = bs.get16();
 	}
 
 	for (int i = 0; i < ENEMY_NUM + 1; i++)
 	{
-		vfread(enemyDat[i].ani,           Uint8, lvlFile);
+		enemyDat[i].ani = bs.get8();
 		for (int j = 0; j < 3; j++)
-			vfread(enemyDat[i].tur[j],       Uint8, lvlFile);
+			enemyDat[i].tur[j] = bs.get8();
 		for (int j = 0; j < 3; j++)
-			vfread(enemyDat[i].freq[j],      Uint8, lvlFile);
-		vfread(enemyDat[i].xmove,         Sint8, lvlFile);
-		vfread(enemyDat[i].ymove,         Sint8, lvlFile);
-		vfread(enemyDat[i].xaccel,        Sint8, lvlFile);
-		vfread(enemyDat[i].yaccel,        Sint8, lvlFile);
-		vfread(enemyDat[i].xcaccel,       Sint8, lvlFile);
-		vfread(enemyDat[i].ycaccel,       Sint8, lvlFile);
-		vfread(enemyDat[i].startx,        Sint16, lvlFile);
-		vfread(enemyDat[i].starty,        Sint16, lvlFile);
-		vfread(enemyDat[i].startxc,       Sint8, lvlFile);
-		vfread(enemyDat[i].startyc,       Sint8, lvlFile);
-		vfread(enemyDat[i].armor,         Uint8, lvlFile);
-		vfread(enemyDat[i].esize,         Uint8, lvlFile);
-		efread(&enemyDat[i].egraphic,      sizeof(JE_word), 20, lvlFile);
-		vfread(enemyDat[i].explosiontype, Uint8, lvlFile);
-		vfread(enemyDat[i].animate,       Uint8, lvlFile);
-		vfread(enemyDat[i].shapebank,     Uint8, lvlFile);
-		vfread(enemyDat[i].xrev,          Sint8, lvlFile);
-		vfread(enemyDat[i].yrev,          Sint8, lvlFile);
-		efread(&enemyDat[i].dgr,           sizeof(JE_word), 1, lvlFile);
-		vfread(enemyDat[i].dlevel,        Sint8, lvlFile);
-		vfread(enemyDat[i].dani,          Sint8, lvlFile);
-		vfread(enemyDat[i].elaunchfreq,   Uint8, lvlFile);
-		efread(&enemyDat[i].elaunchtype,   sizeof(JE_word), 1, lvlFile);
-		vfread(enemyDat[i].value,         Sint16, lvlFile);
-		efread(&enemyDat[i].eenemydie,     sizeof(JE_word), 1, lvlFile);
+			enemyDat[i].freq[j] = bs.get8();
+		enemyDat[i].xmove = bs.getS8();
+		enemyDat[i].ymove = bs.getS8();
+		enemyDat[i].xaccel = bs.getS8();
+		enemyDat[i].yaccel = bs.getS8();
+		enemyDat[i].xcaccel = bs.getS8();
+		enemyDat[i].ycaccel = bs.getS8();
+		enemyDat[i].startx = bs.getS16();
+		enemyDat[i].starty = bs.getS16();
+		enemyDat[i].startxc = bs.getS8();
+		enemyDat[i].startyc = bs.getS8();
+		enemyDat[i].armor = bs.get8();
+		enemyDat[i].esize = bs.get8();
+		for (int j = 0; j < 20; ++j)
+			enemyDat[i].egraphic[j] = bs.get16();
+		enemyDat[i].explosiontype = bs.get8();
+		enemyDat[i].animate = bs.get8();
+		enemyDat[i].shapebank = bs.get8();
+		enemyDat[i].xrev = bs.getS8();
+		enemyDat[i].yrev = bs.getS8();
+		enemyDat[i].dgr = bs.get16();
+		enemyDat[i].dlevel = bs.getS8();
+		enemyDat[i].dani = bs.getS8();
+		enemyDat[i].elaunchfreq = bs.get8();
+		enemyDat[i].elaunchtype = bs.get16();
+		enemyDat[i].value = bs.getS16();
+		enemyDat[i].eenemydie = bs.get16();
 	}
 
-	fclose(lvlFile);
+	lvlFile.close();
 }
 
 static void JE_analyzeLevel( void )
 {
-	FILE *f;
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, levelFile);
 
-	JE_resetFile(&f, levelFile);
-	efread(&lvlNum, sizeof(JE_word), 1, f);
-	for (int x = 0; x < lvlNum; x++)
+	IBinaryStream bs(f);
+
+	lvlNum = bs.get16();
+	for (int i = 0; i < lvlNum; ++i)
 	{
-		vfread(lvlPos[x], Sint32, f);
+		lvlPos[i] = bs.getS32();
 	}
-	fseek(f, 0, SEEK_END);
-	lvlPos[lvlNum] = ftell(f);
-	fclose(f);
+	f.seekg(0, std::ios::end);
+	lvlPos[lvlNum] = f.tellg();
+	f.close();
 }
 
 void JE_initEpisode( int newEpisode )
@@ -256,11 +258,9 @@ void JE_initEpisode( int newEpisode )
 
 void JE_scanForEpisodes( void )
 {
-	JE_findTyrian("tyrian1.lvl"); /* need to know where to scan */
-
 	for (int temp = 0; temp < EPISODE_MAX; temp++)
 	{
-		episodeAvail[temp] = JE_find(dir+"tyrian"+char('1'+temp)+".lvl");
+		episodeAvail[temp] = Filesystem::get().fileExists(std::string("tyrian")+char('1'+temp)+".lvl");
 	}
 }
 

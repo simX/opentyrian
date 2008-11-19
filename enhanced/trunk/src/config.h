@@ -64,8 +64,8 @@ struct JE_SaveFileType
 	JE_PItemsType items;
 	unsigned long score;
 	unsigned long score2;
-	char levelName[11]; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
-	char name[15]; /* [1..14] */ /* SYN: Added extra byte for null */
+	std::string levelName; /* string [9]; */ /* SYN: Added one more byte to match lastLevelName below */
+	std::string name; /* [1..14] */ /* SYN: Added extra byte for null */
 	int cubes;
 	int power[2];
 	int episode;
@@ -113,7 +113,8 @@ extern int shotRepeat[11], shotMultiPos[11];
 extern int portConfig[10];
 extern bool portConfigDone;
 extern JE_PortPowerType portPower, lastPortPower;
-extern char lastLevelName[11], levelName[11];
+extern std::string lastLevelName;
+extern std::string levelName;
 extern unsigned int mainLevel, nextLevel, saveLevel;
 //extern JE_KeySettingType keySettings;
 extern int levelFilter, levelFilterNew, levelBrightness, levelBrightnessChg;
@@ -152,17 +153,19 @@ void JE_setNewGameSpeed( void );
 void JE_loadConfiguration( void );
 void JE_saveConfiguration( void );
 void JE_readCryptLn( FILE* f, char *s );
-std::string JE_readCryptLn( std::ifstream& f );
+std::string JE_readCryptLn( std::fstream& f );
 void JE_skipCryptLn( FILE* f );
+void JE_skipCryptLn( std::fstream& f );
 
 void JE_setupStars( void );
 
-void JE_saveGame( int slot, const char *name );
+void JE_saveGame( int slot, const std::string& name );
 void JE_loadGame( int slot );
 
 void JE_decryptString( char *s, int len );
 std::string JE_decryptString( std::string s );
 
 void scan_autorun( );
+void scan_autorun( std::string dir );
 
 #endif /* CONFIG_H */

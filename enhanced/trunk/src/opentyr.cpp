@@ -45,6 +45,7 @@
 #include "console/KeyNames.h"
 #include "video.h"
 #include "video_scale.h"
+#include "Filesystem.h"
 
 #include "SDL.h"
 
@@ -330,16 +331,16 @@ int main( int argc, char *argv[] )
 		<< "This is free software, and you are welcome to redistribute it\n"
 		<< "under certain conditions.  See the file GPL.txt for details.\n" << std::endl;
 
+	Filesystem::initialize();
+	scan_autorun();
+	scan_parameters(argc, argv);
+	JE_loadConfiguration();
+
 	JE_scanForEpisodes();
 
 	recordFileNum = 1;
 	playDemoNum = 0;
 	playDemo = false;
-
-	JE_loadConfiguration();
-	scan_autorun();
-
-	scan_parameters(argc, argv);
 
 	init_video();
 	init_keyboard();

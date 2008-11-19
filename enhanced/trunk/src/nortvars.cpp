@@ -18,16 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "nortvars.h"
 
 #include "error.h"
 #include "joystick.h"
 #include "keyboard.h"
 #include "video.h"
 #include "vga256d.h"
+#include "Filesystem.h"
+#include "BinaryStream.h"
 
-#include "nortvars.h"
-
-#include <ctype.h>
+#include <cctype>
+#include "boost/format.hpp"
 
 
 bool inputDetected;
@@ -46,56 +48,43 @@ JE_word JE_btow(Uint8 a, Uint8 b)
 
 void JE_loadShapeFile( JE_ShapeType *shapes, char s )
 {
-	FILE *f;
-	bool active;
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, (boost::format("shapes%1%.dat") % char(std::tolower(s))).str());
+	IBinaryStream bs(f);
 
-	char buffer[12];
-	sprintf(buffer, "shapes%c.dat", tolower(s));
-
-	JE_resetFile(&f, buffer);
-
-	for (int x = 0; x < 304; x++)
+	for (int i = 0; i < 304; ++i)
 	{
-		active = (getc(f) != 0);
-
-		if (active)
+		if (bs.get8() != 0)
 		{
-			efread((*shapes)[x], sizeof(Uint8), sizeof(*(*shapes)[x]), f);
+			bs.getIter((*shapes)[i], (*shapes)[i]+304);
 		} else {
-			memset((*shapes)[x], 0, sizeof(*(*shapes)[x]));
+			std::fill_n((*shapes)[i], 304, 0);
 		}
 	}
 
-	fclose(f);
+	f.close();
 
-	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
+	DEBUG_MSG("shapes" << std::tolower(s) << ".dat loading complete.");
 }
 
 void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 {
-	FILE *f;
-	bool active;
 	JE_ShapeTypeOne tempshape;
-	int black, color;
 
-	char buffer[12];
-	sprintf(buffer, "shapes%c.dat", tolower(s));
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, (boost::format("shapes%1%.dat") % char(std::tolower(s))).str());
+	IBinaryStream bs(f);
 
-	JE_resetFile(&f, buffer);
-
-	for (int z = 0; z < 304; z++)
+	for (int i = 0; i < 304; ++i)
 	{
-		active = (getc(f) != 0);
-
-		if (active)
+		if (bs.get8() != 0)
 		{
-			efread(tempshape, sizeof(Uint8), sizeof(tempshape), f);
+			bs.getIter(tempshape, tempshape+sizeof(tempshape));
 
 			for (int y = 0; y <= 13; y++)
 			{
-
-				black = 0;
-				color = 0;
+				int black = 0;
+				int color = 0;
 				for (int x = 0; x <= 11; x++)
 				{
 					if (tempshape[x + y * 12] == 0)
@@ -107,58 +96,54 @@ void JE_loadNewShapeFile( JE_NewShapeType *shapes, char s )
 				}
 
 				if (black == 12)
-				{  /* Compression Value 0 - All black */
-					(*shapes)[z][y * 13] = 0;
+				{
+					// Compression Value 0 - All black
+					(*shapes)[i][y * 13] = 0;
 				} else {
 					if (color == 12)
-					{  /* Compression Value 1 - All color */
-						(*shapes)[z][y * 13] = 1;
+					{
+						// Compression Value 1 - All color
+						(*shapes)[i][y * 13] = 1;
 						for (int x = 0; x <= 11; x++)
 						{
-							(*shapes)[z][x + 1 + y * 13] = tempshape[x + y * 12];
+							(*shapes)[i][x + 1 + y * 13] = tempshape[x + y * 12];
 						}
 					} else {
-						(*shapes)[z][y * 13] = 2;
+						(*shapes)[i][y * 13] = 2;
 						for (int x = 0; x <= 11; x++)
 						{
-							(*shapes)[z][x + 1 + y * 13] = tempshape[x + y * 12];
+							(*shapes)[i][x + 1 + y * 13] = tempshape[x + y * 12];
 						}
 					}
 				}
 			}
 		} else {
-			memset((*shapes)[z], 0, sizeof((*shapes)[z]));
+			std::fill_n((*shapes)[i], 304, 0);
 		}
 	}
 
-	fclose(f);
+	f.close();
 
-	/*fprintf(stderr, "Shapes%c completed.\n", s);*/
+	DEBUG_MSG("New shapes" << std::tolower(s) << ".dat loading complete.");
 }
 
 void JE_loadCompShapes( Uint8 **shapes, unsigned long *shapeSize, char s )
 {
-	FILE *f;
+	free(*shapes);
 
-	char buffer[11];
-	sprintf(buffer, "newsh%c.shp", tolower(s));
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, (boost::format("newsh%c.shp") % char(std::tolower(s))).str());
 
-	if (*shapes != NULL)
-	{
-		free(*shapes);
-	}
+	f.seekg(0, std::ios::end);
+	*shapeSize = f.tellg();
+	f.seekg(0);
 
-	JE_resetFile(&f, buffer);
+	*shapes = static_cast<Uint8 *>(malloc(*shapeSize));
 
-	fseek(f, 0, SEEK_END);
-	*shapeSize = ftell(f);
-	fseek(f, 0, SEEK_SET);
+	IBinaryStream bs(f);
+	bs.getIter(*shapes, (*shapes)+(*shapeSize));
 
-	*shapes = (Uint8 *)	malloc(*shapeSize);
-
-	efread(*shapes, sizeof(Uint8), *shapeSize, f);
-
-	fclose(f);
+	f.close();
 }
 
 void JE_drawShape2( int x, int y, int s_, Uint8 *shape )

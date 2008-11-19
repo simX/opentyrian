@@ -40,7 +40,7 @@ extern int player_delta_x[2], player_delta_y[2];
 
 /*void JE_textMenuWait ( JE_word waittime, bool dogamma );*/
 
-void JE_drawTextWindow( char *text );
+void JE_drawTextWindow( const std::string& text );
 void JE_initPlayerData( void );
 void JE_highScoreScreen( void );
 void JE_gammaCorrect_func( Uint8 *col, float r );
@@ -64,7 +64,7 @@ unsigned int JE_getValue( int itemType, JE_word itemNum );
 unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems );
 
 void JE_drawPortConfigButtons( void );
-void JE_outCharGlow( JE_word x, JE_word y, const char *s );
+void JE_outCharGlow( JE_word x, JE_word y, const std::string& s );
 bool JE_getPassword( void );
 
 void JE_playCredits( void );
@@ -78,7 +78,7 @@ void JE_inGameDisplays( void );
 void JE_mainKeyboardInput( void );
 void JE_pauseGame( void );
 
-void JE_loadCompShapesB( Uint8 **shapes, FILE *f, unsigned long shapeSize );
+void JE_loadCompShapesB( Uint8 **shapes, std::fstream& f, unsigned long shapeSize );
 
 void JE_loadMainShapeTables( void );
 void JE_playerMovement( int inputDevice, int playerNum, JE_word shipGr, Uint8 *shapes9ptr, int *armorLevel, int *baseArmor, int *shield, int *shieldMax, JE_word *playerInvulnerable, int *PX, int *PY, int *lastPX, int *lastPY, int *lastPX2, int *lastPY2, int *PXChange, int *PYChange, int *lastTurn, int *lastTurn2, int *tempLastTurn2, int *stopWaitX, int *stopWaitY, JE_word *mouseX, JE_word *mouseY, bool *playerAlive, int *playerStillExploding, JE_PItemsType pItems );

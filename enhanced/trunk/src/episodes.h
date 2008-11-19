@@ -52,7 +52,7 @@ struct JE_WeaponType
 
 struct JE_WeaponPortType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	int opnum;
 	JE_word op[2][11]; /* [1..2, 1..11] */
 	JE_word cost;
@@ -62,7 +62,7 @@ struct JE_WeaponPortType
 
 struct JE_PowerType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	JE_word itemgraphic;
 	int power;
 	int speed;
@@ -71,7 +71,7 @@ struct JE_PowerType
 
 struct JE_SpecialType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	JE_word itemgraphic;
 	int pwr;
 	int stype;
@@ -80,7 +80,7 @@ struct JE_SpecialType
 
 struct JE_OptionType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	int pwr;
 	JE_word itemgraphic;
 	JE_word cost;
@@ -97,7 +97,7 @@ struct JE_OptionType
 
 struct JE_ShieldType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	int tpwr;
 	int mpwr;
 	JE_word itemgraphic;
@@ -106,7 +106,7 @@ struct JE_ShieldType
 
 struct JE_ShipType
 {
-	char name[31]; /* string [30] */
+	std::string name; /* string [30] */
 	JE_word shipgraphic;
 	JE_word itemgraphic;
 	int ani;

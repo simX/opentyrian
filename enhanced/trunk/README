@@ -99,7 +99,19 @@ Some examples:
  NOXMAS  | +"set ch_xmas false"
  YESXMAS | +"set ch_xmas true"
 
-==== Configuration files =======================================================
+==== Game Directories ==========================================================
+By default, OpenTyrian saves and stores configuration settings to the game's
+directory. However, that may not be desirable in certain cases (like if
+installing to a system directory). The game allows you to use your user's home
+directory to store configuration files instead. To change the setting edit the
+autorun/00paths.con. You may also change the paths the game looks in to find the
+Tyrian datafiles in this file. 
+
+NOTE: The user's home directory is different for each OS, and isn't supported on
+      some. The 00paths.con file contains a list of supported OSes and the
+	  user's directory location.
+
+==== Configuration Files =======================================================
 OpenTyrian Enhanced uses a script file system to configure the game. All files
 in the "autorun" directory with a .con extension will automatically be executed
 at startup by the game, so you can put your configuration settings there.

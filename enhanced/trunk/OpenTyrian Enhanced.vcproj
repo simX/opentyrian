@@ -261,11 +261,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\error.h"
+				RelativePath=".\src\explosion.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\explosion.h"
+				RelativePath=".\src\Filesystem.h"
 				>
 			</File>
 			<File
@@ -485,11 +485,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\error.cpp"
+				RelativePath=".\src\explosion.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\explosion.cpp"
+				RelativePath=".\src\Filesystem.cpp"
 				>
 			</File>
 			<File

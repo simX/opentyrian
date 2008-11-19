@@ -19,12 +19,16 @@
  */
 #include "Console.h"
 
-#include "SDL.h"
 #include "fonthand.h"
 #include "newshape.h"
 #include "keyboard.h"
 #include "video.h"
 #include "vga256d.h"
+#include "CCmd.h"
+#include "cvar/CVar.h"
+#include "Filesystem.h"
+
+#include "SDL.h"
 #include <cassert>
 #include <algorithm>
 #include <vector>
@@ -35,9 +39,7 @@
 #include <fstream>
 #include "boost/filesystem.hpp"
 #include "boost/algorithm/string/trim.hpp"
-
-#include "CCmd.h"
-#include "cvar/CVar.h"
+#include "boost/date_time/posix_time/posix_time.hpp"
 
 namespace CVars
 {
@@ -45,12 +47,16 @@ namespace CVars
 	CVarInt con_height("con_height", CVar::CONFIG | CVar::CONFIG_AUTO, "Height of the console, in lines.", 10, rangeBind(4u, 200/Console::LINE_HEIGHT));
 }
 
+Console::ConsoleStreamBuffer::ConsoleStreamBuffer(Console& parentConsole)
+	: parentConsole(parentConsole)
+{ }
+
 int Console::ConsoleStreamBuffer::overflow( int c )
 {
 	if (c != mTraits::eof()) {
 		if (c == '\n') {
 			mOutputStr.append("\ax");
-			Console::get().println(mOutputStr);
+			parentConsole.println(mOutputStr);
 			mOutputStr.clear();
 		} else if (c == '\t') {
 			mOutputStr.append(8, ' ');
@@ -105,8 +111,21 @@ void Console::drawArrow( Uint8* const surf, unsigned int x, unsigned int y, Uint
 
 Console::Console()
 	: std::ostream(&mStreambuf), mDown(false), mHeight(0), mScrollback(CVars::con_buffer_size),
-	mScrollbackHead(0), mCurScroll(0), mColor(TEXT_COLOR), mCursorPos(0), mCursorVisible(true), mCursorTimeout(BLINK_RATE)
-{ }
+	mScrollbackHead(0), mCurScroll(0), mColor(TEXT_COLOR), mCursorPos(0), mCursorVisible(true), mCursorTimeout(BLINK_RATE),
+	mStreambuf(*this)
+{
+	const std::string fname = Filesystem::getHomeDir()+"log.txt";
+	logStream.open(fname.c_str(), std::ios::app);
+
+	if (logStream.fail())
+		*this << "\a7Warning:\ax Failed to open log file: " << fname << std::endl;
+	else
+	{
+		namespace time = boost::posix_time;
+		const time::ptime now = time::second_clock::local_time();
+		logStream << "* Log opened on " << time::to_simple_string(now) << std::endl;
+	}
+}
 
 void Console::enable( const bool anim )
 {
@@ -319,6 +338,9 @@ void Console::println( const std::string& text )
 			i++; // Skip next char
 		} else {
 			std::cout << text[i];
+			if (logStream.good())
+				logStream << text[i];
+
 			if (line_len == 52)
 			{
 				wrap.push_back(i);
@@ -328,6 +350,8 @@ void Console::println( const std::string& text )
 		}
 	}
 	std::cout << '\n';
+	if (logStream.good())
+		logStream << std::endl;
 
 	wrap.push_back(text.length());
 
@@ -459,13 +483,18 @@ namespace CCmds
 
 			std::string param1 = CCmd::convertParam<std::string>(params, 0);
 
-			if (fs::exists(param1))
+			std::string path;
+			try
 			{
-				std::ifstream stream(param1.c_str(), std::ios_base::in);
-				Console::get().runScript(param1, stream);
-			} else {
+				path = Filesystem::get().findFile(param1);
+			}
+			catch (Filesystem::FileOpenErrorException&)
+			{
 				throw CCmd::RuntimeCCmdError("Script file not found.");
 			}
+
+			std::ifstream stream(path.c_str(), std::ios_base::in);
+			Console::get().runScript(path, stream);
 		}
 	}
 

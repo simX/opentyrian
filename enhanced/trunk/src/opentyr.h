@@ -74,6 +74,9 @@ size_t efwrite( void *buffer, size_t size, size_t num, FILE *stream );
 	var = tmptmp_src_var; \
 }
 
+#include "boost/foreach.hpp"
+#define foreach BOOST_FOREACH
+
 void opentyrian_menu( void );
 
 #endif /* OPENTYR_H */

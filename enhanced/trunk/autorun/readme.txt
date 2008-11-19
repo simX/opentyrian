@@ -1,1 +1,0 @@
-Files in this folder with the .con extension will automatically be run as scripts at game startup.

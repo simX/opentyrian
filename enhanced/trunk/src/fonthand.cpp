@@ -47,7 +47,7 @@ int textGlowFont, textGlowBrightness = 6;
 
 bool levelWarningDisplay;
 int levelWarningLines;
-char levelWarningText[10][61]; /* [1..10] of string [60] */
+std::string levelWarningText[10]; /* [1..10] of string [60] */
 bool warningRed;
 
 int warningSoundDelay;
@@ -55,7 +55,7 @@ JE_word armorShipDelay;
 int warningCol;
 int warningColChange;
 
-void JE_dString( JE_word x, JE_word y, const char *s, int font, bool bright )
+void JE_dString( JE_word x, JE_word y, const std::string& s, int font, bool bright )
 {
 	char b;
 
@@ -457,12 +457,12 @@ void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize
 	}
 }
 
-JE_word JE_fontCenter( const char *s, int font )
+JE_word JE_fontCenter( const std::string& s, int font )
 {
 	return 160 - (JE_textWidth(s, font) / 2);
 }
 
-JE_word JE_textWidth( const char *s, int font )
+JE_word JE_textWidth( const std::string& s, int font )
 {
 	Uint8 b;
 	JE_word x = 0;
@@ -599,7 +599,7 @@ void JE_outTextShade( JE_word x, JE_word y, const char *s, int font )
 	}
 }
 
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow )
+void JE_outTextAdjust( JE_word x, JE_word y, const std::string& s, int filter, int brightness, int font, bool shadow )
 {
 	unsigned char b;
 	bool bright = false;
@@ -690,7 +690,7 @@ void JE_updateWarning( void )
 	}
 }
 
-void JE_outTextGlow( JE_word x, JE_word y, const char *s )
+void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 {
 	int c = 15;
 

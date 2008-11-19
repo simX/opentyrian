@@ -222,7 +222,7 @@ extern int flash;
 extern int flashChange;
 extern int displayTime;
 extern bool firstEvent;
-extern FILE *recordFile;
+extern std::fstream recordFile;
 extern JE_word recordFileNum;
 extern int lastKey[8];
 extern JE_word lastMoveWait, nextMoveWait;

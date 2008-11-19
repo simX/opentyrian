@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "newshape.h"
 
 #include "error.h"
 #include "joystick.h"
@@ -27,8 +28,8 @@
 #include "nortvars.h"
 #include "varz.h"
 #include "video.h"
-
-#include "newshape.h"
+#include "BinaryStream.h"
+#include "Filesystem.h"
 
 
 Uint8 *tempScreenSeg = VGAScreen;
@@ -54,41 +55,35 @@ Draw X pixels of color Y
 */
 
 
-void JE_newLoadShapesB( int table, FILE *f )
+void JE_newLoadShapesB( int table, std::fstream& f )
 {
-	JE_word temp;
-	efread(&temp, sizeof(JE_word), 1, f);
-	maxShape[table] = temp;
+	IBinaryStream bs(f);
+	maxShape[table] = bs.get16();
 
 	for (int i = 0; i < maxShape[table]; ++i)
 	{
-		shapeExist[table][i] = (getc(f) != 0);
+		shapeExist[table][i] = (bs.get8() != 0);
 
 		if (shapeExist[table][i])
 		{
-			efread(&shapeX   [table][i], sizeof(JE_word), 1, f);
-			efread(&shapeY   [table][i], sizeof(JE_word), 1, f);
-			efread(&shapeSize[table][i], sizeof(JE_word), 1, f);
+			shapeX[table][i] = bs.get16();
+			shapeY[table][i] = bs.get16();
+			shapeSize[table][i] = bs.get16();
 
 			shapeArray[table][i] = new Uint8[shapeX[table][i] * shapeY[table][i]];
 
-			// TODO convert to stream
-			efread(shapeArray[table][i], sizeof(JE_byte), shapeSize[table][i], f);
+			bs.getIter(shapeArray[table][i], shapeArray[table][i]+shapeSize[table][i]);
 		}
 	}
 }
 
 void JE_newLoadShapes( int table, const char *shapefile )
 {
-	FILE *f;
-	
 	JE_newPurgeShapes(table);
-	
-	JE_resetFile(&f, shapefile);
-	
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, shapefile);
 	JE_newLoadShapesB(table, f);
-	
-	fclose(f);
+	f.close();
 }
 
 void JE_newDrawCShape( Uint8 *shape, JE_word xsize, JE_word ysize )

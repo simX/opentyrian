@@ -35,7 +35,9 @@
 #include "console/cvar/CVar.h"
 #include "console/cvar/CVarManager.h"
 #include "console/BindManager.h"
+#include "Filesystem.h"
 
+#include <string>
 #include <fstream>
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
@@ -116,7 +118,8 @@ JE_PortPowerType portPower, lastPortPower;
 
 
 /* Level Data */
-char lastLevelName[11], levelName[11]; /* string [10] */
+std::string lastLevelName;
+std::string levelName; /* string [10] */
 unsigned int mainLevel, nextLevel, saveLevel;   /*Current Level #*/
 
 /* Keyboard Junk */
@@ -199,7 +202,7 @@ void JE_readCryptLn( FILE* f, char *s )
 	JE_decryptString(s, size);
 }
 
-std::string JE_readCryptLn( std::ifstream& f )
+std::string JE_readCryptLn( std::fstream& f )
 {
 	unsigned int size = f.get();
 	char* buf = new char[size];
@@ -216,6 +219,10 @@ void JE_skipCryptLn( FILE* f )
 	fseek(f, size, SEEK_CUR);
 }
 
+void JE_skipCryptLn( std::fstream& f )
+{
+	f.seekg(f.get(), std::ios::cur);
+}
 
 void JE_setupStars( void )
 {
@@ -227,7 +234,7 @@ void JE_setupStars( void )
 	}
 }
 
-void JE_saveGame( int slot, const char *name )
+void JE_saveGame( int slot, const std::string& name )
 {
 	saveFiles[slot-1].initialDifficulty = initialDifficulty;
 	saveFiles[slot-1].gameHasRepeated = gameHasRepeated;
@@ -258,10 +265,10 @@ void JE_saveGame( int slot, const char *name )
 
 	saveFiles[slot-1].score  = score;
 	saveFiles[slot-1].score2 = score2;
-	memcpy(&saveFiles[slot-1].levelName, &lastLevelName, sizeof(lastLevelName));
+	saveFiles[slot-1].levelName = lastLevelName;
 	saveFiles[slot-1].cubes  = lastCubeMax;
 
-	if (strcmp(lastLevelName, "Completed") == 0)
+	if (lastLevelName == "Completed")
 	{
 		temp = episodeNum - 1;
 		if (temp < 1)
@@ -278,7 +285,7 @@ void JE_saveGame( int slot, const char *name )
 	saveFiles[slot-1].input1 = inputDevice1;
 	saveFiles[slot-1].input2 = inputDevice2;
 
-	strcpy(saveFiles[slot-1].name, name);
+	saveFiles[slot-1].name = name;
 
 	for (int x = 0; x < 2; x++)
 	{
@@ -344,9 +351,9 @@ void JE_loadGame( int slot )
 
 	temp5 = saveFiles[slot-1].episode;
 
-	memcpy(&levelName, &saveFiles[slot-1].levelName, sizeof(levelName));
+	levelName = saveFiles[slot-1].levelName;
 
-	if (strcmp(levelName, "Completed") == 0)
+	if (levelName == "Completed")
 	{
 		if (temp5 == 4)
 		{
@@ -359,7 +366,7 @@ void JE_loadGame( int slot )
 
 	JE_initEpisode(temp5);
 	saveLevel = mainLevel;
-	memcpy(&lastLevelName, &levelName, sizeof(levelName));
+	lastLevelName = levelName;
 }
 
 namespace CVars
@@ -496,7 +503,7 @@ void JE_loadConfiguration( void )
 	{
 		JE_SaveFileType& save = saveFiles[i];
 
-		std::string fname = std::string("save/tyrian") + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
+		const std::string fname = Filesystem::getHomeDir()+"save/tyrian" + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
 		std::ifstream file(fname.c_str(), std::ios_base::in | std::ios_base::binary);
 
 		if (file)
@@ -515,8 +522,8 @@ void JE_loadConfiguration( void )
 			}
 			save.score = f.get32();
 			save.score2 = f.get32();
-			save.levelName[f.getStr().copy(save.levelName, 10)] = '\0';
-			save.name[f.getStr().copy(save.name, 14)] = '\0';
+			save.levelName = f.getStr();
+			save.name = f.getStr();
 			save.cubes = f.get8();
 			save.power[0] = f.get8();
 			save.power[1] = f.get8();
@@ -530,15 +537,11 @@ void JE_loadConfiguration( void )
 		} else {
 			// Savefile not found, initialize to defaults
 			save.level = 0;
-			for (int i = 0; i < 14; i++)
-			{
-				save.name[i] = ' ';
-			}
-			save.name[14] = '\0';
+			save.name = "";
 		}
 	}
 
-	std::ifstream file("save/tyrian.hi", std::ios_base::in | std::ios_base::binary);
+	std::ifstream file((Filesystem::getHomeDir()+"save/tyrian.hi").c_str(), std::ios_base::in | std::ios_base::binary);
 	if (file)
 	{
 		IBinaryStream s(file);
@@ -584,7 +587,7 @@ void JE_saveConfiguration( void )
 {
 	try
 	{
-		fs::create_directory("save"); // Does nothing if dir already exists
+		fs::create_directory(Filesystem::getHomeDir()+"save"); // Does nothing if dir already exists
 	}
 	catch (const fs::filesystem_error& ex)
 	{
@@ -594,7 +597,7 @@ void JE_saveConfiguration( void )
 	}
 
 	{
-		std::ofstream file("save/tyrian.hi", std::ios_base::out | std::ios_base::binary);
+		std::ofstream file((Filesystem::getHomeDir()+"save/tyrian.hi").c_str(), std::ios_base::out | std::ios_base::binary);
 
 		if (file)
 		{
@@ -613,7 +616,7 @@ void JE_saveConfiguration( void )
 	{
 		if (saveFiles[i].level != 0)
 		{
-			std::string fname = std::string("save/tyrian") + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
+			std::string fname = std::string(Filesystem::getHomeDir()+"save/tyrian") + char(i<11 ? '1' : '2') + char(i==10 || i==21 ? 'L' : '0'+(i<11 ? i : i-11)) + ".sav";
 			std::ofstream file(fname.c_str(), std::ios_base::out | std::ios_base::binary);
 
 			if (!file)
@@ -657,7 +660,7 @@ void JE_saveConfiguration( void )
 	}
 
 	{
-		std::ofstream file("autorun/10config.con", std::ios_base::out);
+		std::ofstream file((Filesystem::getHomeDir()+"autorun/10config.con").c_str(), std::ios_base::out);
 
 		if (file)
 		{
@@ -677,25 +680,33 @@ void JE_saveConfiguration( void )
 		}
 		else
 		{
-			Console::get() << "\a7Error:\ax Couldn't write autorun/10config.con." << std::endl;
+			Console::get() << "\a7Error:\ax Couldn't write " << Filesystem::getHomeDir() << "autorun/10config.con." << std::endl;
 		}
 	}
 }
 
 void scan_autorun( )
 {
+	scan_autorun("autorun");
+
+	if (CVars::cfg_use_home)
+		scan_autorun(Filesystem::getHomeDir()+"/autorun");
+}
+
+void scan_autorun( std::string dir )
+{
 	try
 	{
-		fs::create_directory("autorun"); // Does nothing if dir already exists
+		fs::create_directory(dir); // Does nothing if dir already exists
 	}
 	catch (const fs::filesystem_error& ex)
 	{
-		Console::get() << "\a7Error:\ax Unable to create autorun directory: " << ex.what() << std::endl;
+		Console::get() << "\a7Error:\ax Unable to create autorun (" << dir << ") directory: " << ex.what() << std::endl;
 		return;
 	}
 
 	fs::directory_iterator end_iter;
-	for (fs::directory_iterator dir_iter("autorun"); dir_iter != end_iter; ++dir_iter)
+	for (fs::directory_iterator dir_iter(dir); dir_iter != end_iter; ++dir_iter)
 	{
 		if (fs::is_regular(dir_iter->status()) && fs::extension(dir_iter->path()) == ".con")
 		{

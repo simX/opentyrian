@@ -20,11 +20,12 @@
 #include "opentyr.h"
 #include "palette.h"
 
-#include "error.h"
 #include "nortsong.h"
 #include "nortvars.h"
 #include "video.h"
 #include "BinaryStream.h"
+#include "Filesystem.h"
+
 #include <fstream>
 
 JE_PalType palettes;
@@ -41,8 +42,8 @@ void JE_loadPals( )
 {
 	palNum = 0;
 
-	std::ifstream stream;
-	open_datafile_fail(stream, "palette.dat");
+	std::fstream stream;
+	Filesystem::get().openDatafileFail(stream, "palette.dat");
 	IBinaryStream f(stream);
 
 	while (palNum < MAX_PAL && !stream.eof())

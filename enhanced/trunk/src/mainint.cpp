@@ -44,6 +44,7 @@
 #include "HighScores.h"
 #include "console/cvar/CVar.h"
 #include "explosion.h"
+#include "Filesystem.h"
 
 #include "mainint.h"
 
@@ -51,6 +52,8 @@
 #include <cctype>
 #include <cmath>
 #include <sstream>
+#include <string>
+#include "boost/format.hpp"
 
 
 static const int MAX_PAGE = 8;
@@ -69,7 +72,7 @@ bool loadedMainShapeTables = false;
 int player_delta_x[2], player_delta_y[2];
 
 /* Draws a message at the bottom text window on the playing screen */
-void JE_drawTextWindow( char *text )
+void JE_drawTextWindow( const std::string& text )
 {
 	tempScreenSeg = VGAScreenSeg; /*sega000*/
 	if (textErase > 0)
@@ -81,7 +84,7 @@ void JE_drawTextWindow( char *text )
 	JE_outText(20, 190, text, 0, 4);
 }
 
-void JE_outCharGlow( JE_word x, JE_word y, const char *s )
+void JE_outCharGlow( JE_word x, JE_word y, const std::string& s )
 {
 	int maxloc, loc;
 	char glowcol[60]; /* [1..60] */
@@ -113,7 +116,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 			JE_showVGA();
 		} else {
 
-			maxloc = (int)strlen(s);
+			maxloc = s.length();
 			tempScreenSeg = VGAScreen;
 			for (int z = 0; z < 60; z++)
 			{
@@ -133,7 +136,7 @@ void JE_outCharGlow( JE_word x, JE_word y, const char *s )
 				}
 			}
 
-			for (int loc = 0; (unsigned)loc < strlen(s) + 28; loc++)
+			for (int loc = 0; (unsigned)loc < s.length() + 28; loc++)
 			{
 				if (!ESCPressed)
 				{
@@ -268,14 +271,13 @@ void JE_helpSystem( int startTopic )
 				{
 					for (int temp = 1; temp <= TOPICS; temp++)
 					{
-						char buf[21+1];
+						std::string buf;
 
 						if (temp == menu-1)
 						{
-							strcpy(buf+1, topicName[temp]);
-							buf[0] = '~';
+							buf = "~"+topicName[temp];
 						} else {
-							strcpy(buf, topicName[temp]);
+							buf = topicName[temp];
 						}
 
 						JE_dString(JE_fontCenter(topicName[temp], SMALL_FONT_SHAPES), temp * 20 + 40, buf, SMALL_FONT_SHAPES);
@@ -444,10 +446,11 @@ void JE_helpSystem( int startTopic )
 	} while (lastkey_sym != SDLK_ESCAPE);
 }
 
-void JE_loadCompShapesB( Uint8 **shapes, FILE *f, unsigned long shapeSize )
+void JE_loadCompShapesB( Uint8 **shapes, std::fstream& f, unsigned long shapeSize )
 {
 	*shapes = new Uint8[shapeSize];
-	efread(*shapes, sizeof(Uint8), shapeSize, f);
+	IBinaryStream bs(f);
+	bs.getIter(*shapes, (*shapes)+shapeSize);
 }
 
 void JE_loadMainShapeTables( void )
@@ -455,32 +458,33 @@ void JE_loadMainShapeTables( void )
 	static const int shapeReorderList[7] /* [1..7] */ = {1, 2, 5, 0, 3, 4, 6};
 	static const int SHP_NUM = 12;
 
-	FILE *f;
+	std::fstream f;
+	IBinaryStream bs(f);
 
 	unsigned long shpPos[SHP_NUM + 1];
 	JE_word shpNumb;
 
 	if (CVars::ch_xmas)
 	{
-		JE_resetFile(&f, "tyrianc.shp");
+		Filesystem::get().openDatafileFail(f, "tyrianc.shp");
 	} else {
-		JE_resetFile(&f, "tyrian.shp");
+		Filesystem::get().openDatafileFail(f, "tyrian.shp");
 	}
 
-	efread(&shpNumb, sizeof(JE_word), 1, f);
-	for (int x = 0; x < shpNumb; x++)
+	shpNumb = bs.get16();
+	for (int i = 0; i < shpNumb; ++i)
 	{
-		vfread(shpPos[x], Sint32, f);
+		shpPos[i] = bs.getS32();
 	}
-	fseek(f, 0, SEEK_END);
-	shpPos[shpNumb] = ftell(f);
+	f.seekg(0, std::ios::end);
+	shpPos[shpNumb] = f.tellg();
 
 	int i;
 
 	// Load interface and option sprites
 	for (i = 0; i < 7; i++)
 	{
-		fseek(f, shpPos[i], SEEK_SET);
+		f.seekg(shpPos[i]);
 		JE_newLoadShapesB(shapeReorderList[i], f);
 	}
 
@@ -504,7 +508,7 @@ void JE_loadMainShapeTables( void )
 	shapesW2Size = shpPos[i+1] - shpPos[i];
 	JE_loadCompShapesB(&shapesW2, f, shapesW2Size);
 
-	fclose(f);
+	f.close();
 
 	loadedMainShapeTables = true;
 }
@@ -561,12 +565,10 @@ void JE_loadScreen( void )
 {
 	bool quit;
 	int sel, screen, min = 0, max = 0;
-	char *tempstr;
+	std::string tempstr;
 	char *tempstr2;
 	bool mal_str = false;
 	size_t len;
-
-	tempstr = NULL;
 
 	JE_fadeBlack(10);
 	JE_loadPic(2, false);
@@ -613,7 +615,6 @@ void JE_loadScreen( void )
 				/* Last line is return to main menu, not a save game */
 				if (mal_str)
 				{
-					free(tempstr);
 					mal_str = false;
 				}
 				tempstr = miscText[34 - 1];
@@ -636,14 +637,12 @@ void JE_loadScreen( void )
 				{
 					if (mal_str)
 					{
-						free(tempstr);
 						mal_str = false;
 					}
 					tempstr = miscText[3 - 1];
 				} else {
 					if (mal_str)
 					{
-						free(tempstr);
 						mal_str = false;
 					}
 					tempstr = saveFiles[x - 1].name;
@@ -657,26 +656,14 @@ void JE_loadScreen( void )
 			{
 				if (saveFiles[x - 1].level == 0)
 				{
-					if (mal_str)
-					{
-						free(tempstr);
-					}
-					tempstr = (char *)malloc(7);
 					mal_str = true;
-					strcpy(tempstr, "-----"); /* Unused save slot */
+					tempstr = "-----"; /* Unused save slot */
 				} else {
 					tempstr = saveFiles[x - 1].levelName;
-					tempstr2 = (char *)malloc(5 + strlen(miscTextB[2-1]));
-					sprintf(tempstr2, "%s %d", miscTextB[2-1], saveFiles[x - 1].episode);
-					JE_textShade(250, tempY, tempstr2, 5, (temp2 % 16) - 8, FULL_SHADE);
-					free(tempstr2);
+					JE_textShade(250, tempY, (boost::format("%1% %2%") % miscTextB[2-1] % saveFiles[x - 1].episode).str(), 5, (temp2 % 16) - 8, FULL_SHADE);
 				}
 
-				len = strlen(miscTextB[3-1]) + 2 + strlen(tempstr);
-				tempstr2 = (char *)malloc(len);
-				sprintf(tempstr2, "%s %s", miscTextB[3 - 1], tempstr);
-				JE_textShade(120, tempY, tempstr2, 5, (temp2 % 16) - 8, FULL_SHADE);
-				free(tempstr2);
+				JE_textShade(120, tempY, (boost::format("%s %s") % miscTextB[3 - 1] % tempstr).str(), 5, (temp2 % 16) - 8, FULL_SHADE);
 			}
 
 		}
@@ -812,7 +799,7 @@ bool JE_nextEpisode( void )
 	bool found;
 	int x;
 	
-	strcpy(lastLevelName, "Completed");
+	lastLevelName = "Completed";
 	x = episodeNum;
 	found = JE_findNextEpisode();
 	
@@ -924,7 +911,7 @@ void JE_initPlayerData( void )
 	mainLevel = FIRST_LEVEL;
 	saveLevel = FIRST_LEVEL;
 
-	strcpy(lastLevelName, miscText[20-1]);
+	lastLevelName = miscText[20-1];
 }
 
 void JE_highScoreScreen( void )
@@ -1756,10 +1743,10 @@ void JE_readDemoKeys( void )
 	lastKey[6] = (temp & 0x40) > 0;
 	lastKey[7] = (temp & 0x80) > 0;
 
-	temp = getc(recordFile);
-	temp2 = getc(recordFile);
+	temp = recordFile.get();
+	temp2 = recordFile.get();
 	lastMoveWait = temp << 8 | temp2;
-	nextDemoOperation = getc(recordFile);
+	nextDemoOperation = recordFile.get();
 }
 
 /*Street Fighter codes*/
@@ -1853,14 +1840,13 @@ bool JE_getPassword( void )
 
 void JE_playCredits( void )
 {
-	const int maxlines = 132;
-	typedef char JE_CreditStringType[maxlines][66];
+	static const int maxlines = 132;
 	
-	JE_CreditStringType credstr;
+	std::string credstr[maxlines];
 	JE_word max = 0, maxlen = 0;
 	int curpos, newpos;
 	int yloc;
-	FILE *f;
+	std::fstream f;
 	int currentpic = 1, fade = 0;
 	int fadechg = 1;
 	int currentship = 0;
@@ -1873,11 +1859,11 @@ void JE_playCredits( void )
 	
 	if (currentSong != 9)
 		JE_playSong(9);
-	JE_resetFile(&f, "tyrian.cdt");
-	while (!feof(f))
+	Filesystem::get().openDatafileFail(f, "tyrian.cdt");
+	while (!f.eof())
 	{
 		maxlen += 20 * 3;
-		JE_readCryptLn(f, credstr[max]);
+		credstr[max] = JE_readCryptLn(f);
 		max++;
 	}
 	
@@ -1976,7 +1962,7 @@ void JE_playCredits( void )
 		{
 			if (newpos > 0 && newpos <= max)
 			{
-				if (strcmp(&credstr[newpos-1][0], ".") && strlen(credstr[newpos-1]))
+				if (credstr[newpos-1] == "." && !credstr[newpos-1].empty())
 				{
 					JE_outTextAdjust(110 - JE_textWidth(&credstr[newpos-1][1], SMALL_FONT_SHAPES) / 2 + abs((yloc / 18) % 4 - 2) - 1, yloc - 1, &credstr[newpos-1][1], credstr[newpos-1][0] - 65, -8, SMALL_FONT_SHAPES, false);
 					JE_outTextAdjust(110 - JE_textWidth(&credstr[newpos-1][1], SMALL_FONT_SHAPES) / 2, yloc, &credstr[newpos-1][1], credstr[newpos-1][0] - 65, -2, SMALL_FONT_SHAPES, false);
@@ -2049,7 +2035,7 @@ void JE_endLevelAni( void )
 	JE_changeDifficulty();
 	
 	memcpy(pItemsBack2, pItems, sizeof(pItemsBack2));
-	strcpy(lastLevelName, levelName);
+	lastLevelName = levelName;
 	
 	JE_setNetByte(0);
 	
@@ -2075,11 +2061,9 @@ void JE_endLevelAni( void )
 	{
 		JE_outTextGlow(20, 20, miscText[17-1]);
 	} else if (playerAlive && (!twoPlayerMode || playerAliveB)) {
-		sprintf(tempStr, "%s %s", miscText[27-1], levelName);
-		JE_outTextGlow(20, 20, tempStr);
+		JE_outTextGlow(20, 20, (boost::format("%1% %2%") % miscText[27-1] % levelName).str());
 	} else {
-		sprintf(tempStr, "%s %s", miscText[62-1], levelName);
-		JE_outTextGlow(20, 20, tempStr);
+		JE_outTextGlow(20, 20, (boost::format("%1% %2%") % miscText[62-1] % levelName).str());
 	}
 	
 	JE_updateStream();
@@ -2088,14 +2072,10 @@ void JE_endLevelAni( void )
 	
 	if (twoPlayerMode)
 	{
-		sprintf(tempStr, "%s %lu", miscText[41-1], score);
-		JE_outTextGlow(30, 50, tempStr);
-		
-		sprintf(tempStr, "%s %lu", miscText[42-1], score2);
-		JE_outTextGlow(30, 70, tempStr);
+		JE_outTextGlow(30, 50, (boost::format("%1% %2%") % miscText[41-1] % score).str());
+		JE_outTextGlow(30, 70, (boost::format("%1% %2%") % miscText[42-1] % score2).str());
 	} else {
-		sprintf(tempStr, "%s %lu", miscText[28-1], score);
-		JE_outTextGlow(30, 50, tempStr);
+		JE_outTextGlow(30, 50, (boost::format("%1% %2%") % miscText[28-1] % score).str());
 		
 		JE_updateStream();
 		if (netQuit)
@@ -2108,8 +2088,7 @@ void JE_endLevelAni( void )
 	} else {
 		temp = ot_round(float(enemyKilled * 100 / totalEnemy));
 	}
-	sprintf(tempStr, "%s %d%%", miscText[63-1], temp);
-	JE_outTextGlow(40, 90, tempStr);
+	JE_outTextGlow(40, 90, (boost::format("%1% %2%%%") % miscText[63-1] % temp).str());
 	
 	JE_updateStream();
 	if (netQuit)
@@ -2289,8 +2268,8 @@ void JE_operation( int slot )
 {
 	int flash;
 	bool quit;
-	char stemp[21];
-	char tempStr[51];
+	std::string stemp;
+	std::string tempStr;
 	
 	if (!performSave) {
 		if (saveFiles[slot-1].level > 0)
@@ -2313,10 +2292,8 @@ void JE_operation( int slot )
 		}
 	} else if (slot % 11 != 0) {
 		quit = false;
-		strcpy(stemp, "              ");
-		memcpy(stemp, saveFiles[slot-1].name, strlen(saveFiles[slot-1].name));
-		temp = (int)strlen(stemp);
-		while (stemp[temp-1] == ' ' && --temp);
+		// PORT-CHANGE
+		stemp = saveFiles[slot-1].name;
 		
 		flash = 8 * 16 + 10;
 		
@@ -2335,8 +2312,7 @@ void JE_operation( int slot )
 				flash = (flash == 8 * 16 + 10) ? 8 * 16 + 2 : 8 * 16 + 10;
 				temp3 = (temp3 == 6) ? 2 : 6;
 				
-				strcpy(tempStr, miscText[2-1]);
-				strncat(tempStr, stemp, temp);
+				tempStr = miscText[2-1] + stemp;
 				JE_outText(65, 89, tempStr, 8, 3);
 				tempW = 65 + JE_textWidth(tempStr, TINY_FONT);
 				JE_barShade(tempW + 2, 90, tempW + 6, 95);
@@ -2389,19 +2365,17 @@ void JE_operation( int slot )
 						case '\'':
 							validkey = true;
 						default:
-							if (temp < 14 && (validkey || (lastkey_char >= 'A' && lastkey_char <= 'Z') || (lastkey_char >= '0' && lastkey_char <= '9')))
+							if (stemp.length() < 14 && (validkey || (lastkey_char >= 'A' && lastkey_char <= 'Z') || (lastkey_char >= '0' && lastkey_char <= '9')))
 							{
 								JE_playSampleNum(CURSOR_MOVE);
-								stemp[temp] = lastkey_char;
-								temp++;
+								stemp.append(1, lastkey_char);
 							}
 							break;
 						case SDLK_BACKSPACE:
 						case SDLK_DELETE:
-							if (temp)
+							if (!stemp.empty())
 							{
-								temp--;
-								stemp[temp] = ' ';
+								stemp.erase(stemp.end()-1);
 								JE_playSampleNum(CLICK);
 							}
 							break;
@@ -2428,7 +2402,7 @@ void JE_operation( int slot )
 
 void JE_inGameDisplays( void )
 {
-	char stemp[21];
+	std::string stemp;
 	
 	char tempstr[256];
 
@@ -2470,10 +2444,10 @@ void JE_inGameDisplays( void )
 				}
 			}
 			
-			strcpy(stemp, (temp == 0) ? miscText[49-1] : miscText[50-1]);
+			stemp = (temp == 0) ? miscText[49-1] : miscText[50-1];
 			if (isNetworkGame)
 			{
-				strcpy(stemp, JE_getName(temp+1));
+				stemp = JE_getName(temp+1);
 			}
 			
 			tempW = (temp == 0) ? 28 : (285 - JE_textWidth(stemp, TINY_FONT));
@@ -3091,7 +3065,7 @@ redo:
 
 						if (playDemo)
 						{
-							if (feof(recordFile))
+							if (recordFile.eof())
 							{
 								endLevel = true;
 								levelEnd = 40;
@@ -3152,8 +3126,8 @@ redo:
 							lastMoveWait++;
 							if (tempB)
 							{
-								fputc(lastMoveWait >> 8, recordFile);
-								fputc(lastMoveWait & 0xff, recordFile);
+								recordFile.put(lastMoveWait >> 8);
+								recordFile.put(lastMoveWait & 0xff);
 
 								int temp;
 								for (temp = 0; temp < 8; temp++)
@@ -3161,7 +3135,7 @@ redo:
 								temp = (lastKey[1-1]     ) + (lastKey[2-1] << 1) + (lastKey[3-1] << 2) + (lastKey[4-1] << 3) +
 								       (lastKey[5-1] << 4) + (lastKey[6-1] << 5) + (lastKey[7-1] << 6) + (lastKey[8-1] << 7);
 
-								fputc(temp, recordFile);
+								recordFile.put(temp);
 
 								lastMoveWait = 0;
 							}
@@ -4190,7 +4164,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
                        unsigned long *score_, int *armorLevel_, int *shield_, bool *playerAlive_,
                        int *playerStillExploding_, int playerNum_, int playerInvulnerable_ )
 {
-	char tempStr[256];
+	std::string tempStr;
 	
 	for (int z = 0; z < 100; z++)
 	{
@@ -4261,11 +4235,11 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							
 							if (isNetworkGame)
 							{
-								sprintf(tempStr, "%s %s %s", JE_getName(1), miscTextB[4-1], special[tempI4 - 32100].name);
+								tempStr = (boost::format("%1% %2% %3%") % JE_getName(1) % miscTextB[4-1] % special[tempI4 - 32100].name).str();
 							} else if (twoPlayerMode) {
-								sprintf(tempStr, "%s %s", miscText[43-1], special[tempI4 - 32100].name);
+								tempStr = (boost::format("%1% %2%") % miscText[43-1] % special[tempI4 - 32100].name).str();
 							} else {
-								sprintf(tempStr, "%s %s", miscText[64-1], special[tempI4 - 32100].name);
+								tempStr = (boost::format("%1% %2%") % miscText[64-1] % special[tempI4 - 32100].name).str();
 							}
 							JE_drawTextWindow(tempStr);
 							soundQueue[7] = 29;
@@ -4277,9 +4251,9 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							enemyAvail[z] = 1;
 							if (isNetworkGame)
 							{
-								sprintf(tempStr, "%s %s %s", JE_getName(2), miscTextB[4-1], options[tempI4 - 32000].name);
+								tempStr = (boost::format("%1% %2% %3%") % JE_getName(2) % miscTextB[4-1] % options[tempI4 - 32000].name).str();
 							} else {
-								sprintf(tempStr, "%s %s", miscText[44-1], options[tempI4 - 32000].name);
+								tempStr = (boost::format("%1% %2%") % miscText[44-1] % options[tempI4 - 32000].name).str();
 							}
 							JE_drawTextWindow(tempStr);
 							
@@ -4303,7 +4277,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							tempScreenSeg = VGAScreen;
 						} else if (onePlayerAction) {
 							enemyAvail[z] = 1;
-							sprintf(tempStr, "%s %s", miscText[64-1], options[tempI4 - 32000].name);
+							tempStr = (boost::format("%1% %2%") % miscText[64-1] % options[tempI4 - 32000].name).str();
 							JE_drawTextWindow(tempStr);
 							pItems[PITEM_LEFT_SIDEKICK] = tempI4 - 32000;
 							pItems[PITEM_RIGHT_SIDEKICK] = tempI4 - 32000;
@@ -4321,9 +4295,9 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 						{
 							if (isNetworkGame)
 							{
-								sprintf(tempStr, "%s %s %s", JE_getName(2), miscTextB[4-1], weaponPort[tempI4 - 31000].name);
+								tempStr = (boost::format("%1% %2% %3%") % JE_getName(2) % miscTextB[4-1] % weaponPort[tempI4 - 31000].name).str();
 							} else {
-								sprintf(tempStr, "%s %s", miscText[44-1], weaponPort[tempI4 - 31000].name);
+								tempStr = (boost::format("%1% %2%") % miscText[44-1] % weaponPort[tempI4 - 31000].name).str();
 							}
 							JE_drawTextWindow(tempStr);
 							pItemsPlayer2[PITEM_REAR_WEAPON] = tempI4 - 31000;
@@ -4331,7 +4305,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							enemyAvail[z] = 1;
 							soundQueue[7] = 29;
 						} else if (onePlayerAction) {
-							sprintf(tempStr, "%s %s", miscText[64-1], weaponPort[tempI4 - 31000].name);
+							tempStr = (boost::format("%1% %2%") % miscText[64-1] % weaponPort[tempI4 - 31000].name).str();
 							JE_drawTextWindow(tempStr);
 							pItems[PITEM_REAR_WEAPON] = tempI4 - 31000;
 							shotMultiPos[2] = 0;
@@ -4346,9 +4320,9 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 						{
 							if (isNetworkGame)
 							{
-								sprintf(tempStr, "%s %s %s", JE_getName(1), miscTextB[4-1], weaponPort[tempI4 - 30000].name);
+								tempStr = (boost::format("%1% %2% %3%") % JE_getName(1) % miscTextB[4-1] % weaponPort[tempI4 - 30000].name).str();
 							} else {
-								sprintf(tempStr, "%s %s", miscText[43-1], weaponPort[tempI4 - 30000].name);
+								tempStr = (boost::format("%1% %2%") % miscText[43-1] % weaponPort[tempI4 - 30000].name).str();
 							}
 							JE_drawTextWindow(tempStr);
 							pItems[PITEM_FRONT_WEAPON] = tempI4 - 30000;
@@ -4356,7 +4330,7 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 							enemyAvail[z] = 1;
 							soundQueue[7] = 29;
 						} else if (onePlayerAction) {
-							sprintf(tempStr, "%s %s", miscText[64-1], weaponPort[tempI4 - 30000].name);
+							tempStr = (boost::format("%1% %2%") % miscText[64-1] % weaponPort[tempI4 - 30000].name).str();
 							JE_drawTextWindow(tempStr);
 							pItems[PITEM_FRONT_WEAPON] = tempI4 - 30000;
 							shotMultiPos[1-1] = 0;
@@ -4416,11 +4390,11 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 					} else if (tempI4 == -1) {
 						if (isNetworkGame)
 						{
-							sprintf(tempStr, "%s %s %s", JE_getName(1), miscTextB[4-1], miscText[45-1]);
+							tempStr = (boost::format("%1% %2% %3%") % JE_getName(1) % miscTextB[4-1] % miscText[45-1]).str();
 						} else if (twoPlayerMode) {
-							sprintf(tempStr, "%s %s", miscText[43-1], miscText[45-1]);
+							tempStr = (boost::format("%1% %2%") % miscText[43-1] % miscText[45-1]).str();
 						} else {
-							strcpy(tempStr, miscText[45-1]);
+							tempStr = miscText[45-1];
 						}
 						JE_drawTextWindow(tempStr);
 						JE_powerUp(1);
@@ -4428,11 +4402,11 @@ void JE_playerCollide( int *PX_, int *PY_, int *lastTurn_, int *lastTurn2_,
 					} else if (tempI4 == -2) {
 						if (isNetworkGame)
 						{
-							sprintf(tempStr, "%s %s %s", JE_getName(2), miscTextB[4-1], miscText[46-1]);
+							tempStr = (boost::format("%1% %2% %3%") % JE_getName(2) % miscTextB[4-1] % miscText[46-1]).str();
 						} else if (twoPlayerMode) {
-							sprintf(tempStr, "%s %s", miscText[44-1], miscText[46-1]);
+							tempStr = (boost::format("%1% %2%") % miscText[44-1] % miscText[46-1]).str();
 						} else {
-							strcpy(tempStr, miscText[46-1]);
+							tempStr = miscText[46-1];
 						}
 						JE_drawTextWindow(tempStr);
 						JE_powerUp(2);

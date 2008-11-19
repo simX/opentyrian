@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "nortsong.h"
 
 #include "error.h"
 #include "joystick.h"
@@ -26,8 +27,8 @@
 #include "params.h"
 #include "sndmast.h"
 #include "vga256d.h"
-
-#include "nortsong.h"
+#include "Filesystem.h"
+#include "BinaryStream.h"
 
 #include "SDL.h"
 
@@ -149,94 +150,108 @@ void JE_loadSong( JE_word songnum )
 	if (!CVars::snd_enabled)
 		return;
 
-	JE_word x;
-	FILE *fi;
+	std::fstream fi;
+	IBinaryStream bs(fi);
 
-	JE_resetFile(&fi, "music.mus");
+	Filesystem::get().openDatafileFail(fi, "music.mus");
 
 	if (!loadedMusicData)
 	{
 		/* SYN: We're loading offsets into MUSIC.MUS for each song here. */
 		loadedMusicData = true;
-		efread(&x, sizeof(x), 1, fi);
+		bs.get16();
 		for (int i = 0; i <= MUSIC_NUM; i++)
 		{
-			vfread(songPos[i], Sint32, fi); /* SYN: reads long int (i.e. 4) * MUSICNUM */
+			// SYN: reads long int (i.e. 4) * MUSICNUM
+			songPos[i] = bs.getS32();
 		}
-		fseek(fi, 0, SEEK_END);
-		songPos[MUSIC_NUM] = ftell(fi); /* Store file size */
+		fi.seekg(0, std::ios::end);
+		songPos[MUSIC_NUM] = fi.tellg(); /* Store file size */
 	}
 
 	/* SYN: Now move to the start of the song we want, and load the number of bytes given by the
 	   difference in offsets between it and the next song. */
-	fseek(fi, songPos[songnum - 1], SEEK_SET);
-	efread(&musicData, 1, songPos[songnum] - songPos[songnum - 1], fi);
+	fi.seekg(songPos[songnum-1]);
+	// unsigned char musicData[20000];
+	bs.getIter(musicData, musicData + (songPos[songnum]-songPos[songnum-1]));
 
 	/* currentSong = songnum; */
 
-	fclose(fi);
+	fi.close();
 }
 
 void JE_loadSndFile( void )
 {
-	FILE *fi;
-	int z;
-	unsigned long templ;
 	unsigned long sndPos[2][SOUND_NUM + 1]; /* Reindexed by -1, dammit Jason */
 	JE_word sndNum;
 
-	/* SYN: Loading offsets into TYRIAN.SND */
-	JE_resetFile(&fi, "tyrian.snd");
-	efread(&sndNum, sizeof(sndNum), 1, fi);
+	// SYN: Loading offsets into TYRIAN.SND
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, "tyrian.snd");
+	IBinaryStream bs(f);
 
-	for (int x = 0; x < sndNum; x++)
-	{
-		vfread(sndPos[0][x], Sint32, fi);
-	}
-	fseek(fi, 0, SEEK_END);
-	sndPos[1][sndNum] = ftell(fi); /* Store file size */
+	sndNum = bs.get16();
 
-	for (int z = 0; z < sndNum; z++)
+	for (int i = 0; i < sndNum; ++i)
 	{
-		fseek(fi, sndPos[0][z], SEEK_SET);
-		fxSize[z] = (JE_word)(sndPos[0][z+1] - sndPos[0][z]); /* Store sample sizes */
-		free(digiFx[z]);
-		digiFx[z] = (Uint8 *)malloc(fxSize[z]);
-		efread(digiFx[z], 1, fxSize[z], fi); /* JE: Load sample to buffer */
+		sndPos[0][i] = bs.getS32();
 	}
 
-	fclose(fi);
+	// Store file size
+	f.seekg(0, std::ios::end);
+	sndPos[1][sndNum] = f.tellg();
 
-	/* SYN: Loading offsets into VOICES.SND */
-	if (CVars::ch_xmas)
+	for (int i = 0; i < sndNum; ++i)
 	{
-		JE_resetFile(&fi, "voicesc.snd");
-	} else {
-		JE_resetFile(&fi, "voices.snd");
-	}
-	efread(&sndNum, sizeof(sndNum), 1, fi);
+		f.seekg(sndPos[0][i]);
+		// Store sample sizes
+		fxSize[i] = (JE_word)(sndPos[0][i+1] - sndPos[0][i]);
 
-	for (int x = 0; x < sndNum; x++)
-	{
-		vfread(sndPos[1][x], Sint32, fi);
-	}
-	fseek(fi, 0, SEEK_END);
-	sndPos[1][sndNum] = ftell(fi); /* Store file size */
+		delete[] digiFx[i];
+		digiFx[i] = new Uint8[fxSize[i]];
 
-	z = SOUND_NUM;
+		if (f.fail()){
+			Console::get() << "foobar";
+		}
 
-	for (int y = 0; y < sndNum; y++)
-	{
-		fseek(fi, sndPos[1][y], SEEK_SET);
+		unsigned int pos = f.tellg();
 
-		templ = (sndPos[1][y+1] - sndPos[1][y]) - 100; /* SYN: I'm not entirely sure what's going on here. */
-		if (templ < 1) templ = 1;
-		fxSize[z + y] = (JE_word)templ; /* Store sample sizes */
-		digiFx[z + y] = (Uint8 *)malloc(fxSize[z + y]);
-		efread(digiFx[z + y], 1, fxSize[z + y], fi); /* JE: Load sample to buffer */
+		// Load sample to buffer
+		bs.getIter(digiFx[i], digiFx[i]+fxSize[i]);
 	}
 
-	fclose(fi);
+	f.close();
+
+	// SYN: Loading offsets into VOICES.SND
+	Filesystem::get().openDatafileFail(f, CVars::ch_xmas ? "voicesc.snd" : "voices.snd");
+	sndNum = bs.get16();
+
+	for (int i = 0; i < sndNum; ++i)
+	{
+		sndPos[1][i] = bs.getS32();
+	}
+
+	// Store file size
+	f.seekg(0, std::ios::end);
+	sndPos[1][sndNum] = f.tellg();
+
+	for (int i = 0; i < sndNum; ++i)
+	{
+		f.seekg(sndPos[1][i]);
+
+		// SYN: I'm not entirely sure what's going on here.
+		unsigned long templ = (sndPos[1][i+1] - sndPos[1][i]) - 100;
+		if (templ < 1)
+			templ = 1;
+
+		// Store sample sizes
+		fxSize[SOUND_NUM+i] = (JE_word)templ;
+		digiFx[SOUND_NUM+i] = new Uint8[fxSize[SOUND_NUM+i]];
+		// Load sample to buffer
+		bs.getIter(digiFx[SOUND_NUM+i], digiFx[SOUND_NUM+i]+fxSize[SOUND_NUM+i]);
+	}
+
+	f.close();
 
 	loadedSoundData = true;
 

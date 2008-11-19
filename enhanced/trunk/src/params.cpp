@@ -25,6 +25,7 @@
 #include "loudness.h"
 #include "mainint.h"
 #include "nortsong.h"
+#include "Filesystem.h"
 
 #include <ctime>
 #include <string>
@@ -37,7 +38,7 @@ static bool defaultEnableChristmas( )
 
 static bool christmasCallback( const bool& val )
 {
-	if (JE_getFileSize("tyrianc.shp") == 0 || JE_getFileSize("voicesc.snd") == 0)
+	if (!Filesystem::get().fileExists("tyrianc.shp") || !Filesystem::get().fileExists("voicesc.snd"))
 	{
 		Console::get() << "\a7Error:\ax Christmas datafiles not found." << std::endl;
 		return false;

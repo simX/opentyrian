@@ -19,8 +19,9 @@
  */
 #ifndef FONTHAND_H
 #define FONTHAND_H
-
 #include "opentyr.h"
+
+#include <string>
 
 
 static const int PART_SHADE = 0;
@@ -34,14 +35,14 @@ extern int defaultBrightness;
 extern int textGlowFont, textGlowBrightness;
 extern bool levelWarningDisplay;
 extern int levelWarningLines;
-extern char levelWarningText[10][61];
+extern std::string levelWarningText[10];
 extern bool warningRed;
 extern int warningSoundDelay;
 extern JE_word armorShipDelay;
 extern int warningCol;
 extern int warningColChange;
 
-void JE_dString( JE_word x, JE_word y, const char *s, int font, bool bright = false );
+void JE_dString( JE_word x, JE_word y, const std::string& s, int font, bool bright = false );
 void JE_newDrawCShapeBright( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
 void JE_newDrawCShapeShadow( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
 void JE_newDrawCShapeDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y );
@@ -54,16 +55,16 @@ void JE_newDrawCShapeAdjust( Uint8 *shape, JE_word xsize, JE_word ysize, int x, 
 void JE_newDrawCShapeAdjustNum( int table, int shape, int x, int y, int filter, int brightness );
 void JE_newDrawCShapeBrightAndDarken( Uint8 *shape, JE_word xsize, JE_word ysize, int x, int y, int filter, int brightness );
 /*void JE_newDrawCShapeZoom( int table, int shape, JE_word x, JE_word y, float scale );*/
-JE_word JE_fontCenter( const char *s, int font );
-JE_word JE_textWidth( const char *s, int font );
+JE_word JE_fontCenter( const std::string& s, int font );
+JE_word JE_textWidth( const std::string& s, int font );
 void JE_textShade( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int shadetype );
 void JE_outText( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness );
 void JE_outTextModify( JE_word x, JE_word y, const std::string& s, int filter, int brightness, int font );
 void JE_outTextShade( JE_word x, JE_word y, const char *s, int font );
-void JE_outTextAdjust( JE_word x, JE_word y, const char *s, int filter, int brightness, int font, bool shadow );
+void JE_outTextAdjust( JE_word x, JE_word y, const std::string& s, int filter, int brightness, int font, bool shadow );
 void JE_outTextAndDarken( JE_word x, JE_word y, const std::string& s, int colorbank, int brightness, int font );
 
 void JE_updateWarning( void );
-void JE_outTextGlow( JE_word x, JE_word y, const char *s );
+void JE_outTextGlow( JE_word x, JE_word y, const std::string& s );
 
 #endif /* FONTHAND_H */

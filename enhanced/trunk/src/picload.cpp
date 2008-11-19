@@ -18,13 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "picload.h"
 
 #include "error.h"
 #include "nortvars.h"
 #include "palette.h"
 #include "video.h"
-
-#include "picload.h"
+#include "Filesystem.h"
+#include "BinaryStream.h"
 
 #include <string.h>
 
@@ -45,37 +46,35 @@ void JE_loadPic( unsigned int PCXnumber, bool storepal )
 	typedef Uint8 JE_buftype[63000]; /* [1..63000] */
 	static bool notYetLoadedPCX = true;
 
-	JE_word x;
-	JE_buftype buf;
-	FILE *PCXfile;
-
-	Uint8 *p;
-	Uint8 *s; /* screen pointer, 8-bit specific */
-
-	s = (Uint8 *)VGAScreen;
-
 	PCXnumber--;
 
-	JE_resetFile(&PCXfile, "tyrian.pic");
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, "tyrian.pic");
+	IBinaryStream bs(f);
 
 	/*Same as old AnalyzePic*/
 	if (notYetLoadedPCX)
 	{
 		notYetLoadedPCX = false;
-		efread(&x, sizeof(JE_word), 1, PCXfile);
-		for (unsigned int x = 0; x < PCX_NUM; x++)
+		bs.get16();
+		for (unsigned int i = 0; i < PCX_NUM; ++i)
 		{
-			vfread(pcxpos[x], Sint32, PCXfile);
+			pcxpos[i] = bs.getS32();
 		}
-		fseek(PCXfile, 0, SEEK_END);
-		pcxpos[PCX_NUM] = ftell(PCXfile);
+		f.seekg(0, std::ios::end);
+		pcxpos[PCX_NUM] = f.tellg();
 	}
 
-	fseek(PCXfile, pcxpos[PCXnumber], SEEK_SET);
-	efread(buf, sizeof(Uint8), pcxpos[PCXnumber + 1] - pcxpos[PCXnumber], PCXfile);
-	fclose(PCXfile);
+	JE_buftype buf;
 
-	p = buf;
+	f.seekg(pcxpos[PCXnumber]);
+	bs.getIter(buf, buf+(pcxpos[PCXnumber+1]-pcxpos[PCXnumber]));
+	f.close();
+
+	Uint8 *p = buf;
+	// screen pointer, 8-bit specific
+	Uint8 *s = VGAScreen;
+
 	for (int i = 0; i < 320 * 200; )
 	{
 		if ((*p & 0xc0) == 0xc0)

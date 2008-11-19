@@ -50,6 +50,7 @@
 #include "superpixel.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "Filesystem.h"
 
 #include <ctype.h>
 #include <cmath>
@@ -61,6 +62,10 @@
 #include <fstream>
 #include <utility>
 #include <algorithm>
+#include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
+
+using boost::lexical_cast;
 
 JE_word statDmg[2]; /* [1..2] */
 int planetAni, planetAniWait;
@@ -84,7 +89,7 @@ JE_word levelEnemyMax;
 JE_word levelEnemyFrequency;
 JE_word levelEnemy[40]; /* [1..40] */
 
-char tempStr[31];
+std::string tempStr;
 
 /* Data used for ItemScreen procedure to indicate items available */
 int itemAvail[9][10]; /* [1..9, 1..10] */
@@ -998,7 +1003,7 @@ start_level:
 
 	if (CVars::record_demo || playDemo)
 	{
-		fclose(recordFile);
+		recordFile.close();
 		if (playDemo)
 		{
 			JE_fadeBlack(10);
@@ -1308,30 +1313,28 @@ start_level_first:
 	memset(lastKey, 0, sizeof(lastKey));
 	if (CVars::record_demo && !playDemo)
 	{
-		dont_die = true;
 		do
 		{
-			sprintf(tempStr, "demorec.%d", recordFileNum);
-			tempb = JE_find(tempStr);
-			if (tempb)
+			if (Filesystem::get().fileExists((boost::format("demorec.%1%") % recordFileNum).str()))
 			{
 				recordFileNum++;
 			}
 		} while (tempb);
-		dont_die = false;
 
-		recordFile = fopen_check(tempStr, "wb");
-		if (!recordFile)
+		recordFile.open((Filesystem::getHomeDir()+tempStr).c_str(), std::ios_base::out | std::ios_base::binary);
+		if (!recordFile.good())
 		{
 			exit(1);
 		}
 
-		efwrite(&episodeNum, 1, 1, recordFile);
-		efwrite(levelName, 1, 10, recordFile);
-		efwrite(&lvlFileNum, 1, 1, recordFile);
-		efwrite(pItems, 1, 12, recordFile);
-		efwrite(portPower, 1, 5, recordFile);
-		efwrite(&levelSong, 1, 1, recordFile);
+		OBinaryStream bs(recordFile);
+
+		bs.put8(episodeNum);
+		bs.put(levelName, 10);
+		bs.put8(lvlFileNum);
+		bs.put(pItems, pItems+12);
+		bs.put(portPower, portPower+5);
+		bs.put8(levelSong);
 
 		lastMoveWait = 0;
 	}
@@ -2784,10 +2787,10 @@ enemy_shot_draw_overflow:
 
 	if (debug)
 	{
-		strcpy(tempStr, "");
+		tempStr = "";
 		for (temp = 0; temp < 9; temp++)
 		{
-			sprintf(tempStr, "%s%c", tempStr,  smoothies[temp] + 48);
+			tempStr = (boost::format("%1%%2$c") % tempStr % (smoothies[temp] + 48)).str();
 		}
 		sprintf(buffer, "SM = %s", tempStr);
 		JE_outText(30, 70, buffer, 4, 0);
@@ -2799,9 +2802,10 @@ enemy_shot_draw_overflow:
 
 		debugHist = debugHist + ot_abs((float)(debugTime - lastDebugTime));
 		debugHistCount++;
-		sprintf(tempStr, "%2.3f", 1000.0f / ot_round(debugHist / debugHistCount));
-		sprintf(buffer, "X:%d Y:%-5d  %s FPS  %d %d %d %d", (mapX - 1) * 12 + PX, curLoc, tempStr, lastTurn2, lastTurn, PX, PY);
-		JE_outText(45, 175, buffer, 15, 3);
+
+		const float fps = 1000.0f / ot_round(debugHist / debugHistCount);
+		std::string debug_str = (boost::format("X:%d Y:%-5d  %2.3f FPS  %d %d %d %d") % ((mapX-1)*12+PX) % curLoc % fps % lastTurn2 % lastTurn % PX % PY).str();
+		JE_outText(45, 175, debug_str, 15, 3);
 		lastDebugTime = debugTime;
 	}
 
@@ -3032,21 +3036,20 @@ enemy_shot_draw_overflow:
 void JE_loadMap( void )
 {
 
-	FILE *lvlFile, *shpFile;
+	std::fstream shpFile;
+	std::fstream lvlFile;
 /*	FILE *tempFile;*/ /*Extract map file from LVL file*/
 
 
 	char char_mapFile, char_shapeFile;
 
 	JE_DanCShape shape;
-	bool shapeBlank;
-
 
 	JE_word x, y;
 	int yy, z;
 	JE_word mapSh[3][128]; /* [1..3, 0..127] */
 	Uint8 *ref[3][128]; /* [1..3, 0..127] */
-	char s[256];
+	std::string s;
 
 
 	Uint8 mapBuf[15 * 600]; /* [1..15 * 600] */
@@ -3094,7 +3097,7 @@ new_game:
 	{
 		do
 		{
-			JE_resetFile(&lvlFile, macroFile);
+			Filesystem::get().openDatafileFail(lvlFile, macroFile);
 
 			x = 0;
 			jumpSection = false;
@@ -3103,7 +3106,7 @@ new_game:
 			/* Seek Section # Mainlevel */
 			while (x < mainLevel)
 			{
-				JE_readCryptLn(lvlFile, s);
+				s = JE_readCryptLn(lvlFile);
 				if (s[0] == '*')
 				{
 					x++;
@@ -3122,12 +3125,11 @@ new_game:
 					{
 						loadTitleScreen = true;
 					}
-					fclose(lvlFile);
+					lvlFile.close();
 					goto new_game;
 				}
 
-				strcpy(s, " ");
-				JE_readCryptLn(lvlFile, s);
+				s = JE_readCryptLn(lvlFile);
 
 				switch (s[0])
 				{
@@ -3139,20 +3141,20 @@ new_game:
 								break;
 
 							case 'G':
-								mapOrigin = atoi(strnztcpy(buffer, s + 4, 2));
-								mapPNum   = atoi(strnztcpy(buffer, s + 7, 1));
+								mapOrigin = lexical_cast<JE_word>(s.substr(4, 2));
+								mapPNum = lexical_cast<JE_word>(s.substr(7, 1));
 								for (i = 0; i < mapPNum; i++)
 								{
-									mapPlanet[i] = atoi(strnztcpy(buffer, s + 1 + (i + 1) * 8, 2));
-									mapSection[i] = atoi(strnztcpy(buffer, s + 4 + (i + 1) * 8, 3));
+									mapPlanet[i] = lexical_cast<int>(s.substr(1+ (i+1)*8, 2));
+									mapSection[i] = lexical_cast<int>(s.substr(4+ (i+1)*8, 3));
 								}
 								break;
-
 							case '?': {
-								unsigned int temp = atoi(strnztcpy(buffer, s + 4, 2));
+								unsigned int temp = lexical_cast<unsigned int>(s.substr(4, 2));
+
 								for (unsigned int i = 0; i < temp; i++)
 								{
-									cubeList[i] = atoi(strnztcpy(buffer, s + 3 + (i + 1) * 4, 3));
+									cubeList[i] = lexical_cast<JE_word>(s.substr(3+(i+1)*4, 3));
 								}
 								if (cubeMax > temp)
 								{
@@ -3160,17 +3162,19 @@ new_game:
 								}
 								break; }
 							case '!':
-								cubeMax = atoi(strnztcpy(buffer, s + 4, 2));    /*Auto set CubeMax*/
+								// Auto set CubeMax
+								cubeMax = lexical_cast<unsigned int>(s.substr(4, 2));
 								break;
 							case '+':
-								temp = atoi(strnztcpy(buffer, s + 4, 2));
-								cubeMax += temp;
+								// PORT-CHANGE: 
+								//temp = lexical_cast<int>(s.substr(4, 2));
+								//cubeMax += temp;
+								cubeMax += lexical_cast<int>(s.substr(4, 2));
 								if (cubeMax > 4)
 								{
 									cubeMax = 4;
 								}
 								break;
-
 							case 'g':
 								galagaMode = true;   /*GALAGA mode*/
 								memcpy(&pItemsPlayer2, &pItems, sizeof(pItemsPlayer2));
@@ -3208,39 +3212,50 @@ new_game:
 								break;
 
 							case 'J':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
-								mainLevel = temp;
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
+								//mainLevel = temp;
+								mainLevel = lexical_cast<unsigned int>(s.substr(3, 3));
 								jumpSection = true;
 								break;
 							case '2':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
 								if (twoPlayerMode || onePlayerAction)
 								{
-									mainLevel = temp;
+									//mainLevel = temp;
+									mainLevel = lexical_cast<unsigned int>(s.substr(3, 3));
 									jumpSection = true;
 								}
 								break;
 							case 'w':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));   /*Allowed to go to Time War?*/
+								// Allowed to go to Time War?
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
 								if (pItems[PITEM_SHIP] == 13)
 								{
-									mainLevel = temp;
+									//mainLevel = temp;
+									mainLevel = lexical_cast<unsigned int>(s.substr(3, 3));
 									jumpSection = true;
 								}
 								break;
 							case 't':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
 								if (levelTimer && levelTimerCountdown == 0)
 								{
-									mainLevel = temp;
+									//mainLevel = temp;
+									mainLevel = lexical_cast<unsigned int>(s.substr(3, 3));
 									jumpSection = true;
 								}
 								break;
 							case 'l':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
 								if (!playerAlive || (twoPlayerMode && !playerAliveB))
 								{
-									mainLevel = temp;
+									//mainLevel = temp;
+									mainLevel = lexical_cast<unsigned int>(s.substr(3, 3));
 									jumpSection = true;
 								}
 								break;
@@ -3258,45 +3273,47 @@ new_game:
 								break;
 
 							case 'i':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
-								songBuy = temp;
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
+								//songBuy = temp;
+								songBuy = lexical_cast<int>(s.substr(3, 3));
 								break;
-							case 'I': /*Load Items Available Information*/
+							case 'I':
+								// Load Items Available Information
 
 								memset(&itemAvail, 0, sizeof(itemAvail));
 
 								for (temp = 0; temp < 9; temp++)
 								{
-									char buf[256];
+									std::string line = JE_readCryptLn(lvlFile);
+									std::stringstream sstr;
 
-									JE_readCryptLn(lvlFile, s);
+									sstr << (line.length() > 8 ? line.substr(8) : "") << ' ';
 
-									sprintf(buf, "%s ", (strlen(s) > 8 ? s+8 : ""));
-									/*strcat(strcpy(s, s + 8), " ");*/
-									temp2 = 0;
-									while (JE_getNumber(buf, &itemAvail[temp][temp2]))
+									unsigned int items_count = 0;
+									while (sstr >> itemAvail[temp][items_count])
 									{
-										temp2++;
+										items_count++;
 									}
 
-									itemAvailMax[temp] = temp2;
+									itemAvailMax[temp] = items_count;
 								}
 
 								JE_itemScreen();
 								break;
 
 							case 'L':
-								nextLevel = atoi(strnztcpy(buffer, s + 9, 3));
-								strnztcpy(levelName, s + 13, 9);
-								levelSong = atoi(strnztcpy(buffer, s + 22, 2));
+								nextLevel = lexical_cast<unsigned int>(s.substr(9, 3));
+								levelName = s.substr(13, 9);
+								levelSong = lexical_cast<int>(s.substr(22, 2));
 								if (nextLevel == 0)
 								{
 									nextLevel = mainLevel + 1;
 								}
-								lvlFileNum = atoi(strnztcpy(buffer, s + 25, 2));
+								lvlFileNum = lexical_cast<int>(s.substr(25, 2));
 								loadLevelOk = true;
-								bonusLevelCurrent = (strlen(s) > 28) & (s[28] == '$');
-								normalBonusLevelCurrent = (strlen(s) > 27) & (s[27] == '$');
+								bonusLevelCurrent = (s.length() > 28) && (s[28] == '$');
+								normalBonusLevelCurrent = (s.length() > 27) && (s[27] == '$');
 								gameJustLoaded = false;
 								break;
 
@@ -3310,13 +3327,13 @@ new_game:
 
 								if (twoPlayerMode)
 								{
-									sprintf(levelWarningText[0], "%s %lu", miscText[40], score);
-									sprintf(levelWarningText[1], "%s %lu", miscText[41], score2);
-									strcpy(levelWarningText[2], "");
+									levelWarningText[0] = std::string(miscText[40]) + ' ' + lexical_cast<std::string>(score);
+									levelWarningText[1] = std::string(miscText[41]) + ' ' + lexical_cast<std::string>(score2);
+									levelWarningText[2] = "";
 									levelWarningLines = 3;
 								} else {
-									sprintf(levelWarningText[0], "%s %lu", miscText[37], JE_totalScore(score, pItems));
-									strcpy(levelWarningText[1], "");
+									levelWarningText[0] = std::string(miscText[37]) + ' ' + lexical_cast<std::string>(JE_totalScore(score, pItems));
+									levelWarningText[1] = "";
 									levelWarningLines = 2;
 								}
 
@@ -3324,14 +3341,14 @@ new_game:
 								{
 									do
 									{
-										JE_readCryptLn(lvlFile, s);
+										std::string s = JE_readCryptLn(lvlFile);
 									} while (s[0] != '#');
 								}
 
 								do
 								{
-									JE_readCryptLn(lvlFile, s);
-									strcpy(levelWarningText[levelWarningLines], s);
+									std::string s = JE_readCryptLn(lvlFile);
+									levelWarningText[levelWarningLines] = s;
 									levelWarningLines++;
 								} while (s[0] != '#');
 								levelWarningLines--;
@@ -3419,7 +3436,7 @@ new_game:
 							case 'P':
 								if (!CVars::ch_constant_play)
 								{
-									tempX = atoi(strnztcpy(buffer, s + 3, 3));
+									tempX = lexical_cast<JE_word>(s.substr(3, 3));
 									if (tempX > 900)
 									{
 										load_pcx_palette(tempX-900-1, false);
@@ -3445,7 +3462,7 @@ new_game:
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
-									tempX = atoi(strnztcpy(buffer, s + 3, 3));
+									tempX = lexical_cast<JE_word>(s.substr(3, 3));
 									JE_loadPic(tempX, false);
 									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
@@ -3495,7 +3512,7 @@ new_game:
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
-									tempX = atoi(strnztcpy(buffer, s + 3, 3));
+									tempX = lexical_cast<JE_word>(s.substr(3, 3));
 									JE_loadPic(tempX, false);
 									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
@@ -3545,7 +3562,7 @@ new_game:
 									JE_setNetByte(0);
 									memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
-									tempX = atoi(strnztcpy(buffer, s + 3, 3));
+									tempX = lexical_cast<JE_word>(s.substr(3, 3));
 									JE_loadPic(tempX, false);
 									memcpy(pic_buffer, VGAScreen, sizeof(pic_buffer));
 
@@ -3623,21 +3640,22 @@ new_game:
 										warningSoundDelay = 0;
 										levelWarningDisplay = (s[2] == 'y');
 										levelWarningLines = 0;
-										frameCountMax = atoi(strnztcpy(buffer, s + 4, 2));
+										frameCountMax = lexical_cast<JE_word>(s.substr(4, 2));
 										setjasondelay2(6);
 										warningRed = (frameCountMax / 10) != 0;
 										frameCountMax = frameCountMax % 10;
 
+										std::string s;
 										do
 										{
-											JE_readCryptLn(lvlFile, s);
+											s = JE_readCryptLn(lvlFile);
 
 											if (s[0] != '#')
 											{
-												strcpy(levelWarningText[levelWarningLines], s);
+												levelWarningText[levelWarningLines] = s;
 												levelWarningLines++;
 											}
-										} while (!(s[0] == '#'));
+										} while (s[0] != '#');
 
 										JE_displayText();
 										newkey = false;
@@ -3648,7 +3666,7 @@ new_game:
 							case 'H':
 								if (initialDifficulty < 3)
 								{
-									mainLevel = atoi(strnztcpy(buffer, s + 4, 3));
+									mainLevel = lexical_cast<unsigned int>(s.substr(4, 3));
 									jumpSection = true;
 								}
 								break;
@@ -3656,7 +3674,7 @@ new_game:
 							case 'h':
 								if (initialDifficulty > 2)
 								{
-									JE_readCryptLn(lvlFile, s);
+									JE_readCryptLn(lvlFile);
 								}
 								break;
 
@@ -3674,8 +3692,10 @@ new_game:
 							/* TODO */
 
 							case 'M':
-								temp = atoi(strnztcpy(buffer, s + 3, 3));
-								JE_playSong(temp);
+								// PORT-CHANGE:
+								//temp = atoi(strnztcpy(buffer, s + 3, 3));
+								//JE_playSong(temp);
+								JE_playSong(lexical_cast<JE_word>(s.substr(3, 3)));
 								break;
 
 							/* TODO */
@@ -3687,7 +3707,7 @@ new_game:
 			} while (!(loadLevelOk || jumpSection));
 
 
-			fclose(lvlFile);
+			lvlFile.close();
 
 		} while (!loadLevelOk);
 	}
@@ -3699,25 +3719,26 @@ new_game:
 		{
 
 			difficultyLevel = 2;
-			sprintf(tempStr, "demo.%d", playDemoNum);
-			JE_resetFile(&recordFile, tempStr);
+			Filesystem::get().openDatafileFail(recordFile, "demo."+lexical_cast<std::string>(playDemoNum));
 
 			bonusLevelCurrent = false;
 
-			temp = fgetc(recordFile);
-			JE_initEpisode(temp);
-			efread(levelName, 1, 10, recordFile); levelName[10] = '\0';
-			lvlFileNum = fgetc(recordFile);
-			for (int i = 0; i < 12; i++)
-				vfread(pItems[i], Uint8, recordFile);
-			for (int i = 0; i < 5; i++)
-				vfread(portPower[i], Uint8, recordFile);
-			levelSong = fgetc(recordFile);
+			IBinaryStream bs(recordFile);
 
-			temp = fgetc(recordFile);
-			temp2 = fgetc(recordFile);
+			temp = bs.get8();
+			JE_initEpisode(temp);
+			levelName = bs.getStr(10);
+			lvlFileNum = bs.get8();
+			for (int i = 0; i < 12; i++)
+				pItems[i] = bs.get8();
+			for (int i = 0; i < 5; i++)
+				portPower[i] = bs.get8();
+			levelSong = bs.get8();
+
+			temp = bs.get8();
+			temp2 = bs.get8();
 			lastMoveWait = (temp << 8) | temp2;
-			nextDemoOperation = fgetc(recordFile);
+			nextDemoOperation = bs.get8();
 
 			firstEvent = true;
 
@@ -3727,62 +3748,63 @@ new_game:
 		}
 
 
-		JE_resetFile(&lvlFile, levelFile);
-		fseek(lvlFile, lvlPos[(lvlFileNum-1) * 2], SEEK_SET);
+		Filesystem::get().openDatafileFail(lvlFile, levelFile);
+		lvlFile.seekg(lvlPos[(lvlFileNum-1) * 2]);
 
-		char_mapFile = fgetc(lvlFile);
-		char_shapeFile = fgetc(lvlFile);
-		vfread(mapX,  JE_word, lvlFile);
-		vfread(mapX2, JE_word, lvlFile);
-		vfread(mapX3, JE_word, lvlFile);
+		IBinaryStream bsLvl(lvlFile);
 
-		vfread(levelEnemyMax, JE_word, lvlFile);
-		for (x = 0; x < levelEnemyMax; x++)
+		char_mapFile = bsLvl.get8();
+		char_shapeFile = bsLvl.get8();
+		mapX = bsLvl.get16();
+		mapX2 = bsLvl.get16();
+		mapX3 = bsLvl.get16();
+
+		levelEnemyMax = bsLvl.get16();
+		for (unsigned int i = 0; i < levelEnemyMax; ++i)
 		{
-			vfread(levelEnemy[x], JE_word, lvlFile);
+			levelEnemy[i] = bsLvl.get16();
 		}
 
-		vfread(maxEvent, JE_word, lvlFile);
-		for (x = 0; x < maxEvent; x++)
+		maxEvent = bsLvl.get16();
+		for (unsigned int i = 0; i < maxEvent; ++i)
 		{
-			vfread(eventRec[x].eventtime, JE_word, lvlFile);
-			vfread(eventRec[x].eventtype, Uint8, lvlFile);
-			vfread(eventRec[x].eventdat,  Sint16, lvlFile);
-			vfread(eventRec[x].eventdat2, Sint16, lvlFile);
-			vfread(eventRec[x].eventdat3, Sint8, lvlFile);
-			vfread(eventRec[x].eventdat5, Sint8, lvlFile);
-			vfread(eventRec[x].eventdat6, Sint8, lvlFile);
-			vfread(eventRec[x].eventdat4, Uint8, lvlFile);
+			eventRec[i].eventtime = bsLvl.get16();
+			eventRec[i].eventtype = bsLvl.get8();
+			eventRec[i].eventdat = bsLvl.getS16();
+			eventRec[i].eventdat2 = bsLvl.getS16();
+			eventRec[i].eventdat3 = bsLvl.getS8();
+			eventRec[i].eventdat5 = bsLvl.getS8();
+			eventRec[i].eventdat6 = bsLvl.getS8();
+			eventRec[i].eventdat4 = bsLvl.get8();
 		}
-		eventRec[x].eventtime = 65500;  /*Not needed but just in case*/
+		eventRec[maxEvent].eventtime = 65500;  /*Not needed but just in case*/
 
 		/*debuginfo('Level loaded.');*/
 
 		/*debuginfo('Loading Map');*/
 
 		/* MAP SHAPE LOOKUP TABLE - Each map is directly after level */
-		efread(mapSh, sizeof(JE_word), sizeof(mapSh) / sizeof(JE_word), lvlFile);
-		for (temp = 0; temp < 3; temp++)
+		for (int i = 0; i < 3; ++i)
 		{
-			for (temp2 = 0; temp2 < 128; temp2++)
+			for (int j = 0; j < 128; ++j)
 			{
-				mapSh[temp][temp2] = SDL_Swap16(mapSh[temp][temp2]);
+				// For some reason this data is stored with the wrong endianess.
+				mapSh[i][j] = SDL_Swap16(bsLvl.get16());
 			}
 		}
 
-		/* Read Shapes.DAT */
-		sprintf(tempStr, "shapes%c.dat", tolower(char_shapeFile));
-		JE_resetFile(&shpFile, tempStr);
+		// Read Shapes.DAT
+		Filesystem::get().openDatafileFail(shpFile, (boost::format("shapes%c.dat") % char(std::tolower(char_shapeFile))).str());
+		IBinaryStream bsShp(shpFile);
 
 		for (z = 0; z < 600; z++)
 		{
-			shapeBlank = fgetc(shpFile) != 0;
-
+			bool shapeBlank = bsShp.get8() != 0;
 			if (shapeBlank)
 			{
-				memset(shape, 0, sizeof(shape));
+				std::fill_n(shape, COUNTOF(shape), 0);
 			} else {
-				efread(shape, sizeof(Uint8), sizeof(shape), shpFile);
+				bsShp.getIter16(shape, shape+COUNTOF(shape));
 			}
 
 			/* Match 1 */
@@ -3790,7 +3812,7 @@ new_game:
 			{
 				if (mapSh[0][x] == z+1)
 				{
-					memcpy(megaData1->shapes[x].sh, shape, sizeof(JE_DanCShape));
+					std::copy(shape, shape+COUNTOF(shape), megaData1->shapes[x].sh);
 
 					ref[0][x] = (Uint8 *)megaData1->shapes[x].sh;
 				}
@@ -3803,7 +3825,7 @@ new_game:
 				{
 					if (x != 71 && !shapeBlank)
 					{
-						memcpy(megaData2->shapes[x].sh, shape, sizeof(JE_DanCShape));
+						std::copy(shape, shape+COUNTOF(shape), megaData2->shapes[x].sh);
 
 						y = 1;
 						for (yy = 0; yy < (24 * 28) >> 1; yy++)
@@ -3828,7 +3850,7 @@ new_game:
 				{
 					if (x < 70 && !shapeBlank)
 					{
-						memcpy(megaData3->shapes[x].sh, shape, sizeof(JE_DanCShape));
+						std::copy(shape, shape+COUNTOF(shape), megaData3->shapes[x].sh);
 
 						y = 1;
 						for (yy = 0; yy < (24 * 28) >> 1; yy++)
@@ -3847,9 +3869,12 @@ new_game:
 			}
 		}
 
-		fclose(shpFile);
+		shpFile.close();
 
-		efread(mapBuf, sizeof(Uint8), 14 * 300, lvlFile);
+		for (int i = 0; i < 14*300; ++i)
+		{
+			mapBuf[i] = bsLvl.get8(); // TODO: Improve efficiency?
+		}
 		bufLoc = 0;              /* MAP NUMBER 1 */
 		for (y = 0; y < 300; y++)
 		{
@@ -3860,7 +3885,10 @@ new_game:
 			}
 		}
 
-		efread(mapBuf, sizeof(Uint8), 14 * 600, lvlFile);
+		for (int i = 0; i < 14*600; ++i)
+		{
+			mapBuf[i] = bsLvl.get8();
+		}
 		bufLoc = 0;              /* MAP NUMBER 2 */
 		for (y = 0; y < 600; y++)
 		{
@@ -3871,7 +3899,10 @@ new_game:
 			}
 		}
 
-		efread(mapBuf, sizeof(Uint8), 15 * 600, lvlFile);
+		for (int i = 0; i < 15*600; ++i)
+		{
+			mapBuf[i] = bsLvl.get8();
+		}
 		bufLoc = 0;              /* MAP NUMBER 3 */
 		for (y = 0; y < 600; y++)
 		{
@@ -3882,7 +3913,7 @@ new_game:
 			}
 		}
 
-		fclose(lvlFile);
+		lvlFile.close();
 
 		/* Note: The map data is automatically calculated with the correct mapsh
 		value and then the pointer is calculated using the formula (MAPSH-1)*168.
@@ -4105,7 +4136,7 @@ void JE_titleScreen( bool animate )
 				if (specialName[z][nameGo[z]] == toupper(lastkey_char))
 				{
 					nameGo[z]++;
-					if (strlen(specialName[z]) == nameGo[z])
+					if (specialName[z].length() == nameGo[z])
 					{
 						if (z == SA)
 						{
@@ -4409,7 +4440,7 @@ void JE_displayText( void )
 	{
 		if (!ESCPressed)
 		{
-			JE_outCharGlow(10, tempY, levelWarningText[temp]);
+			JE_outCharGlow(10, tempY, levelWarningText[temp].c_str());
 
 			if (haltGame)
 			{
@@ -6070,13 +6101,13 @@ void JE_itemScreen( void )
 				/* Write save game slot */
 				if (x == max)
 				{
-					strcpy(tempStr, miscText[6-1]);
+					tempStr = miscText[6-1];
 				} else {
 					if (saveFiles[x-2].level == 0)
 					{
-						strcpy(tempStr, miscText[3-1]);
+						tempStr = miscText[3-1];
 					} else {
-						strcpy(tempStr, saveFiles[x-2].name);
+						tempStr = saveFiles[x-2].name;
 					}
 				}
 
@@ -6105,9 +6136,10 @@ void JE_itemScreen( void )
 
 					if (saveFiles[x-2].level == 0)
 					{
-						strcpy(tempStr, "-----"); /* Empty save slot */
+						// Empty save slot
+						tempStr = "-----";
 					} else {
-						strcpy(tempStr, saveFiles[x-2].levelName);
+						tempStr = saveFiles[x-2].levelName;
 
 						std::ostringstream buf;
 						buf << miscTextB[0] << saveFiles[x-2].episode;
@@ -6258,24 +6290,24 @@ void JE_itemScreen( void )
 						{
 							std::ostringstream buf;
 							buf << "Custom Ship " << temp - 90;
-							tempStr[buf.str().copy(tempStr, 30)] = '\0';
+							tempStr = buf.str().substr(0, 30);
 						} else {
-							strcpy(tempStr, ships[temp].name);
+							tempStr = ships[temp].name;
 						}
 						break;
 					case 2: /* front and rear weapon */
 					case 3:
-						strcpy(tempStr, weaponPort[temp].name);
+						tempStr = weaponPort[temp].name;
 						break;
 					case 4: /* shields */
-						strcpy(tempStr, shields[temp].name);
+						tempStr = shields[temp].name;
 						break;
 					case 5: /* generator */
-						strcpy(tempStr, powerSys[temp].name);
+						tempStr = powerSys[temp].name;
 						break;
 					case 6: /* sidekicks */
 					case 7:
-						strcpy(tempStr, options[temp].name);
+						tempStr = options[temp].name;
 						break;
 				}
 				if (tempW == curSel[curMenu]-1)
@@ -6301,7 +6333,7 @@ void JE_itemScreen( void )
 				/* Draw DONE */
 				if (tempW == menuChoices[curMenu]-1)
 				{
-					strcpy(tempStr, miscText[13]);
+					tempStr = miscText[13];
 				}
 				JE_textShade(185, tempY, tempStr, temp2 / 16, temp2 % 16 -8-temp4, DARKEN);
 
@@ -7444,8 +7476,8 @@ void JE_loadCubes( void )
 	std::sort(cubes.begin(), cubes.end(), pair_second_cmp());
 
 	int current_cube = 0; // In which cube we are in the file
-	std::ifstream f;
-	open_datafile_fail(f, cubeFile);
+	std::fstream f;
+	Filesystem::get().openDatafileFail(f, cubeFile);
 
 	std::string file_line;
 	for (unsigned int cube = 0; cube < cubeMax; ++cube)
@@ -7582,16 +7614,16 @@ void JE_drawMenuHeader( void )
 	switch (curMenu)
 	{
 		case 8:
-			tempStr[cubeHdr2[curSel[7]-2].copy(tempStr, 30)] = '\0';
+			tempStr = cubeHdr2[curSel[7]-2].substr(0, 30);
 			break;
 		case 7:
-			strcpy(tempStr, menuInt[0][1]);
+			tempStr = menuInt[0][1];
 			break;
 		case 6:
-			strcpy(tempStr, menuInt[2][performSave + 1]);
+			tempStr = menuInt[2][performSave + 1];
 			break;
 		default:
-			strcpy(tempStr, menuInt[curMenu][0]);
+			tempStr = menuInt[curMenu][0];
 			break;
 	}
 	JE_dString(74 + JE_fontCenter(tempStr, FONT_SHAPES), 10, tempStr, FONT_SHAPES);
@@ -8039,29 +8071,29 @@ void JE_doFunkyScreen( void )
 
 void JE_drawMainMenuHelpText( void )
 {
-	char tempStr[67];
+	std::string tempStr;
 	int temp;
 
 	temp = curSel[curMenu] - 2;
 	if (curMenu < 3 || curMenu == 9 || curMenu > 10)
 	{
-		memcpy(tempStr, mainMenuHelp[(menuHelp[curMenu][temp])-1], sizeof(tempStr));
+		tempStr = mainMenuHelp[(menuHelp[curMenu][temp])-1];
 	} else {
 		if (curMenu == 5 && curSel[5] == 10)
 		{
-			memcpy(tempStr, mainMenuHelp[25-1], sizeof(tempStr));
+			tempStr = mainMenuHelp[25-1];
 		}
 		else if (leftPower || rightPower)
 		{
-			memcpy(tempStr, mainMenuHelp[24-1], sizeof(tempStr));
+			tempStr = mainMenuHelp[24-1];
 		}
 		else if ( (temp == menuChoices[curMenu] - 1) || ( (curMenu == 7) && (cubeMax == 0) ) )
 		{
-			memcpy(tempStr, mainMenuHelp[12-1], sizeof(tempStr));
+			tempStr = mainMenuHelp[12-1];
 		}
 		else
 		{
-			memcpy(tempStr, mainMenuHelp[17 + curMenu - 3], sizeof(tempStr));
+			tempStr = mainMenuHelp[17 + curMenu - 3];
 		}
 	}
 	JE_textShade(10, 187, tempStr, 14, 1, DARKEN);
@@ -8371,13 +8403,12 @@ void JE_menuFunction( int select )
 			newNavY = navY;
 			menuChoices[3] = mapPNum + 2;
 			curSel[3] = 2;
-			strcpy(menuInt[3][0], "Next Level");
+			menuInt[3][0] = "Next Level";
 			for (x = 0; x < mapPNum; x++)
 			{
-				temp = mapPlanet[x];
-				strcpy(menuInt[3][x + 1], pName[temp-1]);
+				menuInt[3][x + 1] = pName[mapPlanet[x]-1];
 			}
-			strcpy(menuInt[3][x+1], miscText[6-1]);
+			menuInt[3][x+1] = miscText[6-1];
 			break;
 		case 7:
 			if (JE_quitRequest(true))
@@ -9123,7 +9154,7 @@ void JE_genItemMenu( int itemNum )
 	temp3 = 2;
 	temp2 = pItems[pItemButtonMap[itemNum - 2] -1];
 
-	strcpy(menuInt[4][0], menuInt[1][itemNum - 1]);
+	menuInt[4][0] = menuInt[1][itemNum - 1];
 
 	for (tempW = 0; tempW < itemAvailMax[itemAvailMap[itemNum-2]-1]; tempW++)
 	{
@@ -9131,32 +9162,32 @@ void JE_genItemMenu( int itemNum )
 		switch (itemNum)
 		{
 		case 2:
-			strcpy(tempStr, ships[temp].name);
+			tempStr = ships[temp].name;
 			break;
 		case 3:
 		case 4:
-			strcpy(tempStr, weaponPort[temp].name);
+			tempStr = weaponPort[temp].name;
 			tempPowerLevel[tempW] = 1;
 			break;
 		case 5:
-			strcpy(tempStr, shields[temp].name);
+			tempStr = shields[temp].name;
 			break;
 		case 6:
-			strcpy(tempStr, powerSys[temp].name);
+			tempStr = powerSys[temp].name;
 			break;
 		case 7:
 		case 8:
-			strcpy(tempStr, options[temp].name);
+			tempStr = options[temp].name;
 			break;
 		}
 		if (temp == temp2)
 		{
 			temp3 = tempW + 2;
 		}
-		strcpy(menuInt[4][tempW+1], tempStr);
+		menuInt[4][tempW+1] = tempStr;
 	}
 
-	strcpy(menuInt[4][tempW+1], miscText[13]);
+	menuInt[4][tempW+1] = miscText[13];
 
 	// YKS: I have no idea wtf this is doing, but I don't think it matters either, little of this function does
 	if (itemNum == 3 || itemNum == 4)

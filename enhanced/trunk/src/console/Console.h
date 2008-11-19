@@ -36,8 +36,11 @@ private:
 	private:
 		std::string mOutputStr;
 		typedef std::char_traits<char> mTraits;
+		Console& parentConsole;
 	protected:
 		virtual int overflow(int c = mTraits::eof());
+	public:
+		ConsoleStreamBuffer(Console& parentConsole);
 	};
 
 public:
@@ -60,6 +63,7 @@ private:
 	unsigned int mCursorTimeout;
 
 	ConsoleStreamBuffer mStreambuf;
+	std::fstream logStream;
 
 	void drawText( Uint8* const surf, unsigned int x, unsigned int y, const std::string& text );
 	void drawArrow( Uint8* const surf, unsigned int x, unsigned int y, Uint8 col );
