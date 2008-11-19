@@ -9,7 +9,7 @@ BOOST_LIBDIR := /usr/lib
 # END SETTINGS #####################################
 
 TARGET := tyrian
-OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o error.o fm_synth.o fmopl.o fonthand.o helptext.o joystick.o jukebox.o keyboard.o lds_play.o loudness.o mainint.o network.o newshape.o nortsong.o nortvars.o opentyr.o palette.o params.o pcxload.o picload.o scroller.o setup.o sndmast.o starlib.o tyrian2.o varz.o vga256d.o video.o video_scale.o BinaryStream.o HighScores.o superpixel.o explosion.o menus.o cheats.o \
+OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o Filesystem.o fm_synth.o fmopl.o fonthand.o helptext.o joystick.o jukebox.o keyboard.o lds_play.o loudness.o mainint.o network.o newshape.o nortsong.o nortvars.o opentyr.o palette.o params.o pcxload.o picload.o scroller.o setup.o sndmast.o starlib.o tyrian2.o varz.o vga256d.o video.o video_scale.o BinaryStream.o HighScores.o superpixel.o explosion.o menus.o cheats.o \
         console/BindManager.o console/Console.o console/CCmd.o console/GameActions.o console/KeyNames.o console/MiscCVars.o \
         console/cvar/CVar.o console/cvar/CVarManager.o console/cvar/CVarFlagsEnumerator.o
 

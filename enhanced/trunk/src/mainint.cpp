@@ -240,13 +240,9 @@ void JE_helpSystem( int startTopic )
 
 		if (page > 0)
 		{
-			char buf[128];
+			JE_outText(10, 192, (boost::format("%1% %2%") % miscText[24] % (page-topicStart[temp2]+1)).str(), 13, 5);
 
-			sprintf(buf, "%s %d", miscText[24], page-topicStart[temp2]+1);
-			JE_outText(10, 192, buf, 13, 5);
-
-			sprintf(buf, "%s %d of %d", miscText[25], page, MAX_PAGE);
-			JE_outText(220, 192, buf, 13, 5);
+			JE_outText(220, 192, (boost::format("%1% %2% of %3%") % miscText[25] % page % MAX_PAGE).str(), 13, 5);
 
 			JE_dString(JE_fontCenter(topicName[temp2], SMALL_FONT_SHAPES), 1, topicName[temp2], SMALL_FONT_SHAPES);
 		}
@@ -269,7 +265,7 @@ void JE_helpSystem( int startTopic )
 
 				do
 				{
-					for (int temp = 1; temp <= TOPICS; temp++)
+					for (int temp = 1; temp < TOPICS; temp++)
 					{
 						std::string buf;
 

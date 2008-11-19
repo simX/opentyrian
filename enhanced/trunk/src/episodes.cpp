@@ -258,9 +258,20 @@ void JE_initEpisode( int newEpisode )
 
 void JE_scanForEpisodes( void )
 {
-	for (int temp = 0; temp < EPISODE_MAX; temp++)
+	for (int i = 0; i < EPISODE_MAX; i++)
 	{
-		episodeAvail[temp] = Filesystem::get().fileExists(std::string("tyrian")+char('1'+temp)+".lvl");
+		const std::string fname = std::string("tyrian")+char('1'+i)+".lvl";
+		try
+		{
+			// This will throw if it fails
+			Filesystem::get().findDatafile(fname);
+			// And thus this won't run
+			episodeAvail[i] = true;
+		}
+		catch (Filesystem::FileOpenErrorException&)
+		{
+			episodeAvail[i] = false;
+		}
 	}
 }
 

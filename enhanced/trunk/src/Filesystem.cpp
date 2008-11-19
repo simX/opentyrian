@@ -58,7 +58,7 @@ std::string Filesystem::findFile( const std::string& filename ) const
 		}
 	}
 
-	fs::path path(filename);
+	const fs::path path(filename);
 	if (fs::exists(path) && fs::is_regular(path))
 	{
 		return path.file_string();
@@ -73,7 +73,6 @@ std::string Filesystem::findDatafile( const std::string& filename ) const
 	{
 		fs::path path(i);
 		path /= filename;
-		std::string aaaa = path.file_string();
 		if (fs::exists(path) && fs::is_regular(path))
 		{
 			return path.file_string();
