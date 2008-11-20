@@ -21,6 +21,7 @@
 #define HIGHSCORES_H
 
 #include "BinaryStream.h"
+#include "mtrand.h"
 
 #include <string>
 
@@ -44,7 +45,7 @@ public:
 
 	HighScore( const int episode, const bool two_player, const int place )
 		: mScore(!two_player ? defaultScores[place]*(episode+1) : defaultScores[place]*(episode+1)/2),
-		  mName(!two_player ? defaultHighScoreNames[rand() % 34] : defaultTeamNames[rand() % 22]),
+		  mName(!two_player ? defaultHighScoreNames[mt::rand() % 34] : defaultTeamNames[rand() % 22]),
 		  mDifficulty(0)
 	{}
 

@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "starlib.h"
 
 #include "keyboard.h"
 #include "video.h"
-
-#include "starlib.h"
+#include "mtrand.h"
 
 #include <ctype.h>
 #include <cmath>
@@ -233,7 +233,7 @@ star_end:
 				JE_resetValues();
 				break;
 			case 'S':
-				nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01f - 0.005f;
+				nspVarVarInc = (mt::rand()/(float)MT_RAND_MAX) * 0.01f - 0.005f;
 				break;
 			case '[':
 				pColor--;
@@ -268,9 +268,9 @@ star_end:
 		}
 	}
 
-	if ((rand() % 1000) == 1)
+	if ((mt::rand() % 1000) == 1)
 	{
-		nspVarVarInc = (rand()/(float)RAND_MAX) * 0.01f - 0.005f;
+		nspVarVarInc = (mt::rand()/(float)MT_RAND_MAX) * 0.01f - 0.005f;
 	}
 
 	nspVarInc += nspVarVarInc;
@@ -291,8 +291,8 @@ void JE_starlib_init( )
 		/* RANDOMIZE; */
 		for (int x = 0; x < MAX_STARS; x++)
 		{
-			star[x].spX = (rand() % 64000) - 32000;
-			star[x].spY = (rand() % 40000) - 20000;
+			star[x].spX = (mt::rand() % 64000) - 32000;
+			star[x].spY = (mt::rand() % 40000) - 20000;
 			star[x].spZ = x+1;
 		}
 	}
@@ -312,13 +312,13 @@ void JE_resetValues( )
 void JE_changeSetup( int setupType )
 {
 	stepCounter = 0;
-	changeTime = (rand() % 1000);
+	changeTime = (mt::rand() % 1000);
 
 	if (setupType > 0)
 	{
 		setup = setupType;
 	} else {
-		setup = rand() % (MAX_TYPES + 1);
+		setup = mt::rand() % (MAX_TYPES + 1);
 	}
 
 	if (setup == 1)
@@ -338,15 +338,15 @@ void JE_newStar( int* posX, int* posY )
 
 	if (setup == 0)
 	{
-		tempX = (rand() % 64000) - 32000;
-		tempY = (rand() % 40000) - 20000;
+		tempX = (mt::rand() % 64000) - 32000;
+		tempY = (mt::rand() % 40000) - 20000;
 	} else {
 		nsp = nsp + nspVarInc; /* YKS: < lol */
 		switch (setup)
 		{
 			case 1:
 				tempX = (int)(sin(nsp / 30) * 20000);
-				tempY = (rand() % 40000) - 20000;
+				tempY = (mt::rand() % 40000) - 20000;
 				break;
 			case 2:
 				tempX = (int)(cos(nsp) * 20000);
@@ -373,8 +373,8 @@ void JE_newStar( int* posX, int* posY )
 				tempY = (int)(cos(nsp) * 20000);
 				break;
 			case 7:
-				tempX = (rand() % 65535)-32768;
-				if ((rand() % 2) == 0)
+				tempX = (mt::rand() % 65535)-32768;
+				if ((mt::rand() % 2) == 0)
 				{
 					tempY = ((int)(cos(nsp / 80) * 10000) + 15000) - 32768;
 				} else {

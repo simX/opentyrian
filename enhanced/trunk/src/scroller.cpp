@@ -29,6 +29,7 @@
 #include "varz.h"
 #include "video.h"
 #include "vga256d.h"
+#include "mtrand.h"
 
 #include <cmath>
 
@@ -59,6 +60,9 @@ const about_text_type about_text[] =
 	{0x05, "for the FM emulator and"},
 	{0x05, "~AdPlug~ for the Loudness code."},
 	{0x00, ""},
+	{0x0d, "Thanks to ~Boost~ for providing"},
+	{0x0d, "such great C++ libraries."},
+	{0x00, ""},
 	{0x00, ""},
 	{0x32, "And special thanks to ~Jason Emery~"},
 	{0x32, "for making all this possible"},
@@ -81,6 +85,21 @@ const about_text_type about_text[] =
 	{0x0d, "This is line color test ~D~."},
 	{0x0e, "This is line color test ~E~."},
 	{0x0f, "This is line color test ~F~."},*/
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, ""},
+	{0x00, "OpenTyrian Enhanced: A modern cross-platform port of Tyrian"},
+	{0x00, "Copyright (C) 2007  The OpenTyrian Development Team"},
+	{0x00, ""},
+	{0x00, "software implementation of FM sound generator types OPL and OPL2"},
+	{0x00, "Copyright (C) 2002,2003 Jarek Burczynski (bujar at mame dot net)"},
+	{0x00, "Copyright (C) 1999,2000 Tatsuyuki Satoh , MultiArcadeMachineEmulator development"},
+	{0x00, ""},
+	{0x00, "Mersenne Twister: A 623-Dimensionally Equidistributed Uniform Pseudo-Random Number Generator"},
+	{0x00, "Copyright (C) 1997--2004, Makoto Matsumoto, Takuji Nishimura, and Eric Landry; All rights reserved."},
 	{0x00, ""},
 	{0x00, ""},
 	{0x00, ""},
@@ -112,7 +131,7 @@ coin_def_type coin_defs[] =
 /* Text is an array of strings terminated by a NULL */
 void scroller_sine( const about_text_type text[] )
 {
-	bool ale = (rand() % 2) != 0;
+	bool ale = (mt::rand() % 2) != 0;
 
 	unsigned int visible_lines = scr_height / LINE_HEIGHT + 1;
 	int current_line = -int(visible_lines);
@@ -128,12 +147,12 @@ void scroller_sine( const about_text_type text[] )
 	} else {
 		for (unsigned int i = 0; i < MAX_COINS; i++)
 		{
-			coins[i].x = rand() % (scr_width - 12);
-			coins[i].y = rand() % (scr_height - 20 - 14);
+			coins[i].x = mt::rand() % (scr_width - 12);
+			coins[i].y = mt::rand() % (scr_height - 20 - 14);
 			
-			coins[i].vel = (rand() % 4) + 1;
-			coins[i].type = rand() % COUNTOF(coin_defs);
-			coins[i].cur_frame = rand() % coin_defs[coins[i].type].frame_count;
+			coins[i].vel = (mt::rand() % 4) + 1;
+			coins[i].type = mt::rand() % COUNTOF(coin_defs);
+			coins[i].cur_frame = mt::rand() % coin_defs[coins[i].type].frame_count;
 			coins[i].backwards = false;
 		}
 	}
@@ -250,12 +269,12 @@ void scroller_sine( const about_text_type text[] )
 				coin->y += coin->vel;
 				if (coin->y > scr_height - 14)
 				{
-					coin->x = rand() % (scr_width - 12);
+					coin->x = mt::rand() % (scr_width - 12);
 					coin->y = 0;
 					
-					coin->vel = (rand() % 4) + 1;
-					coin->type = rand() % COUNTOF(coin_defs);
-					coin->cur_frame = rand() % coin_defs[coin->type].frame_count;
+					coin->vel = (mt::rand() % 4) + 1;
+					coin->type = mt::rand() % COUNTOF(coin_defs);
+					coin->cur_frame = mt::rand() % coin_defs[coin->type].frame_count;
 				}
 			}
 		} else {
@@ -263,10 +282,10 @@ void scroller_sine( const about_text_type text[] )
 			{
 				while (beer[i].vx == 0)
 				{
-					beer[i].x = rand() % (scr_width - 24);
-					beer[i].y = rand() % (scr_height - 28 - 50);
+					beer[i].x = mt::rand() % (scr_width - 24);
+					beer[i].y = mt::rand() % (scr_height - 28 - 50);
 					
-					beer[i].vx = (rand() % 5) - 2;
+					beer[i].vx = (mt::rand() % 5) - 2;
 				}
 				
 				beer[i].vy++;
@@ -281,11 +300,11 @@ void scroller_sine( const about_text_type text[] )
 				{
 					if ((beer[i].vy) < 8) // make sure the beer bounces!
 					{
-						beer[i].vy += rand() % 2;
+						beer[i].vy += mt::rand() % 2;
 					} else if (beer[i].vy > 16) { // make sure the beer doesn't bounce too high
 						beer[i].vy = 16;
 					}
-					beer[i].vy = -beer[i].vy + (rand() % 3 - 1);
+					beer[i].vy = -beer[i].vy + (mt::rand() % 3 - 1);
 					
 					beer[i].x += (beer[i].vx > 0 ? 1 : -1) * (i % 2 ? 1 : -1);
 				}

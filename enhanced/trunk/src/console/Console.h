@@ -27,6 +27,7 @@
 #include <deque>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 class Console : public std::ostream, public Singleton<Console>
 {

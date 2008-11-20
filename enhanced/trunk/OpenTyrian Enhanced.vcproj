@@ -145,7 +145,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4290;4640;4180"
+				DisableSpecificWarnings="4290;4640;4180;4224"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -326,6 +326,10 @@
 			</File>
 			<File
 				RelativePath=".\src\menus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mtrand.h"
 				>
 			</File>
 			<File
@@ -550,6 +554,10 @@
 			</File>
 			<File
 				RelativePath=".\src\console\MiscCVars.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\mtrand.cpp"
 				>
 			</File>
 			<File

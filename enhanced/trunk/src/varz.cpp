@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "varz.h"
 
 #include "config.h"
 #include "editship.h"
@@ -31,8 +32,7 @@
 #include "fonthand.h"
 #include "loudness.h"
 #include "explosion.h"
-
-#include "varz.h"
+#include "mtrand.h"
 
 #include <cmath>
 #include <sstream>
@@ -1207,7 +1207,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 				filterActive = true;
 			}
 			
-			if (rand() % 2 == 0)
+			if (mt::rand() % 2 == 0)
 				flareColChg = -1;
 			else
 				flareColChg = 1;
@@ -1226,7 +1226,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 			}
 		}
 		
-		if (rand() % 6 < specialWeaponFreq)
+		if (mt::rand() % 6 < specialWeaponFreq)
 		{
 			b = 0;
 			
@@ -1237,13 +1237,13 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 					JE_initPlayerShot(0, 9, PX, PY, mouseX, mouseY, specialWeaponWpn, playerNum);
 				}
 			} else {
-				JE_initPlayerShot(0, 9, rand() % 280, rand() % 180, mouseX, mouseY, specialWeaponWpn, playerNum);
+				JE_initPlayerShot(0, 9, mt::rand() % 280, rand() % 180, mouseX, mouseY, specialWeaponWpn, playerNum);
 			}
 			
 			if (spraySpecial && b > 0)
 			{
-				playerShotData[b].shotXM = (rand() % 5) - 2;
-				playerShotData[b].shotYM = (rand() % 5) - 2;
+				playerShotData[b].shotXM = (mt::rand() % 5) - 2;
+				playerShotData[b].shotYM = (mt::rand() % 5) - 2;
 				if (playerShotData[b].shotYM == 0)
 				{
 					playerShotData[b].shotYM++;

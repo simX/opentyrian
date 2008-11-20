@@ -52,7 +52,7 @@
 #include "vga256d.h"
 #include "Filesystem.h"
 
-#include <ctype.h>
+#include <cctype>
 #include <cmath>
 #include <stdlib.h>
 #include <cstring>
@@ -267,7 +267,7 @@ void JE_drawEnemy( int enemyOffset )
 		{
 			enemy[i].mapoffset = tempMapXOfs;
 
-			if (enemy[i].xaccel && enemy[i].xaccel - 89 > rand() % 11)
+			if (enemy[i].xaccel && enemy[i].xaccel - 89 > mt::rand() % 11)
 			{
 				if (PX > enemy[i].ex)
 				{
@@ -283,7 +283,7 @@ void JE_drawEnemy( int enemyOffset )
 				}
 			}
 
-			if (enemy[i].yaccel && enemy[i].yaccel - 89 > rand() % 11)
+			if (enemy[i].yaccel && enemy[i].yaccel - 89 > mt::rand() % 11)
 			{
 				if (PY > enemy[i].ey)
 				{
@@ -624,7 +624,7 @@ enemy_still_exists:
 							}
 						}
 
-						if (galagaMode && (enemy[i].eyc == 0 || (rand() % 400) >= galagaShotFreq))
+						if (galagaMode && (enemy[i].eyc == 0 || (mt::rand() % 400) >= galagaShotFreq))
 							goto draw_enemy_end;
 
 						switch (temp3)
@@ -706,7 +706,7 @@ enemy_still_exists:
 
 								if (weapons[temp3].sound > 0) {
 									do {
-										temp = rand() % 8;
+										temp = mt::rand() % 8;
 									} while (temp == 3);
 									soundQueue[temp] = weapons[temp3].sound;
 								}
@@ -785,7 +785,7 @@ enemy_still_exists:
 										} else if (playerAlive && !playerAliveB) {
 											temp = 0;
 										} else {
-											temp = rand() % 2;
+											temp = mt::rand() % 2;
 										}
 
 										if (temp == 1)
@@ -861,7 +861,7 @@ enemy_still_exists:
 
 							if (enemy[b-1].launchtype > 90)
 							{
-								tempI += rand() % ((enemy[b-1].launchtype - 90) * 4) - (enemy[b-1].launchtype - 90) * 2;
+								tempI += mt::rand() % ((enemy[b-1].launchtype - 90) * 4) - (enemy[b-1].launchtype - 90) * 2;
 							} else {
 								tempI4 = (PX + 25) - tempX - tempMapXOfs - 4;
 								if (tempI4 == 0)
@@ -885,9 +885,9 @@ enemy_still_exists:
 						}
 
 						do {
-							temp = rand() % 8;
+							temp = mt::rand() % 8;
 						} while (temp == 3);
-						soundQueue[temp] = randomEnemyLaunchSounds[(rand() % 3)];
+						soundQueue[temp] = randomEnemyLaunchSounds[(mt::rand() % 3)];
 
 						if (enemy[i].launchspecial == 1
 							&& enemy[i].linknum < 100)
@@ -916,8 +916,6 @@ void JE_main( void )
 	Uint8 *p; /* source/shape pointer */
 	Uint8 *s; /* screen pointer, 8-bit specific */
 	Uint8 *s_limit; /* buffer boundary */
-
-	char buffer[256];
 
 	int lastEnemyOnScreen;
 
@@ -1947,9 +1945,9 @@ level_loop:
 	}
 
 	/* New Enemy */
-	if (enemiesActive && rand() % 100 > levelEnemyFrequency)
+	if (enemiesActive && mt::rand() % 100 > levelEnemyFrequency)
 	{
-		tempW = levelEnemy[rand() % levelEnemyMax];
+		tempW = levelEnemy[mt::rand() % levelEnemyMax];
 		if (tempW == 2)
 		{
 			soundQueue[3] = 7;
@@ -2692,7 +2690,7 @@ enemy_shot_draw_overflow:
 			JE_newEnemy(50);
 			if (b > 0)
 			{
-				enemy[b-1].enemydie = 560 + (rand() % 3) + 1;
+				enemy[b-1].enemydie = 560 + (mt::rand() % 3) + 1;
 				enemy[b-1].eyc -= backMove3;
 				enemy[b-1].armorleft = 4;
 			}
@@ -2737,9 +2735,9 @@ enemy_shot_draw_overflow:
 	/*------- Random Explosions --------*/
 	if (randomExplosions)
 	{
-		if (rand() % 10 == 1)
+		if (mt::rand() % 10 == 1)
 		{
-			JE_setupExplosionLarge(false, 20, rand() % 280, rand() % 180);
+			JE_setupExplosionLarge(false, 20, mt::rand() % 280, rand() % 180);
 		}
 	}
 
@@ -3051,7 +3049,6 @@ void JE_loadMap( void )
 	Uint8 mapBuf[15 * 600]; /* [1..15 * 600] */
 	JE_word bufLoc;
 
-	char buffer[256];
 	int i;
 	Uint8 pic_buffer[320*200]; /* screen buffer, 8-bit specific */
 	Uint8 *vga, *pic, *vga2; /* screen pointer, 8-bit specific */
@@ -3319,7 +3316,7 @@ new_game:
 
 							case 'Q':
 								ESCPressed = false;
-								temp = secretHint + (rand() % 3) * 3;
+								temp = secretHint + (mt::rand() % 3) * 3;
 
 								if (twoPlayerMode)
 								{
@@ -4594,14 +4591,14 @@ void JE_makeEnemy( JE_SingleEnemyType *enemy )
 
 	if (enemyDat[tempW].startxc != 0)
 	{
-		enemy->ex = enemyDat[tempW].startx + (rand() % (enemyDat[tempW].startxc * 2)) - enemyDat[tempW].startxc + 1;
+		enemy->ex = enemyDat[tempW].startx + (mt::rand() % (enemyDat[tempW].startxc * 2)) - enemyDat[tempW].startxc + 1;
 	} else {
 		enemy->ex = enemyDat[tempW].startx + 1;
 	}
 
 	if (enemyDat[tempW].startyc != 0)
 	{
-		enemy->ey = enemyDat[tempW].starty + (rand() % (enemyDat[tempW].startyc * 2)) - enemyDat[tempW].startyc + 1;
+		enemy->ey = enemyDat[tempW].starty + (mt::rand() % (enemyDat[tempW].startyc * 2)) - enemyDat[tempW].startyc + 1;
 	} else {
 		enemy->ey = enemyDat[tempW].starty + 1;
 	}
@@ -5380,15 +5377,15 @@ void JE_eventSystem( void )
 					}
 				} else {
 					if (eventRec[eventLoc-1].eventdat == 533
-					    && (portPower[1-1] == 11 || (rand() % 15) < portPower[1-1])
+					    && (portPower[1-1] == 11 || (mt::rand() % 15) < portPower[1-1])
 					    && !superTyrian)
 					{
-						eventRec[eventLoc-1].eventdat = 829 + (rand() % 6);
+						eventRec[eventLoc-1].eventdat = 829 + (mt::rand() % 6);
 					}
 				}
 				if (eventRec[eventLoc-1].eventdat == 534 && superTyrian)
 				{
-					eventRec[eventLoc-1].eventdat = 828 + superTyrianSpecials[rand() % 4];
+					eventRec[eventLoc-1].eventdat = 828 + superTyrianSpecials[mt::rand() % 4];
 				}
 
 				for (temp = 0; temp < 100; temp++)
@@ -5478,9 +5475,9 @@ void JE_eventSystem( void )
 			if (!superTyrian)
 			{
 				if (eventRec[eventLoc-1].eventdat == 533
-				    && (portPower[1-1] == 11 || (rand() % 15) < portPower[1-1]))
+				    && (portPower[1-1] == 11 || (mt::rand() % 15) < portPower[1-1]))
 				{
-					eventRec[eventLoc-1].eventdat = 829 + (rand() % 6);
+					eventRec[eventLoc-1].eventdat = 829 + (mt::rand() % 6);
 				}
 				if (twoPlayerMode || onePlayerAction)
 				{
@@ -5735,7 +5732,7 @@ void JE_eventSystem( void )
 			if (tempB)
 			{
 				do {
-					temp = (rand() % (eventRec[eventLoc-1].eventdat2 + 1 - eventRec[eventLoc-1].eventdat)) + eventRec[eventLoc-1].eventdat;
+					temp = (mt::rand() % (eventRec[eventLoc-1].eventdat2 + 1 - eventRec[eventLoc-1].eventdat)) + eventRec[eventLoc-1].eventdat;
 				} while (!(JE_searchFor(temp) && enemy[temp5-1].eyc == 0));
 
 				newPL[eventRec[eventLoc-1].eventdat3 - 80] = temp;

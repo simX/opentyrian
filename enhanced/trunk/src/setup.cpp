@@ -35,6 +35,7 @@
 #include "video.h"
 #include "vga256d.h"
 #include "loudness.h"
+#include "mtrand.h"
 
 #include "SDL.h"
 #include "boost/format.hpp"
@@ -168,7 +169,7 @@ void JE_jukeboxGo( void )
 
 		if ( ( (repeated && !fade) || !playing) && !youStopped)
 		{
-			currentJukeboxSong = ( rand() % MUSIC_NUM );
+			currentJukeboxSong = ( mt::rand() % MUSIC_NUM );
 			JE_playNewSong();
 		}
 

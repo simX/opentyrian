@@ -228,9 +228,9 @@ void JE_setupStars( void )
 {
 	for (int z = MAX_STARS; z--; )
 	{
-		starDat[z].sLoc = (rand() % 320) + (rand() % 200) * scr_width;
-		starDat[z].sMov = ((rand() % 3) + 2) * scr_width;
-		starDat[z].sC = (rand() % 16) + (9 * 16);
+		starDat[z].sLoc = (mt::rand() % 320) + (rand() % 200) * scr_width;
+		starDat[z].sMov = ((mt::rand() % 3) + 2) * scr_width;
+		starDat[z].sC = (mt::rand() % 16) + (9 * 16);
 	}
 }
 

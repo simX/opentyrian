@@ -17,40 +17,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+#ifndef MTRAND_H
+#define MTRAND_H
 #include "opentyr.h"
-#include "jukebox.h"
 
-#include "loudness.h"
-#include "nortsong.h"
-#include "mtrand.h"
+static const unsigned long MT_RAND_MAX = 0xffffffff;
 
-
-bool continuousPlay = false;
-JE_word currentJukeboxSong = 0; /* SYN: used to be currentsong, but that name conflicted with elsewhere */
-
-void JE_playNewSelection( void )
+namespace mt
 {
-	currentSong = ( mt::rand() % MUSIC_NUM );
-	JE_playSong(currentSong);
+	void seed( unsigned long s );
+	unsigned long rand( );
 }
 
-void JE_jukebox_selectSong( JE_word song )
-{
-	JE_selectSong(song);
-	repeated = false;
-	playing = true;
-}
-
-void JE_checkEndOfSong( void )
-{
-	if (!continuousPlay && (repeated || !playing) )
-	{
-		JE_playNewSelection();
-		repeated = false;
-	}
-	if (continuousPlay && !playing)
-	{
-		JE_jukebox_selectSong(1);
-	}
-}
-
+#endif // MTRAND_H

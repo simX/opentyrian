@@ -18,10 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
-
 #include "superpixel.h"
 
 #include "video.h"
+#include "mtrand.h"
+
 #include <cmath>
 
 static const unsigned int MAX_SUPERPIXELS = 101;
@@ -47,9 +48,9 @@ void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth,
 {
 	for (unsigned int i = 0; i < num; i++)
 	{
-		float tempr = ((float)rand() / RAND_MAX) * M_PI*2;
-		int tempx = ot_round(sin(tempr) * ((float)rand() / RAND_MAX) * explowidth);
-		int tempy = ot_round(cos(tempr) * ((float)rand() / RAND_MAX) * explowidth);
+		float tempr = ((float)mt::rand() / MT_RAND_MAX) * M_PI*2;
+		int tempx = ot_round(sin(tempr) * ((float)mt::rand() / MT_RAND_MAX) * explowidth);
+		int tempy = ot_round(cos(tempr) * ((float)mt::rand() / MT_RAND_MAX) * explowidth);
 
 		if (++last_superpixel > MAX_SUPERPIXELS) last_superpixel = 0;
 

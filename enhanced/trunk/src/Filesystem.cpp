@@ -120,7 +120,7 @@ void Filesystem::openDatafile( std::fstream& stream, const std::string& filename
 	{
 		path = findDatafile(filename);
 	}
-	catch (FileOpenErrorException& e)
+	catch (FileOpenErrorException&)
 	{
 		throw FileOpenErrorException(filename);
 	}

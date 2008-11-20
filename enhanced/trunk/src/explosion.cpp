@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
-
 #include "explosion.h"
 
 #include "backgrnd.h"
 #include "mainint.h"
 #include "varz.h"
+#include "mtrand.h"
 
 static const int MAX_EXPLOSIONS = 200;
 static const int MAX_REPEATING_EXPLOSIONS = 20;
@@ -73,19 +73,19 @@ void draw_explosions( )
 			}
 			
 			rep_explosions[i].y += backMove2 + 1;
-			int explosion_x = rep_explosions[i].x + (rand() % 24) - 12;
-			int explosion_y = rep_explosions[i].y + (rand() % 27) - 24;
+			int explosion_x = rep_explosions[i].x + (mt::rand() % 24) - 12;
+			int explosion_y = rep_explosions[i].y + (mt::rand() % 27) - 24;
 
 			if (rep_explosions[i].big)
 			{
 				JE_setupExplosionLarge(false, 2, explosion_x, explosion_y);
-				if (rep_explosions[i].life == 1 || rand() % 5 == 1)
+				if (rep_explosions[i].life == 1 || mt::rand() % 5 == 1)
 				{
 					soundQueue[7] = 11;
 				} else {
 					soundQueue[6] = 9;
 				}
-				rep_explosions[i].delay = 4 + (rand() % 3);
+				rep_explosions[i].delay = 4 + (mt::rand() % 3);
 			} else {
 				JE_setupExplosion(explosion_x, explosion_y, 1);
 				soundQueue[5] = 4;

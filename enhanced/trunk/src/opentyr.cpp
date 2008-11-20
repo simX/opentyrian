@@ -46,6 +46,7 @@
 #include "video.h"
 #include "video_scale.h"
 #include "Filesystem.h"
+#include "mtrand.h"
 
 #include "SDL.h"
 
@@ -312,7 +313,7 @@ void opentyrian_menu( void )
 
 int main( int argc, char *argv[] )
 {
-	srand((unsigned int)time(NULL));
+	mt::seed((unsigned int)time(NULL));
 
 	Console::initialize();
 	KeyNames::initialize();
