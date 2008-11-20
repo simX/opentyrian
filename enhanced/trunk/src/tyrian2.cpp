@@ -3332,19 +3332,23 @@ new_game:
 
 								for (x = 0; x < temp - 1; x++)
 								{
+									std::string s;
 									do
 									{
-										std::string s = JE_readCryptLn(lvlFile);
+										s = JE_readCryptLn(lvlFile);
 									} while (s[0] != '#');
 								}
 
-								do
 								{
-									std::string s = JE_readCryptLn(lvlFile);
-									levelWarningText[levelWarningLines] = s;
-									levelWarningLines++;
-								} while (s[0] != '#');
-								levelWarningLines--;
+									std::string s;
+									do
+									{
+										s = JE_readCryptLn(lvlFile);
+										levelWarningText[levelWarningLines] = s;
+										levelWarningLines++;
+									} while (s[0] != '#');
+									levelWarningLines--;
+								}
 
 								JE_wipeKey();
 								frameCountMax = 4;
