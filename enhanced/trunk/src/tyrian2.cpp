@@ -3986,7 +3986,7 @@ void JE_titleScreen( bool animate )
 					}
 					JE_loadPic(4, false);
 
-					JE_textShade(2, 192, opentyrian_version, 15, 0, PART_SHADE);
+					JE_textShade(2, 192, "OpenTyrian Enhanced " + opentyrian_version, 15, 0, PART_SHADE);
 	
 					memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	
@@ -4033,24 +4033,13 @@ void JE_titleScreen( bool animate )
 					for (temp = 0; temp < menunum; temp++)
 					{
 						tempX = 104+(temp)*13;
-						if (temp == 4) /* OpenTyrian override */
-						{
-							tempY = JE_fontCenter(opentyrian_str, SMALL_FONT_SHAPES);
+						tempY = JE_fontCenter(menuText[temp],SMALL_FONT_SHAPES);
 	
-							JE_outTextAdjust(tempY-1,tempX-1,opentyrian_str,15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY+1,tempX+1,opentyrian_str,15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY+1,tempX-1,opentyrian_str,15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY-1,tempX+1,opentyrian_str,15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY,tempX,opentyrian_str,15,-3,SMALL_FONT_SHAPES,false);
-						} else {
-							tempY = JE_fontCenter(menuText[temp],SMALL_FONT_SHAPES);
-	
-							JE_outTextAdjust(tempY-1,tempX-1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY+1,tempX+1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY+1,tempX-1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY-1,tempX+1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
-							JE_outTextAdjust(tempY,tempX,menuText[temp],15,-3,SMALL_FONT_SHAPES,false);
-						}
+						JE_outTextAdjust(tempY-1,tempX-1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
+						JE_outTextAdjust(tempY+1,tempX+1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
+						JE_outTextAdjust(tempY+1,tempX-1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
+						JE_outTextAdjust(tempY-1,tempX+1,menuText[temp],15,-10,SMALL_FONT_SHAPES,false);
+						JE_outTextAdjust(tempY,tempX,menuText[temp],15,-3,SMALL_FONT_SHAPES,false);
 					}
 					JE_showVGA();
 	
@@ -4064,14 +4053,8 @@ void JE_titleScreen( bool animate )
 	
 			for (temp = 0; temp < menunum; temp++)
 			{
-				if (temp == 4) /* OpenTyrian override */
-				{
-					JE_outTextAdjust(JE_fontCenter(opentyrian_str, SMALL_FONT_SHAPES), 104+temp*13,
-									opentyrian_str, 15, -3+((temp == menu) * 2), SMALL_FONT_SHAPES, false);
-				} else {
-					JE_outTextAdjust(JE_fontCenter(menuText[temp], SMALL_FONT_SHAPES), 104+temp*13,
-									menuText[temp], 15, -3+((temp == menu) * 2), SMALL_FONT_SHAPES, false);
-				}
+				JE_outTextAdjust(JE_fontCenter(menuText[temp], SMALL_FONT_SHAPES), 104+temp*13,
+					menuText[temp], 15, -3+((temp == menu) * 2), SMALL_FONT_SHAPES, false);
 			}
 	
 			JE_showVGA();

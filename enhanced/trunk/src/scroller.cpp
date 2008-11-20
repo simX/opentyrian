@@ -61,7 +61,7 @@ const about_text_type about_text[] =
 	{0x05, "~AdPlug~ for the Loudness code."},
 	{0x00, ""},
 	{0x0d, "Thanks to ~Boost~ for providing"},
-	{0x0d, "such great C++ libraries."},
+	{0x0d, "such great libraries."},
 	{0x00, ""},
 	{0x00, ""},
 	{0x32, "And special thanks to ~Jason Emery~"},
@@ -91,15 +91,17 @@ const about_text_type about_text[] =
 	{0x00, ""},
 	{0x00, ""},
 	{0x00, ""},
-	{0x00, "OpenTyrian Enhanced: A modern cross-platform port of Tyrian"},
-	{0x00, "Copyright (C) 2007  The OpenTyrian Development Team"},
+	{0x40, "OpenTyrian Enhanced: A modern cross-platform port of Tyrian"},
+	{0x40, "Copyright (C) 2007  The OpenTyrian Development Team"},
 	{0x00, ""},
-	{0x00, "software implementation of FM sound generator types OPL and OPL2"},
-	{0x00, "Copyright (C) 2002,2003 Jarek Burczynski (bujar at mame dot net)"},
-	{0x00, "Copyright (C) 1999,2000 Tatsuyuki Satoh , MultiArcadeMachineEmulator development"},
+	{0x40, "Software implementation of FM sound generator types OPL and OPL2"},
+	{0x40, "Copyright (C) 2002,2003 Jarek Burczynski (bujar at mame dot net)"},
+	{0x40, "Copyright (C) 1999,2000 Tatsuyuki Satoh , MAME development"},
 	{0x00, ""},
-	{0x00, "Mersenne Twister: A 623-Dimensionally Equidistributed Uniform Pseudo-Random Number Generator"},
-	{0x00, "Copyright (C) 1997--2004, Makoto Matsumoto, Takuji Nishimura, and Eric Landry; All rights reserved."},
+	{0x40, "Mersenne Twister: A 623-Dimensionally Equidistributed Uniform"},
+	{0x40, "Pseudo-Random Number Generator"},
+	{0x40, "Copyright (C) 1997--2004, Makoto Matsumoto, Takuji Nishimura,"},
+	{0x40, "and Eric Landry; All rights reserved."},
 	{0x00, ""},
 	{0x00, ""},
 	{0x00, ""},
@@ -187,17 +189,19 @@ void scroller_sine( const about_text_type text[] )
 				{
 					break;
 				}
+
+				const int font = (text[i+current_line].effect & 0x40 ? TINY_FONT : SMALL_FONT_SHAPES);
 				
-				int line_x = JE_fontCenter(text[i + current_line].text, SMALL_FONT_SHAPES);
+				int line_x = JE_fontCenter(text[i + current_line].text, font);
 				int line_y = i * LINE_HEIGHT - y;
 				
 				if (text[i + current_line].effect & 0x20)
 				{
-					JE_outTextAdjust(line_x + 1, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -10, SMALL_FONT_SHAPES, false);
-					JE_outTextAdjust(line_x - 1, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -10, SMALL_FONT_SHAPES, false);
+					JE_outTextAdjust(line_x + 1, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -10, font, false);
+					JE_outTextAdjust(line_x - 1, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -10, font, false);
 				}
 				
-				JE_outTextAdjust(line_x, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -4, SMALL_FONT_SHAPES, false);
+				JE_outTextAdjust(line_x, line_y, text[i + current_line].text, text[i + current_line].effect & 0x0f, -4, font, false);
 				
 				if (text[i + current_line].effect & 0x10)
 				{

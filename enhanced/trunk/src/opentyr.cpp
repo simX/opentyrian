@@ -58,12 +58,21 @@
 
 const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 
-const char *opentyrian_str = "OpenTyrian",
-#ifdef SVN_REV
-           *opentyrian_version = "Enhanced r" SVN_REV;
+#ifdef NDEBUG
+#define REL_STRING "Release"
 #else
-           *opentyrian_version = "Enhanced";
+#define REL_STRING "Debug"
 #endif
+
+#include "svn_rev.h"
+
+std::string opentyrian_version
+#ifdef SVN_REV
+           ("r" SVN_REV " " REL_STRING);
+#else
+           (REL_STRING);
+#endif
+#undef REL_STRING
 
 const char *opentyrian_menu_items[] =
 {
@@ -181,7 +190,7 @@ void opentyrian_menu( void )
 	JE_fadeBlack(10);
 	JE_loadPic(13, false);
 
-	JE_outTextAdjust(JE_fontCenter(opentyrian_str, FONT_SHAPES), 5, opentyrian_str, 15, -3, FONT_SHAPES, false);
+	JE_outTextAdjust(JE_fontCenter("OpenTyrian", FONT_SHAPES), 5, "OpenTyrian", 15, -3, FONT_SHAPES, false);
 
 	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
@@ -324,7 +333,7 @@ int main( int argc, char *argv[] )
 		// TODO: We should totally bail out here =P
 	}
 
-	Console::get() << "Welcome to... >> " << opentyrian_str << " " << opentyrian_version << " <<\n";
+	Console::get() << "Welcome to... >> OpenTyrian Enhanced " << opentyrian_version << " <<\n";
 
 	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
 

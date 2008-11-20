@@ -185,6 +185,8 @@ void JE_loadHelpText( void )
 	{
 		menuText[i] = JE_readCryptLn(f);      /*Main Menu*/
 	}
+	// Replaces "Ordering Info"
+	menuText[4] = "OpenTyrian";
 	JE_skipCryptLn(f); JE_skipCryptLn(f);
 
 	for (int i = 0; i < 9; i++)

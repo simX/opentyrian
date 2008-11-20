@@ -56,7 +56,7 @@ typedef Uint8  JE_byte;
 //typedef double JE_real; - Done
 #endif
 
-extern const char *opentyrian_str, *opentyrian_version;
+extern std::string opentyrian_version;
 
 char *strnztcpy( char *to, const char *from, size_t count );
 
