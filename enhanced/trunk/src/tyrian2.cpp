@@ -2787,24 +2787,21 @@ enemy_shot_draw_overflow:
 
 	if (debug)
 	{
-		tempStr = "";
-		for (temp = 0; temp < 9; temp++)
+		std::ostringstream smoothiesStr;
+		for (int i = 0; i < 9; ++i)
 		{
-			tempStr = (boost::format("%1%%2$c") % tempStr % (smoothies[temp] + 48)).str();
+			smoothiesStr << (smoothies[i] ? '1' : '0');
 		}
-		sprintf(buffer, "SM = %s", tempStr);
-		JE_outText(30, 70, buffer, 4, 0);
+		JE_outText(30, 70, (boost::format("SM = %1%") % smoothiesStr).str(), 4, 0);
 
-		sprintf(buffer, "Memory left = %d", -1);
-		JE_outText(30, 80, buffer, 4, 0);
-		sprintf(buffer, "Enemies onscreen = %d", enemyOnScreen);
-		JE_outText(30, 90, buffer, 6, 0);
+		JE_outText(30, 80, (boost::format("Memory left = %d") % -1).str(), 4, 0);
+		JE_outText(30, 90, (boost::format("Enemies onscreen = %d") % enemyOnScreen).str(), 6, 0);
 
 		debugHist = debugHist + ot_abs((float)(debugTime - lastDebugTime));
 		debugHistCount++;
 
 		const float fps = 1000.0f / ot_round(debugHist / debugHistCount);
-		std::string debug_str = (boost::format("X:%d Y:%-5d  %2.3f FPS  %d %d %d %d") % ((mapX-1)*12+PX) % curLoc % fps % lastTurn2 % lastTurn % PX % PY).str();
+		const std::string debug_str = (boost::format("X:%d Y:%-5d  %2.3f FPS  %d %d %d %d") % ((mapX-1)*12+PX) % curLoc % fps % lastTurn2 % lastTurn % PX % PY).str();
 		JE_outText(45, 175, debug_str, 15, 3);
 		lastDebugTime = debugTime;
 	}
@@ -2861,8 +2858,7 @@ enemy_shot_draw_overflow:
 			}
 
 			JE_textShade (140, 6, miscText[66], 7, (levelTimerCountdown % 20) / 3, FULL_SHADE);
-			sprintf(buffer, "%.1f", levelTimerCountdown / 100.0f);
-			JE_dString (100, 2, buffer, SMALL_FONT_SHAPES);
+			JE_dString (100, 2, (boost::format("%.1f") % (levelTimerCountdown / 100.0f)).str(), SMALL_FONT_SHAPES);
 		}
 	}
 
@@ -3387,8 +3383,7 @@ new_game:
 									{
 										if (SANextShip[superArcadeMode] == 9)
 										{
-											sprintf(buffer, "Or play... %s", specialName[7]);
-											JE_dString(80, 180, buffer, SMALL_FONT_SHAPES);
+											JE_dString(80, 180, "Or play... "+specialName[7], SMALL_FONT_SHAPES);
 										}
 
 										if (SANextShip[superArcadeMode] != 9)
@@ -3396,8 +3391,8 @@ new_game:
 											JE_dString(JE_fontCenter(superShips[0], FONT_SHAPES), 30, superShips[0], FONT_SHAPES);
 											JE_dString(JE_fontCenter(superShips[SANextShip[superArcadeMode]], SMALL_FONT_SHAPES), 100, superShips[SANextShip[superArcadeMode]], SMALL_FONT_SHAPES);
 										} else {
-											sprintf(buffer, "%s %s", miscTextB[4], pName[0]);
-											JE_dString(JE_fontCenter(buffer, FONT_SHAPES), 100, buffer, FONT_SHAPES);
+											const std::string temp = (boost::format("%1% %2%") % miscTextB[4] % pName[0]).str();
+											JE_dString(JE_fontCenter(temp, FONT_SHAPES), 100, temp, FONT_SHAPES);
 										}
 
 										if (SANextShip[superArcadeMode] < 7)
@@ -3410,8 +3405,8 @@ new_game:
 											}
 										}
 
-										sprintf(buffer, "Type %s at Title", specialName[SANextShip[superArcadeMode]-1]);
-										JE_dString(JE_fontCenter(buffer, SMALL_FONT_SHAPES), 160, buffer, SMALL_FONT_SHAPES);
+										const std::string temp = (boost::format("Type %1% at Title") % specialName[SANextShip[superArcadeMode]-1]).str();
+										JE_dString(JE_fontCenter(temp, SMALL_FONT_SHAPES), 160, temp, SMALL_FONT_SHAPES);
 										JE_showVGA();
 
 										JE_fadeColor(50);
@@ -8354,11 +8349,9 @@ void JE_doStatBar( void )
 
 void JE_drawScore( void )
 {
-	char cl[24];
 	if (curMenu == 4)
 	{
-		sprintf(cl, "%lu", JE_cashLeft());
-		JE_textShade(65, 173, cl, 1, 6, DARKEN);
+		JE_textShade(65, 173, lexical_cast<std::string>(JE_cashLeft()), 1, 6, DARKEN);
 	}
 }
 
@@ -8848,8 +8841,6 @@ void JE_funkyScreen( void )
 
 void JE_weaponSimUpdate( void )
 {
-	char buf[32];
-
 	JE_weaponViewFrame(0);
 
 	if ( (curSel[1] == 3 && curSel[4] < menuChoices[4]) || (curSel[1] == 4 && curSel[4] < menuChoices[4] - 1) )
@@ -8857,8 +8848,7 @@ void JE_weaponSimUpdate( void )
 
 		if (leftPower)
 		{
-			sprintf(buf, "%d", downgradeCost);
-			JE_outText(26, 137, buf, 1, 4);
+			JE_outText(26, 137, lexical_cast<std::string>(downgradeCost), 1, 4);
 		} else {
 			JE_newDrawCShapeNum(OPTION_SHAPES, 14, 24, 149);
 		}
@@ -8867,12 +8857,10 @@ void JE_weaponSimUpdate( void )
 		{
 			if (!rightPowerAfford)
 			{
-				sprintf(buf, "%d", upgradeCost);
-				JE_outText(108, 137, buf, 7, 4);
+				JE_outText(108, 137, lexical_cast<std::string>(upgradeCost), 7, 4);
 				JE_newDrawCShapeNum(OPTION_SHAPES, 15, 119, 149);
 			} else {
-				sprintf(buf, "%d", upgradeCost);
-				JE_outText(108, 137, buf, 1, 4);
+				JE_outText(108, 137, lexical_cast<std::string>(upgradeCost), 1, 4);
 			}
 		} else {
 			JE_newDrawCShapeNum(OPTION_SHAPES, 15, 119, 149);
@@ -8892,9 +8880,7 @@ void JE_weaponSimUpdate( void )
 			JE_bar(39 + x * 6, 165, 39 + x * 6 + 4, 165, 249);
 		}
 
-		sprintf(buf, "POWER: %d", temp);
-		JE_outText(58, 137, buf, 15, 4);
-
+		JE_outText(58, 137, (boost::format("POWER: %1%") % temp).str(), 15, 4);
 	} else {
 		leftPower = false;
 		rightPower = false;

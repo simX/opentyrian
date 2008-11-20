@@ -34,6 +34,7 @@
 #include "loudness.h"
 
 #include <cmath>
+#include "boost/format.hpp"
 
 namespace destruct {
 
@@ -811,10 +812,8 @@ void JE_destructMain( void )
 					JE_rectangle(16, 1, 144, 10, 240);
 					JE_drawShape2(  4, 0, 190 + leftShotType[leftSel-1], eShapes1);
 					JE_outText( 20, 3, weaponNames[leftShotType[leftSel-1]-1], 15, 2);
-					sprintf(tempstr, "dmg~%d~", leftDmg[leftSel-1]);
-					JE_outText( 75, 3, tempstr, 15, 0);
-					sprintf(tempstr, "pts~%d~", leftScore);
-					JE_outText(110, 3, tempstr, 15, 0);
+					JE_outText( 75, 3, (boost::format("dmg~%1%~") % leftDmg[leftSel-1]).str(), 15, 0);
+					JE_outText(110, 3, (boost::format("pts~%1%~") % leftScore).str(), 15, 0);
 					JE_bar(175, 3, 184, 8, 241);
 					JE_rectangle(174, 2, 185, 9, 242);
 					JE_rectangle(173, 1, 186, 10, 240);
@@ -823,10 +822,8 @@ void JE_destructMain( void )
 					JE_rectangle(186, 1, 313, 10, 240);
 					JE_drawShape2(174, 0, 190 + rightShotType[rightSel-1], eShapes1);
 					JE_outText(190, 3, weaponNames[rightShotType[rightSel-1]-1], 15, 2);
-					sprintf(tempstr, "dmg~%d~", rightDmg[rightSel-1]);
-					JE_outText(245, 3, tempstr, 15, 0);
-					sprintf(tempstr, "pts~%d~", rightScore);
-					JE_outText(280, 3, tempstr, 15, 0);
+					JE_outText(245, 3, (boost::format("dmg~%1%~") % rightDmg[rightSel-1]).str(), 15, 0);
+					JE_outText(280, 3, (boost::format("pts~%1%~") % rightScore).str(), 15, 0);
 					
 					JE_showVGA();
 					if (firstTime)

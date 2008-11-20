@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "episodes.h"
 
 #include "error.h"
 #include "lvlmast.h"
 #include "Filesystem.h"
 #include "BinaryStream.h"
 
-#include "episodes.h"
-
+#include "boost/format.hpp"
 
 /* MAIN Weapons Data */
 JE_WeaponPortType weaponPort[PORT_NUM + 1];
@@ -44,7 +44,8 @@ JE_EnemyDatType enemyDat[ENEMY_NUM + 1];
 /* EPISODE variables */
 int episodeNum = 0;
 bool episodeAvail[EPISODE_MAX]; /* [1..episodemax] */
-char macroFile[13], cubeFile[13]; /* string [12] */
+std::string macroFile; // string [12]
+std::string cubeFile;
 
 unsigned long episode1DataLoc;
 
@@ -56,7 +57,7 @@ bool jumpBackToEpisode1;
 
 static JE_word lvlNum;
 unsigned long lvlPos[43];
-char levelFile[13]; /* string [12] */
+std::string levelFile; /* string [12] */
 
 void JE_loadItemDat( void )
 {
@@ -247,9 +248,9 @@ void JE_initEpisode( int newEpisode )
 	{
 		episodeNum = newEpisode;
 
-		sprintf(levelFile, "tyrian%d.lvl", episodeNum);
-		sprintf(cubeFile,  "cubetxt%d.dat", episodeNum);
-		sprintf(macroFile, "levels%d.dat", episodeNum);
+		levelFile = (boost::format("tyrian%1%.lvl") % episodeNum).str();
+		cubeFile = (boost::format("cubetxt%1%.dat") % episodeNum).str();
+		macroFile = (boost::format("levels%1%.dat") % episodeNum).str();
 
 		JE_analyzeLevel();
 		JE_loadItemDat();

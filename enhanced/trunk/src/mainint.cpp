@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "mainint.h"
 
 #include "backgrnd.h"
 #include "config.h"
@@ -46,15 +47,15 @@
 #include "explosion.h"
 #include "Filesystem.h"
 
-#include "mainint.h"
-
 #include <cassert>
 #include <cctype>
 #include <cmath>
 #include <sstream>
 #include <string>
 #include "boost/format.hpp"
+#include "boost/lexical_cast.hpp"
 
+using boost::lexical_cast;
 
 static const int MAX_PAGE = 8;
 static const int TOPICS = 6;
@@ -2399,15 +2400,11 @@ void JE_operation( int slot )
 void JE_inGameDisplays( void )
 {
 	std::string stemp;
-	
-	char tempstr[256];
 
-	sprintf(tempstr, "%lu", score);
-	JE_textShade(30, 175, tempstr, 2, 4, FULL_SHADE);
+	JE_textShade(30, 175, lexical_cast<std::string>(score), 2, 4, FULL_SHADE);
 	if (twoPlayerMode && !galagaMode)
 	{
-		sprintf(tempstr, "%lu", score2);
-		JE_textShade(230, 175, tempstr, 2, 4, FULL_SHADE);
+		JE_textShade(230, 175, lexical_cast<std::string>(score2), 2, 4, FULL_SHADE);
 	}
 
 	/*Special Weapon?*/
@@ -2430,8 +2427,7 @@ void JE_inGameDisplays( void )
 			{
 				JE_drawShape2(tempW, temp5, 285, shapes9);
 				tempW = (temp == 0) ? 45 : 250;
-				sprintf(tempstr, "%d", portPower[temp] - 1);
-				JE_textShade(tempW, temp5 + 3, tempstr, 15, 1, FULL_SHADE);
+				JE_textShade(tempW, temp5 + 3, lexical_cast<std::string>(portPower[temp]-1), 15, 1, FULL_SHADE);
 			} else if (portPower[temp] > 1) {
 				for (int temp2 = 1; temp2 < portPower[temp]; temp2++)
 				{

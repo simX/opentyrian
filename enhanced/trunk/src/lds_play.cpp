@@ -95,9 +95,9 @@ int lds_load(unsigned char *music_location)
 	mode = *(pos++);
 	if (mode > 2)
 	{
-		/* Error! */
-		/* printf("Error loading music! %d\n", mode);
-		return false; */
+		// Error!
+		//Console::get() << "Error loading music! " << mode << std::endl;
+		//return false;
 	}
 
 	pos += 2;

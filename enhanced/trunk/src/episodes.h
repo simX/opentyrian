@@ -158,13 +158,14 @@ extern JE_ShipType ships[SHIP_NUM + 1]; /* [0..shipnum] */
 extern JE_EnemyDatType enemyDat[ENEMY_NUM + 1]; /* [0..enemynum] */
 extern int episodeNum;
 extern bool episodeAvail[EPISODE_MAX];
-extern char macroFile[13], cubeFile[13];
+extern std::string macroFile;
+extern std::string cubeFile;
 extern unsigned long episode1DataLoc;
 extern bool bonusLevel;
 extern bool jumpBackToEpisode1;
 
 extern unsigned long lvlPos[43];
-extern char levelFile[13];
+extern std::string levelFile;
 
 void JE_loadItemDat( void );
 void JE_initEpisode( int newEpisode );

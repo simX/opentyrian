@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "setup.h"
 
 #include "config.h"
 #include "fonthand.h"
@@ -35,9 +36,8 @@
 #include "vga256d.h"
 #include "loudness.h"
 
-#include "setup.h"
-
 #include "SDL.h"
+#include "boost/format.hpp"
 
 
 bool volumeActive = true;
@@ -188,12 +188,10 @@ void JE_jukeboxGo( void )
 			tempScreenSeg = VGAScreenSeg;
 			if (fx)
 			{
-				sprintf(tempStr, "%d %s", fxNum, soundTitle[fxNum - 1]);
 				JE_bar(50, 190, 250, 198, 0);
-				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, tempStr, 1, 4);
+				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, (boost::format("%1% %2%") % fxNum % soundTitle[fxNum-1]).str(), 1, 4);
 			} else {
-				sprintf(tempStr, "%d %s", currentJukeboxSong, musicTitle[currentJukeboxSong - 1]);
-				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, tempStr, 1, 4);
+				JE_outText(JE_fontCenter(tempStr, TINY_FONT), 190, (boost::format("%1% %2%") % currentJukeboxSong % musicTitle[currentJukeboxSong-1]).str(), 1, 4);
 			}
 
 			tempScreenSeg = VGAScreenSeg;
