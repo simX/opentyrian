@@ -110,7 +110,7 @@ void JE_loadExtraShapes()
 {
 	std::fstream file;
 	try {
-		Filesystem::get().openDatafileFail(file, "newsh$.shp");
+		file.open(Filesystem::get().findFile("newsh$.shp").c_str(), std::ios_base::in | std::ios_base::binary);
 	} catch (Filesystem::FileOpenErrorException&) {
 		Console::get() << "Shipedit data not found." << std::endl;
 		return;
