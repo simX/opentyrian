@@ -267,7 +267,7 @@ void JE_drawEnemy( int enemyOffset )
 		{
 			enemy[i].mapoffset = tempMapXOfs;
 
-			if (enemy[i].xaccel && enemy[i].xaccel - 89 > mt::rand() % 11)
+			if (enemy[i].xaccel && enemy[i].xaccel - 89 > (signed)(mt::rand() % 11))
 			{
 				if (PX > enemy[i].ex)
 				{
@@ -283,7 +283,7 @@ void JE_drawEnemy( int enemyOffset )
 				}
 			}
 
-			if (enemy[i].yaccel && enemy[i].yaccel - 89 > mt::rand() % 11)
+			if (enemy[i].yaccel && enemy[i].yaccel - 89 > (signed)(mt::rand() % 11))
 			{
 				if (PY > enemy[i].ey)
 				{
@@ -5364,7 +5364,7 @@ void JE_eventSystem( void )
 					}
 				} else {
 					if (eventRec[eventLoc-1].eventdat == 533
-					    && (portPower[1-1] == 11 || (mt::rand() % 15) < portPower[1-1])
+					    && (portPower[1-1] == 11 || (signed)(mt::rand() % 15) < portPower[1-1])
 					    && !superTyrian)
 					{
 						eventRec[eventLoc-1].eventdat = 829 + (mt::rand() % 6);
@@ -5462,7 +5462,7 @@ void JE_eventSystem( void )
 			if (!superTyrian)
 			{
 				if (eventRec[eventLoc-1].eventdat == 533
-				    && (portPower[1-1] == 11 || (mt::rand() % 15) < portPower[1-1]))
+				    && (portPower[1-1] == 11 || (signed)(mt::rand() % 15) < portPower[1-1]))
 				{
 					eventRec[eventLoc-1].eventdat = 829 + (mt::rand() % 6);
 				}

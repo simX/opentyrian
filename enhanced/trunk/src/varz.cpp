@@ -1226,7 +1226,7 @@ void JE_doSpecialShot( int playerNum, int *armor, int *shield )
 			}
 		}
 		
-		if (mt::rand() % 6 < specialWeaponFreq)
+		if ((signed)(mt::rand() % 6) < specialWeaponFreq)
 		{
 			b = 0;
 			

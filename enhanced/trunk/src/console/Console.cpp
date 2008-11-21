@@ -407,6 +407,9 @@ std::vector<std::string> Console::parseLine( std::string text )
 				escaped = false;
 			}
 			break;
+		case '\r':
+		case '\n':
+			break;
 		default:
 			cur_token.append(1, *i);
 			break;

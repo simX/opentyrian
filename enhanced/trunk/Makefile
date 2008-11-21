@@ -30,7 +30,7 @@ endif
 SDL_CFLAGS := $(shell sdl-config --cflags)
 SDL_LDFLAGS := $(shell sdl-config --libs)
 
-BOOST_LDFLAGS := -I$(BOOST_LIBDIR) -lboost_filesystem$(BOOST_SUFFIX) -lboost_system$(BOOST_SUFFIX)
+BOOST_LDFLAGS := -I$(BOOST_LIBDIR) -lboost_date_time$(BOOST_SUFFIX) -lboost_filesystem$(BOOST_SUFFIX) -lboost_system$(BOOST_SUFFIX)
 
 CXXFLAGS := --std=c++98 -pedantic -Wall -Wno-unused -I$(CURDIR)/src/ -DPASCAL_TYPES $(DEBUG_FLAGS) $(SDL_CFLAGS) -I$(BOOST_ROOT)
 LDFLAGS := $(SDL_LDFLAGS) $(BOOST_LDFLAGS) -lm
