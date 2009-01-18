@@ -52,7 +52,7 @@ void create_superpixels( JE_word x, JE_word y, unsigned int num, int explowidth,
 		int tempx = ot_round(sin(tempr) * ((float)mt::rand() / MT_RAND_MAX) * explowidth);
 		int tempy = ot_round(cos(tempr) * ((float)mt::rand() / MT_RAND_MAX) * explowidth);
 
-		if (++last_superpixel > MAX_SUPERPIXELS) last_superpixel = 0;
+		if (++last_superpixel >= MAX_SUPERPIXELS) last_superpixel = 0;
 
 		superpixels[last_superpixel].x = tempx + x;
 		superpixels[last_superpixel].y = tempy + y;
