@@ -1,6 +1,5 @@
-/* vim: set noet:
- *
- * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
+/* 
+ * OpenTyrian Classic: A modern cross-platform port of Tyrian
  * Copyright (C) 2007  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
@@ -18,56 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "PacketReliable.h"
 
-#include "error.h"
-#include "joystick.h"
-#include "nortsong.h"
-#include "nortvars.h"
-#include "vga256d.h"
-
-#include "animlib.h"
-
-
-JE_word currentpageofs;
-JE_word currentpageseg;
-
-void JE_loadPage( JE_word pagenumber )
+PacketReliable::PacketReliable()
 {
-	STUB();
 }
 
-void JE_drawFrame( JE_word framenumber )
+void PacketReliable::handle()
 {
-	STUB();
+	// TODO
 }
 
-JE_word JE_findPage ( JE_word framenumber )
+void PacketReliable::serialize(Uint8 *data) const
 {
-	STUB();
-	return 0;
+	Packet::serialize(data);
+	data += Packet::getPacketSize();
+
+	SDLNet_Write16(packetId, data);
 }
 
-void JE_renderFrame( JE_word framenumber )
+void PacketReliable::deserialize(Uint8 *data)
 {
-	STUB();
+	Packet::deserialize(data);
+	data += Packet::getPacketSize();
+
+	packetId = SDLNet_Read16(data+1);
 }
 
-void JE_playAnim( const char *animfile, int startingframe, bool keyhalt, int speed )
+int PacketReliable::getPacketSize() const
 {
-	STUB();
-}
-
-void JE_loadAnim( const char *filename )
-{
-	STUB();
-}
-
-void JE_closeAnim( void )
-{
-	STUB();
-}
-
-void JE_playRunSkipDump( JE_word bufferoffset )
-{
-	STUB();
+	return Packet::getPacketSize() + 2;
 }

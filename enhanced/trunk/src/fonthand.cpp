@@ -18,14 +18,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "fonthand.h"
 
 #include "newshape.h"
-#include "network.h"
 #include "nortsong.h"
 #include "video.h"
 #include "vga256d.h"
-
-#include "fonthand.h"
+#include "network.h"
 
 
 const unsigned char fontMap[136] = /* [33..168] */
@@ -694,8 +693,6 @@ void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 {
 	int c = 15;
 
-	JE_setNetByte(0);
-	
 	if (warningRed)
 	{
 		c = 7;
@@ -716,11 +713,8 @@ void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 			{
 				frameCountMax = 0;
 			}
-			JE_updateStream();
-			if (netQuit)
-			{
-				exit(0);
-			}
+			
+			network::keep_alive();
 			
 			JE_showVGA();
 
@@ -737,11 +731,8 @@ void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 		{
 			frameCountMax = 0;
 		}
-		JE_updateStream();
-		if (netQuit)
-		{
-			exit(0);
-		}
+
+		network::keep_alive();
 		
 		JE_showVGA();
 

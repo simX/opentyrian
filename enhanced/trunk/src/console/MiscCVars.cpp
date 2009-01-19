@@ -140,7 +140,13 @@ namespace CCmds
 					CVar& cvar = *i->second;
 					if (cvar.getName().find(param1) != string::npos || cvar.getHelp().find(param1) != string::npos)
 					{
-						Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType() << "] " << cvar.getHelp() << std::endl;
+						Console::get() << "\a2" << cvar.getName() << "\ax [" << cvar.getType();
+
+						std::string flags = enumerate_cvar_flags(cvar);
+						if (!flags.empty())
+							Console::get() << ": " << flags;
+
+						Console::get() << "] " << cvar.getHelp() << std::endl;
 					}
 				}
 

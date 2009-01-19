@@ -30,7 +30,6 @@
 #include "keyboard.h"
 #include "loudness.h"
 #include "mainint.h"
-#include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
 #include "nortvars.h"
@@ -47,6 +46,8 @@
 #include "video_scale.h"
 #include "Filesystem.h"
 #include "mtrand.h"
+#include "network.h"
+#include "network/NetCVars.h"
 
 #include "SDL.h"
 
@@ -67,7 +68,7 @@ const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 #include "svn_rev.h"
 
 std::string opentyrian_version
-#ifdef SVN_REV
+#ifdef HAVE_SVN_REV
            ("r" SVN_REV " " REL_STRING);
 #else
            (REL_STRING);
@@ -399,15 +400,24 @@ int main( int argc, char *argv[] )
 
 	JE_loadMainShapeTables();
 	JE_loadExtraShapes(); // Editship
-
 	JE_loadHelpText();
-
 	JE_loadPals();
+
+	if (CVars::net_enabled)
+	{
+		isNetworkGame = true;
+		if (network::init())
+		{
+			network::tyrian_halt(3, false);
+		}
+	}
+
+	loadDestruct = false;
+	stoppedDemo = false;
 
 	JE_main();
 
 	Console::deinitialize();
-
 	deinit_video();
 
 	return 0;

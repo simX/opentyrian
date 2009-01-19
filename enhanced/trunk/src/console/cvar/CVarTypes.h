@@ -72,6 +72,8 @@ public:
 	CVarString( const std::string& name, int flags, const std::string& help, const std::string& def )
 		: CVarTemplate<std::string, StringString>(name, flags, help, def)
 	{}
+
+	void operator=( const std::string& val ) { set(val); }
 };
 
 /*

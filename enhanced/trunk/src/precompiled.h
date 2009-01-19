@@ -73,3 +73,4 @@
 #include "SDL.h"
 #include "SDL_endian.h"
 #include "SDL_types.h"
+#include "SDL_net.h"

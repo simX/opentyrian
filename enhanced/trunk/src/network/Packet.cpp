@@ -1,6 +1,5 @@
-/* vim: set noet:
- *
- * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
+/* 
+ * OpenTyrian Classic: A modern cross-platform port of Tyrian
  * Copyright (C) 2007  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
@@ -18,56 +17,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "Packet.h"
 
-#include "error.h"
-#include "joystick.h"
-#include "nortsong.h"
-#include "nortvars.h"
-#include "vga256d.h"
+#include "PacketFactory.h"
 
-#include "animlib.h"
+//#include "SDL_net.h"
 
-
-JE_word currentpageofs;
-JE_word currentpageseg;
-
-void JE_loadPage( JE_word pagenumber )
+Packet::Packet()
 {
-	STUB();
 }
 
-void JE_drawFrame( JE_word framenumber )
+Packet::~Packet()
 {
-	STUB();
 }
 
-JE_word JE_findPage ( JE_word framenumber )
+void Packet::serialize(Uint8 *data) const
 {
-	STUB();
-	return 0;
+	data[0] = getTypeId();
 }
 
-void JE_renderFrame( JE_word framenumber )
+Packet *Packet::createPacket(const UDPPacket& data)
 {
-	STUB();
+	Packet *packet = globalPacketFactory.createFromTypeId(PacketFactory::PacketTypes(data.packet->data[0]));
+
+	// Check that the data received it big enough to deserialize
+	if (data->len <= packet->getPacketSize())
+	{
+		delete packet;
+		return 0;
+	}
+	else
+	{
+		packet->deserialize(data->data);
+		return packet;
+	}
 }
 
-void JE_playAnim( const char *animfile, int startingframe, bool keyhalt, int speed )
+void Packet::deserialize(Uint8 *data)
 {
-	STUB();
 }
 
-void JE_loadAnim( const char *filename )
+int Packet::getPacketSize() const
 {
-	STUB();
-}
-
-void JE_closeAnim( void )
-{
-	STUB();
-}
-
-void JE_playRunSkipDump( JE_word bufferoffset )
-{
-	STUB();
+	return 1;
 }

@@ -26,7 +26,6 @@
 #include "jukebox.h"
 #include "keyboard.h"
 #include "loudness.h"
-#include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
 #include "nortvars.h"
@@ -36,6 +35,7 @@
 #include "vga256d.h"
 #include "loudness.h"
 #include "mtrand.h"
+#include "network.h"
 
 #include "SDL.h"
 #include "boost/format.hpp"
@@ -94,6 +94,8 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 				newkey = true;
 			}
 		}
+
+		network::keep_alive();
 
 		SDL_Delay(16); /* <MXD> attempt non-processor-based wait, implement a real delay later */
 		if (*waitTime > 0)

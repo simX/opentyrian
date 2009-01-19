@@ -855,7 +855,7 @@ void JE_destructMain( void )
 							}
 						} else if (leftSystem[leftSel-1] == 8) {
 							if ((keysactive[SDLK_c] || L_Left) && leftX[leftSel-1] > 5)
-								if (JE_stabilityCheck(leftX[rightSel-1] - 5, ot_round(leftY[leftSel-1]))) /** NOTE: BUG! **/
+								if (JE_stabilityCheck(leftX[rightSel-1] - 5, ot_round(leftY[leftSel-1]))) /* NOTE: BUG! */
 								{
 									if (leftLastMove[leftSel-1] > -5)
 										leftLastMove[leftSel-1]--;
@@ -968,14 +968,14 @@ void JE_destructMain( void )
 										shotRec[z-1].y = leftY[leftSel-1] + 1;
 										shotRec[z-1].ymov = 0.5f + leftYMov[leftSel-1] * 0.1f;
 										shotRec[z-1].xmov = 0.02f * leftLastMove[leftSel-1] * leftLastMove[leftSel-1] * leftLastMove[leftSel-1];
-										if ((keysactive[SDLK_a] || L_Up) && rightY[rightSel-1] < 30) /** NOTE: BUG? **/
+										if ((keysactive[SDLK_a] || L_Up) && rightY[rightSel-1] < 30) /* NOTE: BUG? */
 										{
 											shotRec[z-1].ymov = 0.1f;
 											if (shotRec[z-1].xmov < 0)
 												shotRec[z-1].xmov += 0.1f;
 											else if (shotRec[z-1].xmov > 0)
 												shotRec[z-1].xmov -= 0.1f;
-											shotRec[z-1].y = rightY[rightSel-1]; /** NOTE: BUG? **/
+											shotRec[z-1].y = rightY[rightSel-1]; /* NOTE: BUG? */
 										}
 									} else {
 										shotRec[z-1].x = leftX[leftSel-1] + 6 + cos(leftAngle[leftSel-1]) * 10;

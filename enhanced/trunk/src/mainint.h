@@ -83,7 +83,7 @@ void JE_loadCompShapesB( Uint8 **shapes, std::fstream& f, unsigned long shapeSiz
 void JE_loadMainShapeTables( void );
 void JE_playerMovement( int inputDevice, int playerNum, JE_word shipGr, Uint8 *shapes9ptr, int *armorLevel, int *baseArmor, int *shield, int *shieldMax, JE_word *playerInvulnerable, int *PX, int *PY, int *lastPX, int *lastPY, int *lastPX2, int *lastPY2, int *PXChange, int *PYChange, int *lastTurn, int *lastTurn2, int *tempLastTurn2, int *stopWaitX, int *stopWaitY, JE_word *mouseX, JE_word *mouseY, bool *playerAlive, int *playerStillExploding, JE_PItemsType pItems );
 void JE_mainGamePlayerFunctions( void );
-char *JE_getName( int pnum );
+std::string JE_getName( int pnum );
 
 void JE_playerCollide( int *px, int *py, int *lastTurn, int *lastTurn2,
                        unsigned long *score, int *armorLevel, int *shield, bool *playerAlive,

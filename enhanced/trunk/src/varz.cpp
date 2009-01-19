@@ -24,7 +24,6 @@
 #include "editship.h"
 #include "episodes.h"
 #include "joystick.h"
-#include "network.h"
 #include "newshape.h"
 #include "nortsong.h"
 #include "video.h"
@@ -67,21 +66,21 @@ const int specialArcadeWeapon[PORT_NUM] /* [1..Portnum] */ =
 
 const int optionSelect[16][3][2] /* [0..15, 1..3, 1..2] */ =
 {	/*  MAIN    OPT    FRONT */
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
 	{ { 1, 1},{16,16},{30,30} },  /*Single Shot*/
 	{ { 2, 2},{29,29},{29,20} },  /*Dual Shot*/
 	{ { 3, 3},{21,21},{12, 0} },  /*Charge Cannon*/
 	{ { 4, 4},{18,18},{16,23} },  /*Vulcan*/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
 	{ { 6, 6},{29,16},{ 0,22} },  /*Super Missile*/
 	{ { 7, 7},{19,19},{19,28} },  /*Atom Bomb*/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
 	{ {10,10},{21,21},{21,27} },  /*Mini Missile*/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
 	{ {13,13},{17,17},{13,26} },  /*MicroBomb*/
-	{ { 0, 0},{ 0, 0},{ 0, 0} },  /**/
+	{ { 0, 0},{ 0, 0},{ 0, 0} },  /* */
 	{ {15,15},{15,16},{15,16} }   /*Post-It*/
 };
 
@@ -1370,7 +1369,6 @@ int JE_playerDamage( JE_word tempX, JE_word tempY,
 				if (playerAlive && !youAreCheating)
 				{
 					levelTimer = false;
-					gameQuitDelay = 10;
 					*playerAlive = false;
 					*playerStillExploding = 60;
 					levelEnd = 40;

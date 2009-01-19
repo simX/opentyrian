@@ -1,6 +1,5 @@
-/* vim: set noet:
- *
- * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
+/* 
+ * OpenTyrian Classic: A modern cross-platform port of Tyrian
  * Copyright (C) 2007  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
@@ -18,56 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "PacketFactory.h"
 
-#include "error.h"
-#include "joystick.h"
-#include "nortsong.h"
-#include "nortvars.h"
-#include "vga256d.h"
+#include "Packet.h"
 
-#include "animlib.h"
+#include "packets/PacketNetwork.h"
+#include "packets/PacketConnect.h"
+// long list of packet includes
 
-
-JE_word currentpageofs;
-JE_word currentpageseg;
-
-void JE_loadPage( JE_word pagenumber )
+template<class T> Packet *makePacket()
 {
-	STUB();
+	return static_cast<Packet *>(new T());
 }
 
-void JE_drawFrame( JE_word framenumber )
+PacketFactory::PacketFactory()
 {
-	STUB();
+	// Register packet types here
+	idMap[PacketFactory::PACKET_ACKNOWLEDGE] = makePacket<PacketAcknowledge>;
+	idMap[PacketFactory::PACKET_NULL] = makePacket<PacketNull>;
+
+	idMap[PacketFactory::PACKET_CONNECT] = makePacket<PacketConnect>;
 }
 
-JE_word JE_findPage ( JE_word framenumber )
+Packet *PacketFactory::createFromTypeId(PacketTypes type)
 {
-	STUB();
-	return 0;
+	IdMapType::const_iterator mapping = idMap.find(type);
+
+	if (mapping == idMap.end())
+		throw UnknownPacketException();
+
+	return mapping->second();
 }
 
-void JE_renderFrame( JE_word framenumber )
-{
-	STUB();
-}
-
-void JE_playAnim( const char *animfile, int startingframe, bool keyhalt, int speed )
-{
-	STUB();
-}
-
-void JE_loadAnim( const char *filename )
-{
-	STUB();
-}
-
-void JE_closeAnim( void )
-{
-	STUB();
-}
-
-void JE_playRunSkipDump( JE_word bufferoffset )
-{
-	STUB();
-}
+PacketFactory globalPacketFactory;

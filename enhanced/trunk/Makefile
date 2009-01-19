@@ -11,7 +11,9 @@ BOOST_LIBDIR := /usr/lib
 TARGET := tyrian
 OBJS := animlib.o backgrnd.o config.o destruct.o editship.o episodes.o Filesystem.o fm_synth.o fmopl.o fonthand.o helptext.o joystick.o jukebox.o keyboard.o lds_play.o loudness.o mainint.o network.o newshape.o nortsong.o nortvars.o opentyr.o palette.o params.o pcxload.o picload.o scroller.o setup.o sndmast.o starlib.o tyrian2.o varz.o vga256d.o video.o video_scale.o BinaryStream.o HighScores.o superpixel.o explosion.o menus.o cheats.o mtrand.o \
             console/BindManager.o console/Console.o console/CCmd.o console/GameActions.o console/KeyNames.o console/MiscCVars.o \
-                console/cvar/CVar.o console/cvar/CVarManager.o console/cvar/CVarFlagsEnumerator.o
+                console/cvar/CVar.o console/cvar/CVarManager.o console/cvar/CVarFlagsEnumerator.o \
+            network/NetCVars.o network/NetManager.o network/Packet.o network/PacketFactory.o \
+				network/packets/PacketConnect.o network/packets/PacketNetwork.o network/packets/PacketReliable.o
 
 ifeq ($(DEBUG), 1)
 	DEBUG_FLAGS := -g3 -O0 -Werror
@@ -28,7 +30,7 @@ else
 endif
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
-SDL_LDFLAGS := $(shell sdl-config --libs)
+SDL_LDFLAGS := $(shell sdl-config --libs) -lSDL_net
 
 BOOST_LDFLAGS := -I$(BOOST_LIBDIR) -lboost_date_time$(BOOST_SUFFIX) -lboost_filesystem$(BOOST_SUFFIX) -lboost_system$(BOOST_SUFFIX)
 

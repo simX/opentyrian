@@ -23,13 +23,13 @@
 #include "error.h"
 #include "joystick.h"
 #include "keyboard.h"
-#include "network.h"
 #include "nortsong.h"
 #include "nortvars.h"
 #include "varz.h"
 #include "video.h"
 #include "BinaryStream.h"
 #include "Filesystem.h"
+#include "network.h"
 
 
 Uint8 *tempScreenSeg = VGAScreen;
@@ -266,11 +266,8 @@ bool JE_waitAction( int time, bool checkJoystick )
 			JE_mouseReplace();
 		}
 
-		if (time == 0 && isNetworkGame)
-		{
-			/* TODO: NETWORK */
-		}
-
+		network::keep_alive();
+		SDL_Delay(16);
 	} while (!(inputDetected || delaycount() == 0 || netQuit));
 
 	return inputDetected;

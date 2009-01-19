@@ -87,7 +87,7 @@ bool select_gameplay( )
 				{
 					JE_playSampleNum(ESC);
 					// TODO: NETWORK
-					Console::get() << "\a7Error:\ax Networking not implemented yet." << std::endl;
+					Console::get() << "\a7Error:\ax Networking via menu not implemented yet." << std::endl;
 				} else {
 					JE_playSampleNum(SELECT);
 					JE_fadeBlack(10);

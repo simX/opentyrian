@@ -66,7 +66,7 @@ public:
 		: CVar(name, flags, help), mValue(def), archiveValue(def), defaultValue(def), mValidationFunc(validationFunc)
 	{}
 
-	virtual ~CVarTemplate() {}
+	~CVarTemplate() {}
 
 	T get( ) const { return mValue; }
 

@@ -19,51 +19,88 @@
  */
 #ifndef NETWORK_H
 #define NETWORK_H
-
 #include "opentyr.h"
 
+#include "console/cvar/CVar.h"
 
-static const int PACKET_MAXIMUM = 3;
+#include "SDL_net.h"
 
-struct JE_PacketData
-{
-	int buttons;
-	int xchg, ychg;
-	JE_word randomenemytype;    /* 0=no enemy */
-	int ex, ey;
-	unsigned long sync;
-};
-
-extern unsigned long startTime;
-extern unsigned long frames;
-extern int netPlayers, thisPlayerNum, otherPlayerNum;
+extern int thisPlayerNum;
 extern bool haltGame;
 extern bool netQuit;
-extern bool done;
 extern bool moveOk;
-extern bool netResult;
-extern int gameQuitDelay;
-extern Uint8 outputData[10];
-extern Uint8 inputData[10];
 extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 extern bool yourInGameMenuRequest, inGameMenuRequest;
 extern bool portConfigChange;
-extern int exchangeCount;
-extern bool netSuccess;
 
-extern bool isNetworkGame, isNetworkActive;
+extern bool isNetworkGame;
 
-void JE_initNetwork( void );
+namespace network
+{
+	enum NetworkPackets
+	{
+		PACKET_ACKNOWLEDGE = 0x00,
+		PACKET_KEEP_ALIVE = 0x01,
 
-void JE_exchangePacket( int size );
-void JE_recordPacket( int xchg, int ychg, int xachg, int yachg);
+		PACKET_CONNECT = 0x10, // version, delay, episodes, player_number, name
+		PACKET_DETAILS = 0x11, // episode, difficulty
+
+		PACKET_QUIT = 0x20,
+		PACKET_WAITING = 0x21,
+		PACKET_BUSY = 0x22,
+
+		PACKET_GAME_QUIT = 0x30,
+		PACKET_GAME_PAUSE = 0x31,
+		PACKET_GAME_MENU = 0x32,
+
+		PACKET_STATE_RESEND = 0x40, // state_id
+		PACKET_STATE = 0x41, // <state> (not acknowledged)
+		PACKET_STATE_XOR = 0x42 // <xor state> (not acknowledged)
+	};
+
+	extern int delay;
+
+	extern std::string player_name;
+	extern std::string opponent_name;
+
+	extern UDPpacket *packet_out_temp;
+	extern UDPpacket *packet_in[];
+	extern UDPpacket *packet_out[];
+	extern UDPpacket *packet_state_in[];
+	extern UDPpacket *packet_state_out[];
+
+	void prepare( NetworkPackets type );
+	bool send( int len );
+	bool send_no_ack( int len );
+
+	int check( );
+	int acknowledge( NetworkPackets sync );
+	bool update( );
+
+	bool is_sync( );
+	bool is_alive( );
+	static void keep_alive( )
+	{
+		if (isNetworkGame)
+			check();
+	}
+
+	void state_prepare( );
+	int state_send( );
+	bool state_update( );
+	bool state_is_reset( );
+	void state_reset( );
+
+	int connect( );
+	void tyrian_halt( int err, bool attempt_sync );
+
+	int init( );
+
+	void packet_copy( UDPpacket *dst, UDPpacket *src );
+	void packets_shift_up( UDPpacket **dst, int max_packets );
+	void packets_shift_down( UDPpacket **dst, int max_packets );
+}
+
 void JE_clearSpecialRequests( void );
-
-void JE_updateStream( void );
-void JE_setNetByte( Uint8 send );
-bool JE_scanNetByte( Uint8 scan );
-void JE_syncNet( Uint8 syncByte );
-
-void JE_flushNet( void );
 
 #endif /* NETWORK_H */
