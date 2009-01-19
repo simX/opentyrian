@@ -51,7 +51,7 @@ namespace network
 	static const unsigned int KEEP_ALIVE = 1600; // ticks to wait between keep-alive packets
 	static const unsigned int TIME_OUT = 16000; // ticks to wait before considering connection dead
 
-	int delay; // minimum is 1 + 0
+	unsigned int delay; // minimum is 1 + 0
 
 	static std::string opponent_host;
 	static Uint16 player_port;
@@ -211,7 +211,7 @@ int network::check( )
 			case PACKET_CONNECT:
 				queue_in_sync = SDLNet_Read16(packet_temp->data+2);
 				
-				for (int i = 0; i < PACKET_QUEUE; ++i)
+				for (unsigned int i = 0; i < PACKET_QUEUE; ++i)
 				{
 					if (packet_in[i])
 					{
@@ -499,7 +499,7 @@ void network::state_reset( )
 {
 	last_state_in_sync = last_state_out_sync = 0;
 
-	for (int i = 0; i < PACKET_QUEUE; ++i)
+	for (unsigned int i = 0; i < PACKET_QUEUE; ++i)
 	{
 		if (packet_state_in[i])
 		{
@@ -642,7 +642,7 @@ connect_again:
 
 // display error message
 // TODO: This should probably be separate somewhere else since it seems to useful
-void network::tyrian_halt( int err, bool attempt_sync )
+void network::tyrian_halt( unsigned int err, bool attempt_sync )
 {
 	static const std::string err_msg[] = {
 		"Quitting...",

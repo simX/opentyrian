@@ -58,7 +58,7 @@ namespace network
 		PACKET_STATE_XOR = 0x42 // <xor state> (not acknowledged)
 	};
 
-	extern int delay;
+	extern unsigned int delay;
 
 	extern std::string player_name;
 	extern std::string opponent_name;
@@ -92,7 +92,7 @@ namespace network
 	void state_reset( );
 
 	int connect( );
-	void tyrian_halt( int err, bool attempt_sync );
+	void tyrian_halt( unsigned int err, bool attempt_sync );
 
 	int init( );
 
