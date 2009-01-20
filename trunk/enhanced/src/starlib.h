@@ -19,10 +19,67 @@
  */
 #ifndef STARLIB_H
 #define STARLIB_H
-
 #include "opentyr.h"
 
-void JE_starlib_main( );
-void JE_starlib_init( );
+#include "util.h"
+
+#include "boost/array.hpp"
+#include "boost/function.hpp"
+#include <vector>
+#include <list>
+
+namespace starlib
+{
+
+struct Star
+{
+	int x, y;
+	unsigned int z;
+};
+
+class Pattern
+{
+public:
+	virtual ~Pattern() {};
+	virtual void step() {};
+	virtual Star newStar() = 0;
+};
+
+/**
+ * Draws the colored animated starfield seen in the jukebox.
+ */
+class Starfield
+{
+public:
+	Starfield();
+	void draw();
+
+	void addPattern(boost::function<Pattern*()> factory);
+
+private:
+	static const unsigned int NUM_STARS = 512;
+	boost::array<Star, NUM_STARS> stars;
+
+	unsigned int movementSpeed;
+	Uint8 color;
+
+	typedef std::list<boost::function<Pattern*()>> PatternListType;
+	typedef CircularIter<PatternListType::iterator, PatternListType> IterType;
+
+	Pattern *pattern;
+	PatternListType patternList;
+	IterType patternIter;
+
+	void resetValues();
+	static void drawStar(int x, int y, Uint8 color, Uint8 *surface);
+	Star newStar();
+
+	void changePattern(const IterType& iter);
+	void nextPattern();
+	void prevPattern();
+	void addDefaultPatterns();
+};
+
+}
 
 #endif /* STARLIB_H */

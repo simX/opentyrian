@@ -131,7 +131,7 @@ void JE_jukeboxGo( void )
 	JE_showVGA();
 	JE_updateColorsFast(vga_palette);
 
-	JE_starlib_init();
+	starlib::Starfield starfield;
 
 	quit = false;
 	fade = false;
@@ -178,7 +178,7 @@ void JE_jukeboxGo( void )
 		setdelay(1);
 		service_SDL_events(true);
 
-		JE_starlib_main();
+		starfield.draw();
 
 		if (lastSong != currentJukeboxSong)
 		{

@@ -20,423 +20,130 @@
 #include "opentyr.h"
 #include "starlib.h"
 
-#include "keyboard.h"
-#include "video.h"
+#include "starlib_patterns.h"
 #include "mtrand.h"
+#include "video.h"
 
-#include <ctype.h>
-#include <cmath>
-
-static const int MAX_STARS = 1000;
-static const int MAX_TYPES = 14;
-
-struct JE_StarType
+namespace starlib
 {
-	int spX, spY, spZ;
-	int lastX, lastY;
-};
 
-static JE_StarType star[MAX_STARS];
-
-static int setup;
-static JE_word stepCounter;
-
-static JE_word nsp2;
-static Sint8 nspVar2Inc;
-
-/* JE: new sprite pointer */
-static float nsp;
-static float nspVarInc;
-static float nspVarVarInc;
-
-static JE_word changeTime;
-static bool doChange;
-
-static Sint16 starlib_speed;
-
-static Uint8 pColor;
-
-void JE_resetValues( );
-void JE_changeSetup( int setupType );
-void JE_newStar( int* posX, int* posY );
-
-void JE_starlib_main( )
+Starfield::Starfield() : pattern(0), patternIter(patternList)
 {
-	int off;
-	JE_word i;
-	int tempZ;
-	Uint8 tempCol;
-	JE_StarType *stars;
-	Uint8 *surf;
+	addDefaultPatterns();
+	changePattern(IterType(patternList.begin(), patternList));
 
-	/* ASM starts */
-	/* ***START THE LOOP*** */
-	stars = star;
-	i = MAX_STARS;
+	resetValues();
 
-	/* ***START OF EACH PIXEL*** */
-next_star:
-	off = (stars->lastX)+(stars->lastY)*320;
-
-	/* ***CLEAR PIXEL*** */
-	surf = VGAScreen;
-
-	if (off >= 640 && off < (320*200)-640)
+	foreach (Star& star, stars)
 	{
-		surf[off] = 0; /* Shade Level 0 */
-
-		surf[off-1] = 0; /* Shade Level 1, 2 */
-		surf[off+1] = 0;
-		surf[off-2] = 0;
-		surf[off+2] = 0;
-
-		surf[off-320] = 0;
-		surf[off+320] = 0;
-		surf[off-640] = 0;
-		surf[off+640] = 0;
+		star = pattern->newStar();
+		star.z = mt::rand() % 2000;
 	}
-
-	tempZ = stars->spZ;
-
-	/* Here's the StarType offsets:
-	 *
-	 * SPX   0
-	 * SPY   2
-	 * SPZ   4
-	 * LastX 6
-	 * LastY 8
-	 */
-
-	int tempX = (stars->spX / tempZ) + 160;
-	int tempY = (stars->spY / tempZ) + 100;
-
-	tempZ -= starlib_speed;
-
-	if (tempZ <= 0)
-	{
-		goto new_star;
-	}
-
-	if (tempY == 0 || tempY > 198)
-	{
-		goto new_star;
-	}
-
-	if (tempX > 318 || tempX < 1)
-	{
-		goto new_star;
-	}
-
-	/* Update current star */
-	stars->lastX = tempX;
-	stars->lastY = tempY;
-	stars->spZ = tempZ;
-
-	/* Now, WriteSuperPixel */
-	/* Let's find the location */
-	off = tempX+tempY*320;
-
-	tempCol = pColor+((tempZ >> 4) & 31);
-
-	/* Draw the pixel! */
-	if (off >= 640 && off < (320*200)-640)
-	{
-		surf[off] = tempCol;
-
-		tempCol += 72;
-		surf[off-1] = tempCol;
-		surf[off+1] = tempCol;
-		surf[off-320] = tempCol;
-		surf[off+320] = tempCol;
-
-		tempCol += 72;
-		surf[off-2] = tempCol;
-		surf[off+2] = tempCol;
-		surf[off-640] = tempCol;
-		surf[off+640] = tempCol;
-	}
-
-	goto star_end;
-
-new_star:
-	stars->spZ = 500;
-
-	JE_newStar(&tempX, &tempY);
-
-	stars->spX = tempX;
-	stars->spY = tempY;
-
-star_end:
-	stars++;
-	i--;
-	if (i > 0)
-	{
-		goto next_star;
-	}
-
-	/* ASM ends */
-
-	if (newkey)
-	{
-		switch (toupper(lastkey_char))
-		{
-			case '+':
-				starlib_speed++;
-				break;
-			case '-':
-				starlib_speed--;
-				break;
-			case '1':
-				JE_changeSetup(1);
-				break;
-			case '2':
-				JE_changeSetup(2);
-				break;
-			case '3':
-				JE_changeSetup(3);
-				break;
-			case '4':
-				JE_changeSetup(4);
-				break;
-			case '5':
-				JE_changeSetup(5);
-				break;
-			case '6':
-				JE_changeSetup(6);
-				break;
-			case '7':
-				JE_changeSetup(7);
-				break;
-			case '8':
-				JE_changeSetup(8);
-				break;
-			case '9':
-				JE_changeSetup(9);
-				break;
-			case '0':
-				JE_changeSetup(10);
-				break;
-			case '!':
-				JE_changeSetup(11);
-				break;
-			case '@':
-				JE_changeSetup(12);
-				break;
-			case '#':
-				JE_changeSetup(13);
-				break;
-			case '$':
-				JE_changeSetup(14);
-				break;
-
-			case 'C':
-				JE_resetValues();
-				break;
-			case 'S':
-				nspVarVarInc = (mt::rand()/(float)MT_RAND_MAX) * 0.01f - 0.005f;
-				break;
-			case '[':
-				pColor--;
-				break;
-			case ']':
-				pColor++;
-				break;
-			case '{':
-				pColor -= 72;
-				break;
-			case '}':
-				pColor += 72;
-				break;
-			case '`': /* ` */
-				doChange = !doChange;
-				break;
-			case 'P':
-				wait_noinput(true,false,false);
-				wait_input(true,false,false);
-				break;
-			default:
-				break;
-		}
-	}
-
-	if (doChange)
-	{
-		stepCounter++;
-		if (stepCounter > changeTime)
-		{
-			JE_changeSetup(0);
-		}
-	}
-
-	if ((mt::rand() % 1000) == 1)
-	{
-		nspVarVarInc = (mt::rand()/(float)MT_RAND_MAX) * 0.01f - 0.005f;
-	}
-
-	nspVarInc += nspVarVarInc;
 }
 
-void JE_starlib_init( )
+void Starfield::draw()
 {
-	static bool initialized = false;
+	clear_screen(0);
 
-	if (!initialized)
+	foreach (Star& star, stars)
 	{
-		initialized = true;
-
-		JE_resetValues();
-		JE_changeSetup(2);
-		doChange = true;
-
-		/* RANDOMIZE; */
-		for (int x = 0; x < MAX_STARS; x++)
+		if (star.z <= movementSpeed)
 		{
-			star[x].spX = (mt::rand() % 64000) - 32000;
-			star[x].spY = (mt::rand() % 40000) - 20000;
-			star[x].spZ = x+1;
+			star = newStar();
+		}
+		else
+		{
+			const int scrX = star.x / static_cast<signed>(star.z) + scr_width / 2;
+			const int scrY = star.y / static_cast<signed>(star.z) + scr_height / 2;
+
+			if (scrY == 0 || scrY > scr_height-2 ||
+				scrX > scr_width-2 || scrX < 1)
+			{
+				star = newStar();
+			}
+			else
+			{
+				star.z -= movementSpeed;
+
+				const Uint8 drawColor = color + ((star.z / 16) & 0x1F);
+				drawStar(scrX, scrY, drawColor, VGAScreen);
+			}
 		}
 	}
 }
 
-void JE_resetValues( )
+void Starfield::resetValues()
 {
-	nsp2 = 1;
-	nspVar2Inc = 1;
-	nspVarInc = 0.1f;
-	nspVarVarInc = 0.0001f;
-	nsp = 0;
-	pColor = 32;
-	starlib_speed = 2;
+	movementSpeed = 2;
+	color = 0x20;
+	changePattern(patternIter);
 }
 
-void JE_changeSetup( int setupType )
+void Starfield::drawStar(int x, int y, Uint8 color, Uint8 *surface)
 {
-	stepCounter = 0;
-	changeTime = (mt::rand() % 1000);
+	if (x >= 2 && y >= 2 && x <= scr_width-3 && y <= scr_height-3)
+	{
+		surface[xy2off(x,y)] = color;
 
-	if (setupType > 0)
-	{
-		setup = setupType;
-	} else {
-		setup = mt::rand() % (MAX_TYPES + 1);
-	}
+		color += 72;
+		surface[xy2off(x-1,y)] = color;
+		surface[xy2off(x+1,y)] = color;
+		surface[xy2off(x,y-1)] = color;
+		surface[xy2off(x,y+1)] = color;
 
-	if (setup == 1)
-	{
-		nspVarInc = 0.1f;
-	}
-	if (nspVarInc > 2.2f)
-	{
-		nspVarInc = 0.1f;
+		color += 72;
+		surface[xy2off(x-2,y)] = color;
+		surface[xy2off(x+2,y)] = color;
+		surface[xy2off(x,y-2)] = color;
+		surface[xy2off(x,y+2)] = color;
 	}
 }
 
-void JE_newStar( int* posX, int* posY )
+Star Starfield::newStar()
 {
-	int& tempX = *posX;
-	int& tempY = *posY;
+	Star star = pattern->newStar();
+	star.z = 2000;
 
-	if (setup == 0)
-	{
-		tempX = (mt::rand() % 64000) - 32000;
-		tempY = (mt::rand() % 40000) - 20000;
-	} else {
-		nsp = nsp + nspVarInc; /* YKS: < lol */
-		switch (setup)
-		{
-			case 1:
-				tempX = (int)(sin(nsp / 30) * 20000);
-				tempY = (mt::rand() % 40000) - 20000;
-				break;
-			case 2:
-				tempX = (int)(cos(nsp) * 20000);
-				tempY = (int)(sin(nsp) * 20000);
-				break;
-			case 3:
-				tempX = (int)(cos(nsp * 15) * 100) * ((int)(nsp / 6) % 200);
-				tempY = (int)(sin(nsp * 15) * 100) * ((int)(nsp / 6) % 200);
-				break;
-			case 4:
-				tempX = (int)(sin(nsp / 60) * 20000);
-				tempY = (int)(cos(nsp) * (int)(sin(nsp / 200) * 300) * 100);
-				break;
-			case 5:
-				tempX = (int)(sin(nsp / 2) * 20000);
-				tempY = (int)(cos(nsp) * (int)(sin(nsp / 200) * 300) * 100);
-				break;
-			case 6:
-				tempX = (int)(sin(nsp) * 40000);
-				tempY = (int)(cos(nsp) * 20000);
-				break;
-			case 8:
-				tempX = (int)(sin(nsp / 2) * 40000);
-				tempY = (int)(cos(nsp) * 20000);
-				break;
-			case 7:
-				tempX = (mt::rand() % 65535)-32768;
-				if ((mt::rand() % 2) == 0)
-				{
-					tempY = ((int)(cos(nsp / 80) * 10000) + 15000) - 32768;
-				} else {
-					tempY = (50000 - (int)(cos(nsp / 80) * 13000)) - 32768;
-				}
-				break;
-			case 9:
-				nsp2 += nspVar2Inc;
-				if ((nsp2 == 65535) || (nsp2 == 0))
-				{
-					nspVar2Inc = -nspVar2Inc;
-				}
-				tempX = (int)(cos(sin(nsp2 / 10.) + (nsp / 500)) * 32000);
-				tempY = (int)(sin(cos(nsp2 / 10.) + (nsp / 500)) * 30000);
-				break;
-			case 10:
-				nsp2 += nspVar2Inc;
-				if ((nsp2 == 65535) || (nsp2 == 0))
-				{
-					nspVar2Inc = -nspVar2Inc;
-				}
-				tempX = (int)(cos(sin(nsp2 / 5.) + (nsp / 100)) * 32000);
-				tempY = (int)(sin(cos(nsp2 / 5.) + (nsp / 100)) * 30000);
-				break;;
-			case 11:
-				nsp2 += nspVar2Inc;
-				if ((nsp2 == 65535) || (nsp2 == 0))
-				{
-					nspVar2Inc = -nspVar2Inc;
-				}
-				tempX = (int)(cos(sin(nsp2 / 1000.) + (nsp / 2)) * 32000);
-				tempY = (int)(sin(cos(nsp2 / 1000.) + (nsp / 2)) * 30000);
-				break;
-			case 12:
-				if (nsp != 0)
-				{
-					nsp2 += nspVar2Inc;
-					if ((nsp2 == 65535) || (nsp2 == 0))
-					{
-						nspVar2Inc = -nspVar2Inc;
-					}
-					tempX = (int)(cos(sin(nsp2 / 2.) / (sqrt(ot_abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 32000);
-					tempY = (int)(sin(cos(nsp2 / 2.) / (sqrt(ot_abs(nsp)) / 10. + 1) + (nsp2 / 100.)) * 30000);
-				}
-				break;
-			case 13:
-				if (nsp != 0)
-				{
-					nsp2 += nspVar2Inc;
-					if ((nsp2 == 65535) || (nsp2 == 0))
-					{
-						nspVar2Inc = -nspVar2Inc;
-					}
-					tempX = (int)(cos(sin(nsp2 / 10.) / 2 + (nsp / 20)) * 32000);
-					tempY = (int)(sin(sin(nsp2 / 11.) / 2 + (nsp / 20)) * 30000);
-				}
-				break;
-			case 14:
-				nsp2 += nspVar2Inc;
-				tempX = (int)((sin(nsp) + cos(nsp2 / 1000.) * 3) * 12000);
-				tempY = (int)(cos(nsp) * 10000) + nsp2;
-				break;
-		}
-	}
+	return star;
+}
+
+////
+// Pattern functions
+////
+
+void Starfield::changePattern(const IterType& iter)
+{
+	if (pattern)
+		delete pattern;
+
+	patternIter = iter;
+	pattern = (*iter)();
+}
+
+void Starfield::nextPattern()
+{
+	++patternIter;
+	changePattern(patternIter);
+}
+
+void Starfield::prevPattern()
+{
+	++patternIter;
+	changePattern(patternIter);
+}
+
+void Starfield::addPattern(boost::function<Pattern*()> factory)
+{
+	if (factory)
+		patternList.push_back(factory);
+}
+
+void Starfield::addDefaultPatterns()
+{
+	namespace p = starlib::patterns;
+	using p::create;
+
+	addPattern(create<p::Pattern00>);
+}
+
 }

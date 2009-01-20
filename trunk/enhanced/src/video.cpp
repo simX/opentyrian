@@ -144,7 +144,12 @@ void JE_showVGA( )
 	SDL_Flip(display_surface);
 }
 
-void JE_clr256( )
+/**
+ * Clears entire screen to \p color.
+ *
+ * @param color the color used clear the screen
+ */
+void clear_screen(Uint8 color)
 {
 	memset(VGAScreen, 0, scr_width * scr_height);
 }

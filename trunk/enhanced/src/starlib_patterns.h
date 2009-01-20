@@ -17,42 +17,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef VIDEO_H
-#define VIDEO_H
-
+#ifndef STARLIB_PATTERNS_H
+#define STARLIB_PATTERNS_H
 #include "opentyr.h"
 
-#include "palette.h"
-#include "video_scale.h"
+#include "starlib.h"
 
-#include "SDL.h"
-
-static const unsigned int scr_width = 320;
-static const unsigned int scr_height = 200;
-
-static const unsigned int surface_width = 320;
-static const unsigned int surace_height = 200;
-
-extern bool fullscreen_enabled;
-
-extern const Palette vga_palette;
-
-extern SDL_Surface *display_surface;
-extern Uint8 *VGAScreen, *VGAScreenSeg;
-extern Uint8 *game_screen;
-extern Uint8 *VGAScreen2;
-
-void init_video( );
-void reinit_video( );
-void deinit_video( );
-void JE_showVGA( );
-
-void clear_screen(Uint8 color = 0);
-inline void JE_clr256() { clear_screen(0); }
-
-inline unsigned long xy2off(unsigned int x, unsigned int y)
+namespace starlib { namespace patterns
 {
-	return y*scr_width + x;
-}
+	template<class T> Pattern *create()
+	{
+		return new T;
+	}
 
-#endif // VIDEO_H
+	class Pattern00 : public Pattern
+	{
+	public:
+		Star newStar();
+	};
+}}
+
+#endif // STARLIB_PATTERNS_H

@@ -25,6 +25,7 @@
 
 // C++ Standard headers
 #include <algorithm>
+#include <bitset>
 #include <deque>
 #include <fstream>
 #include <functional>
@@ -33,6 +34,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <queue>
 #include <set>
 #include <sstream>
 #include <stdexcept>
@@ -44,6 +46,7 @@
 #include <cassert>
 #include <cctype>
 #include <cmath>
+#include <cstddef>
 #include <cstring>
 #include <ctime>
 
@@ -65,9 +68,18 @@
 #include "boost/bind.hpp"
 #endif
 
+#include "boost/algorithm/string/join.hpp"
+#include "boost/algorithm/string/trim.hpp"
+#include "boost/array.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp"
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
+#include "boost/foreach.hpp"
+#include "boost/format.hpp"
 #include "boost/function.hpp"
+#include "boost/iterator.hpp"
+#include "boost/lexical_cast.hpp"
+#include "boost/static_assert.hpp"
 
 // SDL header
 #include "SDL.h"

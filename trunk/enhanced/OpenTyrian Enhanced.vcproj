@@ -162,7 +162,6 @@
 				OutputFile="$(OutDir)\tyrian.exe"
 				LinkIncremental="1"
 				GenerateManifest="true"
-				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -421,6 +420,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\starlib_patterns.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\superpixel.h"
 				>
 			</File>
@@ -434,6 +437,10 @@
 			</File>
 			<File
 				RelativePath=".\src\network\UDPPacket.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\util.h"
 				>
 			</File>
 			<File
@@ -687,6 +694,10 @@
 			</File>
 			<File
 				RelativePath=".\src\starlib.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\starlib_patterns.cpp"
 				>
 			</File>
 			<File
