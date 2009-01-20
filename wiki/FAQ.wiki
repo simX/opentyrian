@@ -27,4 +27,4 @@
 
 === Q: How can I contact the developers? ===
 
-*A:* Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC.
+*A:* Pretty much all development discussion happens on #tyrian at [http://freenode.net/ freenode]. If you have any offers for help or suggestions to the port, the preferred way to contact us is via IRC or filling a new issue report on this site.
