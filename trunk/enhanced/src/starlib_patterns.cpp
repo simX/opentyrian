@@ -174,6 +174,104 @@ namespace starlib { namespace patterns
 		time += speed * 0.5f;
 	}
 
+	////
+	// Pattern07
+	////
+	Pattern07::Pattern07()
+		: time(0.f), time2(0), reverse(false)
+	{}
+
+	Star Pattern07::newStar()
+	{
+		Star star = {
+			cos(sin(time2 / 5.f) + (time / 100.f)) * 32000.f,
+			sin(cos(time2 / 5.f) + (time / 100.f)) * 30000.f
+		};
+
+		return star;
+	}
+
+	void Pattern07::step(float speed, float speed2)
+	{
+		time += speed * 0.5f;
+		time2 += speed2 * (reverse ? -1.f : 1.f);
+
+		if (time2 >= 500 || time2 <= 0)
+			reverse = !reverse;
+	}
+
+	////
+	// Pattern08
+	////
+	Pattern08::Pattern08()
+		: time(0.f), time2(1)
+	{}
+
+	Star Pattern08::newStar()
+	{
+		Star star = {
+			cos(sin(time / 1000.f) + (time / 2.1f)) * 32000.f * cos(time2 / 201.f),
+			sin(cos(time / 980.f) + (time / 2.f)) * 30000.f * sin(time2 / 183.f)
+		};
+
+		return star;
+	}
+
+	void Pattern08::step(float speed, float speed2)
+	{
+		time += speed * 0.1f;
+		time2 += speed2;
+	}
+
+	////
+	// Pattern09
+	////
+	Pattern09::Pattern09()
+		: time(0.f), time2(0), reverse(false)
+	{}
+
+	Star Pattern09::newStar()
+	{
+		Star star = {
+			cos(sin(time2 / 2.f) / (sqrt(ot_abs(time)) / 10.f + 1.f) + (time2 / 100.f)) * 32000.f,
+			sin(cos(time2 / 2.f) / (sqrt(ot_abs(time)) / 10.f + 1.f) + (time2 / 100.f)) * 30000.f
+		};
+
+		return star;
+	}
+
+	void Pattern09::step(float speed, float speed2)
+	{
+		time += speed * 0.2f;
+		time2 += speed2 * (reverse ? -1.5f : 1.5f);
+
+		if (time2 >= 2500 || time2 <= 0)
+			reverse = !reverse;
+	}
+
+	////
+	// Pattern10
+	////
+	Pattern10::Pattern10()
+		: time(0.f), time2(0)
+	{}
+
+	Star Pattern10::newStar()
+	{
+		Star star = {
+			(sin(time) + cos(time2 / 1000.f) * 3.f) * 12000.f,
+			cos(time) * 10000.f + sin(time2 / 1123.f) * 10000.f
+		};
+
+		return star;
+	}
+
+	void Pattern10::step(float speed, float speed2)
+	{
+		time += speed * 0.1f;
+		time2 += speed2 * 5.f;
+	}
+
 
 	void addPatterns(Starfield& starfield)
 	{
@@ -184,5 +282,9 @@ namespace starlib { namespace patterns
 		starfield.addPattern(factory<Pattern04>);
 		starfield.addPattern(factory<Pattern05>);
 		starfield.addPattern(factory<Pattern06>);
+		starfield.addPattern(factory<Pattern07>);
+		starfield.addPattern(factory<Pattern08>);
+		starfield.addPattern(factory<Pattern09>);
+		starfield.addPattern(factory<Pattern10>);
 	}
 }}

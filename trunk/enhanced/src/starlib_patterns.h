@@ -101,10 +101,54 @@ namespace starlib { namespace patterns
 		Pattern06();
 		void step(float speed);
 		Star newStar();
-		std::string title() { return "Through The Stargate"; }
+		std::string title() { return "Through the Stargate"; }
 	};
 
-	// More TODO!
+	class Pattern07 : public Pattern
+	{
+		float time;
+		float time2;
+		bool reverse;
+	public:
+		Pattern07();
+		void step(float speed, float speed2);
+		Star newStar();
+		std::string title() { return "Heart-Shaped Space"; }
+	};
+
+	class Pattern08 : public Pattern
+	{
+		float time;
+		float time2;
+	public:
+		Pattern08();
+		void step(float speed, float speed2);
+		Star newStar();
+		std::string title() { return "Magic Dust"; }
+	};
+
+	class Pattern09 : public Pattern
+	{
+		float time;
+		float time2;
+		bool reverse;
+	public:
+		Pattern09();
+		void step(float speed, float speed2);
+		Star newStar();
+		std::string title() { return "Strands of Light"; }
+	};
+
+	class Pattern10 : public Pattern
+	{
+		float time;
+		float time2;
+	public:
+		Pattern10();
+		void step(float speed, float speed2);
+		Star newStar();
+		std::string title() { return "Circle Trail"; }
+	};
 
 	/**
 	 * Adds the default set of Starfield patterns.

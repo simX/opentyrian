@@ -84,7 +84,7 @@ void Starfield::draw()
 		--displayPatternTime;
 	}
 
-	pattern->step(speed);
+	pattern->step(speed, speed2);
 }
 
 void Starfield::handle_input()
@@ -109,6 +109,7 @@ void Starfield::resetValues()
 {
 	movementSpeed = 2;
 	speed = 1.f;
+	speed2 = 1.f;
 	color = 0x20;
 	changePattern(patternIter);
 }

@@ -55,7 +55,9 @@ public:
 	 *
 	 * @param speed Current animation speed multiplier. Use for time based effects.
 	 */
-	virtual void step(float speed) {};
+	virtual void step(float speed) {}
+	/** @see step(float) */
+	virtual void step(float speed, float speed2) { step(speed); }
 
 	/** Called to create a new Star. The \c z component is ignored. */
 	virtual Star newStar() = 0;
@@ -86,12 +88,13 @@ public:
 	void addPattern(boost::function<Pattern*()> factory);
 
 private:
-	static const unsigned int NUM_STARS = 1000;
+	static const unsigned int NUM_STARS = 512;
 	static const unsigned int MESSAGE_TIME = 150;
 	boost::array<Star, NUM_STARS> stars;
 
 	unsigned int movementSpeed;
 	float speed;
+	float speed2;
 	Uint8 color;
 	unsigned int displayPatternTime;
 
