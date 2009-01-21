@@ -25,11 +25,19 @@
 
 namespace starlib { namespace patterns
 {
-	template<class T> Pattern *create()
+	/**
+	 * Returns a new instance of \p T. Intended to be used as a delegate for Starfield::addPattern.
+	 *
+	 * @return a heap allocated instance of \p T.
+	 */
+	template<class T> Pattern *factory()
 	{
 		return new T;
 	}
 
+	/**
+	 * Places stars randomly.
+	 */
 	class Pattern00 : public Pattern
 	{
 	public:

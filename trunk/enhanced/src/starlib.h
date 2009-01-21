@@ -31,17 +31,29 @@
 namespace starlib
 {
 
+/**
+ * Represents a single star in the animation.
+ */
 struct Star
 {
 	int x, y;
+
+	/** Depth. @note The Star is recycled when this reaches 0. */
 	unsigned int z;
 };
 
+/**
+ * Pattern used by Starfield to determine the position of new \link Star Stars\endlink.
+ */
 class Pattern
 {
 public:
 	virtual ~Pattern() {};
+
+	/** Called every frame. */
 	virtual void step() {};
+
+	/** Called to create a new Star. The \c z component is ignored. */
 	virtual Star newStar() = 0;
 };
 
@@ -52,8 +64,15 @@ class Starfield
 {
 public:
 	Starfield();
+
+	/** Draws and updates the animation. */
 	void draw();
 
+	/**
+	 * Adds a Pattern to the list of available patterns.
+	 *
+	 * @param factory the Pattern factory function that will return a new instance of the class. Can be generated using patterns::makeFactory.
+	 */
 	void addPattern(boost::function<Pattern*()> factory);
 
 private:

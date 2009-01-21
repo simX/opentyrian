@@ -51,7 +51,8 @@ public:
 	void deserialize(Uint8 *data);
 	int getPacketSize() const;
 
-	Uint16 magic; ///< Ignored on send
+	/** @note Ignored on send, always 0xFFFF. */
+	Uint16 magic;
 	Uint16 version;
 	Uint8 delay;
 	Uint8 episodes;

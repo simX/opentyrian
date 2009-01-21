@@ -141,9 +141,9 @@ void Starfield::addPattern(boost::function<Pattern*()> factory)
 void Starfield::addDefaultPatterns()
 {
 	namespace p = starlib::patterns;
-	using p::create;
+	using p::factory;
 
-	addPattern(create<p::Pattern00>);
+	addPattern(factory<p::Pattern00>);
 }
 
 }

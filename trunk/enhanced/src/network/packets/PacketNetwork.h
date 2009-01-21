@@ -18,7 +18,7 @@
  */
 
 /**
- * \file PacketNetwork.h Connection maintenance packets.
+ * @file PacketNetwork.h Connection maintenance packets.
  */
 #ifndef NETWORK_PACKETS_PACKETNETWORK_H
 #define NETWORK_PACKETS_PACKETNETWORK_H

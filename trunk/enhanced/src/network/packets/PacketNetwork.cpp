@@ -19,9 +19,9 @@
 #include "opentyr.h"
 #include "PacketNetwork.h"
 
-///////////////////////
-// PacketAcknowledge //
-///////////////////////
+////
+// PacketAcknowledge
+////
 
 PacketAcknowledge::PacketAcknowledge()
 {
@@ -61,9 +61,9 @@ int PacketAcknowledge::getPacketSize() const
 
 
 
-/////////////////
-// PacketNull //
-/////////////////
+////
+// PacketNull
+////
 
 PacketNull::PacketNull()
 {
