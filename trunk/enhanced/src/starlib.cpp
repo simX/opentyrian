@@ -27,11 +27,13 @@
 #include "newshape.h"
 #include "keyboard.h"
 
+#include "boost/format.hpp"
+
 namespace starlib
 {
 
 Starfield::Starfield()
-	: pattern(0), patternIter(patternList), displayPatternTime(0)
+	: pattern(0), patternIter(patternList), messageDisplayTime(0)
 {
 	patterns::addPatterns(*this);
 	changePattern(IterType(patternList.begin(), patternList));
@@ -67,21 +69,11 @@ void Starfield::draw()
 		}
 	}
 
-	if (displayPatternTime > 0)
+	if (messageDisplayTime > 0)
 	{
-		// Do the nice fade-in and fade-outs
-		// TODO: Maybe split out color calculation to separate function?
-		int color;
-		if (displayPatternTime < 6 || displayPatternTime > MESSAGE_TIME-3)
-			color = 11;
-		else if (displayPatternTime < 12 || displayPatternTime > MESSAGE_TIME-6)
-			color = 8;
-		else
-			color = 2;
+		JE_outText(JE_fontCenter(message, TINY_FONT), 4, message, fadeColors(messageDisplayTime, MESSAGE_TIME, 2, 8, 11), 4);
 
-		JE_outText(JE_fontCenter(pattern->title(), TINY_FONT), 4, pattern->title(), color, 4);
-
-		--displayPatternTime;
+		--messageDisplayTime;
 	}
 
 	pattern->step(speed, speed2);
@@ -89,17 +81,35 @@ void Starfield::draw()
 
 void Starfield::handle_input()
 {
+	static boost::format speed_format("Speed %1%: %|2$.2f|");
+
 	if (newkey)
 	{
 		switch (lastkey_sym)
 		{
 		case SDLK_PAGEDOWN:
 			nextPattern();
-			displayPatternTime = MESSAGE_TIME;
+			displayMessage(pattern->title(), "patternName");
 			break;
 		case SDLK_PAGEUP:
 			prevPattern();
-			displayPatternTime = MESSAGE_TIME;
+			displayMessage(pattern->title(), "patternName");
+			break;
+		case SDLK_END:
+			speed += 0.05f;
+			displayMessage((speed_format % 1 % speed).str(), "speed1");
+			break;
+		case SDLK_DELETE:
+			speed -= 0.05f;
+			displayMessage((speed_format % 1 % speed).str(), "speed1");
+			break;
+		case SDLK_HOME:
+			speed2 += 0.05f;
+			displayMessage((speed_format % 2 % speed2).str(), "speed2");
+			break;
+		case SDLK_INSERT:
+			speed2 -= 0.05f;
+			displayMessage((speed_format % 2 % speed2).str(), "speed2");
 			break;
 		}
 	}
@@ -171,6 +181,30 @@ void Starfield::addPattern(boost::function<Pattern*()> factory)
 {
 	if (factory)
 		patternList.push_back(factory);
+}
+
+void Starfield::displayMessage(const std::string& message, const std::string& tag)
+{
+	this->message = message;
+
+	// Fade in if message is hidden or tag is different.
+	bool fade_in = messageDisplayTime == 0 || tag != messageTag;
+	unsigned int dispTime = MESSAGE_TIME - (fade_in ? 0 : 6);
+
+	if (messageDisplayTime < dispTime)
+		messageDisplayTime = MESSAGE_TIME - (fade_in ? 0 : 6);
+
+	messageTag = tag;
+}
+
+int Starfield::fadeColors(unsigned int current, unsigned int max, int color1, int color2, int color3)
+{
+	if (current < 6 || current > max-3)
+		return color3;
+	else if (current < 12 || current > max-6)
+		return color2;
+	else
+		return color1;
 }
 
 }

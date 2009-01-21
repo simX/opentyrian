@@ -89,29 +89,40 @@ public:
 
 private:
 	static const unsigned int NUM_STARS = 512;
-	static const unsigned int MESSAGE_TIME = 150;
-	boost::array<Star, NUM_STARS> stars;
 
+	boost::array<Star, NUM_STARS> stars;
 	unsigned int movementSpeed;
 	float speed;
 	float speed2;
 	Uint8 color;
-	unsigned int displayPatternTime;
-
-	typedef std::list<boost::function<Pattern*()>> PatternListType;
-	typedef CircularIter<PatternListType::iterator, PatternListType> IterType;
-
-	Pattern *pattern;
-	PatternListType patternList;
-	IterType patternIter;
 
 	void resetValues();
 	static void drawStar(int x, int y, Uint8 color, Uint8 *surface);
 	Star newStar();
 
+	//////////
+
+	typedef std::list<boost::function<Pattern*()>> PatternListType;
+	typedef CircularIter<PatternListType::iterator, PatternListType> IterType;
+
 	void changePattern(const IterType& iter);
 	void nextPattern();
 	void prevPattern();
+
+	Pattern *pattern;
+	PatternListType patternList;
+	IterType patternIter;
+
+	//////////
+
+	static const unsigned int MESSAGE_TIME = 150;
+
+	unsigned int messageDisplayTime;
+	std::string message;
+	std::string messageTag;
+
+	void displayMessage(const std::string& message, const std::string& tag);
+	static int fadeColors(unsigned int current, unsigned int max, int color1, int color2, int color3);
 };
 
 }
