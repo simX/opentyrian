@@ -23,21 +23,25 @@
 #include "starlib_patterns.h"
 #include "mtrand.h"
 #include "video.h"
+#include "fonthand.h"
+#include "newshape.h"
+#include "keyboard.h"
 
 namespace starlib
 {
 
-Starfield::Starfield() : pattern(0), patternIter(patternList)
+Starfield::Starfield()
+	: pattern(0), patternIter(patternList), displayPatternTime(0)
 {
-	addDefaultPatterns();
+	patterns::addPatterns(*this);
 	changePattern(IterType(patternList.begin(), patternList));
 
 	resetValues();
 
-	foreach (Star& star, stars)
+	for (unsigned int i = 0; i < stars.size(); ++i)
 	{
-		star = pattern->newStar();
-		star.z = mt::rand() % 2000;
+		stars[i] = pattern->newStar();
+		stars[i].z = i * stars.size() / 500;
 	}
 }
 
@@ -55,19 +59,48 @@ void Starfield::draw()
 		{
 			const int scrX = star.x / static_cast<signed>(star.z) + scr_width / 2;
 			const int scrY = star.y / static_cast<signed>(star.z) + scr_height / 2;
+			const Uint8 drawColor = color + ((star.z / 16) & 0x1F);
 
-			if (scrY == 0 || scrY > scr_height-2 ||
-				scrX > scr_width-2 || scrX < 1)
-			{
-				star = newStar();
-			}
-			else
-			{
-				star.z -= movementSpeed;
+			drawStar(scrX, scrY, drawColor, VGAScreen);
 
-				const Uint8 drawColor = color + ((star.z / 16) & 0x1F);
-				drawStar(scrX, scrY, drawColor, VGAScreen);
-			}
+			star.z -= movementSpeed;
+		}
+	}
+
+	if (displayPatternTime > 0)
+	{
+		// Do the nice fade-in and fade-outs
+		// TODO: Maybe split out color calculation to separate function?
+		int color;
+		if (displayPatternTime < 6 || displayPatternTime > MESSAGE_TIME-3)
+			color = 11;
+		else if (displayPatternTime < 12 || displayPatternTime > MESSAGE_TIME-6)
+			color = 8;
+		else
+			color = 2;
+
+		JE_outText(JE_fontCenter(pattern->title(), TINY_FONT), 4, pattern->title(), color, 4);
+
+		--displayPatternTime;
+	}
+
+	pattern->step(speed);
+}
+
+void Starfield::handle_input()
+{
+	if (newkey)
+	{
+		switch (lastkey_sym)
+		{
+		case SDLK_PAGEDOWN:
+			nextPattern();
+			displayPatternTime = MESSAGE_TIME;
+			break;
+		case SDLK_PAGEUP:
+			prevPattern();
+			displayPatternTime = MESSAGE_TIME;
+			break;
 		}
 	}
 }
@@ -75,6 +108,7 @@ void Starfield::draw()
 void Starfield::resetValues()
 {
 	movementSpeed = 2;
+	speed = 1.f;
 	color = 0x20;
 	changePattern(patternIter);
 }
@@ -102,7 +136,7 @@ void Starfield::drawStar(int x, int y, Uint8 color, Uint8 *surface)
 Star Starfield::newStar()
 {
 	Star star = pattern->newStar();
-	star.z = 2000;
+	star.z = 500;
 
 	return star;
 }
@@ -128,7 +162,7 @@ void Starfield::nextPattern()
 
 void Starfield::prevPattern()
 {
-	++patternIter;
+	--patternIter;
 	changePattern(patternIter);
 }
 
@@ -136,14 +170,6 @@ void Starfield::addPattern(boost::function<Pattern*()> factory)
 {
 	if (factory)
 		patternList.push_back(factory);
-}
-
-void Starfield::addDefaultPatterns()
-{
-	namespace p = starlib::patterns;
-	using p::factory;
-
-	addPattern(factory<p::Pattern00>);
 }
 
 }

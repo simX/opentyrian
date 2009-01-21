@@ -23,6 +23,8 @@
 
 #include "starlib.h"
 
+#include <string>
+
 namespace starlib { namespace patterns
 {
 	/**
@@ -35,14 +37,81 @@ namespace starlib { namespace patterns
 		return new T;
 	}
 
-	/**
-	 * Places stars randomly.
-	 */
 	class Pattern00 : public Pattern
 	{
 	public:
 		Star newStar();
+		std::string title() { return "Starfield"; }
 	};
+
+	class Pattern01 : public Pattern
+	{
+		float time;
+	public:
+		Pattern01();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Horizontal Wave"; }
+	};
+
+	class Pattern02 : public Pattern
+	{
+		float time;
+	public:
+		Pattern02();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Star Helix"; }
+	};
+
+	class Pattern03 : public Pattern
+	{
+		float time;
+	public:
+		Pattern03();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Wormhole"; }
+	};
+
+	class Pattern04 : public Pattern
+	{
+		float time;
+	public:
+		Pattern04();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Figure 8"; }
+	};
+
+	class Pattern05 : public Pattern
+	{
+		float time;
+	public:
+		Pattern05();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Light Valley"; }
+	};
+
+	class Pattern06 : public Pattern
+	{
+		float time;
+	public:
+		Pattern06();
+		void step(float speed);
+		Star newStar();
+		std::string title() { return "Through The Stargate"; }
+	};
+
+	// More TODO!
+
+	/**
+	 * Adds the default set of Starfield patterns.
+	 *
+	 * @param starfield the Starfield instance to add the patterns to.
+	 */
+	extern void addPatterns(Starfield& starfield);
 }}
 
 #endif // STARLIB_PATTERNS_H

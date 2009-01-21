@@ -27,6 +27,7 @@
 #include "boost/function.hpp"
 #include <vector>
 #include <list>
+#include <string>
 
 namespace starlib
 {
@@ -50,11 +51,17 @@ class Pattern
 public:
 	virtual ~Pattern() {};
 
-	/** Called every frame. */
-	virtual void step() {};
+	/** Called every frame.
+	 *
+	 * @param speed Current animation speed multiplier. Use for time based effects.
+	 */
+	virtual void step(float speed) {};
 
 	/** Called to create a new Star. The \c z component is ignored. */
 	virtual Star newStar() = 0;
+
+	/** Called to get the name of the current pattern. This name is displayed on the screen when the pattern changes. */
+	virtual std::string title() = 0;
 };
 
 /**
@@ -68,6 +75,9 @@ public:
 	/** Draws and updates the animation. */
 	void draw();
 
+	/** Handles keyboard input. */
+	void handle_input();
+
 	/**
 	 * Adds a Pattern to the list of available patterns.
 	 *
@@ -76,11 +86,14 @@ public:
 	void addPattern(boost::function<Pattern*()> factory);
 
 private:
-	static const unsigned int NUM_STARS = 512;
+	static const unsigned int NUM_STARS = 1000;
+	static const unsigned int MESSAGE_TIME = 150;
 	boost::array<Star, NUM_STARS> stars;
 
 	unsigned int movementSpeed;
+	float speed;
 	Uint8 color;
+	unsigned int displayPatternTime;
 
 	typedef std::list<boost::function<Pattern*()>> PatternListType;
 	typedef CircularIter<PatternListType::iterator, PatternListType> IterType;
@@ -96,7 +109,6 @@ private:
 	void changePattern(const IterType& iter);
 	void nextPattern();
 	void prevPattern();
-	void addDefaultPatterns();
 };
 
 }

@@ -263,6 +263,8 @@ void JE_jukeboxGo( void )
 			}
 		}
 
+		starfield.handle_input();
+
 		if (newkey) {
 			JE_newSpeed();
 			switch (lastkey_sym)

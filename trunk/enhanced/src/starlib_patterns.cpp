@@ -24,6 +24,9 @@
 
 namespace starlib { namespace patterns
 {
+	////
+	// Pattern00
+	////
 	Star Pattern00::newStar()
 	{
 		Star star = {
@@ -32,5 +35,152 @@ namespace starlib { namespace patterns
 		};
 
 		return star;
+	}
+
+	////
+	// Pattern01
+	////
+	Pattern01::Pattern01()
+		: time(0.f)
+	{}
+
+	Star Pattern01::newStar()
+	{
+		Star star = {
+			sin(time / 30.f) * 20000,
+			mt::rand() % 40000 - 20000
+		};
+
+		return star;
+	}
+
+	void Pattern01::step(float speed)
+	{
+		time += speed;
+	}
+
+	////
+	// Pattern02
+	////
+	Pattern02::Pattern02()
+		: time(0.f)
+	{}
+
+	Star Pattern02::newStar()
+	{
+		Star star = {
+			cos(time) * 20000.f,
+			sin(time) * 20000.f
+		};
+
+		return star;
+	}
+
+	void Pattern02::step(float speed)
+	{
+		time += speed * 0.2f;
+	}
+
+	////
+	// Pattern03
+	////
+	Pattern03::Pattern03()
+		: time(0.f)
+	{}
+
+	Star Pattern03::newStar()
+	{
+		Star star = {
+			(cos(time * 15.f) * 100.f) * (int(time / 6.f) % 200),
+			(sin(time * 15.f) * 100.f) * (int(time / 6.f) % 200)
+		};
+
+		return star;
+	}
+
+	void Pattern03::step(float speed)
+	{
+		time += speed;
+	}
+
+	////
+	// Pattern04
+	////
+	Pattern04::Pattern04()
+		: time(0.f)
+	{}
+
+	Star Pattern04::newStar()
+	{
+		Star star = {
+			sin(time) * cos(time * 1.1f) * 20000.f,
+			cos(time) * int(sin(time / 200.f) * 300.f) * 100
+		};
+
+		return star;
+	}
+
+	void Pattern04::step(float speed)
+	{
+		time += speed * 0.1f;
+	}
+
+	////
+	// Pattern05
+	////
+	Pattern05::Pattern05()
+		: time(0.f)
+	{}
+
+	Star Pattern05::newStar()
+	{
+		Star star = {
+			sin(time / 2.f) * 20000.f,
+			cos(time) * int(sin(time / 200.f) * 300.f) * 100
+		};
+
+		return star;
+	}
+
+	void Pattern05::step(float speed)
+	{
+		time += speed * 0.1f;
+	}
+
+	////
+	// Pattern06
+	////
+	Pattern06::Pattern06()
+		: time(0.f)
+	{}
+
+	Star Pattern06::newStar()
+	{
+		Star star = {
+			(mt::rand() % 65535) - 32768,
+			(mt::rand() % 2 == 0 ?
+				cos(time / 80.f) * 10000.f + 15000.f :
+				50000.f - cos(time / 80.f) * 13000.f
+			) - 32768.f
+		};
+
+		return star;
+	}
+
+	void Pattern06::step(float speed)
+	{
+		time += speed * 0.5f;
+	}
+
+
+	void addPatterns(Starfield& starfield)
+	{
+		starfield.addPattern(factory<Pattern00>);
+		starfield.addPattern(factory<Pattern01>);
+		starfield.addPattern(factory<Pattern02>);
+		starfield.addPattern(factory<Pattern03>);
+		starfield.addPattern(factory<Pattern04>);
+		starfield.addPattern(factory<Pattern05>);
+		starfield.addPattern(factory<Pattern06>);
 	}
 }}
