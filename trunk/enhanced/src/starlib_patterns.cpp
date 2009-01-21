@@ -22,6 +22,8 @@
 
 #include "mtrand.h"
 
+#include <cmath>
+
 namespace starlib { namespace patterns
 {
 	////
