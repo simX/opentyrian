@@ -123,6 +123,14 @@ private:
 
 	void displayMessage(const std::string& message, const std::string& tag);
 	static int fadeColors(unsigned int current, unsigned int max, int color1, int color2, int color3);
+
+	//////////
+
+	std::vector<std::string> helpText;
+	bool showHelp;
+
+	void loadHelp();
+	void drawHelp();
 };
 
 }

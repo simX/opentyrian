@@ -1,0 +1,8 @@
+-----Jukebox Help-----
+
+~Page Down~: Next pattern
+~Page Up~: Previous pattern
+~End~: Increase speed 1
+~Delete~: Decrease speed 1
+~Home~: Increase speed 2
+~Insert~: Decrease speed 2

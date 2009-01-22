@@ -26,18 +26,21 @@
 #include "fonthand.h"
 #include "newshape.h"
 #include "keyboard.h"
+#include "Filesystem.h"
 
 #include "boost/format.hpp"
+#include <fstream>
 
 namespace starlib
 {
 
 Starfield::Starfield()
-	: pattern(0), patternIter(patternList), messageDisplayTime(0)
+	: pattern(0), patternIter(patternList), messageDisplayTime(0), showHelp(false)
 {
+	loadHelp();
 	patterns::addPatterns(*this);
-	changePattern(IterType(patternList.begin(), patternList));
 
+	changePattern(IterType(patternList.begin(), patternList));
 	resetValues();
 
 	for (unsigned int i = 0; i < stars.size(); ++i)
@@ -67,6 +70,14 @@ void Starfield::draw()
 
 			star.z -= movementSpeed;
 		}
+	}
+
+	if (!helpText.empty())
+	{
+		if (showHelp)
+			drawHelp();
+		else
+			JE_outText(4, 4, "F1: Help", 1, 0);
 	}
 
 	if (messageDisplayTime > 0)
@@ -110,6 +121,9 @@ void Starfield::handle_input()
 		case SDLK_INSERT:
 			speed2 -= 0.05f;
 			displayMessage((speed_format % 2 % speed2).str(), "speed2");
+			break;
+		case SDLK_F1:
+			showHelp = !showHelp;
 			break;
 		}
 	}
@@ -205,6 +219,42 @@ int Starfield::fadeColors(unsigned int current, unsigned int max, int color1, in
 		return color2;
 	else
 		return color1;
+}
+
+void Starfield::loadHelp()
+{
+	static const char *HELP_FILE = "jukebox_help.txt";
+
+	if (!helpText.empty())
+		return;
+
+	std::fstream f;
+	try
+	{
+		Filesystem::get().openDatafile(f, HELP_FILE);
+	}
+	catch (Filesystem::FileOpenErrorException&)
+	{
+		Console::get() << "\a7Error:\ax Failed to open file " << HELP_FILE << ". Jukebox help won't be available." << std::endl;
+		return;
+	}
+
+	std::string line;
+	while(getline(f, line))
+	{
+		helpText.push_back(line);
+	}
+}
+
+void Starfield::drawHelp()
+{
+	unsigned int y = 4;
+
+	foreach (const std::string& line, helpText)
+	{
+		JE_outText(4, y, line, 1, 4);
+		y += 8;
+	}
 }
 
 }

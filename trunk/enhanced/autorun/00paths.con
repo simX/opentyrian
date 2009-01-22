@@ -10,3 +10,4 @@ set cfg_use_home false
 
 # Here you can add the paths the game searches to find it's datafiles.
 add_search_path "data"
+add_search_path "opentyr-data"
