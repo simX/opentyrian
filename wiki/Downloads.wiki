@@ -1,0 +1,19 @@
+#summary OpenTyrian download links
+
+== Classic ==
+=== Windows ===
+  * [http://camanis.net/opentyrian/builds/opentyrian-w32-latest.php latest Win32 OpenTyrian Classic release build]
+  * [http://www.libsdl.org/release/SDL-1.2.13-win32.zip SDL]
+  * [http://www.libsdl.org/projects/SDL_net/release/SDL_net-1.2.7-win32.zip SDL_net]
+  * (optional) [http://camanis.net/opentyrian/builds/opentyrian-w32-latest-debug.php latest Win32 OpenTyrian Classic debug build]
+=== Mac ===
+  * [http://www.uni-bonn.de/~bcsauer/tyrian/OpenTyrian.dmg latest Mac OpenTyrian build]
+
+== Enhanced ==
+=== Windows ===
+  * [http://camanis.net/opentyrian/builds/opentyrian-enhanced-w32-latest.php latest Win32 OpenTyrian Enhanced release build]
+  * [http://camanis.net/opentyrian/builds/MSVC9runtime.zip MSVC9 runtime libraries]
+  * [http://www.libsdl.org/release/SDL-1.2.13-win32.zip SDL]
+  * [http://www.libsdl.org/projects/SDL_net/release/SDL_net-1.2.7-win32.zip SDL_net]
+  * (optional) [http://camanis.net/opentyrian/builds/opentyrian-enhanced-w32-latest-debug.php latest Win32 OpenTyrian Enhanced release build]
+
