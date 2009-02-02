@@ -292,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\itemscreen.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\joystick.h"
 				>
 			</File>
@@ -561,6 +565,10 @@
 			</File>
 			<File
 				RelativePath=".\src\HighScores.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\itemscreen.cpp"
 				>
 			</File>
 			<File

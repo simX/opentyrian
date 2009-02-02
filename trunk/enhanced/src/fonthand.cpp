@@ -41,7 +41,7 @@ const unsigned char fontMap[136] = /* [33..168] */
 
 /* shape constants included in newshape.h */
 
-int defaultBrightness = -3;
+const int defaultBrightness = -3;
 int textGlowFont, textGlowBrightness = 6;
 
 bool levelWarningDisplay;

@@ -29,10 +29,7 @@
 
 extern int constantLastX;
 extern JE_word textErase;
-extern JE_word upgradeCost;
-extern JE_word downgradeCost;
 extern bool performSave;
-extern bool jumpSection;
 extern bool useLastBank;
 extern bool loadedMainShapeTables;
 
@@ -59,7 +56,6 @@ void JE_readDemoKeys( void );
 void JE_SFCodes( int playerNum_, int PX_, int PY_, int mouseX_, int mouseY_, JE_PItemsType pItems_ );
 
 JE_word JE_powerLevelCost( JE_word base, int level );
-unsigned long JE_getCost( int itemType, JE_word itemNum );
 unsigned int JE_getValue( int itemType, JE_word itemNum );
 unsigned long JE_totalScore( unsigned long score, JE_PItemsType pitems );
 

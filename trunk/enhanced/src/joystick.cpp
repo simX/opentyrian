@@ -49,7 +49,6 @@ Sint16 lastJoyXd, lastJoyYd;
 int joystickError;
 bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 bool joystick_installed = false;
-JE_word joystickWait, joystickWaitMax;
 
 /*int SJoyCD;*/ /*NortVars anybutton check - problems with checking too fast*/
 
@@ -165,22 +164,11 @@ bool JE_nextJoystickCheck( void )
 	JE_joystick2();
 	if (joystickInput)
 	{
-		if (joystickWait > 0)
-			joystickWait--;
-		
 		for (unsigned int i = 0; i < COUNTOF(joyButton); i++)
 		{
 			if (joyButton[i])
 				return true;
 		}
-		
-		if (joystickWait == 0)
-		{
-			joystickWait = joystickWaitMax;
-			return true;
-		}
-	} else {
-		joystickWait = 0;
 	}
 	return false;
 }

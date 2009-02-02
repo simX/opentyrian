@@ -140,8 +140,6 @@ void JE_jukeboxGo( void )
 	tempVolume = CVars::snd_music_vol;
 	youStopped = false;
 
-	JE_wipeKey();
-
 	do
 	{
 		tempScreenSeg = VGAScreenSeg;
@@ -236,7 +234,6 @@ void JE_jukeboxGo( void )
 		if (JE_mousePosition(&tempX, &tempY) > 0 || button[0])
 		{
 			quit = true;
-			JE_wipeKey();
 		}
 		
 		if (joystickInput)

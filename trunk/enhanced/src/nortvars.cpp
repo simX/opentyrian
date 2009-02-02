@@ -385,11 +385,6 @@ void JE_barDrawDirect( JE_word x, JE_word y, JE_word res, JE_word col, JE_word a
 	}
 }
 
-void JE_wipeKey( void )
-{
-	// /!\ Doesn't seems to affect anything.
-}
-
 JE_word JE_mousePosition( JE_word *mouseX, JE_word *mouseY )
 {
 	service_SDL_events(false);

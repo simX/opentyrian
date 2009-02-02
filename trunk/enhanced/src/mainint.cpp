@@ -63,10 +63,8 @@ const int topicStart[TOPICS] = { 0, 1, 2, 3, 7, 255 };
 
 int constantLastX;
 JE_word textErase;
-JE_word upgradeCost;
-JE_word downgradeCost;
 bool performSave;
-bool jumpSection;
+
 bool useLastBank; /* See if I want to use the last 16 colors for DisplayText */
 bool loadedMainShapeTables = false;
 
@@ -216,8 +214,6 @@ void JE_helpSystem( int startTopic )
 
 	memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 
-	joystickWaitMax = 120; joystickWait = 0;
-
 	do
 	{
 		memcpy(VGAScreen, VGAScreen2, scr_width * scr_height);
@@ -254,7 +250,6 @@ void JE_helpSystem( int startTopic )
 				{
 					menu = TOPICS;
 				}
-				joystickWaitMax = 120; joystickWait = 0;
 				JE_dString(JE_fontCenter(topicName[0], FONT_SHAPES), 30, topicName[0], FONT_SHAPES);
 
 				do
@@ -309,7 +304,6 @@ void JE_helpSystem( int startTopic )
 					JE_playSampleNum(CLICK);
 				}
 
-				joystickWaitMax = 120; joystickWait = 80;
 				break;
 			case 1: /* One-Player Menu */
 				JE_HBox(10,  20,  2, 60);
@@ -516,39 +510,6 @@ JE_word JE_powerLevelCost( JE_word base, int level )
 	}
 
 	return tempCost;
-}
-
-unsigned long JE_getCost( int itemType, JE_word itemNum )
-{
-	switch (itemType)
-	{
-		case 2:
-			if (itemNum > 90)
-			{
-				tempW2 = 100;
-			} else {
-				tempW2 = ships[itemNum].cost;
-			}
-			break;
-		case 3:
-		case 4:
-			tempW2 = weaponPort[itemNum].cost;
-			downgradeCost = JE_powerLevelCost(tempW2, portPower[itemType-3]-1);
-			upgradeCost = JE_powerLevelCost(tempW2, portPower[itemType-3]);
-			break;
-		case 5:
-			tempW2 = shields[itemNum].cost;
-			break;
-		case 6:
-			tempW2 = powerSys[itemNum].cost;
-			break;
-		case 7:
-		case 8:
-			tempW2 = options[itemNum].cost;
-			break;
-	}
-
-	return tempW2;
 }
 
 void JE_loadScreen( void )
@@ -839,7 +800,6 @@ bool JE_nextEpisode( void )
 		JE_showVGA();
 		JE_fadeColor(15);
 		
-		JE_wipeKey();
 		if (!CVars::ch_constant_play)
 		{
 			do
@@ -1185,7 +1145,6 @@ bool JE_inGameSetup( void )
 
 	tempScreenSeg = VGAScreenSeg; /* <MXD> ? */
 	JE_clearKeyboard();
-	JE_wipeKey();
 	
 	quit = false;
 	sel = 1;
@@ -1379,7 +1338,6 @@ void JE_inGameHelp( void )
 	
 	tempScreenSeg = VGAScreenSeg;
 	JE_clearKeyboard();
-	JE_wipeKey();
 	
 	JE_barShade(1, 1, 262, 182); /*Main Box*/
 	JE_barShade(3, 3, 260, 180);
@@ -2111,7 +2069,6 @@ void JE_endLevelAni( void )
 	memcpy(pItemsBack2, pItems, sizeof(pItemsBack2));
 	lastLevelName = levelName;
 
-	JE_wipeKey();
 	frameCountMax = 4;
 	textGlowFont = SMALL_FONT_SHAPES;
 	
@@ -2236,15 +2193,6 @@ void JE_endLevelAni( void )
 
 	JE_fadeBlack(15);
 	JE_clr256();
-}
-
-void JE_drawCube( JE_word x, JE_word y, int filter, int brightness )
-{
-	JE_newDrawCShapeDarken(shapeArray[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
-	  shapeY[OPTION_SHAPES][26 - 1], x + 4, y + 4);
-	JE_newDrawCShapeDarken(shapeArray[OPTION_SHAPES][26-1], shapeX[OPTION_SHAPES][26-1],
-	  shapeY[OPTION_SHAPES][26 - 1], x + 3, y + 3);
-	JE_newDrawCShapeAdjustNum(OPTION_SHAPES, 26, x, y, filter, brightness);
 }
 
 void JE_handleChat( void )

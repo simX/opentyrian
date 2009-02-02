@@ -31,7 +31,6 @@ static const int TRICK = 3;
 static const int NO_SHADE = 255;
 
 extern const unsigned char fontMap[136];
-extern int defaultBrightness;
 extern int textGlowFont, textGlowBrightness;
 extern bool levelWarningDisplay;
 extern int levelWarningLines;

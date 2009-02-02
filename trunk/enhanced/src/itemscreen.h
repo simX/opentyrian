@@ -1,6 +1,5 @@
-/* vim: set noet:
- *
- * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
+/*
+ * OpenTyrian Classic: A modern cross-platform port of Tyrian
  * Copyright (C) 2007  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
@@ -17,13 +16,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#ifndef TYRIAN2_H
-#define TYRIAN2_H
+#ifndef ITEMSCREEN_H
+#define ITEMSCREEN_H
 #include "opentyr.h"
 
-extern bool quit;
-extern bool jumpSection;
+void JE_itemScreen( void );
 
-void JE_main( void );
+extern int songBuy;
+extern int itemAvail[9][10];
+extern int itemAvailMax[9];
 
-#endif /* TYRIAN2_H */
+#endif // ITEMSCREEN_H

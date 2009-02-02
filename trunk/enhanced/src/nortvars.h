@@ -60,7 +60,6 @@ void JE_dBar4( JE_word x, JE_word y, JE_word num, JE_word col );
 void JE_barDraw( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
 void JE_barDrawShadow( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
 void JE_barDrawDirect( JE_word x, JE_word y, JE_word res, JE_word col, JE_word amt, JE_word xsize, JE_word ysize );
-void JE_wipeKey( void );
 void JE_drawANSI( char *ansiscreen );
 
 void JE_drawShape2( int x, int y, int s, Uint8 *shape );

@@ -41,7 +41,6 @@ extern Sint16 joyX, joyY;
 extern int joystickError;
 extern bool joystickUp, joystickDown, joystickLeft, joystickRight, joystickInput;
 extern bool joystick_installed;
-extern JE_word joystickWait, joystickWaitMax;
 
 void JE_joystick1( void ); /*procedure to get JoyX, JoyY, Button1, Button2 of Joystick 1*/
 void JE_joystick2( void );
