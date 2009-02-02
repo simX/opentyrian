@@ -25,6 +25,7 @@
 
 #include "boost/bind.hpp"
 #include "boost/function.hpp"
+#include <sstream>
 
 template<class T> T rangeCheck( const T& val, T low, T hi )
 {
