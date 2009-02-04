@@ -20,30 +20,34 @@
 
 #include "svn_rev_def.h"
 
-#include <string>
 #include "boost/lexical_cast.hpp"
+#include <string>
+#include <sstream>
 
 #ifdef HAVE_SVN_REV
 namespace {
-	inline std::string get_svn_rev_internal(unsigned int rev)
+	inline unsigned int get_svn_rev_internal(unsigned int rev)
 	{
-		return boost::lexical_cast<std::string>(rev);
+		return rev;
 	}
 
-	inline std::string get_svn_rev_internal(const char* rev)
+	inline unsigned int get_svn_rev_internal(const char* rev)
 	{
-		return std::string(rev);
+		std::istringstream s(rev);
+		unsigned int tmp = 0;
+		s >> tmp;
+		return tmp;
 	}
 }
 
 inline unsigned int get_svn_rev_int()
 {
-	return boost::lexical_cast<unsigned int>(get_svn_rev_internal(SVN_REV));
+	return get_svn_rev_internal(SVN_REV);
 }
 
 inline std::string get_svn_rev_str()
 {
-	return get_svn_rev_internal(SVN_REV);
+	return boost::lexical_cast<std::string>(get_svn_rev_internal(SVN_REV));
 }
 #else
 inline unsigned int get_svn_rev_int()
