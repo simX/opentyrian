@@ -35,6 +35,12 @@ NetManager::NetManager()
 {
 	Console::get() << "Initializing network..." << std::endl;
 
+	{
+		network_version = 0; // This will be the default if SVN_REV is invalid.
+		std::istringstream s(SVN_REV);
+		s >> network_version;
+	}
+
 	if (SDLNet_Init() == -1)
 	{
 		Console::get() << "\a7Error:\ax Failed to initialized SDL_net: " << SDLNet_GetError() <<  std::endl;
@@ -131,7 +137,7 @@ void NetManager::connect()
 		}
 
 		PacketConnect packet;
-		packet.version = NETWORK_VERSION;
+		packet.version = network_version;
 		packet.delay = networkDelay;
 		packet.episodes = localAvailEpisodes.to_ulong();
 		packet.player = localPlayerNum;
@@ -139,6 +145,7 @@ void NetManager::connect()
 		sendPacket(packet);
 
 		// TODO Stuff
+		// TODO Ignore version if it's 0
 	}
 
 	connected = true;

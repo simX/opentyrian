@@ -63,7 +63,7 @@ public:
 		{}
 	};
 
-	static const Uint16 NETWORK_VERSION = SVN_REV;
+	Uint16 network_version;
 
 	NetManager();
 
