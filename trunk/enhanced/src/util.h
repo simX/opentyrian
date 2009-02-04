@@ -58,7 +58,7 @@ private:
 	}
 
 public:
-	explicit CircularIter(Container& container) : CircularIter::iterator_adaptor_(Container::iterator()), container(&container)
+	explicit CircularIter(Container& container) : CircularIter::iterator_adaptor_(typename Container::iterator()), container(&container)
 	{}
 
 	CircularIter(Iter i, Container& container) : CircularIter::iterator_adaptor_(i), container(&container)

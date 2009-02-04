@@ -28,7 +28,7 @@
 #include "keyboard.h"
 #include "varz.h"
 #include "joystick.h"
-#include "console/cvar/Cvar.h"
+#include "console/cvar/CVar.h"
 #include "console/CCmd.h"
 #include "network/NetCVars.h"
 
@@ -391,7 +391,7 @@ int network::state_send( )
 	{
 		packet_copy(packet_temp, packet_state_out[0]);
 		SDLNet_Write16(PACKET_STATE_XOR, packet_temp->data+0);
-		for (int i = 1; i < delay; ++i)
+		for (unsigned int i = 1; i < delay; ++i)
 			for (int j = 4; j < packet_temp->len; ++j)
 				packet_temp->data[j] ^= packet_state_out[i]->data[j];
 

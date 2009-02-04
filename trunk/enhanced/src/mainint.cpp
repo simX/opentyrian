@@ -3176,7 +3176,7 @@ redo:
 					for (int i = 4-1; i >= 0; --i)
 					{
 						buttons <<= 1;
-						buttons = button || button[i];
+//						buttons = button || button[i];
 					}
 
 					SDLNet_Write16(*PX_ - *mouseX_, network::packet_state_out[0]->data+4);

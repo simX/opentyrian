@@ -102,7 +102,7 @@ private:
 
 	//////////
 
-	typedef std::list<boost::function<Pattern*()>> PatternListType;
+	typedef std::list<boost::function<Pattern*()> > PatternListType;
 	typedef CircularIter<PatternListType::iterator, PatternListType> IterType;
 
 	void changePattern(const IterType& iter);

@@ -125,6 +125,8 @@ void Starfield::handle_input()
 		case SDLK_F1:
 			showHelp = !showHelp;
 			break;
+		default:
+			break;
 		}
 	}
 }
@@ -140,7 +142,7 @@ void Starfield::resetValues()
 
 void Starfield::drawStar(int x, int y, Uint8 color, Uint8 *surface)
 {
-	if (x >= 2 && y >= 2 && x <= scr_width-3 && y <= scr_height-3)
+	if (x >= 2 && y >= 2 && x <= (signed)scr_width-3 && y <= (signed)scr_height-3)
 	{
 		surface[xy2off(x,y)] = color;
 

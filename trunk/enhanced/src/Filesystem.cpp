@@ -193,3 +193,4 @@ namespace CCmds
 
 	CCmd add_search_path("add_search_path", CCmd::NONE, "Adds a directory to the game's datafile search path.", Func::add_search_path);
 }
+
