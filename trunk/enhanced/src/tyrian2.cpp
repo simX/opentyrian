@@ -4016,7 +4016,7 @@ void JE_titleScreen( bool animate )
 					}
 					JE_loadPic(4, false);
 
-					JE_textShade(2, 192, "OpenTyrian Enhanced " + opentyrian_version, 15, 0, PART_SHADE);
+					JE_textShade(2, 192, "OpenTyrian Enhanced " + get_opentyrian_version(), 15, 0, PART_SHADE);
 	
 					memcpy(VGAScreen2, VGAScreen, scr_width * scr_height);
 	

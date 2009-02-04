@@ -35,11 +35,7 @@ NetManager::NetManager()
 {
 	Console::get() << "Initializing network..." << std::endl;
 
-	{
-		network_version = 0; // This will be the default if SVN_REV is invalid.
-		std::istringstream s(SVN_REV);
-		s >> network_version;
-	}
+	network_version = get_svn_rev_int(); // 0 will be the default if SVN_REV is invalid.
 
 	if (SDLNet_Init() == -1)
 	{

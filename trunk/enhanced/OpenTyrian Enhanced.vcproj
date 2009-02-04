@@ -436,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\svn_rev_def.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\tyrian2.h"
 				>
 			</File>

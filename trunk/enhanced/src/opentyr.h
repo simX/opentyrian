@@ -20,10 +20,11 @@
 #ifndef OPENTYR_H
 #define OPENTYR_H
 
+#include "console/Console.h"
+
 #include "SDL.h"
 #include "SDL_endian.h"
-
-#include "console/Console.h"
+#include <string>
 
 #ifdef _MSC_VER
 #define __func__ __FUNCTION__
@@ -56,7 +57,7 @@ typedef Uint8  JE_byte;
 //typedef double JE_real; - Done
 #endif
 
-extern std::string opentyrian_version;
+std::string get_opentyrian_version();
 
 char *strnztcpy( char *to, const char *from, size_t count );
 

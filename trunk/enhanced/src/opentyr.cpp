@@ -67,12 +67,14 @@ const int shapereorderlist[7] = {1, 2, 5, 0, 3, 4, 6};
 
 #include "svn_rev.h"
 
-std::string opentyrian_version
+std::string get_opentyrian_version()
+{
 #ifdef HAVE_SVN_REV
-           ("r" SVN_REV " " REL_STRING);
+	return std::string("r") + get_svn_rev_str() + " " REL_STRING;
 #else
-           (REL_STRING);
+	return REL_STRING;
 #endif
+}
 #undef REL_STRING
 
 const char *opentyrian_menu_items[] =
@@ -334,7 +336,7 @@ int main( int argc, char *argv[] )
 		// TODO: We should totally bail out here =P
 	}
 
-	Console::get() << "Welcome to... >> OpenTyrian Enhanced " << opentyrian_version << " <<\n";
+	Console::get() << "Welcome to... >> OpenTyrian Enhanced " << get_opentyrian_version() << " <<\n";
 
 	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
 
