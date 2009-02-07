@@ -1,6 +1,11 @@
 #include <windows.h>
+#include "src/svn_rev_def.h"
 
-#define version 255,255,255,255 // SVN version
+#ifndef HAVE_SVN_REV
+#define SVN_REV 0
+#endif
+#define version 255,255,255,SVN_REV // SVN version
+
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION version
