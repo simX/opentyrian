@@ -1,7 +1,7 @@
 /* vim: set noet:
  *
  * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
- * Copyright (C) 2007  The OpenTyrian Development Team
+ * Copyright (C) 2007-2009  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,7 +92,7 @@ const about_text_type about_text[] =
 	{0x00, ""},
 	{0x00, ""},
 	{0x40, "OpenTyrian Enhanced: A modern cross-platform port of Tyrian"},
-	{0x40, "Copyright (C) 2007  The OpenTyrian Development Team"},
+	{0x40, "Copyright (C) 2007-2009  The OpenTyrian Development Team"},
 	{0x00, ""},
 	{0x40, "Software implementation of FM sound generator types OPL and OPL2"},
 	{0x40, "Copyright (C) 2002,2003 Jarek Burczynski (bujar at mame dot net)"},

@@ -28,7 +28,7 @@ BEGIN
 			VALUE "FileDescription", "OpenTyrian Enhanced\0"
 			VALUE "FileVersion", "SVN\0"
 			VALUE "InternalName", "tyrian.exe\0"
-			VALUE "LegalCopyright", "Copyright (C) 2007\0"
+			VALUE "LegalCopyright", "Copyright (C) 2007-2009\0"
 			VALUE "OriginalFilename", "tyrian.exe\0"
 			VALUE "ProductName", "OpenTyrian Enhanced\0"
 			VALUE "ProductVersion", "SVN\0"

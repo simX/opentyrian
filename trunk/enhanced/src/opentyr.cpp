@@ -1,7 +1,7 @@
 /* vim: set noet:
  *
  * OpenTyrian Enhanced: A modern cross-platform port of Tyrian
- * Copyright (C) 2007  The OpenTyrian Development Team
+ * Copyright (C) 2007-2009  The OpenTyrian Development Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -338,7 +338,7 @@ int main( int argc, char *argv[] )
 
 	Console::get() << "Welcome to... >> OpenTyrian Enhanced " << get_opentyrian_version() << " <<\n";
 
-	Console::get() << "Copyright (C) 2007 The OpenTyrian Development Team\n\n";
+	Console::get() << "Copyright (C) 2007-2009 The OpenTyrian Development Team\n\n";
 
 	Console::get() << "This program comes with ABSOLUTELY NO WARRANTY.\n"
 		<< "This is free software, and you are welcome to redistribute it\n"
