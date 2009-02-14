@@ -25,15 +25,14 @@
 
 #include "SDL_net.h"
 
-extern int thisPlayerNum;
-extern bool haltGame;
-extern bool netQuit;
-extern bool moveOk;
-extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
-extern bool yourInGameMenuRequest, inGameMenuRequest;
-extern bool portConfigChange;
+//extern int thisPlayerNum;
+extern bool haltGame; // TODO NETWORK check uses
+extern bool netQuit; // TODO NETWORK check uses
+//extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
+extern bool yourInGameMenuRequest, inGameMenuRequest; // TODO NETWORK check uses
+/*extern bool portConfigChange;
 
-extern bool isNetworkGame;
+//extern bool network::netmanager;
 
 namespace network
 {
@@ -81,7 +80,7 @@ namespace network
 	bool is_alive( );
 	static void keep_alive( )
 	{
-		if (isNetworkGame)
+		if (network::netmanager)
 			check();
 	}
 
@@ -100,7 +99,7 @@ namespace network
 	void packets_shift_up( UDPpacket **dst, int max_packets );
 	void packets_shift_down( UDPpacket **dst, int max_packets );
 }
-
+*/
 void JE_clearSpecialRequests( void );
 
 #endif /* NETWORK_H */

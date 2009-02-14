@@ -37,7 +37,10 @@ namespace CVars
 	CVarInt net_delay("net_delay", CVar::NONE, "Multiplayer lag compensation delay.", 1+1, rangeBind(1, 6));
 
 	// Less useful ones
-	CVarInt net_keepalive_interval("net_keepalive_interval", CVar::NONE, "Number of ticks between sending keep alives.", 1600, rangeBind(0, 65535));
+	CVarInt net_keepalive_interval("net_keepalive_interval", CVar::NONE, "Number of ticks between sending keep alives.", 1500, rangeBind(0, 65535));
+	CVarInt net_resend_interval("net_resend_interval", CVar::NONE, "Number of ticks between resend of reliable packets.", 500, rangeBind(0, 65535));
+	CVarBool net_ignore_version("net_ignore_version", CVar::NONE, "Disables version check. Don't enable unless you know what you're doing.", false);
+	CVarBool net_debug("net_debug", CVar::NONE, "Prints networking debugging information.", false);
 }
 
 namespace CCmds

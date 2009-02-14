@@ -39,6 +39,7 @@
 
 using boost::lexical_cast;
 
+#if 0
 namespace network
 {
 	static const unsigned int VERSION = 2;
@@ -79,15 +80,15 @@ namespace network
 
 	static bool connected, quit;
 }
-
+#endif
 // Special Requests
 int thisPlayerNum;
-bool haltGame, netQuit, moveOk;
+bool haltGame, netQuit;
 bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 bool yourInGameMenuRequest, inGameMenuRequest;
 bool portConfigChange;
-
-bool isNetworkGame;
+#if 0
+//bool network::netmanager;
 
 void network::prepare( NetworkPackets type )
 {
@@ -768,7 +769,7 @@ void network::packets_shift_down( UDPpacket **packet, int max_packets )
 	}
 	packet[0] = 0;
 }
-
+#endif
 void JE_clearSpecialRequests( )
 {
 	pauseRequest = false;

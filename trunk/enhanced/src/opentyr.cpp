@@ -46,7 +46,8 @@
 #include "video_scale.h"
 #include "Filesystem.h"
 #include "mtrand.h"
-#include "network.h"
+#include "network/Network.h"
+#include "network/NetManager.h"
 #include "network/NetCVars.h"
 
 #include "SDL.h"
@@ -407,10 +408,15 @@ int main( int argc, char *argv[] )
 
 	if (CVars::net_enabled)
 	{
-		isNetworkGame = true;
-		if (network::init())
+		// TODO Network
+		try
 		{
-			network::tyrian_halt(3, false);
+			netmanager = new network::NetManager();
+		}
+		catch (network::NetManager::NetInitException& e)
+		{
+			Console::get() << "\a7Error:\ax Unable to initialize networking: " << e.what() << std::endl;
+			CVars::net_enabled = false;
 		}
 	}
 

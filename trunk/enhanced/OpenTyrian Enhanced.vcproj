@@ -348,6 +348,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\network\Network.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\newshape.h"
 				>
 			</File>

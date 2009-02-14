@@ -20,11 +20,22 @@
 #define NETWORK_NETMANAGER_H
 #include "opentyr.h"
 
+namespace network {
+class NetManager;
+}
+
 #include "Packet.h"
+#include "packets/PacketReliable.h"
+#include "packets/PacketNetwork.h"
+#include "packets/PacketConnect.h"
 #include "svn_rev.h"
 
 #include <queue>
+#include <map>
 #include "SDL_net.h"
+
+namespace network
+{
 
 class NetManager
 {
@@ -32,6 +43,7 @@ private:
 	NetManager(const NetManager&);
 	void operator=(const NetManager&);
 
+public:
 	const std::string opponentHost;
 	const Uint16 opponentPort;
 	const Uint16 localPort;
@@ -39,16 +51,25 @@ private:
 	const std::string localPlayerName;
 	const unsigned int networkDelay;
 
+private:
 	UDPsocket socket;
 
-	// Head is the last-acked packet, Tail is last-send packet
-	std::queue<Packet*> outHistory;
+	// Maintains a list of reliable packets that haven't been acknowledged yet.
+	// std::map<seqId, std::pair<packet, sentTime>>
+	typedef std::pair<PacketReliable*, Uint32> ReliablePairType;
+	std::map<Uint16, ReliablePairType> sentReliablePackets;
+	Uint16 nextReliableSeqId;
+	Uint16 lastProcessedReliablePacket;
+	std::map<Uint16, PacketReliable*> recvReliablePackets; // Used for in-order processing
 
 	bool connected, connecting;
-	Uint32 lastKeepAliveTick;
+	PacketConnect peerInfo;
+	bool peerInfoSet;
+	Uint32 lastPacketSentTick;
 
-	bool sendPacket(Packet& packet);
-	bool checkNullPacket();
+	bool sendPacket(const Packet& packet);
+	Packet *receivePacket();
+	bool receiveAndProcessPacket();
 
 public:
 	struct NetInitException : std::runtime_error
@@ -66,9 +87,22 @@ public:
 	Uint16 network_version;
 
 	NetManager();
+	~NetManager();
 
 	void connect();
-	void updateNetwork();
+	bool updateNetwork();
+	void quit();
+	void quit(std::string message);
+	static void displayMessage(std::string message);
+
+ 	friend void PacketAcknowledge::handle(NetManager&);
+	friend void PacketConnect::handle(NetManager&);
 };
+
+}
+
+
+// TODO Remove
+#include "../network.h"
 
 #endif // NETWORK_NETMANAGER_H

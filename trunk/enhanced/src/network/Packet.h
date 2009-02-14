@@ -23,8 +23,12 @@
 #include "PacketFactory.h"
 #include "UDPPacket.h"
 
-//#include "SDL.h"
-//#include "SDL_net.h"
+namespace network {
+class NetManager;
+}
+
+namespace network
+{
 
 /**
  * Base Packet class which all other packet classes should inherit from.
@@ -49,7 +53,7 @@ public:
 
 	virtual Packet* clone() const = 0;
 
-	virtual void handle() = 0;
+	virtual void handle(NetManager& manager) = 0;
 
 	virtual void serialize(Uint8 *data) const;
 	static Packet* createPacket(const UDPPacket& data);
@@ -58,5 +62,7 @@ public:
 
 	virtual PacketFactory::PacketTypes getTypeId() const = 0;
 };
+
+}
 
 #endif // NETWORK_PACKET_H

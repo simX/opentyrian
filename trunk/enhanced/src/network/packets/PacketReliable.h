@@ -22,16 +22,19 @@
 
 #include "../Packet.h"
 
+namespace network
+{
+
 /**
  * Reliable packet that is always guaranteed to arrive at the other peer.
  *
- * These kinds of packets are always guaranteed to arrive. The game will wait
- * for a PacketAcknowledge and resend if it doesn't receive it.
+ * These kinds of packets are always guaranteed to arrive and be processed in order.
+ * The game will wait for a PacketAcknowledge and resend if it doesn't receive it.
  *
  * Layout:
  *
  *   - Packet data
- *   - 0: Uint16 Packet ID (Network ID)
+ *   - 0: Uint16 Unique Packet ID (Network ID)
  *
  * Size: 2
  */
@@ -41,7 +44,7 @@ public:
 	PacketReliable();
 
 	PacketReliable *clone() const = 0;
-	void handle();
+	void handle(NetManager& manager) = 0;
 	PacketFactory::PacketTypes getTypeId() const = 0;
 
 	void serialize(Uint8 *data) const;
@@ -50,5 +53,7 @@ public:
 
 	Uint16 packetId;
 };
+
+}
 
 #endif // NETWORK_PACKETS_PACKETRELIABLE_H

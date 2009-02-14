@@ -34,6 +34,9 @@ namespace CVars
 	extern CVarInt net_delay;
 
 	extern CVarInt net_keepalive_interval;
+	extern CVarInt net_resend_interval;
+	extern CVarBool net_ignore_version;
+	extern CVarBool net_debug;
 }
 
 #endif // NETWORK_NETCVARS_H

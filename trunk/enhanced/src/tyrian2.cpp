@@ -47,7 +47,7 @@
 #include "varz.h"
 #include "vga256d.h"
 #include "Filesystem.h"
-#include "network.h"
+#include "network/Network.h"
 #include "itemscreen.h"
 
 #include <cctype>
@@ -952,7 +952,7 @@ start_level:
 		}
 	}
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
 		netQuit = false;
 	}
@@ -1220,7 +1220,7 @@ start_level_first:
 
 	newkey = false;
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
 		JE_clearSpecialRequests();
 		mt::seed(32402394);
@@ -1280,7 +1280,7 @@ start_level_first:
 	chargeGr     = 0;
 	chargeGrWait = 3;
 
-	portConfigChange = false;
+	// TODO NETWORK portConfigChange = false;
 
 	makeMouseDelay = false;
 
@@ -1289,7 +1289,7 @@ start_level_first:
 	enemyKilled = 0;
 
 	/*InputDevices*/
-	if (twoPlayerMode && !isNetworkGame)
+	if (twoPlayerMode && !netmanager)
 	{
 		playerDevice1 = inputDevice1;
 		playerDevice2 = inputDevice2;
@@ -1309,7 +1309,7 @@ start_level_first:
 	playerStillExploding = 0;
 	playerStillExploding2 = 0;
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
 		JE_loadItemDat();
 	}
@@ -1378,7 +1378,7 @@ level_loop:
 
 	tempScreenSeg = game_screen; /* side-effect of game_screen */
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
 		smoothies[9-1] = false;
 		smoothies[6-1] = false;
@@ -1595,7 +1595,7 @@ level_loop:
 		JE_eventSystem();
 	}
 
-	if (isNetworkGame && reallyEndLevel)
+	if (netmanager && reallyEndLevel)
 	{
 		goto start_level;
 	}
@@ -2569,10 +2569,11 @@ enemy_shot_draw_overflow:
 
 	draw_explosions();
 
+	/* TODO NETWORK
 	if (!portConfigChange)
 	{
 		portConfigDone = true;
-	}
+	}*/
 
 
 	/*-----------------------BACKGROUNDS------------------------*/
@@ -2616,8 +2617,8 @@ enemy_shot_draw_overflow:
 			armorShipDelay = 500;
 		}
 		
-		if ((playerAlive && armorLevel < 6 && (!isNetworkGame || thisPlayerNum == 1))
-		    || (twoPlayerMode && playerAliveB && armorLevel2 < 6 && (!isNetworkGame || thisPlayerNum == 2)))
+		if ((playerAlive && armorLevel < 6 && (true/* TODO NETWORK !netmanager || thisPlayerNum == 1*/))
+		    || (twoPlayerMode && playerAliveB && armorLevel2 < 6 && (true/* TODO NETWORK !netmanager || thisPlayerNum == 2*/)))
 		{
 				
 			tempW = tempW2 * 4 + 8;
@@ -2820,7 +2821,7 @@ enemy_shot_draw_overflow:
 					}
 				}
 
-				if (isNetworkGame)
+				if (netmanager)
 				{
 					reallyEndLevel = true;
 				}
@@ -2852,8 +2853,9 @@ enemy_shot_draw_overflow:
 	}
 
 	/*Network Update*/
-	if (isNetworkGame)
+	if (netmanager)
 	{
+		/* TODO NETWORK
 		if (!reallyEndLevel)
 		{
 			Uint16 requests = pauseRequest << 0 |
@@ -2917,6 +2919,7 @@ enemy_shot_draw_overflow:
 		}
 
 		JE_clearSpecialRequests();
+		*/
 	}
 
 	draw_superpixels();
@@ -3390,7 +3393,7 @@ new_game:
 									}
 
 									jumpSection = true;
-									if (isNetworkGame)
+									if (netmanager)
 									{
 										JE_readTextSync();
 									}
@@ -3460,7 +3463,7 @@ new_game:
 											JE_showVGA();
 											wait_delay();
 
-											if (isNetworkGame)
+											if (netmanager)
 											{
 												// TODO: NETWORK
 											}
@@ -3506,7 +3509,7 @@ new_game:
 											JE_showVGA();
 											wait_delay();
 
-											if (isNetworkGame)
+											if (netmanager)
 											{
 												// TODO: NETWORK
 											}
@@ -3549,7 +3552,7 @@ new_game:
 											JE_showVGA();
 											wait_delay();
 
-											if (isNetworkGame)
+											if (netmanager)
 											{
 												// TODO: NETWORK
 											}
@@ -3560,7 +3563,7 @@ new_game:
 								break;
 
 							case 'C':
-								if (!isNetworkGame)
+								if (!netmanager)
 								{
 									JE_fadeBlack(10);
 								}
@@ -3570,13 +3573,13 @@ new_game:
 								break;
 
 							case 'B':
-								if (!isNetworkGame)
+								if (!netmanager)
 								{
 									JE_fadeBlack(10);
 								}
 								break;
 							case 'F':
-								if (!isNetworkGame)
+								if (!netmanager)
 								{
 									JE_fadeWhite(100);
 									JE_fadeBlack(30);
@@ -3634,7 +3637,7 @@ new_game:
 								break;
 
 							case 'S':
-								if (isNetworkGame)
+								if (netmanager)
 								{
 									JE_readTextSync();
 								}
@@ -3918,7 +3921,7 @@ void JE_titleScreen( bool animate )
 	gameLoaded = false;
 	jumpSection = false;
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
 		JE_loadPic(2, false);
 		std::copy(VGAScreen, VGAScreen+scr_width*scr_height, VGAScreen2);
@@ -3926,10 +3929,10 @@ void JE_titleScreen( bool animate )
 		JE_showVGA();
 		JE_fadeColor(10);
 
-		network::connect();
+		netmanager->connect();
 
 		twoPlayerMode = true;
-		if (thisPlayerNum == 1)
+		if (netmanager->localPlayerNum == 1)
 		{
 			JE_fadeBlack(10);
 
@@ -3940,17 +3943,15 @@ void JE_titleScreen( bool animate )
 				// Make it one step harder for 2-player mode
 				difficultyLevel++;
 
+				/* TODO NETWORK Send game_info
 				network::prepare(network::PACKET_DETAILS);
 				SDLNet_Write16(episodeNum, network::packet_out_temp->data+4);
 				SDLNet_Write16(difficultyLevel, network::packet_out_temp->data+6);
-				network::send(8);
+				network::send(8);*/
 			}
 			else
 			{
-				network::prepare(network::PACKET_QUIT);
-				network::send(4);
-
-				network::tyrian_halt(0, true);
+				netmanager->quit();
 			}
 		}
 		else
@@ -3964,23 +3965,24 @@ void JE_titleScreen( bool animate )
 			for (;;)
 			{
 				service_SDL_events(false);
-				JE_showVGA();
+				/*JE_showVGA(); TODO NETWORK
 
 				if (network::packet_in[0] && SDLNet_Read16(network::packet_in[0]->data+0) == network::PACKET_DETAILS)
 					break;
 
 				network::update();
-				network::check();
+				network::check();*/
 
 				SDL_Delay(16);
 			}
 
+			/* TODO NETWORK
 			JE_initEpisode(SDLNet_Read16(network::packet_in[0]->data+4));
 			difficultyLevel = SDLNet_Read16(network::packet_in[0]->data+6);
 			initialDifficulty = difficultyLevel - 1;
-			JE_fadeBlack(10);
+			JE_fadeBlack(10);*/
 
-			network::update();
+			// TODO NETWORK network::update();
 		}
 
 		score = 0;
@@ -3988,6 +3990,7 @@ void JE_titleScreen( bool animate )
 
 		pItems[11] = 11;
 
+		/* TODO NETWORK
 		while (!network::is_sync())
 		{
 			service_SDL_events(false);
@@ -3995,7 +3998,7 @@ void JE_titleScreen( bool animate )
 
 			network::check();
 			SDL_Delay(16);
-		}
+		}*/
 	}
 	else
 	{
@@ -4372,7 +4375,7 @@ void JE_openingAnim( void )
 
 	moveTyrianLogoUp = true;
 
-	if (!isNetworkGame && !stoppedDemo)
+	if (!netmanager && !stoppedDemo)
 	{
 		static const SDL_Color white_col = {255,255,255};
 		static const SDL_Color black_col = {0,0,0};
@@ -4482,7 +4485,8 @@ void JE_displayText( void )
 
 		setjasondelay(1);
 
-		network::keep_alive();
+		if (netmanager)
+			netmanager->updateNetwork();
 
 		int delaycount_temp;
 		if ((delaycount_temp = target - SDL_GetTicks()) > 0)

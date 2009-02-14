@@ -39,6 +39,7 @@
 #include "mainint.h"
 #include "Filesystem.h"
 #include "helptext.h"
+#include "network/Network.h"
 
 #include "boost/format.hpp"
 #include "boost/lexical_cast.hpp"
@@ -245,7 +246,7 @@ void JE_itemScreen()
 			{
 				curMenu = 9;
 			}
-			if (isNetworkGame || onePlayerAction)
+			if (netmanager || onePlayerAction)
 			{
 				curMenu = 10;
 			}
@@ -1395,7 +1396,7 @@ void JE_itemScreen()
 					break;
 
 				case SDLK_F1:
-					if (!isNetworkGame)
+					if (!netmanager)
 					{
 						JE_helpSystem(2);
 						JE_fadeBlack(10);
@@ -1684,8 +1685,9 @@ void JE_itemScreen()
 		
 	} while (!(quit || gameLoaded || jumpSection));
 
-	if (isNetworkGame)
+	if (netmanager)
 	{
+		/* TODO NETWORK
 		if (!quit)
 		{
 			JE_barShade(3, 3, 316, 196);
@@ -1730,7 +1732,7 @@ void JE_itemScreen()
 
 			network::check();
 			SDL_Delay(16);
-		}
+		}*/
 	}
 	
 	if (gameLoaded)
@@ -2037,7 +2039,7 @@ void JE_menuFunction(int select)
 		{
 			// TODO : Write default bind script and load it here
 		} else if (curSelect == 11) { // done
-			if (isNetworkGame || onePlayerAction)
+			if (netmanager || onePlayerAction)
 			{
 				curMenu = 11;
 			} else {
@@ -2264,7 +2266,7 @@ void JE_menuFunction(int select)
 			}
 			break;
 		case 7:
-			if (isNetworkGame || onePlayerAction)
+			if (netmanager || onePlayerAction)
 			{
 				curMenu = 11;
 			} else {
@@ -2290,7 +2292,7 @@ void JE_menuFunction(int select)
 		case 5:
 			if (JE_quitRequest(true))
 			{
-				if (isNetworkGame)
+				if (netmanager)
 				{
 					JE_tyrianHalt(0);
 				}
@@ -2873,10 +2875,11 @@ bool JE_quitRequest(bool useMouse)
 		colC = 1;
 
 		do {
+			/* TODO NETWORK Probably remove
 			if (netQuit)
 			{
 				JE_tyrianHalt(0);
-			}
+			}*/
 
 			setjasondelay(4);
 
@@ -2962,10 +2965,11 @@ bool JE_quitRequest(bool useMouse)
 
 	} while (!quit);
 
+	/* TODO PROBABLY REMOVE
 	if (netQuit)
 	{
 		JE_tyrianHalt(0);
-	}
+	}*/
 
 	retval = select;
 	if (select)
@@ -2975,12 +2979,14 @@ bool JE_quitRequest(bool useMouse)
 		JE_playSampleNum(CLICK);
 	}
 
-	if (isNetworkGame && select)
+	if (netmanager && select)
 	{
+		/* TODO NETWORK
 		network::prepare(network::PACKET_QUIT);
 		network::send(4);
 
 		network::tyrian_halt(0, true);
+		*/
 	}
 
 	return retval;

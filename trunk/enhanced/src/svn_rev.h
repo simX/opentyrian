@@ -17,7 +17,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
+#ifndef SVN_REV_H
+#define SVN_REV_H
 #include "svn_rev_def.h"
 
 #include "boost/lexical_cast.hpp"
@@ -62,3 +63,5 @@ inline std::string get_svn_rev_str()
 #endif
 
 #undef SVN_REV
+
+#endif // SVN_REV_H

@@ -24,7 +24,7 @@
 #include "nortsong.h"
 #include "video.h"
 #include "vga256d.h"
-#include "network.h"
+#include "network/Network.h"
 
 
 const unsigned char fontMap[136] = /* [33..168] */
@@ -714,7 +714,8 @@ void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 				frameCountMax = 0;
 			}
 			
-			network::keep_alive();
+			if (netmanager)
+				netmanager->updateNetwork();
 			
 			JE_showVGA();
 
@@ -732,7 +733,8 @@ void JE_outTextGlow( JE_word x, JE_word y, const std::string& s )
 			frameCountMax = 0;
 		}
 
-		network::keep_alive();
+		if (netmanager)
+			netmanager->updateNetwork();
 		
 		JE_showVGA();
 

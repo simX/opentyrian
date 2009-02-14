@@ -22,6 +22,9 @@
 
 #include "PacketReliable.h"
 
+namespace network
+{
+
 /**
  * Holds information about a player sent during the handshake.
  *
@@ -44,7 +47,7 @@ public:
 	PacketConnect();
 
 	PacketConnect *clone() const;
-	void handle();
+	void handle(NetManager& manager);
 	PacketFactory::PacketTypes getTypeId() const;
 
 	void serialize(Uint8 *data) const;
@@ -59,5 +62,7 @@ public:
 	Uint8 player;
 	std::string playerName;
 };
+
+}
 
 #endif // NETWORK_PACKETS_PACKETCONNECT_H

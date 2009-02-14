@@ -22,6 +22,9 @@
 
 #include "SDL_net.h"
 
+namespace network
+{
+
 /**
  * Resource wrapper around a SDL_net UDPpacket.
  */
@@ -35,6 +38,9 @@ public:
 	{
 		if (packet == 0)
 			throw std::runtime_error(SDLNet_GetError());
+
+		packet->len = size;
+		packet->channel = 0;
 	}
 
 	UDPPacket(const UDPPacket& other) : packet(SDLNet_AllocPacket(other.packet->maxlen))
@@ -64,5 +70,7 @@ public:
 
 	UDPpacket *const packet;
 };
+
+}
 
 #endif // NETWORK_UDPPACKET_H

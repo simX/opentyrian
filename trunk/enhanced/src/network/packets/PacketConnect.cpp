@@ -19,6 +19,10 @@
 #include "opentyr.h"
 #include "PacketConnect.h"
 
+#include "../NetManager.h"
+
+namespace network
+{
 
 PacketConnect::PacketConnect()
 {
@@ -29,9 +33,10 @@ PacketConnect *PacketConnect::clone() const
 	return new PacketConnect(*this);
 }
 
-void PacketConnect::handle()
+void PacketConnect::handle(NetManager& manager)
 {
-	// TODO
+	manager.peerInfo = *this;
+	manager.peerInfoSet = true;
 }
 
 PacketFactory::PacketTypes PacketConnect::getTypeId() const
@@ -64,10 +69,12 @@ void PacketConnect::deserialize(Uint8 *data)
 	delay = data[4];
 	episodes = data[5];
 	player = data[6];
-	playerName.assign(data[8], data[7]);
+	playerName.assign(reinterpret_cast<const char*>(data+8), data[7]);
 }
 
 int PacketConnect::getPacketSize() const
 {
 	return PacketReliable::getPacketSize() + 8 + playerName.length();
+}
+
 }

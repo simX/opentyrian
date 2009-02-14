@@ -27,27 +27,36 @@
 #include "PacketReliable.h"
 #include "../Packet.h"
 
+namespace network
+{
+
 /**
  * Packet used to acknowledge the receivement of a reliable packet.
  *
  * Layout:
  *
- *   - PacketReliable data
+ *   - Packet data
+ *   - 0: Uint16 Unique Packet ID to Ack (Network ID)
  *
- * Size: 0
+ * Size: 2
  */
-class PacketAcknowledge : public PacketReliable
+class PacketAcknowledge : public Packet
 {
 public:
 	PacketAcknowledge();
+	PacketAcknowledge(Uint16 packetId)
+		: packetId(packetId)
+	{}
 
 	PacketAcknowledge *clone() const;
-	void handle();
+	void handle(NetManager& manager);
 	PacketFactory::PacketTypes getTypeId() const;
 
 	void serialize(Uint8 *data) const;
 	void deserialize(Uint8 *data);
 	int getPacketSize() const;
+
+	Uint16 packetId;
 };
 
 /**
@@ -65,12 +74,43 @@ public:
 	PacketNull();
 
 	PacketNull *clone() const;
-	void handle();
+	void handle(NetManager& manager);
 	PacketFactory::PacketTypes getTypeId() const;
 
 	void serialize(Uint8 *data) const;
 	void deserialize(Uint8 *data);
 	int getPacketSize() const;
 };
+
+/**
+ * Indicates to the other peer that the game session should be terminated.
+ *
+ * Layout:
+ *
+ *   - Packet data
+ *   - 0: Uint16 Message length
+ *   - 2: ... Message
+ *
+ * Size: 2 + message length
+ *
+ * @note This isn't a PacketReliable because I don't really care if it doesn't gets there, it'll time out anyway.
+ */
+class PacketTerminate : public Packet
+{
+public:
+	PacketTerminate();
+
+	PacketTerminate *clone() const;
+	void handle(NetManager& manager);
+	PacketFactory::PacketTypes getTypeId() const;
+
+	void serialize(Uint8 *data) const;
+	void deserialize(Uint8 *data);
+	int getPacketSize() const;
+
+	std::string message;
+};
+
+}
 
 #endif // NETWORK_PACKETS_PACKETNETWORK_H

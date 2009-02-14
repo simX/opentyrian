@@ -25,6 +25,9 @@
 #include "packets/PacketConnect.h"
 // long list of packet includes
 
+namespace network
+{
+
 template<class T> Packet *makePacket()
 {
 	return static_cast<Packet *>(new T());
@@ -35,6 +38,7 @@ PacketFactory::PacketFactory()
 	// Register packet types here
 	idMap[PacketFactory::PACKET_ACKNOWLEDGE] = makePacket<PacketAcknowledge>;
 	idMap[PacketFactory::PACKET_NULL] = makePacket<PacketNull>;
+	idMap[PacketFactory::PACKET_TERMINATE] = makePacket<PacketTerminate>;
 
 	idMap[PacketFactory::PACKET_CONNECT] = makePacket<PacketConnect>;
 }
@@ -50,3 +54,5 @@ Packet *PacketFactory::createFromTypeId(PacketTypes type)
 }
 
 PacketFactory globalPacketFactory;
+
+}

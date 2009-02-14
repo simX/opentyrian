@@ -29,7 +29,7 @@
 #include "video.h"
 #include "BinaryStream.h"
 #include "Filesystem.h"
-#include "network.h"
+#include "network/Network.h"
 
 
 Uint8 *tempScreenSeg = VGAScreen;
@@ -266,7 +266,8 @@ bool JE_waitAction( int time, bool checkJoystick )
 			JE_mouseReplace();
 		}
 
-		network::keep_alive();
+		if (netmanager)
+			netmanager->updateNetwork();
 		SDL_Delay(16);
 	} while (!(inputDetected || delaycount() == 0 || netQuit));
 

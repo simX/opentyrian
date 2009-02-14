@@ -20,11 +20,16 @@
 #define NETWORK_PACKETFACTORY_H
 #include "opentyr.h"
 
+namespace network {
 class Packet;
+}
 
 #include <map>
 #include "boost/function.hpp"
 #include "boost/static_assert.hpp"
+
+namespace network
+{
 
 class PacketFactory
 {
@@ -37,6 +42,7 @@ public:
 
 		PACKET_CONNECT = 0x10,
 		PACKET_GAME_INFO = 0x11, // Old DETAILS
+		PACKET_TERMINATE = 0x12,
 
 		PACKET_STATE = 0x20,
 		//PACKET_STATE_XOR = 0x21,
@@ -65,5 +71,7 @@ private:
 };
 
 extern PacketFactory globalPacketFactory;
+
+}
 
 #endif // NETWORK_PACKETFACTORY_H

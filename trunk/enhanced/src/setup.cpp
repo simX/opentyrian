@@ -35,7 +35,7 @@
 #include "vga256d.h"
 #include "loudness.h"
 #include "mtrand.h"
-#include "network.h"
+#include "network/Network.h"
 
 #include "SDL.h"
 #include "boost/format.hpp"
@@ -95,7 +95,8 @@ void JE_textMenuWait( JE_word *waitTime, bool doGamma )
 			}
 		}
 
-		network::keep_alive();
+		if (netmanager)
+			netmanager->updateNetwork();
 
 		SDL_Delay(16); /* <MXD> attempt non-processor-based wait, implement a real delay later */
 		if (*waitTime > 0)

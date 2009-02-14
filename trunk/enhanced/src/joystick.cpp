@@ -23,7 +23,7 @@
 #include "vga256d.h"
 #include "console/Console.h"
 #include "console/cvar/CVar.h"
-#include "network.h"
+#include "network/Network.h"
 
 #include "joystick.h"
 
@@ -85,7 +85,7 @@ void JE_joystick1( void ) /* procedure to get x and y */
 	joyX = SDL_JoystickGetAxis(joystick, 0);
 	joyY = SDL_JoystickGetAxis(joystick, 1);
 
-	if (CVars::input_joy_filter || isNetworkGame)
+	if (CVars::input_joy_filter || netmanager)
 	{
 		lastJoyXd = lastJoyXc;
 		lastJoyXc = lastJoyXb;

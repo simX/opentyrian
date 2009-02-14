@@ -19,13 +19,11 @@
 #include "opentyr.h"
 #include "PacketReliable.h"
 
+namespace network
+{
+
 PacketReliable::PacketReliable()
 {
-}
-
-void PacketReliable::handle()
-{
-	// TODO
 }
 
 void PacketReliable::serialize(Uint8 *data) const
@@ -47,4 +45,6 @@ void PacketReliable::deserialize(Uint8 *data)
 int PacketReliable::getPacketSize() const
 {
 	return Packet::getPacketSize() + 2;
+}
+
 }

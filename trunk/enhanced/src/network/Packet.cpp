@@ -20,8 +20,12 @@
 #include "Packet.h"
 
 #include "PacketFactory.h"
+#include "Network.h"
 
 //#include "SDL_net.h"
+
+namespace network
+{
 
 Packet::Packet()
 {
@@ -41,8 +45,9 @@ Packet *Packet::createPacket(const UDPPacket& data)
 	Packet *packet = globalPacketFactory.createFromTypeId(PacketFactory::PacketTypes(data.packet->data[0]));
 
 	// Check that the data received it big enough to deserialize
-	if (data->len <= packet->getPacketSize())
+	if (data->len < packet->getPacketSize())
 	{
+		NET_DEBUG("Received packet too big! Size: " << data->len << " Expected: " << packet->getPacketSize());
 		delete packet;
 		return 0;
 	}
@@ -60,4 +65,6 @@ void Packet::deserialize(Uint8 *data)
 int Packet::getPacketSize() const
 {
 	return 1;
+}
+
 }
