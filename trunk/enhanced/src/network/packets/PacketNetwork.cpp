@@ -60,7 +60,7 @@ void PacketAcknowledge::deserialize(Uint8 *data)
 	Packet::deserialize(data);
 	data += Packet::getPacketSize();
 
-	packetId = SDLNet_Read16(data+1);
+	packetId = SDLNet_Read16(data+0);
 }
 
 int PacketAcknowledge::getPacketSize() const

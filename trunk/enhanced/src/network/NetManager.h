@@ -84,7 +84,7 @@ public:
 		{}
 	};
 
-	Uint16 network_version;
+	const Uint16 network_version;
 
 	NetManager();
 	~NetManager();

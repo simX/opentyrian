@@ -23,6 +23,7 @@ namespace network
 {
 
 PacketReliable::PacketReliable()
+	: packetId(0)
 {
 }
 
@@ -39,7 +40,7 @@ void PacketReliable::deserialize(Uint8 *data)
 	Packet::deserialize(data);
 	data += Packet::getPacketSize();
 
-	packetId = SDLNet_Read16(data+1);
+	packetId = SDLNet_Read16(data+0);
 }
 
 int PacketReliable::getPacketSize() const

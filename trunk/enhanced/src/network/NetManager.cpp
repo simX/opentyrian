@@ -36,12 +36,11 @@ namespace network
 
 NetManager::NetManager()
 	: opponentHost(CVars::net_host), opponentPort(CVars::net_port), localPort(CVars::net_local_port),
-	localPlayerNum(CVars::net_player), localPlayerName(CVars::net_name), networkDelay(CVars::net_delay), connected(false), connecting(false),
-	nextReliableSeqId(0), socket(0), peerInfoSet(false)
+	localPlayerNum(CVars::net_player), localPlayerName(CVars::net_name), networkDelay(CVars::net_delay),
+	socket(0), nextReliableSeqId(1), lastProcessedReliablePacket(0), connected(false), connecting(false),
+	peerInfoSet(false), lastPacketSentTick(0), network_version(get_svn_rev_int())
 {
 	Console::get() << "Initializing network..." << std::endl;
-
-	network_version = get_svn_rev_int(); // 0 will be the default if SVN_REV is invalid.
 
 	if (SDLNet_Init() == -1)
 	{
@@ -76,26 +75,34 @@ NetManager::~NetManager()
 	SDLNet_Quit();
 }
 
-bool NetManager::sendPacket(const Packet& packet)
+bool NetManager::sendPacket(const Packet& packetParam)
 {
-	UDPPacket udpPacket(packet.getPacketSize());
-	packet.serialize(udpPacket->data);
+	const Packet *packet = &packetParam;
 
-	NET_DEBUG("Sending packet. id: " << packet.getTypeId() << " size: " << packet.getPacketSize());
+	if (const PacketReliable* reliable = dynamic_cast<const PacketReliable*>(packet))
+	{
+		PacketReliable *clone = reliable->clone();
+		if (clone->packetId == 0)
+			clone->packetId = nextReliableSeqId;
+
+		// Insert only if no such packet is already in the queue.
+		if (sentReliablePackets.insert(std::make_pair(clone->packetId, ReliablePairType(clone->clone(), SDL_GetTicks()))).second)
+		{
+			nextReliableSeqId++;
+		}
+
+		packet = clone;
+	}
+
+	UDPPacket udpPacket(packet->getPacketSize());
+	packet->serialize(udpPacket->data);
+
+	NET_DEBUG("Sending packet. id: " << packet->getTypeId() << " size: " << packet->getPacketSize());
 
 	if (!SDLNet_UDP_Send(socket, 0, udpPacket))
 	{
 		NET_DEBUG("\a7Warning:\ax Failed to send packet: " << SDLNet_GetError());
 		return false;
-	}
-
-	if (const PacketReliable* reliable = dynamic_cast<const PacketReliable*>(&packet))
-	{
-		// Insert only if no such packet is already in the queue.
-		if (sentReliablePackets.insert(std::make_pair(nextReliableSeqId, ReliablePairType(reliable->clone(), SDL_GetTicks()))).second)
-		{
-			nextReliableSeqId++;
-		}
 	}
 
 	lastPacketSentTick = SDL_GetTicks();
@@ -149,7 +156,7 @@ bool NetManager::receiveAndProcessPacket()
 			}
 			else
 			{
-				if (reliable->packetId+1 == lastProcessedReliablePacket)
+				if (reliable->packetId-1 == lastProcessedReliablePacket)
 				{
 					// Sequencing numbers match, process.
 					reliable->handle(*this);

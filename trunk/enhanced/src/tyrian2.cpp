@@ -3973,6 +3973,8 @@ void JE_titleScreen( bool animate )
 				network::update();
 				network::check();*/
 
+				netmanager->updateNetwork();
+
 				SDL_Delay(16);
 			}
 
