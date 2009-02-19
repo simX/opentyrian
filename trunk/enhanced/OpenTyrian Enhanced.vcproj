@@ -344,11 +344,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\network.h"
+				RelativePath=".\src\network\Network.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\network\Network.h"
+				RelativePath=".\src\network.h"
 				>
 			</File>
 			<File

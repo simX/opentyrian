@@ -63,6 +63,34 @@ public:
 	std::string playerName;
 };
 
+/**
+ * Holds information about the current game.
+ *
+ * Layout:
+ *
+ *   - PacketReliable data
+ *   - 0: Uint8 Episode number
+ *   - 1: Uint8 Difficulty level
+ *
+ * Size: 2
+ */
+class PacketGameInfo : public PacketReliable
+{
+public:
+	PacketGameInfo();
+
+	PacketGameInfo *clone() const;
+	void handle(NetManager& manager);
+	PacketFactory::PacketTypes getTypeId() const;
+
+	void serialize(Uint8 *data) const;
+	void deserialize(Uint8 *data);
+	int getPacketSize() const;
+
+	Uint8 episode;
+	Uint8 difficulty;
+};
+
 }
 
 #endif // NETWORK_PACKETS_PACKETCONNECT_H

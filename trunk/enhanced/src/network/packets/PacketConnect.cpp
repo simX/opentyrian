@@ -24,6 +24,10 @@
 namespace network
 {
 
+////
+// PacketConnect
+////
+
 PacketConnect::PacketConnect()
 {
 }
@@ -75,6 +79,55 @@ void PacketConnect::deserialize(Uint8 *data)
 int PacketConnect::getPacketSize() const
 {
 	return PacketReliable::getPacketSize() + 8 + playerName.length();
+}
+
+
+
+////
+// PacketGameInfo
+////
+
+PacketGameInfo::PacketGameInfo()
+{
+}
+
+PacketGameInfo *PacketGameInfo::clone() const
+{
+	return new PacketGameInfo(*this);
+}
+
+void PacketGameInfo::handle(NetManager& manager)
+{
+	manager.peerInfo = *this;
+	manager.peerInfoSet = true;
+}
+
+PacketFactory::PacketTypes PacketGameInfo::getTypeId() const
+{
+	return PacketFactory::PACKET_GAME_INFO;
+}
+
+void PacketGameInfo::serialize(Uint8 *data) const
+{
+	PacketReliable::serialize(data);
+	data += PacketReliable::getPacketSize();
+
+	data[0] = episode;
+	data[1] = difficulty;
+}
+
+void PacketGameInfo::deserialize(Uint8 *data)
+{
+	PacketReliable::deserialize(data);
+	data += PacketReliable::getPacketSize();
+
+	episode = data[0];
+	difficulty = data[1];
+}
+
+int PacketGameInfo::getPacketSize() const
+{
+	return PacketReliable::getPacketSize() + 2;
 }
 
 }
