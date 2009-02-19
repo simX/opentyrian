@@ -127,6 +127,26 @@ cvar you must use the `seta` command, which will set it's value and archive it.
 Additionally, some configuration cvars are "auto-config", and will be always
 automatically archived.
 
+==== Custom Music ==============================================================
+You can define your own music files to be played instead of Tyrian's music. To
+define a song replacement, use the `snd_add_custom` ccmd. You probably wan't to
+put the definitions in an autorun script, here's an example:
+
+---- music.con ----
+echo "Loading custom music..."
+
+# Music files are searched for in the datafile paths
+add_search_path music
+snd_add_custom  3 "buy-sell.ogg"
+snd_add_custom 14 "gyges-will-you-please-help-me.ogg"
+snd_add_custom 30 "tyrian-the-song.ogg"
+snd_add_custom 33 "return-me-to-savara.ogg"
+snd_add_custom 38 "rock-garden.ogg"
+snd_add_custom 40 "composition-in-q.ogg"
+--- End of File ---
+
+NOTE: You can find the song id by listening to the song in the jukebox.
+
 ==== Missing Features ==========================================================
 - Network has not yet been implemented in Enhanced
 - ShipEdit is planned to be included in the future.  It has not yet been

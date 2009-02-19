@@ -1986,7 +1986,7 @@ void YM3812UpdateOne(int which, OPLSAMPLE *buffer, int length)
 		SLOT8_1 = &OPL->P_CH[8].SLOT[SLOT1];
 		SLOT8_2 = &OPL->P_CH[8].SLOT[SLOT2];
 	}
-	for(int i=0; i < length ; i++ )
+	for(int i=0; i < length; i++ )
 	{
 		int lt;
 
@@ -2028,7 +2028,9 @@ void YM3812UpdateOne(int which, OPLSAMPLE *buffer, int length)
 		#endif
 
 		/* store to sound buffer */
-		buf[i] = lt;
+		unsigned int pos = i * 2;
+		buf[pos] = lt;
+		buf[pos+1] = buf[pos];
 
 		advance(OPL);
 	}

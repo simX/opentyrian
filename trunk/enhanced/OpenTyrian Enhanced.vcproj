@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib SDL_mixer.lib"
 				OutputFile="$(OutDir)\tyrian.exe"
 				Version=""
 				LinkIncremental="2"
@@ -344,11 +344,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\network\Network.h"
+				RelativePath=".\src\network.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\network.h"
+				RelativePath=".\src\network\Network.h"
 				>
 			</File>
 			<File

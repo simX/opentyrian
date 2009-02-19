@@ -30,7 +30,7 @@ else
 endif
 
 SDL_CFLAGS := $(shell sdl-config --cflags)
-SDL_LDFLAGS := $(shell sdl-config --libs) -lSDL_net
+SDL_LDFLAGS := $(shell sdl-config --libs) -lSDL_net -lSDL_mixer
 
 BOOST_LDFLAGS := -I$(BOOST_LIBDIR) -lboost_date_time$(BOOST_SUFFIX) -lboost_filesystem$(BOOST_SUFFIX) -lboost_system$(BOOST_SUFFIX)
 

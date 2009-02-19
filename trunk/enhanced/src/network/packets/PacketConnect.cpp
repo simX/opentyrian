@@ -98,8 +98,7 @@ PacketGameInfo *PacketGameInfo::clone() const
 
 void PacketGameInfo::handle(NetManager& manager)
 {
-	manager.peerInfo = *this;
-	manager.peerInfoSet = true;
+	// TODO Network
 }
 
 PacketFactory::PacketTypes PacketGameInfo::getTypeId() const

@@ -18,16 +18,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "opentyr.h"
+#include "loudness.h"
 
 #include "fm_synth.h"
 #include "lds_play.h"
 #include "console/Console.h"
 #include "console/cvar/CVar.h"
+#include "console/CCmd.h"
 #include "sndmast.h"
 #include "nortsong.h"
+#include "Filesystem.h"
 
-#include "loudness.h"
-
+#include "SDL_mixer.h"
+#include <map>
 
 /* SYN: These are externally accessible variables: */
 JE_MusicType musicData;
@@ -42,11 +45,16 @@ SAMPLE_TYPE *channel_pos[SFX_CHANNELS];
 Uint32 channel_len[SFX_CHANNELS];
 float channel_vol[SFX_CHANNELS];
 
-int freq = 11025 * OUTPUT_QUALITY;
+const int freq = 11025 * OUTPUT_QUALITY;
 
 bool music_playing = false;
 
 static bool sound_initialized = false;
+
+std::map<unsigned int, std::string> customMusicMappings;
+Mix_Music *currentMusic = 0;
+unsigned int currentMusicNum = 0;
+bool oggPlaying = false;
 
 static bool snd_enabled_callback( const bool& init )
 {
@@ -76,12 +84,55 @@ static bool snd_enabled_callback( const bool& init )
 	}
 }
 
+static float snd_music_vol_callback( const float& val )
+{
+	float vol = val;
+	if (vol < 0.f) vol = 0.f;
+	if (vol > 1.5f) vol = 1.5f;
+	if (oggPlaying) Mix_VolumeMusic(vol * 128);
+	return vol;
+}
+
 namespace CVars
 {
 	CVarBool snd_enabled("snd_enabled", CVar::CONFIG, "Enables sound subsystem.", true, snd_enabled_callback);
 	CVarBool snd_mute("snd_mute", CVar::CONFIG | CVar::CONFIG_AUTO, "Mutes all sound.", false);
-	CVarFloat snd_music_vol("snd_music_vol", CVar::CONFIG | CVar::CONFIG_AUTO, "Music volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarFloat snd_music_vol("snd_music_vol", CVar::CONFIG | CVar::CONFIG_AUTO, "Music volume.", 1.f, snd_music_vol_callback);
 	CVarFloat snd_fx_vol("snd_fx_vol", CVar::CONFIG | CVar::CONFIG_AUTO, "Sound effects volume.", 1.f, rangeBind(0.f, 1.5f));
+	CVarInt snd_buffer("snd_buffer", CVar::CONFIG, "Size of audio buffer.", 1024, rangeBind(0, 8192));
+}
+
+namespace CCmds
+{
+	namespace Func
+	{
+		static void snd_add_custom(const std::vector<std::string>& params)
+		{
+			unsigned int song_id = CCmd::convertParam<unsigned int>(params, 0);
+			std::string music_file = CCmd::convertParam<std::string>(params, 1);
+
+			if (music_file.empty())
+			{
+				customMusicMappings.erase(song_id);
+			}
+			else
+			{
+				std::string music_file_path;
+				try
+				{
+					music_file_path = Filesystem::get().findDatafile(music_file);
+				}
+				catch (Filesystem::FileOpenErrorException& e)
+				{
+					throw CCmd::RuntimeCCmdError(std::string("Error opening file: ") + e.what());
+				}
+
+				customMusicMappings[song_id] = music_file_path;
+			}
+		}
+	}
+
+	CCmd snd_add_custom("snd_add_custom", CCmd::NONE, "Adds a custom music file. Usage: snd_add_custom [song_id] [music_file]", Func::snd_add_custom);
 }
 
 void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
@@ -90,13 +141,13 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 
 	float s_music_vol = CVars::snd_mute ? 0.f : CVars::snd_music_vol.get();
 
-	if (music_playing && s_music_vol > 0.f)
+	if (music_playing && !oggPlaying && s_music_vol > 0.f)
 	{
 		s_music_vol *= music_vol_multiplier;
 
 		/* SYN: Simulate the fm synth chip */
 		SAMPLE_TYPE *music_pos = feedme;
-		long remaining = howmuch / BYTES_PER_SAMPLE;
+		long remaining = howmuch / BYTES_PER_SAMPLE / 2;
 		while (remaining > 0)
 		{
 			static long ct = 0;
@@ -118,7 +169,7 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 			long i = (long)((ct / REFRESH) + 4) & ~3;
 			i = (i > remaining) ? remaining : i; /* i should now equal the number of samples we get */
 			opl_update(music_pos, i);
-			music_pos += i;
+			music_pos += i*2;
 			remaining -= i;
 			ct -= (long)(REFRESH * i);
 		}
@@ -137,18 +188,22 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	for (int ch = 0; ch < SFX_CHANNELS; ch++)
 	{
 		float volume = sample_volume * channel_vol[ch];
+
+		howmuch /= 2;
 		
 		/* SYN: Don't copy more data than is in the channel! */
 		int qu = ((unsigned int)howmuch > channel_len[ch] ? channel_len[ch] : howmuch) / BYTES_PER_SAMPLE;
-		for (int smp = 0; smp < qu; smp++)
+		int smp2 = 0;
+		for (int smp = 0; smp < qu; smp++, smp2 += 2)
 		{
 #if (BYTES_PER_SAMPLE == 2)
-			Sint32 clip = (Sint32)feedme[smp] + (Sint32)(channel_pos[ch][smp] * volume);
-			feedme[smp] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (Sint16)clip;
+			Sint32 clip = (Sint32)feedme[smp2] + (Sint32)(channel_pos[ch][smp] * volume);
+			feedme[smp2] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (Sint16)clip;
 #elif (BYTES_PER_SAMPLE == 1)
-			Sint16 clip = (Sint16)feedme[smp] + (Sint16)(channel_pos[ch][smp] * volume);
-			feedme[smp] = (clip > 0x7f) ? 0x7f : (clip <= -0x80) ? -0x80 : (Sint8)clip;
+			Sint16 clip = (Sint16)feedme[smp2] + (Sint16)(channel_pos[ch][smp] * volume);
+			feedme[smp2] = (clip > 0x7f) ? 0x7f : (clip <= -0x80) ? -0x80 : (Sint8)clip;
 #endif
+			feedme[smp2+1] = feedme[smp2];
 		}
 
 		channel_pos[ch] += qu;
@@ -177,32 +232,31 @@ bool init_sound( )
 		return false;
 	}
 
-	SDL_AudioSpec plz, got;
-	plz.freq = freq;
 #if (BYTES_PER_SAMPLE == 2)
-	plz.format = AUDIO_S16SYS;
+	Uint16 format = AUDIO_S16SYS;
 #elif (BYTES_PER_SAMPLE == 1)
-	plz.format = AUDIO_S8;
+	Uint16 format = AUDIO_S8;
 #endif
-	plz.channels = 1;
-	plz.samples = 512;
-	plz.callback = audio_cb;
 
-	Console::get() << "Requested SDL frequency: " << plz.freq << "; SDL buffer size: " << plz.samples << std::endl;
+	Console::get() << "Requested audio frequency: " << freq << "; buffer size: " << CVars::snd_buffer << std::endl;
 
-	if ( SDL_OpenAudio(&plz, &got) == -1 )
+	if (Mix_OpenAudio(freq, format, 2, CVars::snd_buffer) == -1)
 	{
-		Console::get() << "\a7Error:\ax Failed to initialize SDL audio." << std::endl;
+		Console::get() << "\a7Error:\ax Failed to initialize SDL_mixer audio." << std::endl;
 		CVars::snd_enabled = false;
 		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		return false;
 	}
 
-	Console::get() << "Obtained SDL frequency: " << got.freq << "; SDL buffer size: " << got.samples << std::endl;
+	int got_freq = 0, foo2;
+	Uint16 foo;
+	Mix_QuerySpec(&got_freq, &foo, &foo2);
+
+	Console::get() << "Obtained audio frequency: " << got_freq << std::endl;
 
 	opl_init();
 
-	SDL_PauseAudio(0);
+	Mix_SetPostMix(audio_cb, 0);
 
 	sound_initialized = true;
 
@@ -224,12 +278,30 @@ bool deinit_sound( )
 
 	opl_deinit();
 
-	SDL_CloseAudio();
+	Mix_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
 	sound_initialized = false;
 
 	return true;
+}
+
+void loadOggMusic(unsigned int song)
+{
+	Mix_HaltMusic();
+
+	if (currentMusic != 0)
+		Mix_FreeMusic(currentMusic);
+
+	currentMusic = Mix_LoadMUS(customMusicMappings[song].c_str());
+
+	if (currentMusic == 0)
+		Console::get() << "\a7Error:\ax Failed to load music: " << Mix_GetError() << std::endl;
+	else
+		Mix_PlayMusic(currentMusic, -1);
+
+	oggPlaying = true;
+	Mix_VolumeMusic(CVars::snd_music_vol * 128);
 }
 
 /* SYN: selectSong is called with 0 to disable the current song. Calling it with 1 will start the current song if not playing, or restart it if it is. */
@@ -241,13 +313,31 @@ void JE_selectSong( JE_word value )
 	switch (value)
 	{
 		case 0:
+			if (oggPlaying)
+			{
+				Mix_HaltMusic();
+				oggPlaying = false;
+			}
 			music_playing = false;
 			break;
 		case 1:
 		case 2:
 			if (CVars::snd_enabled)
 			{
-				lds_load(musicData); /* Load song */
+				if (oggPlaying && currentSong == currentMusicNum)
+				{
+					Mix_RewindMusic();
+				}
+				else
+				{
+					if (customMusicMappings.find(currentSong) != customMusicMappings.end())
+						loadOggMusic(currentSong);
+					else
+					{
+						oggPlaying = false;
+						lds_load(musicData);
+					}
+				}
 			}
 			music_playing = true;
 			break;
