@@ -47,6 +47,17 @@ Uint8 *VGAScreen, *VGAScreenSeg;
 Uint8 *game_screen;
 Uint8 *VGAScreen2;
 
+static bool fullscreen_enabled_callback(const bool& val)
+{
+	reinit_video();
+	return val;
+}
+
+namespace CVars
+{
+	CVarBool fullscreen_enabled("fullscreen_enabled", CVar::CONFIG | CVar::CONFIG_AUTO, "Fullscreen.", false, fullscreen_enabled_callback);
+}
+
 void init_video( )
 {
 	if (SDL_WasInit(SDL_INIT_VIDEO) != 0) return;
@@ -90,7 +101,7 @@ void reinit_video( )
 	const int w = scr_width * scale;
 	const int h = scr_height * scale;
 	int bpp = 32;
-	const int flags = SDL_SWSURFACE | SDL_HWPALETTE | (fullscreen_enabled ? SDL_FULLSCREEN : 0);
+	const int flags = SDL_SWSURFACE | SDL_HWPALETTE | (CVars::fullscreen_enabled ? SDL_FULLSCREEN : 0);
 
 	bpp = SDL_VideoModeOK(w, h, bpp, flags);
 	if (bpp == 24) bpp = 32;

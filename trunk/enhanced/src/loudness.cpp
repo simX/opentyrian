@@ -189,10 +189,8 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 	{
 		float volume = sample_volume * channel_vol[ch];
 
-		howmuch /= 2;
-		
 		/* SYN: Don't copy more data than is in the channel! */
-		int qu = ((unsigned int)howmuch > channel_len[ch] ? channel_len[ch] : howmuch) / BYTES_PER_SAMPLE;
+		int qu = ((unsigned int)howmuch/2 > channel_len[ch] ? channel_len[ch] : howmuch/2) / BYTES_PER_SAMPLE;
 		int smp2 = 0;
 		for (int smp = 0; smp < qu; smp++, smp2 += 2)
 		{

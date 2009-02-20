@@ -104,7 +104,7 @@ void init_keyboard( void )
 
 void input_grab( void )
 {
-	input_grabbed = input_grab_enabled || fullscreen_enabled;
+	input_grabbed = input_grab_enabled || CVars::fullscreen_enabled;
 
 	if (input_grabbed)
 	{
@@ -165,8 +165,7 @@ void service_SDL_events( bool clear_new )
 				{
 					if (ev.key.keysym.sym == SDLK_RETURN)
 					{
-						fullscreen_enabled = !fullscreen_enabled;
-						reinit_video();
+						CVars::fullscreen_enabled = !CVars::fullscreen_enabled;
 						break;
 					}
 				}

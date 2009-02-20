@@ -37,7 +37,10 @@ static const unsigned int scr_height = 200;
 static const unsigned int surface_width = 320;
 static const unsigned int surace_height = 200;
 
-extern bool fullscreen_enabled;
+namespace CVars
+{
+	extern CVarBool fullscreen_enabled;
+}
 
 extern const Palette vga_palette;
 

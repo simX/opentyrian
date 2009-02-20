@@ -141,8 +141,6 @@ extern JE_SaveFilesType *saveFilePointer;
 extern JE_SaveGameTemp saveTemp;
 extern JE_SaveGameTemp *saveTempPointer;
 
-extern bool fullscreen_enabled;
-
 namespace CVars
 {
 	extern CVarInt game_speed;

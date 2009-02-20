@@ -164,8 +164,6 @@ JE_SaveFilesType *saveFilePointer = &saveFiles;
 JE_SaveGameTemp saveTemp;
 JE_SaveGameTemp *saveTempPointer = &saveTemp;
 
-bool fullscreen_enabled;
-
 const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
 
 void JE_decryptString( char *s, int len )
@@ -490,7 +488,6 @@ namespace CVars
 {
 	// Video
 	CVarInt gamma_correction("gamma_correction", CVar::CONFIG | CVar::CONFIG_AUTO, "Gamma correction. 0-3", 0, rangeBind(0, 3));
-	CVarBool fullscreen_enabled("fullscreen_enabled", CVar::CONFIG, "Fullscreen.", false);
 
 	// Input devices // TODO will probably be removed
 	CVarInt input_dev1("input_dev1", CVar::CONFIG | CVar::CONFIG_AUTO, "Input device for player 1. 1-3", 1, rangeBind(1, 3));

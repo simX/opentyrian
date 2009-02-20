@@ -293,8 +293,7 @@ void opentyrian_menu( void )
 							fade_in = true;
 							break;
 						case 1: /* Fullscreen */
-							fullscreen_enabled = !fullscreen_enabled;
-							reinit_video();
+							CVars::fullscreen_enabled = !CVars::fullscreen_enabled;
 							JE_playSampleNum(SELECT);
 							break;
 						case 2: // Scaler
