@@ -194,14 +194,16 @@ void audio_cb(void *userdata, unsigned char *sdl_buffer, int howmuch)
 		int smp2 = 0;
 		for (int smp = 0; smp < qu; smp++, smp2 += 2)
 		{
+			for (int i = 0; i < 2; ++i)
+			{
 #if (BYTES_PER_SAMPLE == 2)
-			Sint32 clip = (Sint32)feedme[smp2] + (Sint32)(channel_pos[ch][smp] * volume);
-			feedme[smp2] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (Sint16)clip;
+				Sint32 clip = (Sint32)feedme[smp2+i] + (Sint32)(channel_pos[ch][smp] * volume);
+				feedme[smp2+i] = (clip > 0x7fff) ? 0x7fff : (clip <= -0x8000) ? -0x8000 : (Sint16)clip;
 #elif (BYTES_PER_SAMPLE == 1)
-			Sint16 clip = (Sint16)feedme[smp2] + (Sint16)(channel_pos[ch][smp] * volume);
-			feedme[smp2] = (clip > 0x7f) ? 0x7f : (clip <= -0x80) ? -0x80 : (Sint8)clip;
+				Sint16 clip = (Sint16)feedme[smp2+i] + (Sint16)(channel_pos[ch][smp] * volume);
+				feedme[smp2+i] = (clip > 0x7f) ? 0x7f : (clip <= -0x80) ? -0x80 : (Sint8)clip;
 #endif
-			feedme[smp2+1] = feedme[smp2];
+			}
 		}
 
 		channel_pos[ch] += qu;
