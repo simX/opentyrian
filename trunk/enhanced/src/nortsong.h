@@ -41,7 +41,7 @@ extern JE_SongPosType songPos;
 
 extern JE_word frameCount, frameCount2, frameCountMax;
 
-extern int currentSong;
+extern unsigned int currentSong;
 
 extern Uint8 *digiFx[SOUND_NUM + 9];
 extern JE_word fxSize[SOUND_NUM + 9];

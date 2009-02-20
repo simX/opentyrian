@@ -1110,7 +1110,7 @@ void JE_doInGameSetup( void )
 		}
 		else
 		{
-			/*
+			*//*
 			JE_barShade(3, 160, 257, 180);
 			JE_barShade(5, 162, 255, 178);
 			tempScreenSeg = VGAScreen;

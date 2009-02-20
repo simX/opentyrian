@@ -86,7 +86,7 @@ JE_SongPosType songPos;
 
 JE_word frameCount, frameCount2, frameCountMax;
 
-int currentSong = 0;
+unsigned int currentSong = 0;
 
 Uint8 *digiFx[SOUND_NUM + 9]; /* [1..soundnum + 9] */
 JE_word fxSize[SOUND_NUM + 9]; /* [1..soundnum + 9] */
