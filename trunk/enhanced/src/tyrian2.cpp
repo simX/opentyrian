@@ -270,7 +270,7 @@ void JE_drawEnemy( int enemyOffset )
 					if (enemy[i].ey > -13)
 					{
 						s = (Uint8 *)VGAScreen;
-						s += (enemy[i].ey - 7) * scr_width + (enemy[i].ex - 6) + tempMapXOfs;
+						s += (enemy[i].ey - 7) * (signed)scr_width + (enemy[i].ex - 6) + tempMapXOfs;
 
 						s_limit = (Uint8 *)VGAScreen;
 						s_limit += scr_height * scr_width;
@@ -301,7 +301,7 @@ void JE_drawEnemy( int enemyOffset )
 						}
 
 						s = (Uint8 *)VGAScreen;
-						s += (enemy[i].ey - 7) * scr_width + (enemy[i].ex + 6) + tempMapXOfs;
+						s += (enemy[i].ey - 7) * (signed)scr_width + (enemy[i].ex + 6) + tempMapXOfs;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1]]);
@@ -332,7 +332,7 @@ void JE_drawEnemy( int enemyOffset )
 					if (enemy[i].ey > -26 && enemy[i].ey < 182)
 					{
 						s = (Uint8 *)VGAScreen;
-						s += (enemy[i].ey + 7) * scr_width + (enemy[i].ex - 6) + tempMapXOfs;
+						s += (enemy[i].ey + 7) * (signed)scr_width + (enemy[i].ex - 6) + tempMapXOfs;
 
 						s_limit = (Uint8 *)VGAScreen;
 						s_limit += scr_height * scr_width;
@@ -363,7 +363,7 @@ void JE_drawEnemy( int enemyOffset )
 						}
 
 						s = (Uint8 *)VGAScreen;
-						s += (enemy[i].ey + 7) * scr_width + (enemy[i].ex + 6) + tempMapXOfs;
+						s += (enemy[i].ey + 7) * (signed)scr_width + (enemy[i].ex + 6) + tempMapXOfs;
 
 						p = (Uint8 *)enemy[i].shapeseg;
 						p += SDL_SwapLE16(((JE_word *)p)[enemy[i].egr[enemy[i].enemycycle - 1] + 19]);
@@ -395,7 +395,7 @@ void JE_drawEnemy( int enemyOffset )
 					if (enemy[i].ey > -13)
 					{
 						s = (Uint8 *)VGAScreen;
-						s += enemy[i].ey * scr_width + enemy[i].ex + tempMapXOfs;
+						s += enemy[i].ey * (signed)scr_width + enemy[i].ex + tempMapXOfs;
 
 						s_limit = (Uint8 *)VGAScreen;
 						s_limit += scr_height * scr_width;
