@@ -40,6 +40,7 @@
 #include "sndmast.h"
 #include "varz.h"
 #include "vga256d.h"
+#include "tyrian2.h"
 #include "console/GameActions.h"
 #include "HighScores.h"
 #include "console/cvar/CVar.h"
@@ -3672,7 +3673,7 @@ redo:
 				if (button[4-1])
 				{
 					// TODO NETWORK
-					//portConfigChange = true;
+					portConfigChange = true;
 					if (portConfigDone)
 					{
 
@@ -4134,7 +4135,7 @@ void JE_mainGamePlayerFunctions( void )
 	memset(SFExecuted, 0, sizeof(SFExecuted));
 
 	makeMouseDelay = true;
-	// TODO NETWORK portConfigChange = false;
+	portConfigChange = false;
 
 	if (twoPlayerMode)
 	{

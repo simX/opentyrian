@@ -24,6 +24,8 @@
 extern bool quit;
 extern bool jumpSection;
 
+extern bool portConfigChange;
+
 void JE_main( void );
 
 #endif /* TYRIAN2_H */

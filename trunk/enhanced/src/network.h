@@ -30,7 +30,7 @@ extern bool haltGame; // TODO NETWORK check uses
 extern bool netQuit; // TODO NETWORK check uses
 //extern bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 extern bool yourInGameMenuRequest, inGameMenuRequest; // TODO NETWORK check uses
-/*extern bool portConfigChange;
+/*
 
 //extern bool network::netmanager;
 

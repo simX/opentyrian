@@ -86,7 +86,6 @@ int thisPlayerNum;
 bool haltGame, netQuit;
 bool pauseRequest, skipLevelRequest, helpRequest, nortShipRequest;
 bool yourInGameMenuRequest, inGameMenuRequest;
-bool portConfigChange;
 #if 0
 //bool network::netmanager;
 

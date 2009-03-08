@@ -62,6 +62,8 @@ JE_word statDmg[2]; /* [1..2] */
 bool quit;
 bool jumpSection;
 
+bool portConfigChange;
+
 static bool loadLevelOk;
 
 static const int EVENT_MAXIMUM = 2500;
@@ -1280,7 +1282,7 @@ start_level_first:
 	chargeGr     = 0;
 	chargeGrWait = 3;
 
-	// TODO NETWORK portConfigChange = false;
+	portConfigChange = false;
 
 	makeMouseDelay = false;
 
@@ -2569,11 +2571,10 @@ enemy_shot_draw_overflow:
 
 	draw_explosions();
 
-	/* TODO NETWORK
 	if (!portConfigChange)
 	{
 		portConfigDone = true;
-	}*/
+	}
 
 
 	/*-----------------------BACKGROUNDS------------------------*/
@@ -5424,7 +5425,7 @@ void JE_eventSystem( void )
 			if (firstGameOver)
 			{
 				JE_playSong(eventRec[eventLoc-1].eventdat);
-				if (CVars::snd_enabled)
+				if (!CVars::snd_enabled)
 				{
 					JE_selectSong(0);
 				}
