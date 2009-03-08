@@ -129,10 +129,10 @@ void service_SDL_events( bool clear_new )
 		switch (ev.type)
 		{
 			case SDL_MOUSEMOTION:
-				mouse_x = ev.motion.x;
-				mouse_y = ev.motion.y;
-				mouse_xrel = ev.motion.xrel;
-				mouse_yrel = ev.motion.yrel;
+				mouse_x = ev.motion.x / scale;
+				mouse_y = ev.motion.y / scale;
+				mouse_xrel = ev.motion.xrel / scale;
+				mouse_yrel = ev.motion.yrel / scale;
 				break;
 			case SDL_KEYDOWN:
 				if (ev.key.keysym.mod & KMOD_CTRL)
@@ -197,8 +197,8 @@ void service_SDL_events( bool clear_new )
 				{
 					newmouse = true;
 					lastmouse_but = ev.button.button;
-					lastmouse_x = ev.button.x;
-					lastmouse_y = ev.button.y;
+					lastmouse_x = ev.button.x / scale;
+					lastmouse_y = ev.button.y / scale;
 					mousedown = true;
 				} else {
 					mousedown = false;

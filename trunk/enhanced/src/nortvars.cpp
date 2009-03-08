@@ -302,7 +302,7 @@ void JE_setMousePosition( JE_word mouseX, JE_word mouseY )
 {
 	if (input_grabbed)
 	{
-		SDL_WarpMouse(mouseX, mouseY);
+		SDL_WarpMouse(mouseX * scale, mouseY * scale);
 	}
 }
 
