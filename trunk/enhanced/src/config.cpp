@@ -203,8 +203,11 @@ void JE_readCryptLn( FILE* f, char *s )
 std::string JE_readCryptLn( std::fstream& f )
 {
 	unsigned int size = f.get();
+	if (size == -1)
+		throw StringReadingException("Error reading size.");
 	char* buf = new char[size];
-	f.read(buf, size);
+	if (!f.read(buf, size))
+		throw StringReadingException("Error reading string.");
 	std::string str(buf, size);
 	delete buf;
 

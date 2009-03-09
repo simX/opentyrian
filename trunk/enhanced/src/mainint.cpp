@@ -1879,10 +1879,8 @@ bool JE_getPassword( void )
 
 void JE_playCredits( void )
 {
-	static const int maxlines = 132;
-	
-	std::string credstr[maxlines];
-	JE_word max = 0, maxlen = 0;
+	std::vector<std::string> credstr;
+	JE_word maxlen = 0;
 	int curpos, newpos;
 	int yloc;
 	std::fstream f;
@@ -1894,17 +1892,24 @@ void JE_playCredits( void )
 	
 	JE_newLoadShapes(EXTRA_SHAPES, "estsc.shp");
 	
-	setjasondelay(1000);
+	setjasondelay2(1000);
 	
 	if (currentSong != 9)
 		JE_playSong(9);
+
 	Filesystem::get().openDatafileFail(f, "tyrian.cdt");
-	while (!f.eof())
+
+	try
 	{
-		maxlen += 20 * 3;
-		credstr[max] = JE_readCryptLn(f);
-		max++;
+		for (;;)
+		{
+			credstr.push_back(JE_readCryptLn(f));
+		}
 	}
+	catch (StringReadingException&)
+	{
+	}
+	maxlen += 20 * 3 * credstr.size();
 	
 	load_palette(5, false);
 	JE_clr256();
@@ -1915,7 +1920,7 @@ void JE_playCredits( void )
 	
 	for (int x = 0; x < maxlen; x++)
 	{
-		setjasondelay2(1);
+		setjasondelay(1);
 		JE_clr256();
 		
 		JE_newDrawCShapeAdjust(shapeArray[EXTRA_SHAPES][currentpic-1], shapeX[EXTRA_SHAPES][currentpic-1], shapeY[EXTRA_SHAPES][currentpic-1], 319 - shapeX[EXTRA_SHAPES][currentpic-1], 100 - (shapeY[EXTRA_SHAPES][currentpic-1] / 2), 0, fade - 15);
@@ -1931,10 +1936,10 @@ void JE_playCredits( void )
 		if (fade == 15)
 			fadechg = 0;
 		
-		if (delaycount() == 0)
+		if (delaycount2() == 0)
 		{
 			fadechg = -1;
-			setjasondelay(900);
+			setjasondelay2(900);
 		}
 		
 		curpos = (x / 3) / 20;
@@ -1999,12 +2004,13 @@ void JE_playCredits( void )
 		
 		for (newpos = curpos - 9; newpos <= curpos; newpos++)
 		{
-			if (newpos > 0 && newpos <= max)
+			if (newpos > 0 && newpos <= credstr.size())
 			{
-				if (credstr[newpos-1] == "." && !credstr[newpos-1].empty())
+				if (credstr[newpos-1] != "." && !credstr[newpos-1].empty())
 				{
-					JE_outTextAdjust(110 - JE_textWidth(&credstr[newpos-1][1], SMALL_FONT_SHAPES) / 2 + abs((yloc / 18) % 4 - 2) - 1, yloc - 1, &credstr[newpos-1][1], credstr[newpos-1][0] - 65, -8, SMALL_FONT_SHAPES, false);
-					JE_outTextAdjust(110 - JE_textWidth(&credstr[newpos-1][1], SMALL_FONT_SHAPES) / 2, yloc, &credstr[newpos-1][1], credstr[newpos-1][0] - 65, -2, SMALL_FONT_SHAPES, false);
+					std::string substr = credstr[newpos-1].substr(1);
+					JE_outTextAdjust(110 - JE_textWidth(substr, SMALL_FONT_SHAPES) / 2 + abs((yloc / 18) % 4 - 2) - 1, yloc - 1, substr, credstr[newpos-1][0] - 65, -8, SMALL_FONT_SHAPES, false);
+					JE_outTextAdjust(110 - JE_textWidth(substr, SMALL_FONT_SHAPES) / 2, yloc, substr, credstr[newpos-1][0] - 65, -2, SMALL_FONT_SHAPES, false);
 				}
 			}
 			
@@ -2020,16 +2026,14 @@ void JE_playCredits( void )
 		if (netmanager)
 			netmanager->updateNetwork();
 
-		int delaycount_temp;
-		if ((delaycount_temp = target2 - SDL_GetTicks()) > 0)
-			SDL_Delay(delaycount_temp);
+		wait_delay();
 		
 		JE_showVGA();
 		if (JE_anyButton())
 		{
 			x = maxlen - 1;
 		} else {
-			if (newpos == maxlines - 8)
+			if (newpos == credstr.size() - 8)
 				JE_selectSong(0xC001);
 			if (x == maxlen - 1)
 			{

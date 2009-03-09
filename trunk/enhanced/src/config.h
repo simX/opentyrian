@@ -150,6 +150,14 @@ void JE_initProcessorType( void );
 void JE_setNewGameSpeed( void );
 void JE_loadConfiguration( void );
 void JE_saveConfiguration( void );
+
+struct StringReadingException : public std::runtime_error
+{
+	StringReadingException(const std::string& message)
+		: std::runtime_error(message)
+	{}
+};
+
 void JE_readCryptLn( FILE* f, char *s );
 std::string JE_readCryptLn( std::fstream& f );
 void JE_skipCryptLn( FILE* f );
