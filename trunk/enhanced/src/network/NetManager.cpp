@@ -317,7 +317,7 @@ bool NetManager::updateNetwork()
 	if (connected)
 	{
 		// Send a PacketNull if we excedded the keep alive interval.
-		if (SDL_GetTicks() - lastPacketSentTick > CVars::net_keepalive_interval)
+		if (SDL_GetTicks() - lastPacketSentTick > (unsigned long)CVars::net_keepalive_interval)
 		{
 			PacketNull packet;
 			sendPacket(packet);
@@ -327,7 +327,7 @@ bool NetManager::updateNetwork()
 		typedef std::pair<const Uint16, ReliablePairType> Pair;
 		foreach (Pair& pair, sentReliablePackets)
 		{
-			if (SDL_GetTicks() - pair.second.second > CVars::net_resend_interval)
+			if (SDL_GetTicks() - pair.second.second > (unsigned long)CVars::net_resend_interval)
 			{
 				pair.second.second = SDL_GetTicks();
 				sendPacket(*pair.second.first);

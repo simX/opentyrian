@@ -158,9 +158,7 @@ struct StringReadingException : public std::runtime_error
 	{}
 };
 
-void JE_readCryptLn( FILE* f, char *s );
 std::string JE_readCryptLn( std::fstream& f );
-void JE_skipCryptLn( FILE* f );
 void JE_skipCryptLn( std::fstream& f );
 
 void JE_setupStars( void );
@@ -168,7 +166,6 @@ void JE_setupStars( void );
 void JE_saveGame( int slot, const std::string& name );
 void JE_loadGame( int slot );
 
-void JE_decryptString( char *s, int len );
 std::string JE_decryptString( std::string s );
 
 void scan_autorun( );

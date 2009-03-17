@@ -166,18 +166,6 @@ JE_SaveGameTemp *saveTempPointer = &saveTemp;
 
 const unsigned char StringCryptKey[10] = {99, 204, 129, 63, 255, 71, 19, 25, 62, 1};
 
-void JE_decryptString( char *s, int len )
-{
-	for (int i = len-1; i >= 0; i--)
-	{
-		s[i] ^= StringCryptKey[((i+1) % 10)];
-		if (i > 0)
-		{
-			s[i] ^= s[i-1];
-		}
-	}
-}
-
 std::string JE_decryptString( std::string s )
 {
 	for (int i = s.length()-1; i >= 0; i--)
@@ -191,19 +179,10 @@ std::string JE_decryptString( std::string s )
 	return s;
 }
 
-void JE_readCryptLn( FILE* f, char *s )
-{
-	int size = getc(f);
-	if (size < 0) size = 0;
-	efread(s, 1, size, f);
-	s[size] = '\0';
-	JE_decryptString(s, size);
-}
-
 std::string JE_readCryptLn( std::fstream& f )
 {
 	unsigned int size = f.get();
-	if (size == -1)
+	if (!f)
 		throw StringReadingException("Error reading size.");
 	char* buf = new char[size];
 	if (!f.read(buf, size))
@@ -212,12 +191,6 @@ std::string JE_readCryptLn( std::fstream& f )
 	delete buf;
 
 	return JE_decryptString(str);
-}
-
-void JE_skipCryptLn( FILE* f )
-{
-	unsigned int size = getc(f);
-	fseek(f, size, SEEK_CUR);
 }
 
 void JE_skipCryptLn( std::fstream& f )

@@ -1881,7 +1881,7 @@ void JE_playCredits( void )
 {
 	std::vector<std::string> credstr;
 	JE_word maxlen = 0;
-	int curpos, newpos;
+	unsigned int curpos, newpos;
 	int yloc;
 	std::fstream f;
 	int currentpic = 1, fade = 0;
